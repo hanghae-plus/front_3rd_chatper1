@@ -12,7 +12,7 @@ const routes = {
             <ul class="flex justify-around">
               <li><a href="/" class="text-blue-600">홈</a></li>
               <li><a href="/profile" class="text-gray-600">프로필</a></li>
-              <li><a href="#" class="text-gray-600">로그아웃</a></li>
+              <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
             </ul>
           </nav>
     
@@ -119,12 +119,12 @@ const routes = {
       <main class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-          <form>
+          <form id="login-form">
             <div class="mb-4">
-              <input type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+              <input type="text" placeholder="이메일 또는 전화번호" id="username" class="w-full p-2 border rounded">
             </div>
             <div class="mb-6">
-              <input type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
+              <input type="password" placeholder="비밀번호" id="password" class="w-full p-2 border rounded">
             </div>
             <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
           </form>
@@ -152,7 +152,7 @@ const routes = {
             <ul class="flex justify-around">
               <li><a href="/" class="text-gray-600">홈</a></li>
               <li><a href="#" class="text-blue-600">프로필</a></li>
-              <li><a href="#" class="text-gray-600">로그아웃</a></li>
+              <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
             </ul>
           </nav>
     
@@ -205,11 +205,7 @@ const routes = {
   },
 };
 
-const userInfo = {
-  isLogin: false,
-  name: '',
-  password: '',
-}
+let isLogin = false;
 
 // 페이지를 로드하는 함수
 const loadPage = (page) => {
@@ -218,6 +214,12 @@ const loadPage = (page) => {
   // 동기적으로 콘텐츠를 설정
   document.getElementById('root').innerHTML = route.content;
   document.title = route.title;
+
+  // 로그인 폼 초기화
+  initLoginForm();
+
+  // 로그아웃 버튼 초기화
+  initLogoutButton();
 };
 
 // 현재 경로에 맞는 페이지를 로드하는 함수
@@ -225,7 +227,7 @@ const route = () => {
   const path = window.location.pathname;
 
   // 로그인이 되지 않은 상태에서 /profile로 접근할 경우, /login으로 리다이렉션
-  if (path === '/profile' && !userInfo.isLogin) {
+  if (path === '/profile' && !isLogin) {
     navigate('/login');
     return;
   }
@@ -257,3 +259,61 @@ window.addEventListener('popstate', route);
 
 // 페이지 로드 시 라우터 초기화
 window.onload = initRouter;
+
+// 로그인
+const loginUser = (username) => {
+  isLogin = true;
+  localStorage.setItem('user', JSON.stringify({
+    name: username,
+    email: '',
+    bio: ''
+  }));
+};
+
+// 로그아웃
+const logoutUser = () => {
+  isLogin = false;
+  localStorage.removeItem('user');
+};
+
+// 로그인 폼 제출 시 처리
+const handleFormSubmit = (e) => {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
+
+  if (!username) return;
+
+  loginUser(username);
+  navigate('/');
+};
+
+// 로그인 폼 초기화
+const initLoginForm = () => {
+  const loginForm = document.getElementById('login-form');
+
+  if (!loginForm) return;
+
+  loginForm.addEventListener('submit', handleFormSubmit);
+};
+
+// 로그아웃 버튼 초기화
+const initLogoutButton = () => {
+  const logoutButton = document.getElementById('logout');
+
+  if (!logoutButton) return;
+
+  logoutButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    logoutUser();
+    navigate('/login');
+  });
+};
+
+
+
+
+
+
+
+
+

@@ -3,6 +3,7 @@ import ProfilePage from "./components/ProfilePage";
 import NotFoundPage from "./components/NotFoundPage";
 import LoginPage from "./components/LoginPage";
 import { ControlUser, render, Router, submitForm } from "./utils";
+import { advanced } from "./utils/advanced";
 
 const controlUserData = new ControlUser();
 
@@ -128,6 +129,7 @@ router.addRoute("/login", () => {
 
   const loginForm = document.getElementById("login-form");
   if (!loginForm) return;
+  advanced.occurError(loginForm);
   submitForm(loginForm, (formData) => {
     const user = { name: formData.username, email: "", bio: "" };
     controlUserData.login(user, () => {
@@ -181,5 +183,6 @@ document.body.addEventListener("click", (e) => {
   }
 });
 
+advanced.eventDelegation();
 const currentPath = window.location.pathname;
 router.handleRoute(currentPath);

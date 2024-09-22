@@ -1,14 +1,18 @@
-export default function Nav() {
-  const Nav = document.createElement("nav");
-  Nav.setAttribute("class", "bg-white shadow-md p-2 sticky top-14");
+import { createElement } from "@/utils/createElement";
 
-  const NavContainer = document.createElement("ul");
-  NavContainer.setAttribute("class", "flex justify-around");
+export default function Nav() {
+  const Nav = createElement({
+    tagName: "nav",
+    className: "bg-white shadow-md p-2 sticky top-14",
+  });
+
+  const NavContainer = createElement({
+    tagName: "ul",
+    className: "flex justify-around",
+  });
 
   NavList.forEach(({ title, href }) => {
-    const NavItem = document.createElement("li");
-
-    NavItem.className = "flex-center";
+    const NavItem = createElement({ tagName: "li", className: "flex-center" });
 
     const Link = document.createElement("a");
     Link.className = "block w-full h-full text-center";

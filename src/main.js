@@ -112,7 +112,7 @@ const routes = {
         </div>
       </div>
     `,
-    title: '항해플러스 - 홈'
+    title: '항해플러스 - 홈',
   },
   '/login': {
     content: `
@@ -138,7 +138,7 @@ const routes = {
         </div>
       </main>
     `,
-    title: '항해플러스 - 로그인'
+    title: '항해플러스 - 로그인',
   },
   '/profile': {
     content: `
@@ -183,7 +183,7 @@ const routes = {
         </div>
       </div>
     `,
-    title: '항해플러스 - 프로필'
+    title: '항해플러스 - 프로필',
   },
   '/error': {
     content: `
@@ -201,7 +201,7 @@ const routes = {
         </div>
       </main>
     `,
-    title: '항해플러스 - 에러'
+    title: '항해플러스 - 에러',
   },
 };
 
@@ -263,11 +263,14 @@ window.onload = initRouter;
 // 로그인
 const loginUser = (username) => {
   isLogin = true;
-  localStorage.setItem('user', JSON.stringify({
-    username,
-    email: '',
-    bio: ''
-  }));
+  localStorage.setItem(
+    'user',
+    JSON.stringify({
+      username,
+      email: '',
+      bio: '',
+    }),
+  );
 };
 
 // 로그아웃
@@ -308,12 +311,3 @@ const initLogoutButton = () => {
     navigate('/login');
   });
 };
-
-
-
-
-
-
-
-
-

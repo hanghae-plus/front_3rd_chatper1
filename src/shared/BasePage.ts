@@ -9,7 +9,11 @@ export class BasePage implements IBasePage {
     this.#target = target;
   }
 
-  render(innerHTML = '') {
-    this.#target.innerHTML = innerHTML;
+  render() {
+    this.#target.innerHTML = this.template();
+  }
+
+  template() {
+    return '';
   }
 }

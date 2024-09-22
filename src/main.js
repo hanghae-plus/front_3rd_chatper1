@@ -264,7 +264,7 @@ window.onload = initRouter;
 const loginUser = (username) => {
   isLogin = true;
   localStorage.setItem('user', JSON.stringify({
-    name: username,
+    username,
     email: '',
     bio: ''
   }));

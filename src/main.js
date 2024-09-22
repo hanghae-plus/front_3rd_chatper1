@@ -1,11 +1,11 @@
 //라우트 정의 : 경로와 해당 컴포넌트 함수 매핑
 const routes = {
-  '/':Home,
-  '/login':Login,
-  '/profile':Profile,
-}
+  '/': Home,
+  '/login': Login,
+  '/profile': Profile,
+};
 
-function Home () {
+function Home() {
   return `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
@@ -117,10 +117,10 @@ function Home () {
     </div>
   </div>
 
-  `
-} 
+  `;
+}
 
-function Login () {
+function Login() {
   return `
   <main class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -143,10 +143,10 @@ function Login () {
       </div>
     </div>
   </main>
-`
+`;
 }
 
-function Profile () {
+function Profile() {
   return `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
@@ -188,11 +188,11 @@ function Profile () {
       </footer>
     </div>
   </div>
-`
+`;
 }
 
-function Error () {
-  return` 
+function Error() {
+  return ` 
   <main class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded-lg shadow-md w-full text-center" style="max-width: 480px">
       <h1 class="text-2xl font-bold text-blue-600 mb-4">항해플러스</h1>
@@ -206,11 +206,11 @@ function Error () {
       </a>
     </div>
   </main>
-`
+`;
 }
 
-//라우터 함수 
-function router () {
+//라우터 함수
+function router() {
   const path = window.location.pathname;
   const component = routes[path] || Error;
   const content = component();
@@ -219,7 +219,7 @@ function router () {
 
 //네비게이션 이벤트 처리
 function handleNavigation(e) {
-  if(e.target.matches('a') ){
+  if (e.target.matches('a')) {
     e.preventDefault();
     const href = e.target.getAttribute('href');
     history.pushState(null, '', href);
@@ -227,9 +227,9 @@ function handleNavigation(e) {
   }
 }
 
-//초기화 함수 
+//초기화 함수
 function init() {
-    document.body.addEventListener('click', handleNavigation);
+  document.body.addEventListener('click', handleNavigation);
   window.addEventListener('popstate', router);
   //초기 라우트 렌더링
   router();
@@ -241,4 +241,4 @@ if (typeof document !== 'undefined') {
   } else {
     init();
   }
-} 
+}

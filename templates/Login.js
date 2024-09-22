@@ -10,6 +10,7 @@ const Login = () => {
 						placeholder="사용자 이름"
 						autocomplete="username"
 						class="w-full p-2 border rounded"
+						required
 					/>
 				</div>
 				<div class="mb-6">
@@ -19,6 +20,7 @@ const Login = () => {
 						placeholder="비밀번호"
 						autocomplete="current-password"
 						class="w-full p-2 border rounded"
+						required
 					/>
 				</div>
 				<button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">

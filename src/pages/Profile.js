@@ -6,7 +6,7 @@ export const Profile = () => {
   const { navigate } = useNavigate(routes);
 
   const render = () => {
-    const rootElement = document.getElementById('root');
+    const rootElement = document.getElementById('main');
     rootElement.innerHTML = ProfilePage;
 
     addEvent();

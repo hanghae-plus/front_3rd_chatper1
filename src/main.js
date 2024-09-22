@@ -260,4 +260,16 @@ function route() {
 
 window.addEventListener('popstate', route);
 
+document.addEventListener('click', (event) => {
+  if (event.target.tagName === 'A') {
+    const href = event.target.getAttribute('href');
+
+    if (href && href.startsWith('/')) {
+      event.preventDefault();
+      window.history.pushState({}, '', href);
+      route();
+    }
+  }
+});
+
 route();

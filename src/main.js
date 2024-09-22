@@ -1,11 +1,11 @@
-import HomePage from "./components/page/HomePage";
-import LoginPage from "./components/page/LoginPage";
-import NotFoundPage from "./components/page/NotFoundPage";
-import ProfilePage from "./components/page/ProfilePage";
-import Header from "./components/shared/Header";
-import Footer from "./components/shared/Footer";
+import {
+  HomePage,
+  LoginPage,
+  NotFoundPage,
+  ProfilePage,
+} from "./components/page";
+import { Footer, Header, Layout } from "./components/shared";
 import { advanced } from "./utils/advanced";
-import Layout from "./components/shared/Layout";
 
 import { Component, ControlUser, Router, submitForm } from "./utils";
 
@@ -55,12 +55,7 @@ class ProfileComponent extends Component {
       input.defaultValue = value;
     });
 
-    submitForm(profileForm, ({ username, email, bio }) => {
-      const updatedData = {
-        username,
-        email,
-        bio,
-      };
+    submitForm(profileForm, (updatedData) => {
       user.update(updatedData, () => {
         alert("프로필이 수정되었습니다.");
       });
@@ -102,7 +97,7 @@ class App extends Component {
     const user = new ControlUser();
     const router = new Router({
       notFound: () => {
-        new NotFoundComponent({ target: document.querySelector("#root") });
+        new NotFoundComponent({ target: this.target });
       },
     });
     this.state = {
@@ -113,17 +108,16 @@ class App extends Component {
 
   afterRender() {
     const { router, user } = this.state;
-    const mainTarget = document.querySelector("#root");
 
     router.addRoute("/login", () => {
-      new LoginComponent({ target: mainTarget }, { user, router });
+      new LoginComponent({ target: this.target }, { user, router });
     });
 
     router.addRoute("/profile", () => {
-      new ProfileComponent({ target: mainTarget }, { user, router });
+      new ProfileComponent({ target: this.target }, { user, router });
     });
     router.addRoute("/", () => {
-      new HomeComponent({ target: mainTarget }, { user, router });
+      new HomeComponent({ target: this.target }, { user, router });
     });
 
     advanced.eventDelegation();

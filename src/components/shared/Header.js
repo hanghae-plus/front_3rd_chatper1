@@ -1,10 +1,9 @@
-import { authPathIds, publicPathIds, tabList } from "../constants";
+import { AUTH_PATH_IDS, PUBLIC_PATH_IDS, TAB_LIST } from "../constants";
 
 function TabList(type) {
-  const filteredPathIds = type === "auth" ? authPathIds : publicPathIds;
+  const filteredPathIds = type === "auth" ? AUTH_PATH_IDS : PUBLIC_PATH_IDS;
   const currentPath = window.location.pathname;
-  const tabListHtml = tabList
-    .filter((tab) => filteredPathIds.includes(tab.id))
+  const tabListHtml = TAB_LIST.filter((tab) => filteredPathIds.includes(tab.id))
     .map(
       (tab) =>
         `<li><a href="${tab.path}" id="${tab.id}" class="${

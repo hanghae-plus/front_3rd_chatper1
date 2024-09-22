@@ -1,0 +1,16 @@
+{
+  "env": {
+    "browser": true, // 브라우저 환경
+    "es2021": true, // 최신 ECMAScript 문법 지원
+    "node": true // Node.js 환경
+  },
+  "extends": [
+    "eslint:recommended", // ESLint의 기본 추천 규칙
+    "prettier" // Prettier와의 충돌 방지
+  ],
+  "rules": {
+    "no-unused-vars": "warn", // 사용하지 않는 변수 경고
+    "semi": ["error", "always"], // 세미콜론 사용
+    "quotes": ["error", "single"] // 작은따옴표 사용
+  }
+}

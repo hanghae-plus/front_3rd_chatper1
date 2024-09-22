@@ -5,8 +5,8 @@ export const getHeaderComponent = () => `
 
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
-          <li><a href="./main" class="text-blue-600" id="home">홈</a></li>
-          <li><a href="#" class="text-gray-600" id="login">로그인</a></li>
+          <li><a href="/" class="text-blue-600" id="home">홈</a></li>
+          <li><a href="/login" class="text-gray-600" id="login">로그인</a></li>
         </ul>
       </nav>
 

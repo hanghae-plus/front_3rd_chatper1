@@ -30,15 +30,15 @@ root.addEventListener("click", (e) => {
   }
 });
 
-// 3. 로그인 시 사용자 정보 저장
+// 3. 로그인/프로필 수정 시 사용자 정보 저장
 root.addEventListener("submit", (e) => {
-  if (e.target?.id === "login-form") {
+  if (["login-form", "profile-form"].includes(e.target?.id)) {
     e.preventDefault();
 
     const loginForm = {
-      username: document.getElementById("username")?.value || "", // 이메일 또는 전화번호
-      email: "",
-      bio: "",
+      username: document.getElementById("username")?.value || "", // 이메일 또는 전화번호(사용자 이름)
+      email: document.getElementById("email")?.value || "", // 이메일
+      bio: document.getElementById("bio")?.value || "", // 자기소개
     };
 
     localStorage.setItem("user", JSON.stringify(loginForm));

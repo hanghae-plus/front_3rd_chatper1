@@ -1,3 +1,25 @@
+// 사용자 관리 함수 
+function saveUser(username,email="",bio="" ){
+  localStorage.setItem('user',JSON.stringify({username,email,bio}));
+  localStorage.setItem('isLoggedIn',true);
+}
+function getUser(){
+  const user = localStorage.getItem('user');
+  return user? JSON.parse(user):null;
+}
+
+//사용자의 로그인 상태 확인하는 함수 
+function isLoggedIn(){
+  return localStorage.getItem('isLoggedIn') === 'true';
+}
+
+//로그아웃
+function logout(){
+  localStorage.removeItem('user');
+  localStorage.setItem('isLoggedIn',false)
+}
+
+
 //라우트 정의 : 경로와 해당 컴포넌트 함수 매핑
 const routes = {
   '/': Home,
@@ -6,6 +28,9 @@ const routes = {
 };
 
 function Home() {
+  const user = getUser();
+  const loggedIn = isLoggedIn();
+
   return `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
@@ -16,8 +41,12 @@ function Home() {
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
           <li><a href="./" class="text-blue-600">홈</a></li>
-          <li><a href="./profile" class="text-gray-600">프로필</a></li>
-          <li><a href="/login" class="text-gray-600">로그아웃</a></li>
+         
+           ${loggedIn 
+            ? ` <li><a href="./profile" class="text-gray-600">프로필</a></li>
+              <li><a href="/login" id="logout-btn" class="text-gray-600">로그아웃</a></li>`
+            : `<li><a href="./login" class="text-gray-600">로그인</a></li>`
+          }
         </ul>
       </nav>
 
@@ -125,12 +154,12 @@ function Login() {
   <main class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
       <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-      <form>
+      <form id='login-form'>
         <div class="mb-4">
-          <input type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+          <input type="text" id="username" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
         </div>
         <div class="mb-6">
-          <input type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
+          <input type="password" id='password' placeholder="비밀번호" class="w-full p-2 border rounded">
         </div>
         <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
       </form>
@@ -139,7 +168,7 @@ function Login() {
       </div>
       <hr class="my-6">
       <div class="text-center">
-        <button class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
+        <button type='submit' class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
       </div>
     </div>
   </main>
@@ -147,6 +176,11 @@ function Login() {
 }
 
 function Profile() {
+  const user = getUser();
+  if(!user){
+    history.pushState(null,'','/login');
+    return Login();
+  }
   return `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
@@ -215,6 +249,7 @@ function router() {
   const component = routes[path] || Error;
   const content = component();
   document.querySelector('#root').innerHTML = content;
+  addEventListener()
 }
 
 //네비게이션 이벤트 처리
@@ -225,6 +260,37 @@ function handleNavigation(e) {
     history.pushState(null, '', href);
     router();
   }
+}
+
+//이벤트 리스너 추가 함수 
+function addEventListener(){
+  const loginForm = document.getElementById('login-form');
+  if(loginForm) {
+    loginForm.addEventListener('submit',handleLogin);
+  }
+
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', handleLogout);
+  }
+
+}
+
+// 로그인 폼 제출 처리 함수
+function handleLogin(e) {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
+  saveUser(username);
+  history.pushState(null, '', '/');
+  router();
+}
+
+//로그아웃 버튼 클릭 시 처리 함수 
+function handleLogout(e){
+e.preventDefault();
+logout();
+history.pushState(null,'','/');
+router();
 }
 
 //초기화 함수

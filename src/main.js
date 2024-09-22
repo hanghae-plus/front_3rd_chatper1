@@ -216,9 +216,19 @@ function renderProfile() {
   `;
   loadPage(profileTemplate);
 
+  document.getElementById('profile-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const updatedUsername = document.getElementById('username').value;
+    const updatedBio = document.getElementById('bio').value;
+
+    localStorage.setItem('user', JSON.stringify({ name: updatedUsername, bio: updatedBio }));
+    
+    alert('프로필이 업데이트되었습니다!');
+  });
+
   document.getElementById('logout').addEventListener('click', () => {
     localStorage.removeItem('user');
-    route();
+    route('/login');
   });
 }
 

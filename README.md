@@ -39,7 +39,7 @@
     - [ ] Footer 컴포넌트
 - [ ] 페이지별 컴포넌트 작성
     - [ ] HomePage 컴포넌트
-    - [ ] LoginPage 컴포넌트
+    - [x] LoginPage 컴포넌트
     - [ ] ProfilePage 컴포넌트
     - [ ] NotFoundPage 컴포넌트
 

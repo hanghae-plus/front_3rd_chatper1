@@ -1,14 +1,14 @@
-import { Page } from './types';
+import { BasePage } from './shared/BasePage';
 
 type Path = string | '/404';
 type Routes = {
-  [key: Path]: Page;
+  [key in Path]: BasePage;
 };
 
-export default class Router {
+class Router {
   #routes: Routes;
 
-  constructor(routes: Routes) {
+  init(routes: Routes) {
     if (!routes['/404']) {
       throw new Error("'/404' 경로가 필요합니다.");
     }
@@ -17,6 +17,7 @@ export default class Router {
 
     this.#handlePopState();
     window.addEventListener('popstate', this.#handlePopState.bind(this));
+    this.#setupLinkNavigation();
   }
 
   navigateTo(path: Path) {
@@ -32,4 +33,17 @@ export default class Router {
     const page = this.#routes[path] ?? this.#routes['/404'];
     page.render();
   }
+
+  #setupLinkNavigation() {
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'A') {
+        e.preventDefault();
+        const target = e.target as HTMLAnchorElement;
+        router.navigateTo(target.pathname);
+      }
+    });
+  }
 }
+
+export const router = new Router();

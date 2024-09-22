@@ -41,7 +41,7 @@
     - [x] HomePage 컴포넌트
     - [x] LoginPage 컴포넌트
     - [ ] ProfilePage 컴포넌트
-    - [ ] NotFoundPage 컴포넌트
+    - [x] NotFoundPage 컴포넌트
 
 ### 5) 상태 관리 초기 구현
 

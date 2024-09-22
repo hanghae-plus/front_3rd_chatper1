@@ -1,8 +1,7 @@
 function occurError(target) {
   document.getElementById("username").addEventListener("input", () => {
-    target.appendChild(document.createElement("p")).innerHTML = "오류 발생!";
     target.appendChild(document.createElement("p")).innerHTML =
-      "의도적인 오류입니다.";
+      "오류 발생! 의도적인 오류입니다.";
   });
 }
 function eventDelegation() {

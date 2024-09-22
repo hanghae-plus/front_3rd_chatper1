@@ -8,14 +8,11 @@ export default class Home extends Component {
 
   template() {
     return `
-      <main class="p-4">
         <div class="mb-4 bg-white rounded-lg shadow p-4">
           <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
           <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
         </div>
-
         <div class="space-y-4">
-
           <div class="bg-white rounded-lg shadow p-4">
             <div class="flex items-center mb-2">
               <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
@@ -96,7 +93,6 @@ export default class Home extends Component {
             </div>
           </div>
         </div>
-      </main>
         `;
   }
 }

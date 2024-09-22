@@ -127,7 +127,7 @@ export default class App extends Component {
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
         <header></header>
-        <main></main>
+        <main class="p-4"></main>
         <footer></footer>
       </div>
     </div>

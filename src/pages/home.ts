@@ -6,8 +6,7 @@ export default class HomePage extends BasePage {
     super(target);
   }
 
-  render() {
-    super.render();
+  afterRender(): void {
     new Header('#header-container');
   }
 

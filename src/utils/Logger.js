@@ -1,4 +1,4 @@
-const Logger = (function () {
+const logger = (function () {
   let instance;
   let logs = [];
 
@@ -28,4 +28,4 @@ const Logger = (function () {
   };
 })();
 
-export default Logger
+export default logger

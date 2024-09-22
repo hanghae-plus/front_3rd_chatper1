@@ -1,84 +1,12 @@
+import Layout from "@/components/Layout";
+import MainPage from "./pages/main/page";
+
 function App() {
   const AppEl = document.createElement("div");
   AppEl.setAttribute("class", "bg-gray-100 min-h-screen flex justify-center");
-  AppEl.appendChild(Layout());
+  AppEl.appendChild(Layout(MainPage()));
 
   return AppEl;
-}
-
-function Layout() {
-  const LayoutEl = document.createElement("div");
-  LayoutEl.setAttribute("class", "max-w-md w-full");
-  LayoutEl.appendChild(HeaderComponent());
-
-  LayoutEl.appendChild(Nav());
-  return LayoutEl;
-}
-
-function HeaderComponent() {
-  const HeaderEl = document.createElement("header");
-  HeaderEl.setAttribute("class", "bg-blue-600 text-white p-4 sticky top-0");
-
-  const TitleEl = document.createElement("h1");
-  TitleEl.setAttribute("class", "text-2xl font-bold");
-
-  TitleEl.textContent = "항해플러스";
-
-  HeaderEl.appendChild(TitleEl);
-
-  return HeaderEl;
-}
-
-function Nav() {
-  const { routerPush } = Router();
-
-  const NavEl = document.createElement("nav");
-  NavEl.setAttribute("class", "bg-white shadow-md p-2 sticky top-14");
-
-  const NavUlEl = document.createElement("ul");
-  NavUlEl.setAttribute("class", "flex justify-around");
-
-  NavUlEl.addEventListener("click", ({ target }) => {
-    const routePath = target.getAttribute("href");
-    routerPush(routePath);
-  });
-
-  const NavList = [
-    { title: "홈", href: "/main" },
-    { title: "프로필", href: "/profile" },
-    { title: "로그아웃", href: "/logout" },
-    { title: "로그인", href: "/login" },
-  ];
-
-  NavList.forEach(({ title, href }) => {
-    const LiEl = document.createElement("li");
-
-    LiEl.className = "flex-center";
-
-    const AEl = document.createElement("a");
-    AEl.className = "block w-full h-full text-center";
-    if (window.location.pathname === href) {
-      AEl.className += " text-blue-600";
-    }
-    AEl.setAttribute("href", href);
-    AEl.setAttribute("onclick", "return false;");
-
-    AEl.textContent = title;
-
-    LiEl.appendChild(AEl);
-    NavUlEl.appendChild(LiEl);
-  });
-
-  NavEl.appendChild(NavUlEl);
-
-  return NavEl;
-}
-
-function Router() {
-  const routerPush = (path) => {
-    history.pushState(null, null, path);
-  };
-  return { routerPush };
 }
 
 document.querySelector("#root").appendChild(App());

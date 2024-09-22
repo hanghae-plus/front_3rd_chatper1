@@ -2,7 +2,7 @@ interface IBaseComponent {
   render: () => void;
 }
 
-export class BaseComponent implements IBaseComponent {
+export abstract class BaseComponent implements IBaseComponent {
   #target: Element;
 
   constructor(selector: string) {
@@ -20,9 +20,14 @@ export class BaseComponent implements IBaseComponent {
 
   render() {
     this.#target.innerHTML = this.template();
+    this.afterRender();
   }
 
-  template() {
-    return '';
+  afterRender() {}
+
+  querySelector(selector: string) {
+    return this.#target.querySelector(selector);
   }
+
+  abstract template(): string;
 }

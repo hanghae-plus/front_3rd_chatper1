@@ -2,7 +2,7 @@ interface IBasePage {
   render: (innerHTML?: string) => void;
 }
 
-export class BasePage implements IBasePage {
+export abstract class BasePage implements IBasePage {
   #target: Element;
 
   constructor(target: Element) {
@@ -11,9 +11,10 @@ export class BasePage implements IBasePage {
 
   render() {
     this.#target.innerHTML = this.template();
+    this.afterRender();
   }
 
-  template() {
-    return '';
-  }
+  afterRender() {}
+
+  abstract template(): string;
 }

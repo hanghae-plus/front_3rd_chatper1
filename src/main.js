@@ -131,7 +131,7 @@ router.addRoute("/login", () => {
   if (!loginForm) return;
   advanced.occurError(loginForm);
   submitForm(loginForm, (formData) => {
-    const user = { name: formData.username, email: "", bio: "" };
+    const user = { username: formData.username, email: "", bio: "" };
     controlUserData.login(user, () => {
       router.navigateTo("/profile");
     });
@@ -153,17 +153,15 @@ router.addRoute("/profile", () => {
 
   const userKeys = Object.keys(user);
   userKeys.forEach((key) => {
-    const keyName = key === "name" ? "username" : key;
-    const input = document.getElementById(keyName);
+    const input = document.getElementById(key);
     if (!input) return;
     input.defaultValue = user[key];
   });
   submitForm(profileForm, (formData) => {
     const updatedData = {
-      name: formData.username,
+      username: formData.username,
       email: formData.email,
       bio: formData.bio,
-      username: formData.username,
     };
     controlUserData.update(updatedData, () => {
       alert("프로필이 수정되었습니다.");

@@ -266,20 +266,21 @@ function redirectRoute(path) {
 }
 
 function route(path = window.location.pathname) {
+  const protectedPath = redirectRoute(path);
+  
+  window.history.pushState({}, '', protectedPath);
 
-  window.history.pushState({}, '', path);
-
-  if (path === '/' || path === '/main') {
+  if (protectedPath === '/' || protectedPath === '/main') {
     renderHome();
-  } else if (path === '/login') {
+  } else if (protectedPath === '/login') {
     renderLogin();
-  } else if (path === '/profile') {
+  } else if (protectedPath === '/profile') {
     if (isLoggedIn()) {
       renderProfile();
     } else {
       renderLogin();
     }
-  } else if (path === '/404') {
+  } else if (protectedPath === '/404') {
     renderNotFound();
   } else {
     window.history.pushState({}, '', '/404');

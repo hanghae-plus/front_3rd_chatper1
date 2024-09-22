@@ -14,7 +14,7 @@ const Profile = () => {
 						<a href="/profile" class="text-blue-600"> 프로필 </a>
 					</li>
 					<li>
-						<a href="/logout" class="text-gray-600"> 로그아웃 </a>
+						<button id="logout" class="text-gray-600">로그아웃</button>
 					</li>
 				</ul>
 			</nav>

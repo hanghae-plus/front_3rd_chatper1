@@ -51,9 +51,19 @@ const login = (event) => {
 
 	navigate("/profile");
 };
+const logout = () => {
+	localStorage.removeItem("user");
+	navigate("/login");
+};
 
+// TODO: getElementById로 대체할 수 있는 지 확인
 window.addEventListener("submit", (event) => {
 	if (event.target.id === "login-form") {
 		login(event);
+	}
+});
+window.addEventListener("click", (event) => {
+	if (event.target.id === "logout") {
+		logout();
 	}
 });

@@ -1,10 +1,9 @@
-function isLoggedIn() {
-  return !!localStorage.getItem('user');
-}
+import { setupRouting, route } from './routes.js';
 
 function loadPage(template) {
   document.querySelector('#root').innerHTML = template;
 }
+
 function renderHeader() {
   const user = JSON.parse(localStorage.getItem('user'));
   const currentPath = window.location.pathname;
@@ -17,22 +16,15 @@ function renderHeader() {
     <nav class="bg-white shadow-md p-2 sticky top-14">
       <ul class="flex justify-around">
         <li><a href="/" class="${currentPath === '/' ? 'text-blue-600' : 'text-gray-600'}">홈</a></li>
-        ${user ?
-      `<li><a href="/profile" class="${currentPath === '/profile' ? 'text-blue-600' : 'text-gray-600'}">프로필</a></li>
-        <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>` :
-      `<li><a href="/login" class="${currentPath === '/login' ? 'text-blue-600' : 'text-gray-600'}">로그인</a></li>`
-    }
+        ${user ? `<li><a href="/profile" class="${currentPath === '/profile' ? 'text-blue-600' : 'text-gray-600'}">프로필</a></li>
+        <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>` : `<li><a href="/login" class="${currentPath === '/login' ? 'text-blue-600' : 'text-gray-600'}">로그인</a></li>`}
       </ul>
     </nav>
   `;
 }
 
 function renderFooter() {
-  return `
-      <footer class="bg-gray-200 p-4 text-center">
-          <p>&copy; 2024 항해플러스. All rights reserved.</p>
-      </footer>
-  `;
+  return `<footer class="bg-gray-200 p-4 text-center"><p>&copy; 2024 항해플러스. All rights reserved.</p></footer>`;
 }
 
 function renderHome() {
@@ -234,7 +226,7 @@ function renderProfile() {
   });
 
 
-const logoutButton = document.getElementById('#logout');
+const logoutButton = document.getElementById('logout');
 if (logoutButton) {
   logoutButton.addEventListener('click', () => {
     localStorage.removeItem('user');
@@ -288,17 +280,5 @@ function route(path = window.location.pathname) {
   }
 }
 
-window.addEventListener('popstate', () => route());
-
-document.addEventListener('click', (event) => {
-  if (event.target.tagName === 'A') {
-    const href = event.target.getAttribute('href');
-    if (href && href.startsWith('/')) {
-      event.preventDefault();
-      window.history.pushState({}, '', href);
-      route(href);
-    }
-  }
-});
-
+setupRouting();
 route();

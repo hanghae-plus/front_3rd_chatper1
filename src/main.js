@@ -1,13 +1,13 @@
-import Login from "../templates/Login";
-import Home from "../templates/Home";
-import Error from "../templates/Error";
-import Profile from "../templates/Profile";
+import LoginPage from "../templates/LoginPage";
+import HomePage from "../templates/HomePage";
+import NotFoundPage from "../templates/NotFoundPage";
+import ProfilePage from "../templates/ProfilePage";
 
 const routes = {
-	"/": Home,
-	"/login": Login,
-	"/profile": Profile,
-	"/404": Error,
+	"/": HomePage,
+	"/login": LoginPage,
+	"/profile": ProfilePage,
+	"/404": NotFoundPage,
 };
 const protectedRoutes = ["/", "/profile"];
 

@@ -33,6 +33,18 @@ class Router {
       this.navigateTo('/404');
     }
   }
+
+  setLoginStatus(status) {
+    this.isLoggedIn = status;
+  }
+
+  handleLogin() {
+    this.setLoginStatus(true);
+  }
+
+  handleLogout() {
+    this.setLoginStatus(false);
+  }
 }
 
 // 각 라우트에 해당하는 컴포넌트 렌더링 함수 작성
@@ -54,7 +66,7 @@ const renderHomePage = (isLoggedIn) => {
             }
             ${
               isLoggedIn
-                ? '<li><a href="#" class="text-gray-600">로그아웃</a></li>'
+                ? '<li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>'
                 : '<li><a href="./login" class="text-gray-600">로그인</a></li>'
             }
           </ul>
@@ -156,9 +168,25 @@ const renderHomePage = (isLoggedIn) => {
       </div>
     </div>
   `;
+
+  // 로그아웃 버튼 클릭 이벤트 리스너 추가
+  if (isLoggedIn) {
+    document.getElementById('logout').addEventListener('click', (e) => {
+      e.preventDefault();
+
+      // LocalStorage에서 데이터 삭제
+      localStorage.removeItem('user');
+
+      router.handleLogout();
+      router.navigateTo('/');
+    });
+  }
 };
 
-const renderProfilePage = () => {
+const renderProfilePage = (isLoggedIn) => {
+  // LocalStorage에서 데이터 가져오기 (key: 'user')
+  const user = JSON.parse(localStorage.getItem('user'));
+
   document.querySelector('#root').innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
@@ -170,14 +198,14 @@ const renderProfilePage = () => {
         <ul class="flex justify-around">
           <li><a href="./" class="text-gray-600">홈</a></li>
           <li><a href="#" class="text-blue-600">프로필</a></li>
-          <li><a href="#" class="text-gray-600">로그아웃</a></li>
+          <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
         </ul>
       </nav>
 
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-          <form>
+          <form id="profile-form">
             <div class="mb-4">
               <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
               <input type="text" id="username" name="username" value="홍길동" class="w-full p-2 border rounded">
@@ -188,7 +216,7 @@ const renderProfilePage = () => {
             </div>
             <div class="mb-6">
               <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
-              <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">안녕하세요, 항해플러스에서 열심히 공부하고 있는 홍길동입니다.</textarea>
+              <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">${user.bio}</textarea>
             </div>
             <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
           </form>
@@ -201,6 +229,34 @@ const renderProfilePage = () => {
     </div>
   </div>
   `;
+
+  document.getElementById('username').value = user.username;
+
+  document.getElementById('profile-form').addEventListener('submit', (e) => {
+    e.preventDefault(); // 폼 제출 기본 동작 방지
+
+    const userInfo = {
+      username: document.getElementById('username').value,
+      email: '',
+      bio: document.getElementById('bio').value,
+    };
+
+    // // LocalStorage에 데이터 저장 (key: 'user')
+    localStorage.setItem('user', JSON.stringify(userInfo));
+  });
+
+  // 로그아웃 버튼 클릭 이벤트 리스너 추가
+  if (isLoggedIn) {
+    document.getElementById('logout').addEventListener('click', (e) => {
+      e.preventDefault();
+
+      // LocalStorage에서 데이터 삭제 (key: 'user')
+      localStorage.removeItem('user');
+
+      router.handleLogout();
+      router.navigateTo('/');
+    });
+  }
 };
 
 const renderLoginPage = () => {
@@ -208,12 +264,12 @@ const renderLoginPage = () => {
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form>
+        <form id="login-form">
           <div class="mb-4">
-            <input type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+            <input type="text" id="username" placeholder="사용자 이름" class="w-full p-2 border rounded">
           </div>
           <div class="mb-6">
-            <input type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
+            <input type="password" id="userPw" placeholder="비밀번호" class="w-full p-2 border rounded">
           </div>
           <button type="submit" id="loginButton" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
         </form>
@@ -227,6 +283,22 @@ const renderLoginPage = () => {
       </div>
     </main>
   `;
+
+  document.getElementById('login-form').addEventListener('submit', (e) => {
+    e.preventDefault(); // 폼 제출 기본 동작 방지
+
+    const userInfo = {
+      username: document.getElementById('username').value,
+      email: '',
+      bio: '',
+    };
+
+    // LocalStorage에 데이터 저장 (key: 'user')
+    localStorage.setItem('user', JSON.stringify(userInfo));
+
+    router.handleLogin();
+    router.navigateTo('/');
+  });
 };
 
 const renderNotFoundPage = () => {
@@ -250,7 +322,7 @@ const renderNotFoundPage = () => {
 // 라우터에 경로와 해당 컴포넌트 등록
 const router = new Router();
 router.addRoute('/', () => renderHomePage(router.isLoggedIn));
-router.addRoute('/profile', renderProfilePage);
+router.addRoute('/profile', () => renderProfilePage(router.isLoggedIn));
 router.addRoute('/login', renderLoginPage);
 router.addRoute('/404', renderNotFoundPage);
 

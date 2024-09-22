@@ -6,12 +6,12 @@ document.querySelector("#root").innerHTML = getInitComponent();
 
 document.getElementById("login").addEventListener("click", (e) => {
   e.preventDefault();
-  history.pushState({ page: "login" }, "login", "login");
+  history.pushState({ page: "login" }, "loginPage", "login");
   document.querySelector("#main").innerHTML = getLoginComponent();
 });
 
 document.getElementById("main").addEventListener("click", (e) => {
   e.preventDefault();
-  history.pushState({ page: 2 }, "main", "main");
+  history.pushState({ page: 2 }, "mainPage", "");
   document.querySelector("#main").innerHTML = getHomeComponent();
 });

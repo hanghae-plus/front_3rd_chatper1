@@ -9,15 +9,27 @@ const routes = {
 	"/profile": Profile,
 	"/404": Error,
 };
+const protectedRoutes = ["/", "/profile"];
 
 const navigate = (path) => {
 	window.history.pushState({}, "", path);
 	updateHTML();
 };
 
+const isLoggedIn = () => {
+	const user = localStorage.getItem("user");
+	if (!user) return false;
+	return true;
+};
+
 const updateHTML = async () => {
 	const currentPath = window.location.pathname;
 	const targetHTML = routes[currentPath] || routes["/404"];
+
+	if (!isLoggedIn() && protectedRoutes.includes(currentPath)) {
+		navigate("/login");
+		return;
+	}
 
 	document.querySelector("#root").innerHTML = targetHTML;
 	document.querySelectorAll("a").forEach((anchor) => {

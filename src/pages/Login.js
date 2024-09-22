@@ -8,17 +8,17 @@ export const Login = () => {
   const render = () => {
     const rootElement = document.getElementById('root');
     rootElement.innerHTML = LoginPage;
+
+    addEvent();
+  };
+
+  const addEvent = () => {
     document.querySelectorAll('a').forEach((anchor) => {
       anchor.addEventListener('click', (event) => {
         event.preventDefault();
         navigate(event.target.href);
       });
     });
-
-    addEvent();
-  };
-
-  const addEvent = () => {
     document.getElementById('login-form').addEventListener('submit', (event) => {
       login(event);
       navigate('/profile');

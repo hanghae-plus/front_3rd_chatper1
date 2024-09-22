@@ -9,17 +9,16 @@ export const Home = () => {
     const rootElement = document.getElementById('root');
     rootElement.innerHTML = HomePage;
 
+    addEvent();
+  };
+
+  const addEvent = () => {
     document.querySelectorAll('a').forEach((anchor) => {
       anchor.addEventListener('click', (event) => {
         event.preventDefault();
         navigate(event.target.href);
       });
     });
-
-    addEvent();
-  };
-
-  const addEvent = () => {
     document.getElementById('logout').addEventListener('click', () => {
       logout();
       navigate('/login');

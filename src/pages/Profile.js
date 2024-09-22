@@ -8,18 +8,18 @@ export const Profile = () => {
   const render = () => {
     const rootElement = document.getElementById('root');
     rootElement.innerHTML = ProfilePage;
-    document.querySelectorAll('a').forEach((anchor) => {
-      anchor.addEventListener('click', (event) => {
-        event.preventDefault();
-        navigate(event.target.href);
-      });
-    });
 
     addEvent();
     getProfile();
   };
 
   const addEvent = () => {
+    document.querySelectorAll('a').forEach((anchor) => {
+      anchor.addEventListener('click', (event) => {
+        event.preventDefault();
+        navigate(event.target.href);
+      });
+    });
     document.getElementById('profile-form').addEventListener('submit', (event) => {
       updateProfile(event);
     });

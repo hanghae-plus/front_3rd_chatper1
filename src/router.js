@@ -1,22 +1,23 @@
-import Home from "./components/home";
+import Home from "./components/HomePage";
+import Profile from "./components/ProfilePage";
 
 export const navigateTo = (url) => {
   history.pushState({}, "", url);
   router();
 };
-export const router = async () => {
-  const root = document.querySelector('#root')
-  const routes = [
-    // { path: "/", view: () => {
-    //     window.location.replace("/main");  // '/' 접속 시 '/main'으로 리다이렉트
-    //   }
-    // },
-    { path: "/", view: new Home(root) },
-    { path: "/login", view: () => console.log("로그인") },
-    { path: "/profile", view: () => console.log("프로필페이지") },
-    { path: "/404", view: () => console.log("404 페이지") },
-  ];
+const root = document.querySelector('#root')
 
+export const routes = [
+  // { path: "/", view: () => {
+  //     window.location.replace("/main");  // '/' 접속 시 '/main'으로 리다이렉트
+  //   }
+  // },
+  { path: "/", view: ()=> new Home(root), name: '홈' },
+  { path: "/login", view: () => console.log("로그인"), name: '로그인' },
+  { path: "/profile", view: ()=>new Profile(root), name: '프로필' },
+  { path: "/404", view: () => console.log("404 페이지"), name: '404' },
+];
+export const router = async () => {
   const valideRouters = routes.map((route) => {
     return {
       ...route,
@@ -34,5 +35,5 @@ export const router = async () => {
     };
   }
 
-  // matchRoute.view();
+  matchRoute.view();
 };

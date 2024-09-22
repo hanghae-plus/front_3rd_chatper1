@@ -1,6 +1,4 @@
 import { router } from "./router.js";
-import Home from "./components/home.js";
-import Header from "./components/header.js";
 // document.querySelector('#root').innerHTML = `
 // <div class="bg-gray-100 min-h-screen flex justify-center">
 //     <div class="max-w-md w-full">
@@ -121,10 +119,11 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(e.target.matches("#nav_link"))
     if (e.target.matches("#nav_link")) {
       e.preventDefault();
+      // e.stopPropagation()
       navigateTo(e.target.href);
     }
   });
-  router();
+  // router();
 });
 // const myApp = document.querySelector('#root') 
 // new Home(myApp)

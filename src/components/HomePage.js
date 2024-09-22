@@ -3,22 +3,20 @@ import Footer from "./footer";
 export default class Home {
   $target;
   state;
-  header;
   constructor ($target) { // 클래스 생성자 함수. mouted같아 
     this.$target = $target;
     this.setup();
     this.render();
   }
   setup () {
-    this.header = new Header();
-    this.header.setState(['프로필','로그아웃'])
+    // this.header = new Header(this.$target);
+    // this.header.setState(['프로필','로그아웃'])
   };
   template () { 
     return `
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
-        ${this.header.template()}
-          
+        <header></header>
         <main class="p-4">
           <div class="mb-4 bg-white rounded-lg shadow p-4">
             <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
@@ -108,20 +106,29 @@ export default class Home {
             </div>
           </div>
         </main>
-        ${new Footer().template()}
+        <footer></footer>
       </div>
     </div>
     ` 
+  }
+  setTemplate() {
+    const header = new Header(this.$target.querySelector('header'),['프로필','로그아웃']);
+    const footer = new Footer(this.$target.querySelector('footer'));
+    // header.setState(['프로필','로그아웃'])
+
+    // this.footer = new Footer({ $element: this.$element.querySelector('footer') });
   }
   render () {
     console.log(this.$target)
     this.$target.innerHTML = this.template();
     this.setEvent();
+    this.setTemplate();
     // this.updateClass('bg-gray-100', 'min-h-screen', 'flex', 'justify-center'); // 렌더링 후 클래스 업데이트
   }
   setEvent () {
     
   }
+  
    // 클래스 변경 메서드
   // updateClass(...className) {
   //   this.$target.classList.add(...className); // 렌더링 후 클래스 추가

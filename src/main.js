@@ -258,6 +258,13 @@ function renderNotFound() {
   loadPage(notFoundTemplate);
 }
 
+function redirectRoute(path) {
+  const isLoggedIn = isLoggedIn();
+  if (path === '/profile' && !isLoggedIn) return '/login';
+  if (path === '/login' && isLoggedIn) return '/';
+  return path;
+}
+
 function route(path = window.location.pathname) {
 
   window.history.pushState({}, '', path);

@@ -13,7 +13,7 @@ export const useNavigate = (routes) => {
     const currentPath = window.location.pathname;
     const rootElement = document.getElementById('root');
 
-    if (currentPath === '/' || currentPath === '/profile')
+    if (currentPath === '/' || currentPath === '/profile') {
       rootElement.innerHTML = /* HTML */ `<div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
           ${Header(currentPath)}
@@ -21,7 +21,21 @@ export const useNavigate = (routes) => {
           ${Footer}
         </div>
       </div>`;
-    else rootElement.innerHTML = '<main id="main"></main>';
+
+      document.getElementById('logout').addEventListener('click', () => {
+        localStorage.removeItem('user');
+        navigate('/login');
+      });
+    } else {
+      rootElement.innerHTML = '<main id="main"></main>';
+    }
+
+    document.querySelectorAll('a').forEach((anchor) => {
+      anchor.addEventListener('click', (event) => {
+        event.preventDefault();
+        navigate(event.target.href);
+      });
+    });
 
     const targetComponent = routes[currentPath] || routes['/404'];
     targetComponent();

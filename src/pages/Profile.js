@@ -1,10 +1,6 @@
 import ProfilePage from '../../templates/ProfilePage';
-import { routes } from '../routes';
-import { useNavigate } from '../utils/navigate';
 
 export const Profile = () => {
-  const { navigate } = useNavigate(routes);
-
   const render = () => {
     const rootElement = document.getElementById('main');
     rootElement.innerHTML = ProfilePage;
@@ -14,18 +10,8 @@ export const Profile = () => {
   };
 
   const addEvent = () => {
-    document.querySelectorAll('a').forEach((anchor) => {
-      anchor.addEventListener('click', (event) => {
-        event.preventDefault();
-        navigate(event.target.href);
-      });
-    });
     document.getElementById('profile-form').addEventListener('submit', (event) => {
       updateProfile(event);
-    });
-    document.getElementById('logout').addEventListener('click', () => {
-      logout();
-      navigate('/login');
     });
   };
 
@@ -49,10 +35,6 @@ export const Profile = () => {
     const bio = document.getElementById('bio').value;
 
     localStorage.setItem('user', JSON.stringify({ username, email, bio }));
-  };
-
-  const logout = () => {
-    localStorage.removeItem('user');
   };
 
   render();

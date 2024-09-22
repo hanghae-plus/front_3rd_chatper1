@@ -1,3 +1,5 @@
+import { STORAGE_KEY } from "../components/constants";
+
 export class Storage {
   constructor() {
     this.storage = localStorage;
@@ -16,27 +18,24 @@ export class Storage {
   }
 }
 
-export function render(targetName, html) {
-  document.querySelector(targetName).innerHTML = html;
-}
-
 export class ControlUser {
   constructor() {
     this.storage = new Storage();
-    this.user = this.storage.getParsed("user");
+    this.user = this.storage.getParsed(STORAGE_KEY.USER);
   }
+
   login(data, callback) {
-    this.storage.set("user", data);
+    this.storage.set(STORAGE_KEY.USER, data);
     this.user = data;
     callback();
   }
   update(data, callback) {
-    this.storage.set("user", data);
+    this.storage.set(STORAGE_KEY.USER, data);
     this.user = data;
     callback();
   }
   logout(callback) {
-    this.storage.remove("user");
+    this.storage.remove(STORAGE_KEY.USER);
     this.user = null;
     callback();
   }
@@ -90,4 +89,32 @@ export function submitForm(form, callback) {
     const formData = getFormData(form);
     callback(formData);
   });
+}
+
+export class Component {
+  constructor({ target }, props) {
+    this.target = target;
+    this.props = props;
+    this.state = null;
+    this.setup();
+    this.render();
+    this.setEvent(this.state);
+  }
+
+  setup() {}
+  setEvent() {}
+  afterRender() {}
+
+  setState(state) {
+    this.state = { ...this.state, ...state };
+    this.render();
+  }
+
+  template() {
+    return "";
+  }
+  render() {
+    this.target.innerHTML = this.template();
+    this.afterRender();
+  }
 }

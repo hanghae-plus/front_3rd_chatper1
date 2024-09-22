@@ -1,186 +1,150 @@
-import HomePage from "./components/HomePage";
-import ProfilePage from "./components/ProfilePage";
-import NotFoundPage from "./components/NotFoundPage";
-import LoginPage from "./components/LoginPage";
-import { ControlUser, render, Router, submitForm } from "./utils";
+import HomePage from "./components/page/HomePage";
+import LoginPage from "./components/page/LoginPage";
+import NotFoundPage from "./components/page/NotFoundPage";
+import ProfilePage from "./components/page/ProfilePage";
+import Header from "./components/shared/Header";
+import Footer from "./components/shared/Footer";
 import { advanced } from "./utils/advanced";
+import Layout from "./components/shared/Layout";
 
-const controlUserData = new ControlUser();
+import { Component, ControlUser, Router, submitForm } from "./utils";
 
-const tabList = [
-  {
-    name: "홈",
-    id: "home",
-    path: "/",
-    isPublic: true,
-  },
-  {
-    name: "프로필",
-    id: "profile",
-    path: "/profile",
-    isPublic: false,
-  },
-  {
-    name: "로그아웃",
-    id: "logout",
-    path: "",
-    isPublic: false,
-  },
-  {
-    name: "로그인",
-    id: "login",
-    path: "/login",
-    isPublic: false,
-  },
-];
-
-function Header() {
-  return `
-    <header class="bg-blue-600 text-white p-4 sticky top-0">
-      <h1 class="text-2xl font-bold">항해플러스</h1>
-    </header>
-    ${TabList()}
-`;
+class NotFoundComponent extends Component {
+  template() {
+    return NotFoundPage();
+  }
 }
 
-function Footer() {
-  return `
-    <footer class="bg-gray-200 p-4 text-center">
-      <p>&copy; 2024 항해플러스. All rights reserved.</p>
-    </footer>
-  `;
-}
-
-function Layout({ children, disableHeader, disableFooter }) {
-  return `
-    <div class="bg-gray-100 min-h-screen flex justify-center">
-      <div class="max-w-md w-full">
-        ${disableHeader ? "" : Header()}  
-        ${children}
-        ${disableFooter ? "" : Footer()}
-      </div>
-  </div>
-  `;
-}
-
-function TabList() {
-  const user = controlUserData.getUser();
-  const tabListHtml = tabList
-    .map((tab) => {
-      const currentPath = window.location.pathname;
-      if (user && tab.path === "/login") {
-        return "";
-      }
-      if (
-        tab.isPublic ||
-        (!tab.isPublic && user) ||
-        (tab.path === "/login" && !user)
-      ) {
-        return `<li><a href="${tab.path}" id="${tab.id}" class="${
-          tab.path === currentPath ? "text-blue-600 font-bold" : "text-gray-600"
-        }">${tab.name}</a></li>`;
-      }
-      return "";
-    })
-    .join("");
-
-  return `
-      <nav class="bg-white shadow-md p-2 sticky top-14">
-        <ul id='tab-list' class="flex justify-around">
-          ${tabListHtml}  
-        </ul>
-      </nav>
-      `;
-}
-
-const router = new Router({
-  notFound: () => {
-    render(
-      "#root",
-      Layout({
-        children: NotFoundPage(),
-        disableHeader: true,
-        disableFooter: true,
-      })
-    );
-  },
-});
-
-router.addRoute("/", () => {
-  render(
-    "#root",
-    Layout({
+class HomeComponent extends Component {
+  template() {
+    const type = this.props.user.getUser() ? "auth" : "public";
+    return Layout({
       children: HomePage(),
-    })
-  );
-});
-
-router.addRoute("/login", () => {
-  render(
-    "#root",
-    Layout({
-      children: LoginPage(),
-      disableHeader: true,
-      disableFooter: true,
-    })
-  );
-  const user = controlUserData.getUser();
-  router.redirectTo("/", user);
-
-  const loginForm = document.getElementById("login-form");
-  if (!loginForm) return;
-  advanced.occurError(loginForm);
-  submitForm(loginForm, (formData) => {
-    const user = { username: formData.username, email: "", bio: "" };
-    controlUserData.login(user, () => {
-      router.navigateTo("/profile");
+      header: Header(type),
+      footer: Footer(),
     });
-  });
-});
+  }
+}
 
-router.addRoute("/profile", () => {
-  render(
-    "#root",
-    Layout({
+class ProfileComponent extends Component {
+  template() {
+    const type = this.props.user.getUser() ? "auth" : "public";
+    return Layout({
       children: ProfilePage(),
-    })
-  );
-  const user = controlUserData.getUser();
-  router.redirectTo("/login", !user);
+      header: Header(type),
+      footer: Footer(),
+    });
+  }
 
-  const profileForm = document.getElementById("profile-form");
-  if (!profileForm) return;
+  afterRender() {
+    const { user, router } = this.props;
+    const userData = user.getUser();
+    router.redirectTo("/login", !userData);
 
-  const userKeys = Object.keys(user);
-  userKeys.forEach((key) => {
-    const input = document.getElementById(key);
-    if (!input) return;
-    input.defaultValue = user[key];
-  });
-  submitForm(profileForm, (formData) => {
-    const updatedData = {
-      username: formData.username,
-      email: formData.email,
-      bio: formData.bio,
+    this.updateProfile(user);
+  }
+
+  updateProfile(user) {
+    const userData = user.getUser();
+    const profileForm = document.getElementById("profile-form");
+    if (!profileForm) return;
+
+    Object.entries(userData).forEach(([key, value]) => {
+      const input = document.getElementById(key);
+      if (!input) return;
+      input.defaultValue = value;
+    });
+
+    submitForm(profileForm, ({ username, email, bio }) => {
+      const updatedData = {
+        username,
+        email,
+        bio,
+      };
+      user.update(updatedData, () => {
+        alert("프로필이 수정되었습니다.");
+      });
+    });
+  }
+}
+
+class LoginComponent extends Component {
+  template() {
+    return Layout({
+      children: LoginPage(),
+    });
+  }
+  afterRender() {
+    const { user, router } = this.props;
+    const userData = user.getUser();
+    router.redirectTo("/", userData);
+
+    this.login(user, router);
+  }
+
+  login(user, router) {
+    const loginForm = document.getElementById("login-form");
+    if (!loginForm) return;
+
+    advanced.occurError(loginForm);
+
+    submitForm(loginForm, ({ username }) => {
+      const userData = { username, email: "", bio: "" };
+      user.login(userData, () => {
+        router.navigateTo("/profile");
+      });
+    });
+  }
+}
+
+class App extends Component {
+  setup() {
+    const user = new ControlUser();
+    const router = new Router({
+      notFound: () => {
+        new NotFoundComponent({ target: document.querySelector("#root") });
+      },
+    });
+    this.state = {
+      user,
+      router,
     };
-    controlUserData.update(updatedData, () => {
-      alert("프로필이 수정되었습니다.");
-    });
-  });
-});
-
-document.body.addEventListener("click", (e) => {
-  if (e.target.tagName === "A") {
-    e.preventDefault();
-    router.navigateTo(e.target.pathname);
   }
-  if (e.target.id === "logout") {
-    controlUserData.logout(() => {
-      router.navigateTo("/login");
+
+  afterRender() {
+    const { router, user } = this.state;
+    const mainTarget = document.querySelector("#root");
+
+    router.addRoute("/login", () => {
+      new LoginComponent({ target: mainTarget }, { user, router });
+    });
+
+    router.addRoute("/profile", () => {
+      new ProfileComponent({ target: mainTarget }, { user, router });
+    });
+    router.addRoute("/", () => {
+      new HomeComponent({ target: mainTarget }, { user, router });
+    });
+
+    advanced.eventDelegation();
+    const currentPath = window.location.pathname;
+    router.handleRoute(currentPath);
+  }
+
+  setEvent(props) {
+    const { router, user } = props;
+    this.target.addEventListener("click", (e) => {
+      if (e.target.tagName === "A") {
+        e.preventDefault();
+        router.navigateTo(e.target.pathname);
+      }
+      if (e.target.id === "logout") {
+        user.logout(() => {
+          router.navigateTo("/login");
+        });
+      }
     });
   }
-});
+}
 
-advanced.eventDelegation();
-const currentPath = window.location.pathname;
-router.handleRoute(currentPath);
+new App({ target: document.querySelector("#root") });

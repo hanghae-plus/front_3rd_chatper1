@@ -164,6 +164,12 @@ function renderLogin() {
 
 function renderProfile() {
   const user = JSON.parse(localStorage.getItem('user'));
+
+  if (!user) {
+    route('/login');
+    return;
+  }
+
   const profileTemplate = `
     <div id="root">
   <div class="bg-gray-100 min-h-screen flex justify-center">

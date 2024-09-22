@@ -1,7 +1,7 @@
 import { router } from '../Router';
 import { safeLocalStorage } from './localStorage';
 
-export const USER_INFO_KEY = 'userInfo';
+export const USER_INFO_KEY = 'user';
 
 export type UserInfo = { name: string; email: string; bio: string };
 
@@ -17,4 +17,8 @@ export const login = (userInfo: UserInfo) => {
 
 export const isLoggedIn = () => {
   return !!safeLocalStorage.get(USER_INFO_KEY);
+};
+
+export const getUserInfo = (): UserInfo => {
+  return JSON.parse(safeLocalStorage.get(USER_INFO_KEY) ?? '{}');
 };

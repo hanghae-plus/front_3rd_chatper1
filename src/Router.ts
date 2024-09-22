@@ -1,8 +1,8 @@
-import { BasePage } from './shared/BasePage';
+import { BaseComponent } from './shared/BaseComponent';
 
 type Path = string | '/404';
 type Routes = {
-  [key in Path]: BasePage;
+  [key in Path]: BaseComponent;
 };
 
 class Router {

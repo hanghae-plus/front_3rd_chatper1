@@ -1,8 +1,10 @@
 import { isLoggedIn, logout } from '../shared/auth';
 import { BaseComponent } from '../shared/BaseComponent';
 
+const LOGOUT_ID = 'logout';
+
 interface IHeader {
-  linkList: { text: string; link: string }[];
+  linkList: { id: string; text: string; link: string }[];
 }
 
 export class Header extends BaseComponent implements IHeader {
@@ -13,13 +15,13 @@ export class Header extends BaseComponent implements IHeader {
 
     this.linkList = isLoggedIn()
       ? [
-          { text: '홈', link: '/' },
-          { text: '프로필', link: '/profile' },
-          { text: '로그아웃', link: '#' },
+          { id: 'home-link', text: '홈', link: '/' },
+          { id: 'profile-link', text: '프로필', link: '/profile' },
+          { id: LOGOUT_ID, text: '로그아웃', link: '#' },
         ]
       : [
-          { text: '홈', link: '/' },
-          { text: '로그인', link: '/login' },
+          { id: 'home-link', text: '홈', link: '/' },
+          { id: 'login-link', text: '로그인', link: '/login' },
         ];
 
     this.render();
@@ -32,11 +34,11 @@ export class Header extends BaseComponent implements IHeader {
   private renderLinkList() {
     return this.linkList
       .map(
-        ({ link, text }) =>
+        ({ id, link, text }) =>
           `<li>
              <a href="${link}" class="${
             this.isActiveLink(link) ? 'text-blue-600' : 'text-gray-600'
-          }" data-text="${text}">
+          }" id=${id}>
               ${text}
             </a>
           </li>`
@@ -45,7 +47,7 @@ export class Header extends BaseComponent implements IHeader {
   }
 
   private bindEvents() {
-    const $logoutLink = this.querySelector('a[data-text="로그아웃"]');
+    const $logoutLink = this.querySelector(`#${LOGOUT_ID}`);
     if ($logoutLink) {
       $logoutLink.addEventListener('click', (e) => {
         e.preventDefault();

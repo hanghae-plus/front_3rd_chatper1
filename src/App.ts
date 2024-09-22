@@ -5,15 +5,12 @@ import ProfilePage from './pages/profile';
 import { router } from './Router';
 
 export default class App {
-  #target: Element;
-
-  constructor(target: Element) {
-    this.#target = target;
+  constructor(selector: string) {
     router.init({
-      '/': new HomePage(this.#target),
-      '/login': new LoginPage(this.#target),
-      '/profile': new ProfilePage(this.#target),
-      '/404': new ErrorPage(this.#target),
+      '/': new HomePage(selector),
+      '/login': new LoginPage(selector),
+      '/profile': new ProfilePage(selector),
+      '/404': new ErrorPage(selector),
     });
   }
 }

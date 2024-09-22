@@ -1,11 +1,7 @@
 import { Header } from '../components/Header';
-import { BasePage } from '../shared/BasePage';
+import { BaseComponent } from '../shared/BaseComponent';
 
-export default class HomePage extends BasePage {
-  constructor(target: Element) {
-    super(target);
-  }
-
+export default class HomePage extends BaseComponent {
   afterRender(): void {
     new Header('#header-container');
   }

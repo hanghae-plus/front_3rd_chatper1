@@ -1,10 +1,6 @@
-import { BasePage } from '../shared/BasePage';
+import { BaseComponent } from '../shared/BaseComponent';
 
-export default class ErrorPage extends BasePage {
-  constructor(target: Element) {
-    super(target);
-  }
-
+export default class ErrorPage extends BaseComponent {
   template() {
     return `
 <main class="bg-gray-100 flex items-center justify-center min-h-screen">

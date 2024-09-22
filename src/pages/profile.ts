@@ -1,13 +1,9 @@
 import { Header } from '../components/Header';
-import { BasePage } from '../shared/BasePage';
+import { getUserInfo } from '../shared/auth';
+import { BaseComponent } from '../shared/BaseComponent';
 
-export default class ProfilePage extends BasePage {
-  constructor(target: Element) {
-    super(target);
-  }
-
-  render() {
-    super.render();
+export default class ProfilePage extends BaseComponent {
+  afterRender(): void {
     new Header('#header-container');
   }
 
@@ -26,7 +22,9 @@ export default class ProfilePage extends BasePage {
           <form>
             <div class="mb-4">
               <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
-              <input type="text" id="username" name="username" value="홍길동" class="w-full p-2 border rounded">
+              <input type="text" id="username" name="username" value="${
+                getUserInfo().name
+              }" class="w-full p-2 border rounded">
             </div>
             <div class="mb-4">
               <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>

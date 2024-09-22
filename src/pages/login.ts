@@ -1,24 +1,20 @@
 import { login } from '../shared/auth';
-import { BasePage } from '../shared/BasePage';
+import { BaseComponent } from '../shared/BaseComponent';
 
 const LOGIN_FORM_ID = 'login-form';
 const USER_NAME_ID = 'username';
 
-export default class LoginPage extends BasePage {
-  constructor(target: Element) {
-    super(target);
-  }
-
+export default class LoginPage extends BaseComponent {
   afterRender() {
     this.handleLogin();
   }
 
   handleLogin() {
-    const $loginForm = document.querySelector(
-      `#${LOGIN_FORM_ID}`
+    const $loginForm = document.getElementById(
+      LOGIN_FORM_ID
     ) as HTMLFormElement;
-    const $usernameInput = document.querySelector(
-      `#${USER_NAME_ID}`
+    const $usernameInput = document.getElementById(
+      USER_NAME_ID
     ) as HTMLInputElement;
 
     $loginForm.addEventListener('submit', (e) => {

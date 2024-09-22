@@ -10,10 +10,8 @@ const routes = {
 	"/404": Error,
 };
 
-const navigate = (event) => {
-	event = event || window.event;
-	event.preventDefault();
-	window.history.pushState({}, "", event.target.href);
+const navigate = (path) => {
+	window.history.pushState({}, "", path);
 	updateHTML();
 };
 
@@ -23,10 +21,12 @@ const updateHTML = async () => {
 
 	document.querySelector("#root").innerHTML = targetHTML;
 	document.querySelectorAll("a").forEach((anchor) => {
-		anchor.addEventListener("click", navigate);
+		anchor.addEventListener("click", (event) => {
+			event.preventDefault();
+			navigate(event.target.href);
+		});
 	});
 };
 
 window.addEventListener("popstate", updateHTML);
-
 updateHTML();

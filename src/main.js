@@ -30,3 +30,18 @@ const updateHTML = async () => {
 
 window.addEventListener("popstate", updateHTML);
 updateHTML();
+
+const login = (event) => {
+	event.preventDefault();
+
+	const username = document.getElementById("username").value;
+	localStorage.setItem("user", JSON.stringify({ name: username, email: "", bio: "" }));
+
+	navigate("/profile");
+};
+
+window.addEventListener("submit", (event) => {
+	if (event.target.id === "login-form") {
+		login(event);
+	}
+});

@@ -1,5 +1,9 @@
+import header from "../components/Header";
+import Footer from "../components/Footer";
+
 export default function HomePage() {
   document.getElementById('root').innerHTML = `
+  ${header()}
     <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
 
@@ -93,5 +97,6 @@ export default function HomePage() {
   </main>
   </div>
   </div>
+    ${Footer()}
   `;
 }

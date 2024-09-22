@@ -1,65 +1,53 @@
-import Logger from "./logger"
-import AsyncStorage from './AsyncStorage'
+import AsyncStorage from './storage';
 
 const Store = (function () {
   let instance;
-  const logger = Logger();
 
-  function initState() {
-    const userData = AsyncStorage.load('user');
-    return {
-      isAuthenticated: !!userData,
-      currentUser: userData || null,
-    };
-  }
+  const initialState = {
+    isLoggedIn: !!AsyncStorage.loadData('user'),
+    user: AsyncStorage.loadData('user') || null,
+  };
 
-  function createStoreInstance() {
-    let state = initState();
-    const subscribers = [];
+  function createInstance() {
+    let state = { ...initialState };
+    const listeners = [];
 
-    function getState(key) {
-      return state[key];
+    function getState(type) {
+      return state[type];
     }
 
-    function updateCurrentUser(newUserInfo) {
+    function updateUser(userInfo) {
       state = {
         ...state,
-        isAuthenticated: true,
-        currentUser: { ...state.currentUser, ...newUserInfo },
+        isLoggedIn: true,
+        user: { ...state.user, ...userInfo },
       };
-      AsyncStorage.save('user', state.currentUser);
-      notifySubscribers();
+      AsyncStorage.saveData('user', state.user);
     }
 
-    function clearCurrentUser() {
+    function clearUserInfo() {
       state = {
-        isAuthenticated: false,
-        currentUser: null,
+        isLoggedIn: false,
+        user: null,
       };
-      AsyncStorage.remove('user');
-      notifySubscribers();
+      AsyncStorage.clearData('user')
     }
 
     function subscribe(listener) {
-      subscribers.push(listener);
-    }
-
-    function notifySubscribers() {
-      subscribers.forEach((listener) => listener());
-      logger.log(`State updated: ${JSON.stringify(state)}`);
+      listeners.push(listener);
     }
 
     return {
       getState,
-      updateCurrentUser,
-      clearCurrentUser,
+      updateUser,
+      clearUserInfo,
       subscribe,
     };
   }
 
   return function getInstance() {
     if (!instance) {
-      instance = createStoreInstance();
+      instance = createInstance();
     }
     return instance;
   };

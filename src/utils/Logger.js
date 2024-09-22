@@ -1,26 +1,21 @@
-const logger = (function () {
+const Logger = (function () {
   let instance;
   let logs = [];
 
-  function logMessage(message) {
-    const timestamp = new Date().toISOString();
-    const logEntry = `${timestamp}: ${message}`;
-    logs.push(logEntry);
-    console.log(logEntry);
-  }
-
-  function getLogs() {
-    return logs;
-  }
-
   function createInstance() {
+    function log(message) {;
+      logs.push(`${message}`);
+      console.log(`${message}`);
+      console.log("저장 성공!")
+    }
+
     return {
-      log: logMessage,
-      getLogs,
+      log,
+      getLogs: () => logs,
     };
   }
 
-  return function getInstance() {
+  return function () {
     if (!instance) {
       instance = createInstance();
     }
@@ -28,4 +23,4 @@ const logger = (function () {
   };
 })();
 
-export default logger
+export default Logger;

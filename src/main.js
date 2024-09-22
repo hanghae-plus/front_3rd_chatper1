@@ -38,16 +38,17 @@ const updateHTML = async () => {
 			navigate(event.target.href);
 		});
 	});
-};
 
-window.addEventListener("popstate", updateHTML);
-updateHTML();
+	if (window.location.pathname === "/profile") {
+		getProfile();
+	}
+};
 
 const login = (event) => {
 	event.preventDefault();
 
 	const username = document.getElementById("username").value;
-	localStorage.setItem("user", JSON.stringify({ name: username, email: "", bio: "" }));
+	localStorage.setItem("user", JSON.stringify({ username, email: "", bio: "" }));
 
 	navigate("/profile");
 };
@@ -56,10 +57,36 @@ const logout = () => {
 	navigate("/login");
 };
 
+const getProfile = () => {
+	const usernameInput = document.getElementById("username");
+	const emailInput = document.getElementById("email");
+	const bioInput = document.getElementById("bio");
+
+	const savedUser = JSON.parse(localStorage.getItem("user"));
+
+	usernameInput.value = savedUser?.username || "";
+	emailInput.value = savedUser?.email || "";
+	bioInput.value = savedUser?.bio || "";
+};
+const updateProfile = (event) => {
+	event.preventDefault();
+
+	const username = document.getElementById("username").value;
+	const email = document.getElementById("email").value;
+	const bio = document.getElementById("bio").value;
+
+	localStorage.setItem("user", JSON.stringify({ username, email, bio }));
+};
+
+window.addEventListener("popstate", updateHTML);
 // TODO: getElementById로 대체할 수 있는 지 확인
 window.addEventListener("submit", (event) => {
 	if (event.target.id === "login-form") {
 		login(event);
+	}
+
+	if (event.target.id === "profile-form") {
+		updateProfile(event);
 	}
 });
 window.addEventListener("click", (event) => {
@@ -67,3 +94,8 @@ window.addEventListener("click", (event) => {
 		logout();
 	}
 });
+
+updateHTML();
+if (window.location.pathname === "/profile") {
+	getProfile();
+}

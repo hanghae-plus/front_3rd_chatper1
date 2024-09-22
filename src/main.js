@@ -18,9 +18,30 @@ window.addEventListener("popstate", () => {
   router.render(window.location.pathname);
 });
 //  2.2 a 태그가 동적으로 생성되므로, 이벤트 위임(bubbling) 방법 사용
-document.querySelector("#root").addEventListener("click", (e) => {
+const root = document.getElementById("root");
+root.addEventListener("click", (e) => {
+  // 로그아웃 시 사용자 정보 제거
+  if (e.target.id === "logout") {
+    localStorage.removeItem("user");
+  }
   if (e.target.tagName === "A") {
     e.preventDefault();
     router.navigateTo(e.target.pathname);
+  }
+});
+
+// 3. 로그인 시 사용자 정보 저장
+root.addEventListener("submit", (e) => {
+  if (e.target?.id === "login-form") {
+    e.preventDefault();
+
+    const loginForm = {
+      username: document.getElementById("username")?.value || "", // 이메일 또는 전화번호
+      email: "",
+      bio: "",
+    };
+
+    localStorage.setItem("user", JSON.stringify(loginForm));
+    router.navigateTo("/profile");
   }
 });

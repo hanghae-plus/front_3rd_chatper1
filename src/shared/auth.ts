@@ -3,7 +3,35 @@ import { safeLocalStorage } from './localStorage';
 
 export const USER_INFO_KEY = 'user';
 
-export type UserInfo = { name: string; email: string; bio: string };
+export type UserInfo = {
+  /** 로그인 id */
+  name: string;
+
+  /** 프로필 */
+  username?: string;
+
+  /** 이메일 */
+  email: string;
+
+  /** 자기소개 */
+  bio: string;
+};
+
+export const defaultUserInfo: UserInfo = {
+  name: '',
+  bio: '',
+  email: '',
+  username: '',
+};
+
+export const setUserInfo = (payload: UserInfo) => {
+  safeLocalStorage.set(USER_INFO_KEY, JSON.stringify(payload));
+};
+
+export const getUserInfo = (): UserInfo | null => {
+  const userInfoString = safeLocalStorage.get(USER_INFO_KEY);
+  return userInfoString ? JSON.parse(userInfoString) : null;
+};
 
 export const logout = () => {
   safeLocalStorage.remove(USER_INFO_KEY);
@@ -11,14 +39,10 @@ export const logout = () => {
 };
 
 export const login = (userInfo: UserInfo) => {
-  safeLocalStorage.set(USER_INFO_KEY, JSON.stringify(userInfo));
+  setUserInfo(userInfo);
   router.navigateTo('/profile');
 };
 
 export const isLoggedIn = () => {
-  return !!safeLocalStorage.get(USER_INFO_KEY);
-};
-
-export const getUserInfo = (): UserInfo => {
-  return JSON.parse(safeLocalStorage.get(USER_INFO_KEY) ?? '{}');
+  return !!getUserInfo();
 };

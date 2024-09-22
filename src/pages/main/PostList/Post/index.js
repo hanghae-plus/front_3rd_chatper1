@@ -9,7 +9,7 @@ export default function Post({ userName, postedTime, content }) {
   UserImg.src = "https://via.placeholder.com/40";
   UserImg.alt = "프로필";
   UserImg.className = "rounded-full mr-2";
-  console.log(1234);
+
   const UserInfoContainer = document.createElement("div");
   const UserName = document.createElement("p");
   UserName.className = "font-bold";

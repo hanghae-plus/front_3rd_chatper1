@@ -1,44 +1,37 @@
-import { routerPush } from "@/lib/router";
-
 export default function Nav() {
-  const NavEl = document.createElement("nav");
-  NavEl.setAttribute("class", "bg-white shadow-md p-2 sticky top-14");
+  const Nav = document.createElement("nav");
+  Nav.setAttribute("class", "bg-white shadow-md p-2 sticky top-14");
 
-  const NavUlEl = document.createElement("ul");
-  NavUlEl.setAttribute("class", "flex justify-around");
-
-  NavUlEl.addEventListener("click", ({ target }) => {
-    const routePath = target.getAttribute("href");
-    routerPush(routePath);
-  });
-
-  const NavList = [
-    { title: "홈", href: "/main" },
-    { title: "프로필", href: "/profile" },
-    { title: "로그아웃", href: "/logout" },
-    { title: "로그인", href: "/login" },
-  ];
+  const NavContainer = document.createElement("ul");
+  NavContainer.setAttribute("class", "flex justify-around");
 
   NavList.forEach(({ title, href }) => {
-    const LiEl = document.createElement("li");
+    const NavItem = document.createElement("li");
 
-    LiEl.className = "flex-center";
+    NavItem.className = "flex-center";
 
-    const AEl = document.createElement("a");
-    AEl.className = "block w-full h-full text-center";
-    if (window.location.pathname === href) {
-      AEl.className += " text-blue-600";
+    const Link = document.createElement("a");
+    Link.className = "block w-full h-full text-center";
+
+    if (window.location.hash.includes(href)) {
+      Link.className += " text-blue-600";
     }
-    AEl.setAttribute("href", href);
-    AEl.setAttribute("onclick", "return false;");
+    Link.setAttribute("href", `#${href}`);
 
-    AEl.textContent = title;
+    Link.textContent = title;
 
-    LiEl.appendChild(AEl);
-    NavUlEl.appendChild(LiEl);
+    NavItem.appendChild(Link);
+    NavContainer.appendChild(NavItem);
   });
 
-  NavEl.appendChild(NavUlEl);
+  Nav.appendChild(NavContainer);
 
-  return NavEl;
+  return Nav;
 }
+
+const NavList = [
+  { title: "홈", href: "main" },
+  { title: "프로필", href: "profile" },
+  { title: "로그아웃", href: "logout" },
+  { title: "로그인", href: "login" },
+];

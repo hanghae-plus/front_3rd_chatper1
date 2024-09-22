@@ -1,11 +1,11 @@
+import Layout from "../../components/Layout";
 import AddPost from "./AddPost";
 import PostList from "./PostList";
 
 export default function MainPage() {
-  const MainPage = document.createElement("main");
-  MainPage.setAttribute("class", "p-4");
+  const MainPage = document.createElement("div");
   MainPage.appendChild(AddPost());
   MainPage.appendChild(PostList());
 
-  return MainPage;
+  return Layout(MainPage);
 }

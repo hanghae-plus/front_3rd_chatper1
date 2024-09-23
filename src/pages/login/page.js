@@ -1,16 +1,20 @@
 import { appendChild } from "@/utils";
-import { createElement } from "../../utils/createElement";
+import { createElement } from "@/utils/createElement";
 
 export default function LoginPage() {
-  const LoginPage = document.createElement("div");
-  LoginPage.className =
-    "bg-white p-8 rounded-lg shadow-md w-full text-center max-w-[480px]";
+  const LoginPage = createElement({
+    tagName: "div",
+    className:
+      "bg-white p-8 rounded-lg shadow-md w-full text-center max-w-[480px]",
+  });
 
-  const LoginTitle = document.createElement("h1");
-  LoginTitle.className = "text-2xl font-bold text-center text-blue-600 mb-8";
-  LoginTitle.textContent = "로그인";
+  const LoginTitle = createElement({
+    tagName: "h1",
+    className: "text-2xl font-bold text-center text-blue-600 mb-8",
+    textContent: "로그인",
+  });
 
-  const LoginForm = document.createElement("form");
+  const LoginForm = createElement({ tagName: "form" });
 
   Array(2)
     .fill(0)

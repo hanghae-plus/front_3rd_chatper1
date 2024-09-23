@@ -1,42 +1,54 @@
+import { appendChild, createElement } from "@/utils";
+
 export default function Post({ userName, postedTime, content }) {
-  const PostContainer = document.createElement("div");
-  PostContainer.className = "bg-white rounded-lg shadow p-4";
-
-  const UserProfile = document.createElement("div");
-  UserProfile.className = "flex items-center mb-2";
-
-  const UserImg = document.createElement("img");
-  UserImg.src = "https://via.placeholder.com/40";
-  UserImg.alt = "프로필";
-  UserImg.className = "rounded-full mr-2";
-
-  const UserInfoContainer = document.createElement("div");
-  const UserName = document.createElement("p");
-  UserName.className = "font-bold";
-  UserName.textContent = userName;
-
-  const PostedTime = document.createElement("p");
-  PostedTime.className = "text-sm text-gray-500";
-  PostedTime.textContent = postedTime;
-
-  UserInfoContainer.appendChild(UserName);
-  UserInfoContainer.appendChild(PostedTime);
-
-  UserProfile.appendChild(UserImg);
-  UserProfile.appendChild(UserInfoContainer);
-
-  const Content = document.createElement("p");
-  Content.textContent = content;
-
-  const PostBtnContainer = document.createElement("div");
-  ["좋아요", "댓글", "공유"].forEach((btnText) => {
-    const PostBtn = document.createElement("button");
-    PostBtn.textContent = btnText;
-    PostBtnContainer.appendChild(PostBtn);
+  const PostContainer = createElement({
+    tagName: "div",
+    className: "bg-white rounded-lg shadow p-4",
   });
 
-  PostContainer.appendChild(UserInfoContainer);
-  PostContainer.appendChild(Content);
+  const UserProfile = createElement({
+    tagName: "div",
+    className: "flex items-center mb-2",
+  });
+
+  const UserImg = createElement({
+    tagName: "img",
+    className: "rounded-full mr-2",
+    setAttribute: { src: "https://via.placeholder.com/40", alt: "프로필" },
+  });
+
+  const UserInfoContainer = createElement({ tagName: "div" });
+
+  const UserName = createElement({
+    tagName: "p",
+    className: "font-bold",
+    textContent: userName,
+  });
+
+  const PostedTime = createElement({
+    tagName: "p",
+    className: "text-sm text-gray-500",
+    textContent: postedTime,
+  });
+
+  appendChild({ parent: UserInfoContainer, children: [UserName, PostedTime] });
+  appendChild({ parent: UserProfile, children: [UserImg, UserInfoContainer] });
+
+  const Content = createElement({ tagName: "p", textContent: content });
+
+  const PostBtnContainer = createElement({
+    tagName: "div",
+    className: "mt-2 flex justify-between text-gray-500",
+  });
+  ["좋아요", "댓글", "공유"].forEach((btnText) => {
+    const PostBtn = createElement({ tagName: "button", textContent: btnText });
+    appendChild({ parent: PostBtnContainer, children: [PostBtn] });
+  });
+
+  appendChild({
+    parent: PostContainer,
+    children: [UserProfile, Content, PostBtnContainer],
+  });
 
   return PostContainer;
 }

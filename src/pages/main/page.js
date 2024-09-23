@@ -1,11 +1,13 @@
-import Layout from "../../components/Layout";
+import Layout from "@/components/Layout";
 import AddPost from "./AddPost";
 import PostList from "./PostList";
 
+import { appendChild, createElement } from "@/utils";
+
 export default function MainPage() {
-  const MainPage = document.createElement("div");
-  MainPage.appendChild(AddPost());
-  MainPage.appendChild(PostList());
+  const MainPage = createElement({ tagName: "div" });
+
+  appendChild({ parent: MainPage, children: [AddPost(), PostList()] });
 
   return Layout(MainPage);
 }

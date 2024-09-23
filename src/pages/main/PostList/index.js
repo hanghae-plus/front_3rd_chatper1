@@ -1,11 +1,15 @@
 import Post from "./Post";
 
+import { appendChild, createElement } from "@/utils";
+
 export default function PostList(postList = dummyPostList) {
-  const PostListContainer = document.createElement("div");
-  PostListContainer.className = "space-y-4";
+  const PostListContainer = createElement({
+    tagName: "div",
+    className: "space-y-4",
+  });
 
   postList.forEach((post) => {
-    PostListContainer.appendChild(Post(post));
+    appendChild({ parent: PostListContainer, children: [Post(post)] });
   });
 
   return PostListContainer;

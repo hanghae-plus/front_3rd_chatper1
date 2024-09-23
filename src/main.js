@@ -31,17 +31,23 @@ root.addEventListener("click", (e) => {
 });
 
 // 3. 로그인/프로필 수정 시 사용자 정보 저장
+const setUserInfo = () => {
+  const loginForm = {
+    username: document.getElementById("username")?.value || "", // 이메일 또는 전화번호(사용자 이름)
+    email: document.getElementById("email")?.value || "", // 이메일
+    bio: document.getElementById("bio")?.value || "", // 자기소개
+  };
+
+  localStorage.setItem("user", JSON.stringify(loginForm));
+};
 root.addEventListener("submit", (e) => {
-  if (["login-form", "profile-form"].includes(e.target?.id)) {
+  if (e.target?.id === "login-form") {
     e.preventDefault();
-
-    const loginForm = {
-      username: document.getElementById("username")?.value || "", // 이메일 또는 전화번호(사용자 이름)
-      email: document.getElementById("email")?.value || "", // 이메일
-      bio: document.getElementById("bio")?.value || "", // 자기소개
-    };
-
-    localStorage.setItem("user", JSON.stringify(loginForm));
+    setUserInfo();
     router.navigateTo("/profile");
+  } else if (e.target?.id === "profile-form") {
+    e.preventDefault();
+    setUserInfo();
+    alert("프로필 수정이 완료되었습니다 :)");
   }
 });

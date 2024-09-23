@@ -2,13 +2,10 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import Common from "../common";
 export default class Home extends Common{
-  $target;
-  state;
-  // constructor ($target) { 
-  //   super($target);
-  //   this.$target = $target;
-  //   this.render();
-  // }
+  render () {
+    this.$target.innerHTML = this.template();
+    this.setTemplate();
+  }
   template () { 
     return `
       <div class="bg-gray-100 min-h-screen flex justify-center">

@@ -1,8 +1,15 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
 import Common from "../common";
+import { navigateTo } from "../router";
+
 export default class Profile extends Common{
   setup () {
+    if (!this.state.isLogined) {
+      navigateTo('/login');
+      return;
+    }
+      
     this.setState(JSON.parse(localStorage.getItem('user')) || {username:'',email:'',bio:''});
   };
   template () { 
@@ -34,6 +41,11 @@ export default class Profile extends Common{
       </div>
     </div>
     ` 
+  }
+  render () {
+    this.$target.innerHTML = this.template();
+    this.setTemplate();
+    this.setEvent();
   }
   setTemplate() {
     const header = new Header(this.$target.querySelector('header'));

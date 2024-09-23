@@ -1,6 +1,11 @@
 import { routes , navigateTo} from "../router";
 import Common from "../common";
 export default class Header extends Common {
+  render () {
+    this.$target.innerHTML = this.template();
+    this.setTemplate();
+    this.setEvent();
+  }
   setup () {
     this.setState({menuList:['홈']});
     if(!this.state.isLogined){
@@ -23,6 +28,7 @@ export default class Header extends Common {
     this.$target.querySelectorAll("#nav_link").forEach(element => {
       element.addEventListener("click", (e) => {
         e.preventDefault();
+        e.stopPropagation();
         navigateTo(e.target.href);
       })
     });
@@ -30,6 +36,7 @@ export default class Header extends Common {
     if (this.state.isLogined) {
       this.$target.querySelector('#logout').addEventListener('click', (e) => {
         e.preventDefault(); // 기본 동작 방지 (리다이렉트 방지)
+        e.stopPropagation();
         // 로그아웃 시 localStorage의 'user' 삭제
         localStorage.removeItem('user');
         navigateTo('/login');
@@ -47,7 +54,7 @@ export default class Header extends Common {
     this.$target.querySelector('#menu_list').innerHTML = [
       ...menuRoutes.map(menu => `
         <li>
-          <a id="nav_link" href="${menu.path}" class="${menu.path === currentPath ? 'text-blue-600' : 'text-gray-600'}">
+          <a id="nav_link" href="${menu.path}" class="${menu.path === currentPath ? 'text-blue-600 font-bold' : 'text-gray-600'}">
             ${menu.name}
           </a>
         </li>

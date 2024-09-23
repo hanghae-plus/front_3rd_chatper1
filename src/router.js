@@ -2,6 +2,7 @@ import Home from "./pages/HomePage";
 import Profile from "./pages/ProfilePage";
 import Login from "./pages/LoginPage";
 import NotFound from "./pages/NotFoundPage";
+import Common from "./common";
 
 const root = document.querySelector('#root')
 
@@ -28,7 +29,21 @@ export const router = async () => {
       isMatch: true,
     };
   }
+  // Home 클래스의 로그인 상태값을 확인
+  const {isLogined} = new Common().state;
 
+  // 라우터 가드 적용
+  if (matchRoute.path === "/profile" && !isLogined) {
+    // 비로그인 사용자가 프로필 페이지에 접근하려고 할 때
+    navigateTo("/login");
+    return;
+  }
+
+  if (matchRoute.path === "/login" && isLogined) {
+    // 로그인된 사용자가 로그인 페이지에 접근하려고 할 때
+    navigateTo("/");
+    return;
+  }
   matchRoute.view();
 };
 export const navigateTo = (path) => {

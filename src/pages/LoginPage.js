@@ -1,6 +1,18 @@
 import Common from "../common";
 import { navigateTo } from "../router";
 export default class Login extends Common {
+  setup () {
+    if (this.state.isLogined) {
+      navigateTo('/');
+      return;
+    }
+    this.state.errorMsg = '';
+  }
+  render () {
+    this.$target.innerHTML = this.template();
+    this.setTemplate();
+    this.setEvent();
+  }
   template () { 
     return `
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -13,6 +25,7 @@ export default class Login extends Common {
           <div class="mb-6">
             <input type="password" required placeholder="비밀번호" class="w-full p-2 border rounded">
           </div>
+          <div class="mb-4 text-center" id="error_msg"></div>
           <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
         </form>
         <div class="mt-4 text-center">
@@ -26,17 +39,31 @@ export default class Login extends Common {
     </main>
     ` 
   }
+  setTemplate() {
+    this.$target.querySelector('#error_msg').innerHTML = `<p class="text-red-600 text-sm">${this.state.errorMsg}</p>`;
+  }
   setEvent () {
     const form = this.$target.querySelector('form');
+    const $username = form.querySelector('#username');
     const saveUserInfo = (event)=> {
+      const username = $username.value;
       event.preventDefault();
-      const username = form.querySelector('#username').value;
+      console.log($username,username)
+      const regex = /^[a-zA-Z]+$/;
+      if (username.length < 3 || username.length > 20) {
+        this.setState({errorMsg:'오류 발생! 사용자 이름은 3자 이상 20자 이하로 입력해야 합니다.'});
+        this.setTemplate();
+        throw new Error('오류 발생!');
+      }
+      if (!regex.test(username)) {
+        this.setState({errorMsg:'사용자 이름에 숫자는 의도적인 오류입니다.'});
+        this.setTemplate();
+        throw new Error('의도적인 오류입니다.');
+      }
       localStorage.setItem('user', JSON.stringify({username,email:'',bio:''}));
       navigateTo('/profile');
     }
     form.addEventListener("submit", saveUserInfo)
   }
-  setState (newState) {
-    this.state = { ...this.state, ...newState };
-  }
+  
 }

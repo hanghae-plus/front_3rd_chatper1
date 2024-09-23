@@ -12,11 +12,7 @@ export default class Common {
   setup () {}
   template () {}
   setTemplate() {}
-  render () {
-    this.$target.innerHTML = this.template();
-    this.setTemplate();
-    this.setEvent();
-  }
+  render () {}
   setEvent () {}
   setState (newState) {
     this.state = { ...this.state, ...newState };

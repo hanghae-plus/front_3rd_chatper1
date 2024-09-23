@@ -1,4 +1,7 @@
 import { router,navigateTo } from "./router.js";
 
-window.addEventListener('popstate', router);
 document.addEventListener('DOMContentLoaded', router);
+window.addEventListener('popstate', router);
+window.addEventListener('error', error=>{
+  console.log(error)
+})

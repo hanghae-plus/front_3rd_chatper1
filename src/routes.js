@@ -49,7 +49,8 @@ function createRouter(routesConfig = routes, rootElement = rootElementId) {
 
   function handleLinkClick(event) {
     const target = event.target;
-
+/* 이벤트 위임으로 구현한 함수 */
+//프로젝트 전체에 클릭 이벤트 리스너를 설정하고, 이벤트가 발생하면 이벤트 타겟이 링크(A 태그)인지 확인
     if (target.tagName === 'A' && target.href.startsWith(window.location.origin)) {
       event.preventDefault();
 

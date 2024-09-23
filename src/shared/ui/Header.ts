@@ -10,8 +10,10 @@ export class Header extends BaseComponent {
 
   constructor(selector: string) {
     super(selector);
+  }
+
+  beforeRender() {
     this.linkList = this.getLinkList();
-    this.render();
   }
 
   afterRender() {

@@ -23,9 +23,12 @@ export abstract class BaseComponent {
   render() {
     if (!this.$root) return;
 
+    this.beforeRender();
     this.$root.innerHTML = this.template();
     this.afterRender();
   }
+
+  beforeRender() {}
 
   afterRender() {}
 

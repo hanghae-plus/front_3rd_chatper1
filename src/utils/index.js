@@ -1,6 +1,6 @@
-import { STORAGE_KEY } from "../components/constants";
+import { PERMISSION, STORAGE_KEY } from "../components/constants";
 
-export class Storage {
+export class StorageController {
   constructor() {
     this.storage = localStorage;
   }
@@ -18,9 +18,9 @@ export class Storage {
   }
 }
 
-export class ControlUser {
+export class UserController {
   constructor() {
-    this.storage = new Storage();
+    this.storage = new StorageController();
     this.user = this.storage.getParsed(STORAGE_KEY.USER);
   }
 
@@ -41,6 +41,10 @@ export class ControlUser {
   }
   getUser() {
     return this.user;
+  }
+
+  status() {
+    return this.getUser() ? PERMISSION.AUTH.key : PERMISSION.PUBLIC.key;
   }
 }
 

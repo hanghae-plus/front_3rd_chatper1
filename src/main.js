@@ -6,7 +6,7 @@ import {
 } from "./components/page";
 import { Footer, Header, Layout } from "./components/shared";
 import { PERMISSION, ROUTES } from "./components/constants";
-import { Component, ControlUser, Router, submitForm } from "./utils";
+import { Component, UserController, Router, submitForm } from "./utils";
 import { ROUTE_COMPONENT_LIST } from "./components/constants";
 
 class NotFoundComponent extends Component {
@@ -17,12 +17,11 @@ class NotFoundComponent extends Component {
 
 export class HomeComponent extends Component {
   template() {
-    const type = this.props.user.getUser()
-      ? PERMISSION.AUTH
-      : PERMISSION.PUBLIC;
+    const userStatus = this.props.user.status();
+    const permission = PERMISSION[userStatus];
     return Layout({
       children: HomePage(),
-      header: Header(type),
+      header: Header({ tabPaths: permission.path }),
       footer: Footer(),
     });
   }
@@ -30,12 +29,11 @@ export class HomeComponent extends Component {
 
 export class ProfileComponent extends Component {
   template() {
-    const type = this.props.user.getUser()
-      ? PERMISSION.AUTH
-      : PERMISSION.PUBLIC;
+    const userStatus = this.props.user.status();
+    const permission = PERMISSION[userStatus];
     return Layout({
       children: ProfilePage(),
-      header: Header(type),
+      header: Header({ tabPaths: permission.path }),
       footer: Footer(),
     });
   }
@@ -125,7 +123,7 @@ class ErrorBoundary extends Component {
 
 class App extends Component {
   setup() {
-    const user = new ControlUser();
+    const user = new UserController();
     const router = new Router({
       notFound: () => {
         new NotFoundComponent(this.target);

@@ -1,11 +1,17 @@
+import { appendChild, createElement } from "../utils";
+
 export default function Footer() {
-  const Footer = document.createElement("footer");
-  Footer.className = "bg-gray-200 p-4 text-center";
+  const Footer = createElement({
+    tagName: "footer",
+    className: "bg-gray-200 p-4 text-center",
+  });
 
-  const FooterContent = document.createElement("p");
-  FooterContent.textContent = "© 2024 항해플러스. All rights reserved.";
+  const FooterContent = createElement({
+    tagName: "p",
+    textContent: "© 2024 항해플러스. All rights reserved.",
+  });
 
-  Footer.appendChild(FooterContent);
+  appendChild({ parent: Footer, children: [FooterContent] });
 
   return Footer;
 }

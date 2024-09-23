@@ -1,13 +1,18 @@
+import { appendChild, createElement } from "@/utils";
+
 export default function Header() {
-  const Header = document.createElement("header");
-  Header.setAttribute("class", "bg-blue-600 text-white p-4 sticky top-0");
+  const Header = createElement({
+    tagName: "header",
+    className: "bg-blue-600 text-white p-4 sticky top-0",
+  });
 
-  const Title = document.createElement("h1");
-  Title.setAttribute("class", "text-2xl font-bold");
+  const Title = createElement({
+    tagName: "h1",
+    className: "text-2xl font-bold",
+    textContent: "항해플러스",
+  });
 
-  Title.textContent = "항해플러스";
-
-  Header.appendChild(Title);
+  appendChild({ parent: Header, children: [Title] });
 
   return Header;
 }

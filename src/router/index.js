@@ -6,8 +6,6 @@ import LoginPage from "@/pages/login/page";
 
 const RootElement = document.getElementById("root");
 
-const pageList = ["main", "profile", "login"];
-
 function createPage(type) {
   const pages = {
     main: {
@@ -30,6 +28,7 @@ function createPage(type) {
 export function router() {
   const path = window.location.hash.slice(1) || "main";
   const page = createPage(path);
+
   RootElement.innerHTML = "";
   RootElement.appendChild(RootLayout(page.render()));
 }

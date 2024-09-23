@@ -50,7 +50,17 @@ export default function ProfilePage() {
       appendChild({ parent: ProfileForm, children: [ProfileFormContainer] });
     });
 
-  appendChild({ parent: ProfilePage, children: [ProfileTitle, ProfileForm] });
+  const ProfileFormBtn = createElement({
+    tagName: "button",
+    className: "w-full bg-blue-600 text-white p-2 rounded font-bold",
+    textContent: "프로필 업데이트",
+    setAttribute: { type: "submit" },
+  });
+
+  appendChild({
+    parent: ProfilePage,
+    children: [ProfileTitle, ProfileForm, ProfileFormBtn],
+  });
 
   return Layout(ProfilePage);
 }

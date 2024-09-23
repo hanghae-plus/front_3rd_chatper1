@@ -110,20 +110,19 @@
 //   </div>
 // `;
 
-import Header from './components/layouts/Header.js';
-import Footer from './components/layouts/Footer.js';
-import routes from './routes.js';
-import Component from './core/Components.js';
+import Footer from "./components/layouts/Footer.js";
+import Header from "./components/layouts/Header.js";
+import routes from "./routes";
 
-export default class App extends Component {
+export default class App {
   constructor($element) {
-    $element.innerHTML = '';
-    super($element);
+    this.$element = $element;
     this.render();
+    this.setTemplate();
   }
 
-  template() {
-    return `
+  render() {
+    this.$element.innerHTML = `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
         <header></header>
@@ -134,15 +133,16 @@ export default class App extends Component {
     `;
   }
   setTemplate() {
-    this.router = routes(this.$element.querySelector('main'));
+    this.router = routes(this.$element.querySelector("main"), this.header);
     this.header = new Header({
-      $element: this.$element.querySelector('header'),
+      $element: this.$element.querySelector("header"),
       router: this.router,
     });
+
     this.footer = new Footer({
-      $element: this.$element.querySelector('footer'),
+      $element: this.$element.querySelector("footer"),
     });
   }
 }
 
-new App(document.querySelector('#root'));
+new App(document.querySelector("#root"));

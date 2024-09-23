@@ -1,9 +1,11 @@
-import Component from '../core/Components.js';
-
-export default class Error extends Component {
+export default class NotFound {
   constructor({ $element }) {
-    super($element);
+    this.$element = $element;
     this.render();
+  }
+
+  render() {
+    this.$element.innerHTML = this.template();
   }
 
   template() {

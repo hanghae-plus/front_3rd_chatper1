@@ -1,16 +1,14 @@
-import Component from '../../core/Components.js';
-
-export default class Footer extends Component {
+export default class Footer {
   constructor({ $element }) {
-    super($element);
+    this.$element = $element;
     this.render();
   }
 
-  template() {
-    return `
-        <footer class="bg-gray-200 p-4 text-center">
-            <p>&copy; 2024 항해플러스. All rights reserved.</p>
-        </footer>
-         `;
+  render() {
+    this.$element.innerHTML = ` 
+      <footer class="bg-gray-200 p-4 text-center">
+        <p>&copy; 2024 항해플러스. All rights reserved.</p>
+      </footer>
+      `;
   }
 }

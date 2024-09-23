@@ -1,9 +1,12 @@
-import Component from '../core/Components.js';
-
-export default class Profile extends Component {
-  constructor({ $element }) {
-    super($element);
+export default class Profile {
+  constructor({ $element, router }) {
+    this.$element = $element;
+    this.router = router;
     this.render();
+  }
+
+  render() {
+    this.$element.innerHTML = this.template();
   }
 
   template() {

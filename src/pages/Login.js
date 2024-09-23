@@ -8,8 +8,6 @@ export const Login = () => {
   const render = () => {
     const rootElement = document.getElementById('main');
     rootElement.innerHTML = LoginPage;
-
-    addEvent();
   };
 
   const addEvent = () => {
@@ -31,6 +29,7 @@ export const Login = () => {
   };
 
   render();
+  addEvent();
 
   return { getUser, login };
 };

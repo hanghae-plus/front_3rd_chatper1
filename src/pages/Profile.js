@@ -4,9 +4,6 @@ export const Profile = () => {
   const render = () => {
     const rootElement = document.getElementById('main');
     rootElement.innerHTML = ProfilePage;
-
-    addEvent();
-    getProfile();
   };
 
   const addEvent = () => {
@@ -38,6 +35,8 @@ export const Profile = () => {
   };
 
   render();
+  addEvent();
+  getProfile();
 
   return { getProfile, updateProfile };
 };

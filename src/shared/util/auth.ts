@@ -28,9 +28,9 @@ export const setUserInfo = (payload: UserInfo) => {
   safeLocalStorage.set(USER_INFO_KEY, JSON.stringify(payload));
 };
 
-export const getUserInfo = (): UserInfo | null => {
+export const getUserInfo = (): UserInfo | undefined => {
   const userInfoString = safeLocalStorage.get(USER_INFO_KEY);
-  return userInfoString ? JSON.parse(userInfoString) : null;
+  return userInfoString ? JSON.parse(userInfoString) : undefined;
 };
 
 export const logout = () => {

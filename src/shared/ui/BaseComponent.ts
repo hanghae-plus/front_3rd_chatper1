@@ -1,8 +1,10 @@
-export abstract class BaseComponent {
+export abstract class BaseComponent<S = unknown> {
   protected $root: Element | null;
+  protected state: S | undefined;
 
-  constructor(selector: string) {
+  constructor(selector: string, initialState?: S) {
     this.$root = this.getRootElement(selector);
+    this.state = initialState;
   }
 
   private getRootElement(selector: string): Element | null {
@@ -17,6 +19,15 @@ export abstract class BaseComponent {
 
   protected getElement<T extends HTMLElement>(selector: string): T | null {
     return this.$root?.querySelector(selector) as T | null;
+  }
+
+  setState(nextState: Partial<S>) {
+    if (this.state) {
+      this.state = { ...this.state, ...nextState };
+    } else {
+      this.state = nextState as S;
+    }
+    this.render();
   }
 
   render() {

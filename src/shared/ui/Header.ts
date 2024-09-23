@@ -5,15 +5,13 @@ const LOGOUT_ID = 'logout';
 
 type Link = { id?: string; text: string; link: string };
 
-export class Header extends BaseComponent {
-  private linkList: Link[] = [];
-
+export class Header extends BaseComponent<Link[]> {
   constructor(selector: string) {
-    super(selector);
+    super(selector, []);
   }
 
   beforeRender() {
-    this.linkList = this.getLinkList();
+    this.state = this.getLinkList();
   }
 
   afterRender() {
@@ -33,8 +31,8 @@ export class Header extends BaseComponent {
   }
 
   private renderLinkList() {
-    return this.linkList
-      .map(({ id, link, text }) => {
+    return this.state
+      ?.map(({ id, link, text }) => {
         const activeClass = this.isActiveLink(link)
           ? 'text-blue-600'
           : 'text-gray-600';

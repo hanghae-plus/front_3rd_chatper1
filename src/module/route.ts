@@ -19,9 +19,7 @@ class Router {
         let nextPath = path
         if(localStorage.getItem('user')){
             const {username, email, bio} = JSON.parse(localStorage.getItem('user')!)
-            store.state.username = username
-            store.state.email = email
-            store.state.bio = bio
+            store.setState({username, email, bio})
         }
         switch(path){
             case '/profile':

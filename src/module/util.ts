@@ -25,7 +25,6 @@ export function throttle(func:(args: any)=>void, limit:number) {
 export function debounce(func:(args: any)=>void, delay:number) {
     let timeoutId;
     return function (...args) {
-        console.log({timeoutId})
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => func.apply(this, args), delay);
     };

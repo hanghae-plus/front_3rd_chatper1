@@ -18,6 +18,5 @@ window.addEventListener('error', error=>{
     const errorComponent = document.createElement('div');
     errorComponent.innerHTML = `<p style="color:red;">오류 발생! ${error.message}</p>`;
     root.appendChild(errorComponent);
-    console.log('*****************************************************',{root:root.innerHTML})
     return true
 })

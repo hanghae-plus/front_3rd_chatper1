@@ -6,7 +6,7 @@ const router = useRouter();
 
 export default class Header extends Component{
     init(){
-        this.container.className="stick top-0"
+        this.container.className="sticky top-0"
         this.state = { pathname: location.pathname }
         this.render()
     }

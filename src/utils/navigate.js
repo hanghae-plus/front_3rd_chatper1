@@ -8,7 +8,7 @@ export const useNavigate = (routes) => {
     updateHTML();
   };
 
-  const updateHTML = async () => {
+  const updateHTML = () => {
     const currentPath = window.location.pathname;
     const rootElement = document.getElementById('root');
 

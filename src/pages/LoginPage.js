@@ -1,5 +1,6 @@
 import Router from '../routes.js';
 import Store from "../utils/store.js";
+import errorMessage from "../components/ErrorBoundary.js";
 
 const userStore = Store();
 
@@ -27,54 +28,73 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
-      <div id="error-message" class="text-red-500 text-center mt-4"></div> <!-- 에러 메시지 컨테이너 -->
+      <div id="error-message" class="text-red-500 text-center mt-4"></div> 
     `;
   }
 
+  window.addEventListener('error', function (e) {
+    console.error('전역 에러 발생:', e.error);
+    displayErrorMessage(e.error ? e.error.message : '에러가 발생했습니다.');
+    e.preventDefault();
+  });
+
   function handleLoginSubmit(e) {
     e.preventDefault();
-    const username = e.target.querySelector('#username').value;
+    try {
+      const username = e.target.querySelector('#username').value;
 
-    if (!username) {
-      alert('이름과 비밀번호를 입력해주세요');
-      return;
+      if (!username) {
+        throw new Error('이름과 비밀번호를 입력해주세요');
+      }
+
+      const userData = { username, email: '', bio: '' };
+
+      localStorage.setItem('user', JSON.stringify(userData));
+      userStore.updateUser(userData);
+
+      Router.navigate('/profile');
+    } catch (error) {
+      displayErrorMessage(error.message);
     }
-
-    const userData = { username, email: '', bio: '' };
-
-    localStorage.setItem('user', JSON.stringify(userData));
-    userStore.updateUser(userData);
-
-    Router.navigate('/profile');
   }
 
   function setupEventListeners() {
     const loginForm = document.getElementById('login-form');
-    loginForm?.addEventListener('submit', handleLoginSubmit);
-    setupInputErrorHandling();
-  }
-
-  function displayError(message) {
-    const errorDivContainer = document.getElementById('error-message');
-    if (errorDivContainer) {
-      errorDivContainer.textContent = `오류 발생! ${message}`;
+    if (loginForm) {
+      loginForm.addEventListener('submit', (e) => {
+        try {
+          handleLoginSubmit(e);
+        } catch (error) {
+          console.error("로그인 중 오류 발생:", error);
+          displayErrorMessage(error.message);
+        }
+      });
     }
+    setupInputErrorHandling();
   }
 
   function setupInputErrorHandling() {
     const $username = document.getElementById('username');
-    $username.addEventListener('input', (event) => {
-      try {
-        throw new Error('의도적인 오류입니다.');
-      } catch (error) {
-        displayError(error.message);
-      }
-  
-      event.preventDefault();
-    }, { once: true });
+    if ($username) {
+      $username.addEventListener('input', (event) => {
+        try {
+          throw new Error('의도적인 오류입니다.');
+        } catch (error) {
+          console.error("입력 중 오류 발생:", error);
+          displayErrorMessage(error.message);
+          event.preventDefault();
+        }
+      }, { once: true });
+    }
+  }
+
+  function displayErrorMessage(message) {
+    const errorContainer = document.getElementById('error-message');
+    if (errorContainer) {
+      errorContainer.innerHTML = errorMessage({ message });
+    }
   }
 
   renderLoginPage();
   setupEventListeners();
 }
-

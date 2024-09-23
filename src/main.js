@@ -56,7 +56,7 @@ addRoute('/login', () => {
 
 addRoute('/profile', () => {
   if (userState.isLogged) {
-    render(Profile);
+    render(() => Profile(userState.userInfo));
     return;
   }
   navigateTo('/login');
@@ -64,10 +64,10 @@ addRoute('/profile', () => {
 
 addRoute('/404', () => render(NotFound));
 
-const logIn = (userName, email, bio) => {
+const logIn = (username, email, bio) => {
   localStorage.setItem(
     'user',
-    JSON.stringify({ username: userName, email, bio })
+    JSON.stringify({ username: username, email, bio })
   );
   loadedUser();
   navigateTo('/');
@@ -76,6 +76,10 @@ const logIn = (userName, email, bio) => {
 const logOut = () => {
   localStorage.removeItem('user');
   loadedUser();
+};
+
+const updateUserInfo = (bio) => {
+  localStorage.setItem('user', JSON.stringify({ ...userState.userInfo, bio }));
 };
 
 const loadedUser = () => {
@@ -107,17 +111,21 @@ const addListeners = () => {
   document.querySelector('#root')?.addEventListener('submit', (e) => {
     e.preventDefault();
     if (e.target.id === 'login-form') {
-      const userName = document.getElementById('username').value;
-      logIn(userName, '', '');
+      const username = document.getElementById('username').value;
+      logIn(username, '', '');
+    }
+    if (e.target.id === 'profile-form') {
+      const bio = document.getElementById('bio').value;
+      updateUserInfo(bio);
     }
   });
 };
 
 const init = () => {
   const initialPath = window.location.pathname;
-  handleRoute(initialPath);
-  addListeners();
   loadedUser();
+  addListeners();
+  handleRoute(initialPath);
 };
 
 init();

@@ -22,4 +22,4 @@ const Login = `
   </main>
 `
 
-export default Login
+export default Login;

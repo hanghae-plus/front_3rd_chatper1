@@ -30,6 +30,9 @@ function loadHTML(path) {
       </div>
     </div>
   `;
+
+  // 페이지가 로드될 때 링크의 클래스를 초기화
+  updateActiveLink(path);
 }
 
 // 네비게이션 클릭 이벤트 처리
@@ -41,12 +44,31 @@ document.addEventListener('click', (e) => {
     navigateTo(url);
     console.log(url);
   }
+
 });
 
 // URL 변경 및 페이지 로드
 function navigateTo(url) {
   history.pushState(null, null, url);  // URL 변경
   loadHTML(url);  // 해당 URL에 맞는 페이지 로드
+}
+
+// 링크에 active 클래스를 추가하는 함수
+function updateActiveLink(currentPath) {
+  const links = document.querySelectorAll('a[data-link]');
+
+  links.forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === currentPath) {
+      // 현재 경로와 일치하는 링크에 active 클래스 추가
+      link.classList.remove('text-gray-600');
+      link.classList.add('text-blue-600');
+    } else {
+      // 다른 링크에는 기본 클래스 적용
+      link.classList.remove('text-blue-600');
+      link.classList.add('text-gray-600');
+    }
+  });
 }
 
 // 브라우저의 뒤로/앞으로 가기 버튼 동작 처리

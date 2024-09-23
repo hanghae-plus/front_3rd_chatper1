@@ -1,111 +1,85 @@
-document.querySelector('#root').innerHTML = `
-<div class="bg-gray-100 min-h-screen flex justify-center">
-    <div class="max-w-md w-full">
-      <header class="bg-blue-600 text-white p-4 sticky top-0">
-        <h1 class="text-2xl font-bold">항해플러스</h1>
-      </header>
+import Home from '../components/Home';
+import Profile, { bindProfileEvents } from '../components/Profile';
+import Login, { bindEvents as bindLoginEvents } from '../components/Login';
+import Error from '../components/Error';
+import  Header from '../components/Header';
+import { Nav, bindLogoutEvent } from '../components/Nav';
+import Footer from '../components/Footer';
 
-      <nav class="bg-white shadow-md p-2 sticky top-14">
-        <ul class="flex justify-around">
-          <li><a href="./main.html" class="text-blue-600">홈</a></li>
-          <li><a href="./profile.html" class="text-gray-600">프로필</a></li>
-          <li><a href="#" class="text-gray-600">로그아웃</a></li>
-        </ul>
-      </nav>
+const $root = document.querySelector('#root');
 
-      <main class="p-4">
-        <div class="mb-4 bg-white rounded-lg shadow p-4">
-          <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
-          <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
-        </div>
+// 라우트 정의
+const routes = {
+  '/': { component: Home, isOnlyComponent: false },
+  '/login': { component: Login, isOnlyComponent: true },
+  '/profile': { component: Profile, isOnlyComponent: false },
+  '/error': { component: Error, isOnlyComponent: true },
+};
 
-        <div class="space-y-4">
+// 경로에 따라 페이지 렌더링 함수
+function renderPage(path) {
+  const route = routes[path] || routes['/error'];
+  const component = route.component; // component를 가져오기
+  const isOnlyComponent = route.isOnlyComponent;
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">홍길동</p>
-                <p class="text-sm text-gray-500">5분 전</p>
-              </div>
-            </div>
-            <p>오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+  // 프로필 페이지에 접근할 때 localStorage에 user가 없으면 로그인 페이지로 리다이렉트
+  if (path === '/profile' && !localStorage.getItem('user')) {
+    renderPage('/login');
+    return; // 이후 코드 실행을 중단합니다.
+  }
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">김철수</p>
-                <p class="text-sm text-gray-500">15분 전</p>
-              </div>
-            </div>
-            <p>새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+  const componentInstance = component(); // 이제 component는 함수여야 합니다.
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">이영희</p>
-                <p class="text-sm text-gray-500">30분 전</p>
-              </div>
-            </div>
-            <p>오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+  // isOnlyComponent가 true일 경우 헤더와 푸터를 숨김
+  const header = !isOnlyComponent ? Header() : '';
+  const nav = !isOnlyComponent ? Nav(path, renderPage) : '';
+  const footer = !isOnlyComponent ? Footer() : '';
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">박민수</p>
-                <p class="text-sm text-gray-500">1시간 전</p>
-              </div>
-            </div>
-            <p>주말에 등산 가실 분 계신가요? 함께 가요!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+  // 헤더, 네비게이션, 컴포넌트, 푸터 템플릿을 root 요소에 삽입하여 페이지 렌더링
+  $root.innerHTML = `
+    ${header}  
+    ${nav}
+    ${componentInstance} 
+    ${footer}
+  `;
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">정수연</p>
-                <p class="text-sm text-gray-500">2시간 전</p>
-              </div>
-            </div>
-            <p>새로 나온 영화 재미있대요. 같이 보러 갈 사람?</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
-        </div>
-      </main>
+  // 로그인 컴포넌트의 bindEvents 호출
+  if (path === '/login') {
+    bindLoginEvents(renderPage);
+  }
 
-      <footer class="bg-gray-200 p-4 text-center">
-        <p>&copy; 2024 항해플러스. All rights reserved.</p>
-      </footer>
-    </div>
-  </div>
-`;
+  // 프로필 컴포넌트의 bindProfileEvents 호출
+  if (path === '/profile') {
+    bindProfileEvents(); // 여기에서 호출
+  }
+
+  // 헤더 네비게이션 이벤트 바인딩
+  bindLogoutEvent(renderPage);
+}
+
+
+// 네비게이션 클릭 이벤트 처리 함수
+function handleNavigation(event) {
+  if (event.target.classList.contains('menu')) {
+    event.preventDefault();
+    const path = event.target.getAttribute('href');
+    renderPage(path);
+
+    // URL 업데이트
+    window.history.pushState({}, '', path);
+  }
+}
+
+// 초기 페이지 로드 시 실행
+document.addEventListener('DOMContentLoaded', () => {
+  const initialPath = window.location.pathname;
+  renderPage(initialPath);
+
+  // 네비게이션 클릭 이벤트 바인딩
+  document.addEventListener('click', handleNavigation);
+});
+
+// 브라우저의 뒤로가기/앞으로가기 버튼 클릭 시 페이지를 로드하는 함수
+window.addEventListener('popstate', () => {
+  renderPage(window.location.pathname);
+});

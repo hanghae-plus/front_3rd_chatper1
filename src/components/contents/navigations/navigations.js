@@ -5,7 +5,6 @@ import { getLoginComponent } from "../../pages/Login/Login";
 export const ROUTES = {
   "/": getHomeComponent,
   "/login": getLoginComponent,
-  "/404": getErrorComponent,
 };
 
 export const IS_PATCH = ["/", "/login"];

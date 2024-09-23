@@ -6,23 +6,34 @@ const ID = {
   USER_NAME: 'username',
 };
 
+const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const phoneRegex =
+  /^\+?[0-9]{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
+
 export default class LoginPage extends BaseComponent {
   afterRender() {
-    this.handleLogin();
+    this.bindLoginEvent();
   }
 
-  handleLogin() {
+  private bindLoginEvent() {
     const $loginForm = this.getElement<HTMLFormElement>(`#${ID.LOGIN_FORM}`);
-    const $nameInput = this.getElement<HTMLInputElement>(`#${ID.USER_NAME}`);
+    if (!$loginForm) return;
 
-    if (!$loginForm || !$nameInput) return;
+    $loginForm.addEventListener('submit', this.handleLogin.bind(this));
+  }
 
-    $loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+  private handleLogin(e: SubmitEvent) {
+    e.preventDefault();
 
-      const username = $nameInput.value.trim();
-      login({ name: username });
-    });
+    const $nameInput = this.getElement<HTMLInputElement>(`#${ID.USER_NAME}`)!;
+    const username = $nameInput.value.trim();
+
+    if (!emailRegex.test(username) && !phoneRegex.test(username)) {
+      alert('유효한 이메일 주소 또는 전화번호를 입력하세요.');
+      return;
+    }
+
+    login({ name: username });
   }
 
   template() {

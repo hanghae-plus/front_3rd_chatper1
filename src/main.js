@@ -8,6 +8,7 @@ import { Footer, Header, Layout } from "./components/shared";
 import { PERMISSION, ROUTES } from "./components/constants";
 import { Component, UserController, Router, submitForm } from "./utils";
 import { ROUTE_COMPONENT_LIST } from "./components/constants";
+import ErrorBoundaryPage from "./components/page/ErrorBoundaryPage";
 
 class NotFoundComponent extends Component {
   template() {
@@ -113,11 +114,7 @@ class ErrorBoundary extends Component {
   }
 
   template() {
-    return `
-    <div>
-      오류 발생! ${this.state.errorMessage}
-    </div>
-  `;
+    return ErrorBoundaryPage({ message: this.state.errorMessage });
   }
 }
 

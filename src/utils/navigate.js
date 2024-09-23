@@ -2,8 +2,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export const useNavigate = (routes) => {
-  const protectedRoutes = ['/', '/profile'];
-
   const navigate = (path) => {
     window.history.pushState({}, '', path);
     updateHTML();
@@ -22,7 +20,7 @@ export const useNavigate = (routes) => {
         </div>
       </div>`;
 
-      document.getElementById('logout').addEventListener('click', () => {
+      document.getElementById('logout')?.addEventListener('click', () => {
         localStorage.removeItem('user');
         navigate('/login');
       });
@@ -30,9 +28,10 @@ export const useNavigate = (routes) => {
       rootElement.innerHTML = '<main id="main"></main>';
     }
 
-    document.querySelectorAll('a').forEach((anchor) => {
+    document.querySelectorAll('li').forEach((anchor) => {
       anchor.addEventListener('click', (event) => {
         event.preventDefault();
+
         navigate(event.target.href);
       });
     });
@@ -40,8 +39,13 @@ export const useNavigate = (routes) => {
     const targetComponent = routes[currentPath] || routes['/404'];
     targetComponent();
 
-    if (!JSON.parse(localStorage.getItem('user')) && protectedRoutes.includes(currentPath)) {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user && currentPath === '/profile') {
       navigate('/login');
+      return;
+    }
+    if (user && currentPath === '/login') {
+      navigate('/');
       return;
     }
   };

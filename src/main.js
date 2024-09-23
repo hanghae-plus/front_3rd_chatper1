@@ -44,7 +44,10 @@ export class ProfileComponent extends Component {
     const { user, router } = this.props;
     const userData = user.getUser();
     router.redirectTo(ROUTES.LOGIN.path, !userData);
+  }
 
+  setEvent() {
+    const { user } = this.props;
     this.updateProfile(user);
   }
 
@@ -78,6 +81,10 @@ export class LoginComponent extends Component {
     const { user, router } = this.props;
     const userData = user.getUser();
     router.redirectTo(ROUTES.HOME.path, userData);
+  }
+
+  setEvent() {
+    const { user, router } = this.props;
     this.login(user, router);
   }
 
@@ -87,7 +94,6 @@ export class LoginComponent extends Component {
 
     submitForm(loginForm, ({ username }) => {
       const userData = { username, email: "", bio: "" };
-
       user.login(userData, () => {
         router.navigateTo(ROUTES.PROFILE.path);
       });
@@ -125,6 +131,7 @@ class App extends Component {
         new NotFoundComponent(this.target);
       },
     });
+    new ErrorBoundary(this.target);
 
     this.state = {
       user,
@@ -144,8 +151,6 @@ class App extends Component {
         component(this.target, { user, router });
       });
     });
-
-    new ErrorBoundary(this.target);
 
     const currentPath = window.location.pathname;
     router.handleRoute(currentPath);

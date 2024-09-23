@@ -98,7 +98,7 @@ export class Component {
     this.state = null;
     this.setup();
     this.render();
-    this.setEvent(this.state);
+    this.setEvent();
   }
 
   setup() {}

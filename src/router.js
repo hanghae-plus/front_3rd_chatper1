@@ -5,29 +5,34 @@ import ProfilePage from './components/ProfilePage';
 
 const isLogin = false;
 const routes = {
-  '/404': ErrorPage,
-  '/': MainPage,
-  '/login': LoginPage,
-  '/profile': ProfilePage,
+  '/404': ($target) => new ErrorPage($target),
+  '/': ($target) => new MainPage($target),
+  '/login': ($target) => new LoginPage($target),
+  '/profile': ($target) => new ProfilePage($target),
 };
 
-const navigateTo = (path) => {
-  history.pushState(null, '', path);
+const navigateTo = (path, replace = false) => {
+  if (replace) {
+    history.replaceState(null, '', path);
+  } else {
+    history.pushState(null, '', path);
+  }
+
   handleRoute(path);
 };
 
 const handleRoute = (path) => {
   if (!routes[path]) {
-    navigateTo('/404');
+    navigateTo('/404', true);
     return;
   }
 
   if (path === '/profile' && !isLogin) {
-    navigateTo('/login');
+    navigateTo('/login', true);
     return;
   }
 
-  document.querySelector('#root').innerHTML = routes[path]();
+  routes[path](document.querySelector('#root'));
 };
 
 export { handleRoute, navigateTo };

@@ -215,23 +215,31 @@ const loadPage = (page) => {
   document.getElementById('root').innerHTML = route.content;
   document.title = route.title;
 
-  // 로그인 폼 초기화
-  initLoginForm();
+  if (page === '/') {
+    // 로그아웃 버튼 초기화
+    initLogoutButton();
+  }
 
-  // 로그아웃 버튼 초기화
-  initLogoutButton();
+  if (page === '/profile') {
+    // 로그인이 되지 않은 상태에서 /profile로 접근할 경우, /login으로 리다이렉션
+    if (!isLogin) {
+      navigate('/login');
+      return;
+    }
+
+    // 로그아웃 버튼 초기화
+    initLogoutButton();
+  }
+
+  if (page === '/login') {
+    // 로그인 폼 초기화
+    initLoginForm();
+  }
 };
 
 // 현재 경로에 맞는 페이지를 로드하는 함수
 const route = () => {
   const path = window.location.pathname;
-
-  // 로그인이 되지 않은 상태에서 /profile로 접근할 경우, /login으로 리다이렉션
-  if (path === '/profile' && !isLogin) {
-    navigate('/login');
-    return;
-  }
-
   loadPage(path);
 };
 

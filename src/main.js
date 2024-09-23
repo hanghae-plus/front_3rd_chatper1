@@ -21,7 +21,7 @@ function renderPage(path) {
   const { component, isOnlyComponent } = routes[path] || routes["/error"];
 
   // isOnlyComponent 속성이 true면 Header와 Footer 미노출 처리함
-  const headerContent = !isOnlyComponent ? Header.template() : "";
+  const headerContent = !isOnlyComponent ? Header.template(path) : "";
   const footerContent = !isOnlyComponent ? Footer.template() : "";
 
   // root 요소에 헤더, 컴포넌트, 푸터의 템플릿을 삽입하여 페이지 렌더링

@@ -1,22 +1,33 @@
 class Header {
-  template() {
+  template(currentPath) {
     const user = localStorage.getItem("user");
+
+    // 현재 경로와 일치하는 메뉴에 active 클래스 추가
+    const isActive = (path) =>
+      currentPath === path ? "text-blue-600 font-bold" : "text-gray-600";
+
     return `
       <header class="bg-blue-600 text-white p-4 sticky top-0">
         <h1 class="text-2xl font-bold">항해플러스</h1>
       </header>
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
-          <li><a href="/" class="menu text-gray-600">홈</a></li>
+          <li><a href="/" class="menu ${isActive("/")}">홈</a></li>
             ${
               user
-                ? '<li><a href="/profile" class="menu text-gray-600">프로필</a></li>'
+                ? `<li><a href="/profile" class="menu ${isActive(
+                    "/profile"
+                  )}">프로필</a></li>`
                 : ""
             }
           ${
             user
-              ? '<li><a href="/login" id="logout" class="menu text-red-600">로그아웃</a></li>'
-              : '<li><a href="/login" id="login" class="menu text-gray-600">로그인</a></li>'
+              ? `<li><a href="/login" id="logout" class="menu ${isActive(
+                  "/login"
+                )}">로그아웃</a></li>`
+              : `<li><a href="/login" id="login" class="menu ${isActive(
+                  "/login"
+                )}">로그인</a></li>`
           }
         </ul>
       </nav>
@@ -32,6 +43,7 @@ class Header {
         event.preventDefault();
         // 로그아웃 처리(유저 정보 삭제)
         localStorage.removeItem("user");
+
         renderPage("/login");
       });
     }

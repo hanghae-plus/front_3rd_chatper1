@@ -1,9 +1,9 @@
-import ProfilePage from '../../templates/ProfilePage';
+import ProfileTemplate from '../../templates/profile';
 
-export const Profile = () => {
+const ProfilePage = () => {
   const render = () => {
     const rootElement = document.getElementById('main');
-    rootElement.innerHTML = ProfilePage;
+    rootElement.innerHTML = ProfileTemplate;
   };
 
   const addEvent = () => {
@@ -40,3 +40,4 @@ export const Profile = () => {
 
   return { getProfile, updateProfile };
 };
+export default ProfilePage;

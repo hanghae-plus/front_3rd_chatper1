@@ -1,13 +1,13 @@
-import LoginPage from '../../templates/LoginPage';
+import LoginTemplate from '../../templates/login';
 import { routes } from '../routes';
 import { useNavigate } from '../utils/navigate';
 
-export const Login = () => {
+const LoginPage = () => {
   const { navigate } = useNavigate(routes);
 
   const render = () => {
     const rootElement = document.getElementById('main');
-    rootElement.innerHTML = LoginPage;
+    rootElement.innerHTML = LoginTemplate;
   };
 
   const addEvent = () => {
@@ -33,3 +33,5 @@ export const Login = () => {
 
   return { getUser, login };
 };
+
+export default LoginPage;

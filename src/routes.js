@@ -1,11 +1,11 @@
-import { NotFound } from './pages/NotFound';
-import { Home } from './pages/Home';
-import { Login } from './pages/Login';
-import { Profile } from './pages/Profile';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import ProfilePage from './pages/ProfilePage';
+import NotFoundPage from './pages/NotFoundPage';
 
 export const routes = {
-  '/': () => Home(),
-  '/login': () => Login(),
-  '/profile': () => Profile(),
-  '/404': () => NotFound(),
+  '/': () => HomePage(),
+  '/login': () => LoginPage(),
+  '/profile': () => ProfilePage(),
+  '/404': () => NotFoundPage(),
 };

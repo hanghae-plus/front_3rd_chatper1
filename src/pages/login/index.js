@@ -31,20 +31,20 @@ export default function LoginPage() {
 
   const loginForm = document.getElementById('login-form')
 
-  function handleSaveUser(name) {
-    const payload = { name, email: '', bio: '' }
+  function handleSaveUser(username) {
+    const payload = { username, email: '', bio: '' }
     userStore.updateUser(payload)
   }
 
   loginForm?.addEventListener('submit', (e) => {
     e.preventDefault()
     e.stopPropagation()
-    const name = e.target.querySelector('#username').value
-    if (!name) {
+    const username = e.target.querySelector('#username').value
+    if (!username) {
       alert('이름과 비밀번호를 입력해주세요')
       return
     }
-    handleSaveUser(name)
+    handleSaveUser(username)
     Router.navigate('/profile')
   })
 

@@ -49,7 +49,7 @@ export default function mainPage() {
     if (!message) return
     const user = userStore.getState('user')
     const newMessage = {
-      name: user.name,
+      name: user.username,
       profile: 'https://via.placeholder.com/40',
       content: message,
       time: '지금',

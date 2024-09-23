@@ -35,7 +35,7 @@ export default function profilePage() {
     const username = document.getElementById('username').value
     const email = document.getElementById('email').value
     const bio = document.getElementById('bio').value
-    return { name: user.name, email, bio, username }
+    return { username, email, bio }
   }
 
   const profileForm = document.getElementById('profile-form')

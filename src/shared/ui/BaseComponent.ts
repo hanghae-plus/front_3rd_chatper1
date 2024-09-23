@@ -3,7 +3,6 @@ export abstract class BaseComponent {
 
   constructor(selector: string) {
     this.$root = this.getRootElement(selector);
-    if (this.$root) this.render();
   }
 
   private getRootElement(selector: string): Element | null {

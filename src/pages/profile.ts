@@ -19,7 +19,7 @@ const ID = {
 };
 
 export default class ProfilePage extends BaseComponent {
-  protected userInfo: UserInfo;
+  private userInfo: UserInfo;
 
   constructor(selector: string) {
     super(selector);
@@ -30,8 +30,8 @@ export default class ProfilePage extends BaseComponent {
   }
 
   afterRender() {
-    new Header(`#${ID.HEADER}`);
-    new Footer(`#${ID.FOOTER}`);
+    new Header(`#${ID.HEADER}`).render();
+    new Footer(`#${ID.FOOTER}`).render();
 
     this.handleFormSubmit();
   }

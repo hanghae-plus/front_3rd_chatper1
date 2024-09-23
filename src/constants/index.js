@@ -1,5 +1,3 @@
-import { HomeComponent, LoginComponent, ProfileComponent } from "../../main";
-
 export const ROUTES = {
   HOME: { path: "/", id: "home", name: "홈" },
   PROFILE: { path: "/profile", id: "profile", name: "프로필" },
@@ -7,20 +5,6 @@ export const ROUTES = {
   LOGOUT: { id: "logout", name: "로그아웃" },
 };
 
-export const ROUTE_COMPONENT_LIST = [
-  {
-    path: ROUTES.HOME.path,
-    component: (target, props) => new HomeComponent(target, props),
-  },
-  {
-    path: ROUTES.PROFILE.path,
-    component: (target, props) => new ProfileComponent(target, props),
-  },
-  {
-    path: ROUTES.LOGIN.path,
-    component: (target, props) => new LoginComponent(target, props),
-  },
-];
 export const TAB_LIST = [
   ROUTES.HOME,
   ROUTES.PROFILE,

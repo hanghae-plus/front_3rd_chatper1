@@ -1,4 +1,4 @@
-import { PERMISSION, STORAGE_KEY } from "../components/constants";
+import { PERMISSION, STORAGE_KEY } from "../constants";
 
 export class StorageController {
   constructor() {
@@ -83,18 +83,6 @@ export class Router {
   }
 }
 
-export function getFormData(elements) {
-  return Object.fromEntries(new FormData(elements).entries());
-}
-
-export function submitForm(form, callback) {
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const formData = getFormData(form);
-    callback(formData);
-  });
-}
-
 export class Component {
   constructor(target, props) {
     this.target = target;
@@ -121,4 +109,16 @@ export class Component {
     this.target.innerHTML = this.template();
     this.afterRender();
   }
+}
+
+export function getFormData(elements) {
+  return Object.fromEntries(new FormData(elements).entries());
+}
+
+export function submitForm(form, callback) {
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = getFormData(form);
+    callback(formData);
+  });
 }

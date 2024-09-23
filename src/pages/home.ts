@@ -1,9 +1,16 @@
 import { BaseComponent } from '../shared/ui/BaseComponent';
+import { Footer } from '../shared/ui/Footer';
 import { Header } from '../shared/ui/Header';
+
+const ID = {
+  HEADER: 'header-container',
+  FOOTER: 'footer-container',
+};
 
 export default class HomePage extends BaseComponent {
   afterRender() {
-    new Header('#header-container');
+    new Header(`#${ID.HEADER}`);
+    new Footer(`#${ID.FOOTER}`);
   }
 
   template() {
@@ -11,7 +18,7 @@ export default class HomePage extends BaseComponent {
 <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
 
-    <div id="header-container"></div>
+    <div id="${ID.HEADER}"></div>
 
       <main class="p-4">
         <div class="mb-4 bg-white rounded-lg shadow p-4">
@@ -103,9 +110,7 @@ export default class HomePage extends BaseComponent {
         </div>
       </main>
 
-      <footer class="bg-gray-200 p-4 text-center">
-        <p>&copy; 2024 항해플러스. All rights reserved.</p>
-      </footer>
+      <div id="${ID.FOOTER}"></div>
     </div>
   </div>
 `;

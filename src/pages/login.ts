@@ -1,8 +1,10 @@
 import { BaseComponent } from '../shared/ui/BaseComponent';
 import { login } from '../shared/util/auth';
 
-const LOGIN_FORM_ID = 'login-form';
-const USER_NAME_ID = 'username';
+const ID = {
+  LOGIN_FORM: 'login-form',
+  USER_NAME: 'username',
+};
 
 export default class LoginPage extends BaseComponent {
   afterRender() {
@@ -10,8 +12,8 @@ export default class LoginPage extends BaseComponent {
   }
 
   handleLogin() {
-    const $loginForm = this.getElement<HTMLFormElement>(`#${LOGIN_FORM_ID}`);
-    const $nameInput = this.getElement<HTMLInputElement>(`#${USER_NAME_ID}`);
+    const $loginForm = this.getElement<HTMLFormElement>(`#${ID.LOGIN_FORM}`);
+    const $nameInput = this.getElement<HTMLInputElement>(`#${ID.USER_NAME}`);
 
     if (!$loginForm || !$nameInput) return;
 
@@ -29,9 +31,9 @@ export default class LoginPage extends BaseComponent {
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
 
-        <form id="${LOGIN_FORM_ID}">
+        <form id="${ID.LOGIN_FORM}">
           <div class="mb-4">
-            <input type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded" id="${USER_NAME_ID}">
+            <input id="${ID.USER_NAME}" type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
           </div>
           <div class="mb-6">
             <input type="password" placeholder="비밀번호" class="w-full p-2 border rounded">

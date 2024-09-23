@@ -1,4 +1,5 @@
 import { BaseComponent } from '../shared/ui/BaseComponent';
+import { Footer } from '../shared/ui/Footer';
 import { Header } from '../shared/ui/Header';
 import {
   defaultUserInfo,
@@ -12,6 +13,9 @@ const ID = {
   USER_NAME: 'username',
   EMAIL: 'email',
   BIO: 'bio',
+
+  HEADER: 'header-container',
+  FOOTER: 'footer-container',
 };
 
 export default class ProfilePage extends BaseComponent {
@@ -26,7 +30,9 @@ export default class ProfilePage extends BaseComponent {
   }
 
   afterRender() {
-    new Header('#header-container');
+    new Header(`#${ID.HEADER}`);
+    new Footer(`#${ID.FOOTER}`);
+
     this.handleFormSubmit();
   }
 
@@ -97,9 +103,7 @@ export default class ProfilePage extends BaseComponent {
         </div>
       </main>
 
-      <footer class="bg-gray-200 p-4 text-center">
-        <p>&copy; 2024 항해플러스. All rights reserved.</p>
-      </footer>
+      <div id="${ID.FOOTER}"></div>
     </div>
   </div>
   `;

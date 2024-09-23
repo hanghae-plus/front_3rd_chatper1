@@ -5,7 +5,6 @@ import Footer from './components/Footer';
 import Login from './components/Login';
 import ErrorPage from './components/ErrorPage';
 
-
 const root = document.querySelector("#root");
 
 // 라우팅 관리 객체
@@ -14,10 +13,11 @@ const routes = {
   "/login": { component: Login, isOnlyComponent: true },
   "/profile": { component: Profile, isOnlyComponent: false },
   "/error": { component: ErrorPage, isOnlyComponent: true },
-}
+};
 
 loadHTML('/');
 
+// HTML을 로드하는 함수
 function loadHTML(path) {
   const { component, isOnlyComponent } = routes[path] || routes['/error'];
   
@@ -32,21 +32,24 @@ function loadHTML(path) {
   `;
 }
 
-document.querySelector('nav').addEventListener('click', (e) => {
+// 네비게이션 클릭 이벤트 처리
+document.addEventListener('click', (e) => {
+  // 클릭된 요소가 'a[data-link]'인지 확인
   if (e.target.matches('a[data-link]')) {
     e.preventDefault();
-    const url = e.target.href.replace(window.location.origin, "");
+    const url = e.target.getAttribute('href');
     navigateTo(url);
     console.log(url);
   }
-})
+});
 
-
+// URL 변경 및 페이지 로드
 function navigateTo(url) {
-  history.pushState(null, null, url);
-  loadHTML(url);
+  history.pushState(null, null, url);  // URL 변경
+  loadHTML(url);  // 해당 URL에 맞는 페이지 로드
 }
 
+// 브라우저의 뒤로/앞으로 가기 버튼 동작 처리
 window.addEventListener('popstate', () => {
-  loadHTML(location.pathname);  // URL에 맞는 콘텐츠를 로드
+  loadHTML(location.pathname);  // 현재 URL에 맞는 콘텐츠 로드
 });

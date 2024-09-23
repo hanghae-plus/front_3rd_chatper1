@@ -1,14 +1,12 @@
 import { useRouter } from "../module/route";
 import { throttle } from "../module/util";
 import Component from "../core/component"
-import store from "../module/store";
 
 const router = useRouter();
 
 function submitHandle(){
   const username = (document.querySelector('#username') as HTMLInputElement).value
   localStorage.setItem( 'user', JSON.stringify( { username, email:'', bio: '' } ) )
-  store.setState( { username , email: '', bio: '' } )
   router.push('/profile')
 }
 
@@ -19,8 +17,8 @@ export default class LoginPage extends Component {
 
   attachEventListeners() {
     document.querySelector('#login-form')!.addEventListener('submit', function(event) {
-        event.preventDefault();
-        throttle(submitHandle,500)()
+      event.preventDefault();
+      throttle(submitHandle,500)()
     });
 
     const btnList = document.querySelectorAll('[data-path]')
@@ -43,10 +41,10 @@ export default class LoginPage extends Component {
               </h1>
               <form id="login-form">
                 <div class="mb-4">
-                  <input id="username" type="text" minlength="4" placeholder="사용자 이름" class="w-full p-2 border rounded" autofocus required>
+                  <input id="username" type="text" placeholder="사용자 이름" class="w-full p-2 border rounded">
                 </div>
                 <div class="mb-6">
-                  <input id="password" type="password" minlength="4" placeholder="비밀번호" class="w-full p-2 border rounded">
+                  <input id="password" type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
                 </div>
                 <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
               </form>

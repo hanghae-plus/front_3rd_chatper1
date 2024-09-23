@@ -17,13 +17,19 @@ class Router {
 
     push(path: string) {
         let nextPath = path
+        if(localStorage.getItem('user')){
+            const {username, email, bio} = JSON.parse(localStorage.getItem('user')!)
+            store.state.username = username
+            store.state.email = email
+            store.state.bio = bio
+        }
         switch(path){
             case '/profile':
                 if( store.state.username == '') nextPath = '/login'
                 break;
             
             case '/login':
-                store.reset()
+                if( store.state.username ) nextPath = '/'
                 break;
             
             case '/logout':
@@ -39,12 +45,12 @@ class Router {
     }
 
     handlePopState() {
-        this.handleRoute(window.location.pathname);
+        this.push(window.location.pathname);
     }
 
     handleRoute(path: string) {
         const nextPath = this.routes[path] ? path : '/404';
-        this.routes[nextPath].render()    
+        this.routes[nextPath].render()
     }
 }
 

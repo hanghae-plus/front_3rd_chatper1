@@ -6,8 +6,9 @@ import {
 } from "./components/page";
 import { Footer, Header, Layout } from "./components/shared";
 import { advanced } from "./utils/advanced";
-
+import { PERMISSION, ROUTES } from "./components/constants";
 import { Component, ControlUser, Router, submitForm } from "./utils";
+import { ROUTE_COMPONENT_LIST } from "./components/constants";
 
 class NotFoundComponent extends Component {
   template() {
@@ -15,9 +16,11 @@ class NotFoundComponent extends Component {
   }
 }
 
-class HomeComponent extends Component {
+export class HomeComponent extends Component {
   template() {
-    const type = this.props.user.getUser() ? "auth" : "public";
+    const type = this.props.user.getUser()
+      ? PERMISSION.AUTH
+      : PERMISSION.PUBLIC;
     return Layout({
       children: HomePage(),
       header: Header(type),
@@ -26,9 +29,11 @@ class HomeComponent extends Component {
   }
 }
 
-class ProfileComponent extends Component {
+export class ProfileComponent extends Component {
   template() {
-    const type = this.props.user.getUser() ? "auth" : "public";
+    const type = this.props.user.getUser()
+      ? PERMISSION.AUTH
+      : PERMISSION.PUBLIC;
     return Layout({
       children: ProfilePage(),
       header: Header(type),
@@ -39,7 +44,7 @@ class ProfileComponent extends Component {
   afterRender() {
     const { user, router } = this.props;
     const userData = user.getUser();
-    router.redirectTo("/login", !userData);
+    router.redirectTo(ROUTES.LOGIN.path, !userData);
 
     this.updateProfile(user);
   }
@@ -63,7 +68,7 @@ class ProfileComponent extends Component {
   }
 }
 
-class LoginComponent extends Component {
+export class LoginComponent extends Component {
   template() {
     return Layout({
       children: LoginPage(),
@@ -72,7 +77,7 @@ class LoginComponent extends Component {
   afterRender() {
     const { user, router } = this.props;
     const userData = user.getUser();
-    router.redirectTo("/", userData);
+    router.redirectTo(ROUTES.HOME.path, userData);
 
     this.login(user, router);
   }
@@ -86,7 +91,7 @@ class LoginComponent extends Component {
     submitForm(loginForm, ({ username }) => {
       const userData = { username, email: "", bio: "" };
       user.login(userData, () => {
-        router.navigateTo("/profile");
+        router.navigateTo(ROUTES.PROFILE.path);
       });
     });
   }
@@ -97,7 +102,7 @@ class App extends Component {
     const user = new ControlUser();
     const router = new Router({
       notFound: () => {
-        new NotFoundComponent({ target: this.target });
+        new NotFoundComponent(this.target);
       },
     });
     this.state = {
@@ -109,15 +114,10 @@ class App extends Component {
   afterRender() {
     const { router, user } = this.state;
 
-    router.addRoute("/login", () => {
-      new LoginComponent({ target: this.target }, { user, router });
-    });
-
-    router.addRoute("/profile", () => {
-      new ProfileComponent({ target: this.target }, { user, router });
-    });
-    router.addRoute("/", () => {
-      new HomeComponent({ target: this.target }, { user, router });
+    ROUTE_COMPONENT_LIST.forEach(({ path, component }) => {
+      router.addRoute(path, () => {
+        component(this.target, { user, router });
+      });
     });
 
     advanced.eventDelegation();
@@ -132,13 +132,13 @@ class App extends Component {
         e.preventDefault();
         router.navigateTo(e.target.pathname);
       }
-      if (e.target.id === "logout") {
+      if (e.target.id === ROUTES.LOGOUT.id) {
         user.logout(() => {
-          router.navigateTo("/login");
+          router.navigateTo(ROUTES.LOGIN.path);
         });
       }
     });
   }
 }
 
-new App({ target: document.querySelector("#root") });
+new App(document.querySelector("#root"));

@@ -92,7 +92,7 @@ export function submitForm(form, callback) {
 }
 
 export class Component {
-  constructor({ target }, props) {
+  constructor(target, props) {
     this.target = target;
     this.props = props;
     this.state = null;

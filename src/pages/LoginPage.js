@@ -27,6 +27,7 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
+      <div id="error-message" class="text-red-500 text-center mt-4"></div> <!-- 에러 메시지 컨테이너 -->
     `;
   }
 
@@ -45,36 +46,35 @@ export default function LoginPage() {
     userStore.updateUser(userData);
 
     Router.navigate('/profile');
-    setupInputErrorHandling();
   }
 
   function setupEventListeners() {
     const loginForm = document.getElementById('login-form');
     loginForm?.addEventListener('submit', handleLoginSubmit);
+    setupInputErrorHandling();
   }
 
   function displayError(message) {
-    let errorDivContainer = document.getElementById('error-message');
-    if (!errorDivContainer) {
-      errorDivContainer = document.createElement('div');
-      errorDivContainer.id = 'error-message';
-      document.body.appendChild(errorDivContainer);
+    const errorDivContainer = document.getElementById('error-message');
+    if (errorDivContainer) {
+      errorDivContainer.textContent = `오류 발생! ${message}`;
     }
-    errorDivContainer.textContent = `로그인 오류 발생했습니다. ${message}`;
   }
 
   function setupInputErrorHandling() {
     const $username = document.getElementById('username');
-    $username.addEventListener('input', () => {
+    $username.addEventListener('input', (event) => {
       try {
-        throw new Error('개발자의 의도한 로그인 오류');
+        throw new Error('의도적인 오류입니다.');
       } catch (error) {
         displayError(error.message);
       }
-    });
+  
+      event.preventDefault();
+    }, { once: true });
   }
-
 
   renderLoginPage();
   setupEventListeners();
 }
+

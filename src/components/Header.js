@@ -5,8 +5,8 @@ const Header = ({ selectPath, isLogged }) => {
   </header>
   <nav class="bg-white shadow-md p-2 sticky top-14">
     <ul class="flex justify-around">
-      <li><a href="./main.html" class="text-blue-600">홈</a></li>
-      ${isLogged ? '<li><a href="./profile.html" class="text-gray-600">프로필</a></li>' : ''}
+      <li><a href="/" class="text-blue-600">홈</a></li>
+      ${isLogged ? '<li><a href="/profile" class="text-gray-600">프로필</a></li>' : ''}
       ${
         isLogged
           ? `<li>
@@ -15,7 +15,7 @@ const Header = ({ selectPath, isLogged }) => {
             </a>
           </li>`
           : `<li>
-            <a href='./login.html' class='text-gray-600'>
+            <a href='/login' class='text-gray-600'>
               로그인
             </a>
           </li>`

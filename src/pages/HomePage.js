@@ -112,7 +112,7 @@ export default class Home {
     ` 
   }
   setTemplate() {
-    const header = new Header(this.$target.querySelector('header'),['프로필']);
+    const header = new Header(this.$target.querySelector('header'));
     const footer = new Footer(this.$target.querySelector('footer'));
     // header.setState(['프로필','로그아웃'])
 

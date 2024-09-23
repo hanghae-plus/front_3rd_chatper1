@@ -1,4 +1,4 @@
-import { router } from "./router.js";
+import { router,navigateTo } from "./router.js";
 // document.querySelector('#root').innerHTML = `
 // <div class="bg-gray-100 min-h-screen flex justify-center">
 //     <div class="max-w-md w-full">
@@ -111,6 +111,7 @@ import { router } from "./router.js";
 //   </div>
 // `;
 
+
 window.addEventListener('popstate', router);
 document.addEventListener('DOMContentLoaded', router);
 
@@ -124,7 +125,7 @@ document.addEventListener('DOMContentLoaded', router);
 //     }
 //   });
   
-//   router();
+  // router();
 // });
 // const myApp = document.querySelector('#root') 
 // new Home(myApp)

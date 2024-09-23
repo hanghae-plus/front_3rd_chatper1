@@ -11,7 +11,7 @@ export default class Profile {
     this.render();
   }
   setup () {
-    this.setState(JSON.parse(localStorage.getItem('user-info')) || {});
+    this.setState(JSON.parse(localStorage.getItem('user-info')) || {username:'',email:'',bio:''});
 
   };
   template () { 
@@ -25,15 +25,15 @@ export default class Profile {
           <form>
             <div class="mb-4">
               <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
-              <input type="text" id="username" name="username" value="${this.state.username}" class="w-full p-2 border rounded" required>
+              <input type="text" id="username" name="username" value="${this.state.username ?? ''}" class="w-full p-2 border rounded" required>
             </div>
             <div class="mb-4">
               <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
-              <input type="email" id="email" name="email" value="${this.state.email}" class="w-full p-2 border rounded" required>
+              <input type="email" id="email" name="email" value="${this.state.email ?? ''}" class="w-full p-2 border rounded" required>
             </div>
             <div class="mb-6">
               <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
-              <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded" required>${this.state.bio}</textarea>
+              <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">${this.state.bio ?? ''}</textarea>
             </div>
             <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
           </form>
@@ -45,7 +45,7 @@ export default class Profile {
     ` 
   }
   setTemplate() {
-    const header = new Header(this.$target.querySelector('header'),['프로필']);
+    const header = new Header(this.$target.querySelector('header'));
     const footer = new Footer(this.$target.querySelector('footer'));
 
     // header.setState(['프로필','로그아웃'])
@@ -65,7 +65,8 @@ export default class Profile {
       const username = form.querySelector('#username').value;
       const email = form.querySelector('#email').value;
       const bio = form.querySelector('#bio').value;
-      localStorage.setItem('user-info', JSON.stringify({username,email,bio}))
+      localStorage.setItem('user-info', JSON.stringify({username,email,bio}));
+      alert('프로필이 업데이트되었습니다')
       //   form.keyword.value = '' // FORM 초기화 
     }
 

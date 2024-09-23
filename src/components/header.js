@@ -1,18 +1,19 @@
-import { routes } from "../router";
+import { routes , navigateTo} from "../router";
 export default class Header {
   $target;
   state;
-  constructor ($target,menuList) { // 클래스 생성자 함수. mouted같아 
+  constructor ($target) { // 클래스 생성자 함수. mouted같아 
     this.$target = $target;
+    this.state = {menuList:['홈'], isLogined : !!(JSON.parse(localStorage.getItem('user-info')))};
     this.setup();
     // this.menuList = menu;
-    this.state.menuList.push(...menuList);
     console.log(this.$target )
-    this.render();
+    // this.render();
   }
   setup () {
-    this.state = {menuList:['홈'], isLogined : !!(JSON.parse(localStorage.getItem('user-info')))};
-    
+    if(!this.state.isLogined){
+      this.setState({menuList:[...this.state.menuList,'로그인']})
+    }else this.setState({menuList:[...this.state.menuList,'프로필']})
   };
   template () { 
     // const { menuList } = this.state;
@@ -46,13 +47,17 @@ export default class Header {
       }
     });
     // 로그아웃 클릭 이벤트 설정 (로그아웃 메뉴가 있을 때만)
-  if (this.state.isLogined) {
-    this.$target.querySelector('#logout_link').addEventListener('click', (e) => {
-      e.preventDefault(); // 기본 동작 방지 (리다이렉트 방지)
-      // 로그아웃 시 localStorage의 'user-info' 삭제
-      localStorage.removeItem('user-info');
-    });
-  }
+    if (this.state.isLogined) {
+      this.$target.querySelector('#logout_link').addEventListener('click', (e) => {
+        e.preventDefault(); // 기본 동작 방지 (리다이렉트 방지)
+        // 로그아웃 시 localStorage의 'user-info' 삭제
+        localStorage.removeItem('user-info');
+        navigateTo('/login');
+      });
+    }
+    // else {
+    //   this.$target.querySelector('#login_link').addEventListener('click')
+    // }
   }
   setTemplate() {
     const { menuList = [] } = this.state; // 기본값 처리
@@ -78,13 +83,7 @@ export default class Header {
             로그아웃
           </a>
         </li>
-      ` : `
-      <li>
-          <a id="login_link" href="#" class="text-gray-600">
-            로그인
-          </a>
-        </li>
-        `
+      ` : ''
     ].join('');
   
   }
@@ -92,6 +91,6 @@ export default class Header {
     console.log(newState)
     this.state = { ...this.state, ...newState };
 
-    // this.render();
+    this.render();
   }
 }

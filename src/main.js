@@ -1,53 +1,32 @@
 import { Home } from './Page/Home';
 import { Login } from './Page/Login';
 import { Profile } from './Page/Profile';
-import { ErrorPage } from './Page/ErrorPage';
-
-class Router {
-  constructor() {
-      this.routes = {};
-      window.addEventListener('popstate', this.handlePopState.bind(this));
-  }
-
-  addRoute(path, handler) {
-      this.routes[path] = handler;
-  }
-
-  navigateTo(path) {
-      history.pushState(null, '', path);
-      this.handleRoute(path);
-  }
-
-  handlePopState() {
-      this.handleRoute(window.location.pathname);
-  }
-
-  handleRoute(path) {
-      const handler = this.routes[path];
-      if (handler) {
-          handler();
-      } else {
-          console.log('404 Not Found');
-      }
-  }
-}
+import { Router } from './Router/Router';
 
 const router = new Router();
 
 router.addRoute('/', () => Home());
 router.addRoute('/profile', () => Profile());
 router.addRoute('/login', () => Login());
-router.addRoute('/not-found', () => ErrorPage());
 
-console.log(router)
+console.log('window.location.pathname: ', window.location.pathname);
 
-// document.querySelector('nav').addEventListener('click', (e) => {
-//   if (e.target.tagName === 'A') {
-//       e.preventDefault();
-//       router.navigateTo(e.target.pathname);
-//   }
+router.handlePopState();
+
+// window.addEventListener("DOMContentLoaded", (event) => {
+//   console.log("DOM fully loaded and parsed");
 // });
 
-// router()
+console.log(router);
 
-console.log()
+const navElem = document.querySelector('nav');
+
+if (navElem) {
+    navElem.addEventListener('click', (e) => {
+        console.log(e.target.tagName);
+        if (e.target.tagName === 'A') {
+            e.preventDefault();
+            router.navigateTo(e.target.pathname);
+        }
+    });
+}

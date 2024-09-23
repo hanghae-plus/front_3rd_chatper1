@@ -1,4 +1,8 @@
 export const Login = () => {
+
+  console.log('Login Components!')
+
+
     document.querySelector('#root').innerHTML = `
   <!DOCTYPE html>
   <html lang="ko">

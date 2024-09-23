@@ -1,4 +1,5 @@
 export const Profile = () => {
+  console.log('Profile Components!')
     document.querySelector('#root').innerHTML = `
 <!DOCTYPE html>
 <html lang="ko">

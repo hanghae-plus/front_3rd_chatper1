@@ -1,4 +1,5 @@
 export const ErrorPage = () => {
+    console.log('ErrorPage Components!');
 
     document.querySelector('#root').innerHTML = `
   <!DOCTYPE html>

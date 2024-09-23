@@ -1,4 +1,6 @@
 export const Home = () => {
+  console.log('Home Components!')
+
     document.querySelector('#root').innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">

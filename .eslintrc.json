@@ -1,0 +1,15 @@
+{
+	"env": {
+	  "browser": true,
+	  "es2021": true
+	},
+	"extends": [
+	  "eslint:recommended",
+	  "plugin:prettier/recommended"  // Prettier와 ESLint 통합
+	],
+	"plugins": ["prettier"],  // Prettier 플러그인 추가
+	"rules": {
+	  "prettier/prettier": "error"  // Prettier 위반을 오류로 처리
+	}
+  }
+  

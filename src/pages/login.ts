@@ -1,5 +1,6 @@
 import { BaseComponent } from '../shared/ui/BaseComponent';
-import { login } from '../shared/util/auth';
+import { isLoggedIn, login } from '../shared/util/auth';
+import { router } from '../shared/util/Router';
 
 const ID = {
   LOGIN_FORM: 'login-form',
@@ -12,7 +13,14 @@ const phoneRegex =
 
 export default class LoginPage extends BaseComponent {
   afterRender() {
+    this.checkAccess();
     this.bindLoginEvent();
+  }
+
+  private checkAccess() {
+    if (isLoggedIn()) {
+      router.navigateTo('/');
+    }
   }
 
   private bindLoginEvent() {

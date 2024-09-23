@@ -34,7 +34,7 @@ export class Header extends BaseComponent<Link[]> {
     return this.state
       ?.map(({ id, link, text }) => {
         const activeClass = this.isActiveLink(link)
-          ? 'text-blue-600'
+          ? 'text-blue-600 font-bold'
           : 'text-gray-600';
         const linkId = id ? `id=${id}` : '';
 

@@ -1,7 +1,13 @@
 import { BaseComponent } from '../shared/ui/BaseComponent';
 import { Footer } from '../shared/ui/Footer';
 import { Header } from '../shared/ui/Header';
-import { getUserInfo, setUserInfo, UserInfo } from '../shared/util/auth';
+import {
+  getUserInfo,
+  isLoggedIn,
+  setUserInfo,
+  UserInfo,
+} from '../shared/util/auth';
+import { router } from '../shared/util/Router';
 
 const ID = {
   PROFILE_FORM: 'profile-form',
@@ -22,7 +28,14 @@ export default class ProfilePage extends BaseComponent<UserInfo> {
     new Header(`#${ID.HEADER}`).render();
     new Footer(`#${ID.FOOTER}`).render();
 
+    this.checkAccess();
     this.bindSubmitEvent();
+  }
+
+  private checkAccess() {
+    if (!isLoggedIn()) {
+      router.navigateTo('/login');
+    }
   }
 
   private bindSubmitEvent() {

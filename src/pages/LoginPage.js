@@ -45,12 +45,35 @@ export default function LoginPage() {
     userStore.updateUser(userData);
 
     Router.navigate('/profile');
+    setupInputErrorHandling();
   }
 
   function setupEventListeners() {
     const loginForm = document.getElementById('login-form');
     loginForm?.addEventListener('submit', handleLoginSubmit);
   }
+
+  function displayError(message) {
+    let errorDivContainer = document.getElementById('error-message');
+    if (!errorDivContainer) {
+      errorDivContainer = document.createElement('div');
+      errorDivContainer.id = 'error-message';
+      document.body.appendChild(errorDivContainer);
+    }
+    errorDivContainer.textContent = `로그인 오류 발생했습니다. ${message}`;
+  }
+
+  function setupInputErrorHandling() {
+    const $username = document.getElementById('username');
+    $username.addEventListener('input', () => {
+      try {
+        throw new Error('개발자의 의도한 로그인 오류');
+      } catch (error) {
+        displayError(error.message);
+      }
+    });
+  }
+
 
   renderLoginPage();
   setupEventListeners();

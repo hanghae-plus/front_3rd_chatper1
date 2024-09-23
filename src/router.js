@@ -1,5 +1,5 @@
-import Home from "./components/HomePage";
-import Profile from "./components/ProfilePage";
+import Home from "./pages/HomePage";
+import Profile from "./pages/ProfilePage";
 
 export const navigateTo = (url) => {
   history.pushState({}, "", url);

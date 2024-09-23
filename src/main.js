@@ -114,17 +114,18 @@ import { router } from "./router.js";
 window.addEventListener('popstate', router);
 document.addEventListener('DOMContentLoaded', router);
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.addEventListener("click", (e) => {
-    console.log(e.target.matches("#nav_link"))
-    if (e.target.matches("#nav_link")) {
-      e.preventDefault();
-      // e.stopPropagation()
-      navigateTo(e.target.href);
-    }
-  });
-  // router();
-});
+// document.addEventListener("DOMContentLoaded", () => {
+//   document.body.addEventListener("click", (e) => {
+//     console.log(e.target,e.target.matches("#nav_link"))
+//     if (e.target.matches("#nav_link")) {
+//       // e.preventDefault();
+//       // e.stopPropagation()
+//       navigateTo(e.target.href);
+//     }
+//   });
+  
+//   router();
+// });
 // const myApp = document.querySelector('#root') 
 // new Home(myApp)
 // new Header(myApp,new Home)

@@ -1,5 +1,5 @@
-import Header from "./header";
-import Footer from "./footer";
+import Header from "../components/header";
+import Footer from "../components/footer";
 export default class Home {
   $target;
   state;
@@ -112,7 +112,7 @@ export default class Home {
     ` 
   }
   setTemplate() {
-    const header = new Header(this.$target.querySelector('header'),['프로필','로그아웃']);
+    const header = new Header(this.$target.querySelector('header'),['프로필']);
     const footer = new Footer(this.$target.querySelector('footer'));
     // header.setState(['프로필','로그아웃'])
 

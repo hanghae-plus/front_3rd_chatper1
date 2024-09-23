@@ -6,7 +6,7 @@ const router = useRouter();
 
 export default class Header extends Component{
     init(){
-        this.container.setAttribute('style', 'position: sticky; top:0;');
+        this.container.className="stick top-0"
         this.state = { pathname: location.pathname }
         this.render()
     }
@@ -29,14 +29,14 @@ export default class Header extends Component{
             </header>
             <nav class="bg-white shadow-md p-2">
                 <ul class="flex justify-around">
-                <li class="w-full"><button data-path="/" class="w-full text-center ${this.state['pathname']=='/' ? 'text-blue-600':'text-gray-600'}">홈</button></li>
+                <li class="w-full"><a href="/" class="block w-full text-center ${this.state['pathname']=='/' ? 'text-blue-600 font-bold':'text-gray-600'}">홈</a></li>
                 
                 ${
                     store.state.username ? 
-                    `<li class="w-full"><button data-path="/profile" class="w-full text-center ${this.state['pathname']=='/profile'?'text-blue-600':'text-gray-600'}">프로필</button></li>
+                    `<li class="w-full"><a href="/profile" class="block w-full text-center ${this.state['pathname']=='/profile'?'text-blue-600 font-bold':'text-gray-600'}">프로필</a></li>
                     <li class="w-full"><button id="logout" data-path="/logout" class="w-full text-center text-gray-600"> 로그아웃 </button> </li>`
                     :
-                    `<li class="w-full"><button data-path="/login" class="w-full text-center text-gray-600">로그인</button></li>`
+                    `<li class="w-full"><a href="/login" class="block w-full text-center text-gray-600">로그인</a></li>`
                 }
                 </ul>
             </nav>

@@ -22,34 +22,35 @@ export default class ProfilePage extends BaseComponent<UserInfo> {
     new Header(`#${ID.HEADER}`).render();
     new Footer(`#${ID.FOOTER}`).render();
 
-    this.handleFormSubmit();
+    this.bindSubmitEvent();
   }
 
-  private handleFormSubmit() {
+  private bindSubmitEvent() {
     const $profileForm = this.getElement<HTMLFormElement>(
       `#${ID.PROFILE_FORM}`
     )!;
+    $profileForm.addEventListener('submit', this.handleFormSubmit.bind(this));
+  }
+
+  private handleFormSubmit(e: SubmitEvent) {
+    e.preventDefault();
 
     const $nameInput = this.getElement<HTMLInputElement>(`#${ID.USER_NAME}`)!;
     const $emailInput = this.getElement<HTMLInputElement>(`#${ID.EMAIL}`)!;
     const $bioInput = this.getElement<HTMLInputElement>(`#${ID.BIO}`)!;
 
-    $profileForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+    const name = $nameInput.value.trim();
+    const email = $emailInput.value.trim();
+    const bio = $bioInput.value.trim();
 
-      const name = $nameInput.value.trim();
-      const email = $emailInput.value.trim();
-      const bio = $bioInput.value.trim();
+    const userInfo: UserInfo = {
+      name,
+      email,
+      bio,
+      username: name,
+    };
 
-      const userInfo: UserInfo = {
-        name,
-        email,
-        bio,
-        username: name,
-      };
-
-      setUserInfo(userInfo);
-    });
+    setUserInfo(userInfo);
   }
 
   template() {

@@ -3,9 +3,9 @@ import Footer from "../components/Footer";
 
 export default function HomePage() {
   document.getElementById('root').innerHTML = `
-  ${header()}
     <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
+      ${header()}
 
     <main class="p-4">
     <div class="mb-4 bg-white rounded-lg shadow p-4">

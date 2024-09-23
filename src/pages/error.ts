@@ -1,4 +1,4 @@
-import { BaseComponent } from '../shared/BaseComponent';
+import { BaseComponent } from '../shared/ui/BaseComponent';
 
 export default class ErrorPage extends BaseComponent {
   template() {

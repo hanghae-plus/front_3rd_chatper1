@@ -1,11 +1,11 @@
-import { Header } from '../components/Header';
+import { BaseComponent } from '../shared/ui/BaseComponent';
+import { Header } from '../shared/ui/Header';
 import {
   defaultUserInfo,
   getUserInfo,
   setUserInfo,
   UserInfo,
-} from '../shared/auth';
-import { BaseComponent } from '../shared/BaseComponent';
+} from '../shared/util/auth';
 
 const ID = {
   PROFILE_FORM: 'profile-form',

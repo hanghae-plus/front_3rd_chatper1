@@ -1,4 +1,4 @@
-import { router } from '../Router';
+import { router } from './Router';
 import { safeLocalStorage } from './localStorage';
 
 export const USER_INFO_KEY = 'user';
@@ -38,8 +38,12 @@ export const logout = () => {
   router.navigateTo('/');
 };
 
-export const login = (userInfo: UserInfo) => {
-  setUserInfo(userInfo);
+export const login = (payload: Pick<UserInfo, 'name'>) => {
+  setUserInfo({
+    email: '',
+    bio: '',
+    ...payload,
+  });
   router.navigateTo('/profile');
 };
 

@@ -1,5 +1,5 @@
-import { Header } from '../components/Header';
-import { BaseComponent } from '../shared/BaseComponent';
+import { BaseComponent } from '../shared/ui/BaseComponent';
+import { Header } from '../shared/ui/Header';
 
 export default class HomePage extends BaseComponent {
   afterRender() {

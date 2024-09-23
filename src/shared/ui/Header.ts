@@ -1,5 +1,5 @@
-import { isLoggedIn, logout } from '../shared/auth';
-import { BaseComponent } from '../shared/BaseComponent';
+import { isLoggedIn, logout } from '../util/auth';
+import { BaseComponent } from './BaseComponent';
 
 const LOGOUT_ID = 'logout';
 

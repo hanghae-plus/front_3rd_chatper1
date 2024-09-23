@@ -1,4 +1,4 @@
-import { BaseComponent } from './shared/BaseComponent';
+import { BaseComponent } from '../ui/BaseComponent';
 
 type Path = string | '/404';
 type Routes = {

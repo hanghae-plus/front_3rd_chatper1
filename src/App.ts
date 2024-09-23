@@ -2,7 +2,7 @@ import ErrorPage from './pages/error';
 import HomePage from './pages/home';
 import LoginPage from './pages/login';
 import ProfilePage from './pages/profile';
-import { router } from './Router';
+import { router } from './shared/util/Router';
 
 export default class App {
   constructor(selector: string) {

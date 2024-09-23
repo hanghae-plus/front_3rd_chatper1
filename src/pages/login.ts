@@ -1,5 +1,5 @@
-import { login } from '../shared/auth';
-import { BaseComponent } from '../shared/BaseComponent';
+import { BaseComponent } from '../shared/ui/BaseComponent';
+import { login } from '../shared/util/auth';
 
 const LOGIN_FORM_ID = 'login-form';
 const USER_NAME_ID = 'username';
@@ -19,11 +19,7 @@ export default class LoginPage extends BaseComponent {
       e.preventDefault();
 
       const username = $nameInput.value.trim();
-      login({
-        name: username,
-        email: '',
-        bio: '',
-      });
+      login({ name: username });
     });
   }
 

@@ -2,14 +2,6 @@ export const ErrorPage = () => {
     console.log('ErrorPage Components!');
 
     document.querySelector('#root').innerHTML = `
-  <!DOCTYPE html>
-  <html lang="ko">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>항해플러스 - 오류</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
   <body>
     <div id="root">
       <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -27,6 +19,5 @@ export const ErrorPage = () => {
       </main>
     </div>
   </body>
-  </html>
   `;
 };

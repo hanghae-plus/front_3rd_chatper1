@@ -1,5 +1,16 @@
 export const Home = () => {
-  console.log('Home Components!')
+    console.log('Home Components!');
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const logoutButton = document.getElementById('logout');
+        console.log(logoutButton);
+        console.log('DOM fully loaded and parsed');
+
+        // 로그아웃 버튼 클릭 처리
+        logoutButton.addEventListener('click', function () {
+            localStorage.removeItem('user');
+        });
+    });
 
     document.querySelector('#root').innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
@@ -12,7 +23,10 @@ export const Home = () => {
           <ul class="flex justify-around">
             <li><a href="/" class="text-blue-600">홈</a></li>
             <li><a href="/profile" class="text-gray-600">프로필</a></li>
-            <li><a href="/login" class="text-gray-600">로그인</a></li>
+            <li>
+              <a  href="/login" class="text-gray-600">로그인</a>
+              <button id="logout" class="text-gray-600 hidden">로그아웃</button>
+            </li>
           </ul>
         </nav>
   

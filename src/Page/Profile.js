@@ -1,14 +1,7 @@
 export const Profile = () => {
   console.log('Profile Components!')
     document.querySelector('#root').innerHTML = `
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>항해플러스 - 프로필</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+
 <body>
 <div id="root">
   <div class="bg-gray-100 min-h-screen flex justify-center">
@@ -53,6 +46,5 @@ export const Profile = () => {
   </div>
 </div>
 </body>
-</html>
   `;
 };

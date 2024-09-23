@@ -1,19 +1,15 @@
-import UserPreferences from "../../utils/UserPreferences.js";
+import userPreferences from '../../utils/UserPreferences.js';
 
 export default class Header {
   constructor({ $element, router }) {
     this.$element = $element;
     this.router = router;
-
-    this.userPreferences = new UserPreferences();
-    this.isLoggedIn = false;
     this.render();
     this.setEvent();
   }
 
   render() {
-    const email = this.userPreferences.get("email");
-    this.isLoggedIn = !!email;
+    const isLoggedIn = !!userPreferences.get('email');
 
     this.$element.innerHTML = ` 
     <div>
@@ -26,7 +22,7 @@ export default class Header {
           <li><a href="/" class="text-blue-600">홈</a></li>
           <li><a href="/profile" class="text-gray-600">프로필</a></li>
           ${
-            this.isLoggedIn
+            isLoggedIn
               ? `<button id="logout-btn">로그아웃</button>`
               : `<a href="/login" class="text-blue-600">로그인</a>`
           }
@@ -38,20 +34,16 @@ export default class Header {
     this.setEvent();
   }
 
-  setState(value) {
-    this.isLoggedIn = value;
-    this.render();
-  }
-
   setEvent() {
-    this.$element.querySelector("nav").addEventListener("click", (e) => {
-      if (e.target.tagName === "A") {
+    this.$element.querySelector('nav').addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
         e.preventDefault();
-        this.router.navigateTo(e.target.getAttribute("href"));
-      } else if (e.target.id === "logout-btn") {
-        this.userPreferences.set("email", undefined);
-        this.router.navigateTo("/login");
-        this.setState(!this.userPreferences.get("email"));
+        this.router.navigateTo(e.target.getAttribute('href'));
+      } else if (e.target.id === 'logout-btn') {
+        userPreferences.set('email', undefined);
+        userPreferences.set('username', undefined);
+        userPreferences.set('bio', undefined);
+        this.router.navigateTo('/login');
       }
     });
   }

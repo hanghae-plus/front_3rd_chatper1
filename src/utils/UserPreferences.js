@@ -1,11 +1,7 @@
 export default class UserPreferences {
   constructor() {
-    if (!UserPreferences.instance) {
-      this.preferences =
-        JSON.parse(localStorage.getItem("userPreferences")) || {};
-      UserPreferences.instance = this;
-    }
-    return UserPreferences.instance;
+    this.preferences =
+      JSON.parse(localStorage.getItem('userPreferences')) || {};
   }
 
   set(key, value) {
@@ -18,6 +14,6 @@ export default class UserPreferences {
   }
 
   save() {
-    localStorage.setItem("userPreferences", JSON.stringify(this.preferences));
+    localStorage.setItem('userPreferences', JSON.stringify(this.preferences));
   }
 }

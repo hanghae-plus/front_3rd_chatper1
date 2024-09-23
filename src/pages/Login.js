@@ -1,5 +1,4 @@
-import UserPreferences from "../utils/UserPreferences.js";
-import Header from "../components/layouts/Header.js";
+import userPreferences from '../utils/UserPreferences.js';
 
 export default class Login {
   constructor({ $element, router }) {
@@ -7,10 +6,15 @@ export default class Login {
     this.router = router;
     this.render();
     this.handleLogIn();
-    this.userPreferences = new UserPreferences();
   }
 
   render() {
+    const email = userPreferences.get('email');
+    if (email) {
+      this.router.navigateTo('/');
+      return;
+    }
+
     this.$element.innerHTML = this.template();
   }
 
@@ -39,23 +43,21 @@ export default class Login {
   }
 
   handleLogIn() {
-    const form = this.$element.querySelector("#login-form");
-    const header = new Header({ $element: document.querySelector("header") });
+    const form = this.$element.querySelector('#login-form');
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const email = this.$element.querySelector("#email").value;
-      const password = this.$element.querySelector("#password").value;
+      const email = this.$element.querySelector('#email').value;
+      const password = this.$element.querySelector('#password').value;
 
       if (!email || !password) {
-        alert("이메일과 비밀번호를 확인해주세요.");
+        alert('이메일과 비밀번호를 확인해주세요.');
         return;
       }
 
       if (email) {
-        this.userPreferences.set("email", email);
-        this.router.navigateTo("/");
-        header.setState(!this.userPreferences.get("email"));
+        userPreferences.set('email', email);
+        this.router.navigateTo('/');
       }
     });
   }

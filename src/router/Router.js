@@ -1,7 +1,7 @@
 export default class Router {
   constructor() {
     this.routes = {};
-    window.addEventListener("popstate", this.handlePopState.bind(this));
+    window.addEventListener('popstate', this.handlePopState.bind(this));
   }
 
   addRoute(path, handler) {
@@ -9,7 +9,7 @@ export default class Router {
   }
 
   navigateTo(path) {
-    history.pushState(null, "", path);
+    history.pushState(null, '', path);
     this.handleRoute(path);
   }
 
@@ -22,7 +22,7 @@ export default class Router {
     if (handler) {
       handler();
     } else {
-      this.routes["*"]();
+      this.routes['*']();
     }
   }
 }

@@ -11,8 +11,7 @@ export default class HomePage extends BaseComponent {
 <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
 
-    <div id="header-container" />
-      
+    <div id="header-container"></div>
 
       <main class="p-4">
         <div class="mb-4 bg-white rounded-lg shadow p-4">

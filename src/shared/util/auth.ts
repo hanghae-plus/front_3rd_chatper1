@@ -40,9 +40,9 @@ export const logout = () => {
 
 export const login = (payload: Pick<UserInfo, 'name'>) => {
   setUserInfo({
+    ...payload,
     email: '',
     bio: '',
-    ...payload,
   });
   router.navigateTo('/profile');
 };

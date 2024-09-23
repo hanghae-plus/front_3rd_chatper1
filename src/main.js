@@ -22,9 +22,9 @@ function logout(){
 
 //라우트 정의 : 경로와 해당 컴포넌트 함수 매핑
 const routes = {
-  '/': Home,
-  '/login': Login,
-  '/profile': Profile,
+  '/': HomePage,
+  '/login': LoginPage,
+  '/profile': ProfilePage,
 };
 
 function Header({isLoggedIn}){
@@ -49,7 +49,7 @@ function Footer(){
       <p>&copy; 2024 항해플러스. All rights reserved.</p>
     </footer>`;
 }
-function Home() {
+function HomePage() {
   const loggedIn = isLoggedIn();
   const root = document.querySelector('#root');
   root.innerHTML = `
@@ -152,7 +152,7 @@ addEventListener();
  
 }
 
-function Login() {
+function LoginPage() {
   const root = document.querySelector('#root');
   root.innerHTML = `
   <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -182,11 +182,11 @@ addEventListener();
 
 }
 
-function Profile() {
+function ProfilePage() {
   const user = getUser();
   if(!user){
     history.pushState(null,'','/login');
-    return Login();
+    return LoginPage();
   }
   const root = document.querySelector('#root');
   root.innerHTML = `
@@ -222,7 +222,7 @@ function Profile() {
 
 }
 
-function Error() {
+function NotFoundPage() {
   const root = document.querySelector('#root');
   root.innerHTML = ` 
   <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -246,7 +246,7 @@ function Error() {
 //라우터 함수
 function router() {
   const path = window.location.pathname;
-  const component = routes[path] || Error;
+  const component = routes[path] || NotFoundPage;
   component()
 }
 
@@ -269,7 +269,6 @@ function addEventListener(){
   }
 
   const logoutBtn = document.getElementById('logout');
-  console.log("logoutBtn",logoutBtn)
   if (logoutBtn) {
     logoutBtn.addEventListener('click', handleLogout);
   }

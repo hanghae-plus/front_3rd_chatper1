@@ -9,10 +9,12 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '@routers': path.resolve(__dirname, './src/routers'),
       '@components': path.resolve(__dirname, './src/components'),
       '@pages': path.resolve(__dirname, './src/pages'),
       '@stores': path.resolve(__dirname, './src/stores'),
       '@utils': path.resolve(__dirname, './src/utils'),
+      '@services': path.resolve(__dirname, './src/services'),
     },
   },
 })

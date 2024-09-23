@@ -1,19 +1,19 @@
 function createUser() {
   const storageCount = localStorage.getItem("user");
-  let user = storageCount ? storageCount : null; // 프라이빗 변수
+  let user = storageCount ? storageCount : null;
 
   return {
-    login: function ({ name }) {
-      user = { name, email: "", desc: "" };
-      localStorage.setItem("user", user);
+    login: function (user) {
+      user = user;
+      localStorage.setItem("user", JSON.stringify(user));
     },
     logout: function () {
-      localStorage.removeItem("user");
       user = null;
+      localStorage.removeItem("user");
     },
     setUser: function (user) {
-      localStorage.setItem("user", user);
       user = user;
+      localStorage.setItem("user", user);
     },
     getUser: function () {
       return user;

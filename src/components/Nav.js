@@ -1,4 +1,6 @@
 import { appendChild, createElement } from "@/utils";
+import { getUser } from "@/store/userStore";
+import { logout } from "../store/userStore";
 
 export default function Nav() {
   const Nav = createElement({
@@ -10,8 +12,17 @@ export default function Nav() {
     tagName: "ul",
     className: "flex justify-around",
   });
+  const isLogin = !!getUser();
+  console.log(getUser());
+  console.log(isLogin);
 
   NavList.forEach(({ title, href }) => {
+    if (isLogin) {
+      if (href === "login") return;
+    } else {
+      if (href === "profile" || href === "logout") return;
+    }
+
     const NavItem = createElement({ tagName: "li", className: "flex-center" });
 
     const Link = createElement({
@@ -29,6 +40,14 @@ export default function Nav() {
     appendChild({ parent: NavContainer, children: [NavItem] });
   });
 
+  NavContainer.addEventListener("click", (e) => {
+    if (e.target.href.includes("#logout")) {
+      alert("로그아웃 되었습니다.");
+      e.preventDefault();
+      logout();
+      return;
+    }
+  });
   appendChild({ parent: Nav, children: [NavContainer] });
 
   return Nav;

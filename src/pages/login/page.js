@@ -1,5 +1,6 @@
 import { appendChild } from "@/utils";
 import { createElement } from "@/utils/createElement";
+import { login } from "@/store/userStore";
 
 export default function LoginPage() {
   const LoginPage = createElement({
@@ -34,11 +35,13 @@ export default function LoginPage() {
         setAttribute: { for: LoginFormLabelFor },
       });
 
+      const LoginFormInputType = idx === 0 ? "text" : "password";
+
       const LoginFormInput = createElement({
         tagName: "input",
         className: "w-full p-2 border rounded",
         id: LoginFormLabelFor,
-        setAttribute: { name: LoginFormLabelFor },
+        setAttribute: { name: LoginFormLabelFor, type: LoginFormInputType },
       });
 
       appendChild({
@@ -77,6 +80,17 @@ export default function LoginPage() {
     tagName: "button",
     className: "bg-green-500 text-white px-4 py-2 rounded font-bold",
     textContent: "새 계정 만들기",
+  });
+
+  LoginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const [username, password] = e.target;
+
+    if (username.value === "") {
+      return;
+    }
+    login({ username: username.value, email: "", desc: "" });
+    window.location.hash = "#main";
   });
 
   appendChild({ parent: NewAccountBox, children: [NewAccountButton] });

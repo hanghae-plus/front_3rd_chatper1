@@ -1,3 +1,3 @@
-import Router from './router.js'
+import Router from '@routers'
 
 Router.init()

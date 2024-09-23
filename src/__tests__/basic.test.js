@@ -109,7 +109,9 @@ describe('기본과제 테스트', () => {
 		beforeEach(async () => {
 			goTo('/login');
 
-			const loginForm = document.getElementById('login-form');
+			expect(localStorage.getItem('user')).toEqual(
+				`{"name":"testuser","email":"","bio":"Updated bio","username":"testuser"}`,
+			);
 
 			await user.type(document.getElementById('username'), 'testuser');
 

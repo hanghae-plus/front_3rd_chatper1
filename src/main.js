@@ -5,7 +5,6 @@ import {
   ProfilePage,
 } from "./components/page";
 import { Footer, Header, Layout } from "./components/shared";
-import { advanced } from "./utils/advanced";
 import { PERMISSION, ROUTES } from "./components/constants";
 import { Component, ControlUser, Router, submitForm } from "./utils";
 import { ROUTE_COMPONENT_LIST } from "./components/constants";
@@ -74,11 +73,11 @@ export class LoginComponent extends Component {
       children: LoginPage(),
     });
   }
+
   afterRender() {
     const { user, router } = this.props;
     const userData = user.getUser();
     router.redirectTo(ROUTES.HOME.path, userData);
-
     this.login(user, router);
   }
 
@@ -86,14 +85,35 @@ export class LoginComponent extends Component {
     const loginForm = document.getElementById("login-form");
     if (!loginForm) return;
 
-    advanced.occurError(loginForm);
-
     submitForm(loginForm, ({ username }) => {
       const userData = { username, email: "", bio: "" };
+
       user.login(userData, () => {
         router.navigateTo(ROUTES.PROFILE.path);
       });
     });
+  }
+}
+
+class ErrorBoundary extends Component {
+  setup() {
+    this.state = {
+      errorMessage: "",
+    };
+  }
+
+  setEvent() {
+    window.addEventListener("error", (e) => {
+      this.setState({ errorMessage: e.error.message });
+    });
+  }
+
+  template() {
+    return `
+    <div>
+      오류 발생! ${this.state.errorMessage}
+    </div>
+  `;
   }
 }
 
@@ -105,10 +125,15 @@ class App extends Component {
         new NotFoundComponent(this.target);
       },
     });
+
     this.state = {
       user,
       router,
     };
+  }
+
+  setEvent() {
+    this.validatePath();
   }
 
   afterRender() {
@@ -120,13 +145,14 @@ class App extends Component {
       });
     });
 
-    advanced.eventDelegation();
+    new ErrorBoundary(this.target);
+
     const currentPath = window.location.pathname;
     router.handleRoute(currentPath);
   }
 
-  setEvent(props) {
-    const { router, user } = props;
+  validatePath() {
+    const { router, user } = this.state;
     this.target.addEventListener("click", (e) => {
       if (e.target.tagName === "A") {
         e.preventDefault();

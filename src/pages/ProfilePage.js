@@ -1,4 +1,5 @@
 import ProfileTemplate from '../../templates/profile';
+import { store } from '../store';
 
 const ProfilePage = () => {
   const render = () => {
@@ -17,7 +18,7 @@ const ProfilePage = () => {
     const emailInput = document.getElementById('email');
     const bioInput = document.getElementById('bio');
 
-    const savedUser = JSON.parse(localStorage.getItem('user'));
+    const savedUser = store.getState('user');
 
     usernameInput.value = savedUser?.username || '';
     emailInput.value = savedUser?.email || '';
@@ -31,7 +32,7 @@ const ProfilePage = () => {
     const email = document.getElementById('email').value;
     const bio = document.getElementById('bio').value;
 
-    localStorage.setItem('user', JSON.stringify({ username, email, bio }));
+    store.setState('user', { username, email, bio });
   };
 
   render();

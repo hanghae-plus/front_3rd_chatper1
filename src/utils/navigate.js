@@ -1,5 +1,6 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { store } from '../store';
 
 export const useNavigate = (routes) => {
   const navigate = (path) => {
@@ -21,7 +22,7 @@ export const useNavigate = (routes) => {
       </div>`;
 
       document.getElementById('logout')?.addEventListener('click', () => {
-        localStorage.removeItem('user');
+        store.removeState('user');
         navigate('/login');
       });
     } else {
@@ -39,7 +40,7 @@ export const useNavigate = (routes) => {
     const targetComponent = routes[currentPath] || routes['/404'];
     targetComponent();
 
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = store.getState('user');
     if (!user && currentPath === '/profile') {
       navigate('/login');
       return;

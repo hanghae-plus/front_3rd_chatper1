@@ -1,5 +1,6 @@
 import LoginTemplate from '../../templates/login';
 import { routes } from '../routes';
+import { store } from '../store';
 import { useNavigate } from '../utils/navigate';
 
 const LoginPage = () => {
@@ -17,21 +18,17 @@ const LoginPage = () => {
     });
   };
 
-  const getUser = () => {
-    return JSON.parse(localStorage.getItem('user'));
-  };
-
   const login = (event) => {
     event.preventDefault();
 
     const username = document.getElementById('username').value;
-    localStorage.setItem('user', JSON.stringify({ username, email: '', bio: '' }));
+    store.setState('user', { username, email: '', bio: '' });
   };
 
   render();
   addEvent();
 
-  return { getUser, login };
+  return { login };
 };
 
 export default LoginPage;

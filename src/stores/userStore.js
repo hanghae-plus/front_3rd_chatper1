@@ -1,4 +1,4 @@
-import { Logger, Storage } from '@utils'
+import { Logger, Storage } from '@services'
 
 const USER_STORAGE_KEY = 'user'
 
@@ -35,7 +35,7 @@ const UserStore = (function () {
         isLoggedIn: false,
         user: null,
       }
-      Storage.clear(USER_STORAGE_KEY)
+      Storage.remove(USER_STORAGE_KEY)
       notify()
     }
 

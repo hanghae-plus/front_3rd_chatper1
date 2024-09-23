@@ -16,12 +16,12 @@ const updateLoginUI = (tab) => {
 
   navList.innerHTML = userData.isLogin
     ? `
-      <li><a href="/" class=${tab === 'home' ? 'text-blue-600' : 'text-gray-600'}>홈</a></li>
-      <li><a href="/profile" class=${tab === 'profile' ? 'text-blue-600' : 'text-gray-600'}>프로필</a></li>
+      <li><a href="/" class="${tab === 'home' ? 'text-blue-600 font-bold' : 'text-gray-600'}">홈</a></li>
+      <li><a href="/profile" class="${tab === 'profile' ? 'text-blue-600 font-bold' : 'text-gray-600'}">프로필</a></li>
       <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
     `
     : `
-      <li><a href="/" class="text-blue-600 tab" data-tab="home">홈</a></li>
+      <li><a href="/" class="text-blue-600 font-bold">홈</a></li>
       <li><a href="/login" class="text-gray-600">로그인</a></li>
     `;
 
@@ -199,6 +199,11 @@ const loadPage = (page) => {
   }
 
   if (page === '/login') {
+    if (userData.isLogin) {
+      navigate('/');
+      return;
+    }
+
     // 로그인 폼 초기화
     initLoginForm();
   }

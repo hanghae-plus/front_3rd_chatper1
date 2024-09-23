@@ -223,13 +223,17 @@ const navigate = (path) => {
 
 // SPA 라우터를 초기화하는 함수
 const initRouter = () => {
-  document.body.addEventListener('click', (e) => {
-    if (!e.target.matches('a')) return;
-    e.preventDefault();
+  const nav = document.querySelector('nav');
 
-    const path = new URL(e.target.href).pathname;
-    navigate(path);
-  });
+  if (nav) {
+    nav.addEventListener('click', (e) => {
+      if (!e.target.matches('a')) return;
+
+      e.preventDefault();
+      const path = new URL(e.target.href).pathname;
+      navigate(path);
+    });
+  }
 
   route();
 };

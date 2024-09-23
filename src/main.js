@@ -44,7 +44,7 @@ const router = () => {
 
 const { addRoute, navigateTo, handleRoute } = router();
 
-addRoute('/', () => render(Home));
+addRoute('/', () => render(() => Home({ isLogged: userState.isLogged })));
 
 addRoute('/login', () => {
   if (!userState.isLogged) {
@@ -80,6 +80,7 @@ const logOut = () => {
 
 const updateUserInfo = (bio) => {
   localStorage.setItem('user', JSON.stringify({ ...userState.userInfo, bio }));
+  loadedUser();
 };
 
 const loadedUser = () => {

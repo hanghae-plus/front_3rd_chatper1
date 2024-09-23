@@ -3,10 +3,10 @@ import Footer from '../components/Footer';
 import Post from '../components/Post';
 import PostForm from '../components/PostForm';
 
-const Home = () => `
+const Home = ({ isLogged }) => `
 <div class="bg-gray-100 min-h-screen flex justify-center">
   <div class="max-w-md w-full">
-  ${Header()}
+  ${Header({ isLogged })}
     <main class="p-4">
     ${PostForm()}
       <div class="space-y-4">

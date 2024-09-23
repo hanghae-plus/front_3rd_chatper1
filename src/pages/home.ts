@@ -2,7 +2,7 @@ import { Header } from '../components/Header';
 import { BaseComponent } from '../shared/BaseComponent';
 
 export default class HomePage extends BaseComponent {
-  afterRender(): void {
+  afterRender() {
     new Header('#header-container');
   }
 
@@ -11,9 +11,7 @@ export default class HomePage extends BaseComponent {
 <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
 
-    <div id="header-container">
-          <!-- Header가 이곳에 렌더링 -->
-    </div>
+    <div id="header-container" />
       
 
       <main class="p-4">

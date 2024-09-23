@@ -10,17 +10,15 @@ export default class LoginPage extends BaseComponent {
   }
 
   handleLogin() {
-    const $loginForm = document.getElementById(
-      LOGIN_FORM_ID
-    ) as HTMLFormElement;
-    const $usernameInput = document.getElementById(
-      USER_NAME_ID
-    ) as HTMLInputElement;
+    const $loginForm = this.getElement<HTMLFormElement>(`#${LOGIN_FORM_ID}`);
+    const $nameInput = this.getElement<HTMLInputElement>(`#${USER_NAME_ID}`);
+
+    if (!$loginForm || !$nameInput) return;
 
     $loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const username = $usernameInput.value.trim();
+      const username = $nameInput.value.trim();
       login({
         name: username,
         email: '',

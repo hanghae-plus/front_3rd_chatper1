@@ -1,2 +1,3 @@
-export { default as Logger } from './logger.js'
-export { default as Storage } from './storage.js'
+export { default as memoize } from './memoize.js'
+export { default as throttle } from './throttle.js'
+export { default as debounce } from './debounce.js'

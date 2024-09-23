@@ -4,7 +4,7 @@ export default class Header {
   state;
   constructor ($target) { // 클래스 생성자 함수. mouted같아 
     this.$target = $target;
-    this.state = {menuList:['홈'], isLogined : !!(JSON.parse(localStorage.getItem('user-info')))};
+    this.state = {menuList:['홈'], isLogined : !!(JSON.parse(localStorage.getItem('user')))};
     this.setup();
     // this.menuList = menu;
     console.log(this.$target )
@@ -48,10 +48,10 @@ export default class Header {
     });
     // 로그아웃 클릭 이벤트 설정 (로그아웃 메뉴가 있을 때만)
     if (this.state.isLogined) {
-      this.$target.querySelector('#logout_link').addEventListener('click', (e) => {
+      this.$target.querySelector('#logout').addEventListener('click', (e) => {
         e.preventDefault(); // 기본 동작 방지 (리다이렉트 방지)
-        // 로그아웃 시 localStorage의 'user-info' 삭제
-        localStorage.removeItem('user-info');
+        // 로그아웃 시 localStorage의 'user' 삭제
+        localStorage.removeItem('user');
         navigateTo('/login');
       });
     }
@@ -79,7 +79,7 @@ export default class Header {
       // 로그아웃 메뉴 추가
       `
         <li>
-          <a id="logout_link" href="#" class="text-gray-600">
+          <a id="logout" href="#" class="text-gray-600">
             로그아웃
           </a>
         </li>

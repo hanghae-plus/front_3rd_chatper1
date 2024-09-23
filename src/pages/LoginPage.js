@@ -10,7 +10,7 @@ export default class Profile {
     this.render();
   }
   setup () {
-    const isLogined = !!(JSON.parse(localStorage.getItem('user-info')));
+    const isLogined = !!(JSON.parse(localStorage.getItem('user')));
     // if(isLogined) { 
     //   window.location.replace("/profile"); 
     //   return;
@@ -22,7 +22,7 @@ export default class Profile {
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form>
+        <form id="login-form">
           <div class="mb-4">
             <input type="text" id="username" required placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
           </div>
@@ -55,7 +55,7 @@ export default class Profile {
     const saveUserInfo = (event)=> {
       event.preventDefault();
       const username = form.querySelector('#username').value;
-      localStorage.setItem('user-info', JSON.stringify({username}));
+      localStorage.setItem('user', JSON.stringify({username,email:'',bio:''}));
       navigateTo('/profile');
       //   form.keyword.value = '' // FORM 초기화 
     }

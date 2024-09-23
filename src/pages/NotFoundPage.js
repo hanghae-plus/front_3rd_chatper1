@@ -1,4 +1,3 @@
-import { navigateTo } from "../router";
 export default class NotFound {
   $target;
   state;

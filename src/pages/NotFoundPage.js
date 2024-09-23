@@ -24,7 +24,6 @@ export default class NotFound {
     `
   }
   render () {
-    console.log(this.$target)
     this.$target.innerHTML = this.template();
   }
 }

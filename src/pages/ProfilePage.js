@@ -1,18 +1,9 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
-export default class Profile {
-  $target;
-  state;
-  header;
-
-  constructor ($target) { // 클래스 생성자 함수. mouted같아 
-    this.$target = $target;
-    this.setup();
-    this.render();
-  }
+import Common from "../common";
+export default class Profile extends Common{
   setup () {
     this.setState(JSON.parse(localStorage.getItem('user')) || {username:'',email:'',bio:''});
-
   };
   template () { 
     return `
@@ -47,16 +38,6 @@ export default class Profile {
   setTemplate() {
     const header = new Header(this.$target.querySelector('header'));
     const footer = new Footer(this.$target.querySelector('footer'));
-
-    // header.setState(['프로필','로그아웃'])
-
-    // this.footer = new Footer({ $element: this.$element.querySelector('footer') });
-  }
-  render () {
-    console.log(this.$target)
-    this.$target.innerHTML = this.template();
-    this.setTemplate();
-    this.setEvent();
   }
   setEvent () {
     const form = this.$target.querySelector('form');
@@ -66,15 +47,9 @@ export default class Profile {
       const email = form.querySelector('#email').value;
       const bio = form.querySelector('#bio').value;
       localStorage.setItem('user', JSON.stringify({username,email,bio}));
-      alert('프로필이 업데이트되었습니다')
-      //   form.keyword.value = '' // FORM 초기화 
+      alert('프로필이 업데이트되었습니다');
     }
 
-
     form.addEventListener("submit", saveUserInfo)
-  }
-  setState (newState) {
-    this.state = { ...this.state, ...newState };
-    // this.render();
   }
 }

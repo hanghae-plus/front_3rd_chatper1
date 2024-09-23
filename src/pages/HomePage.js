@@ -1,30 +1,22 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
-export default class Home {
+import Common from "../common";
+export default class Home extends Common{
   $target;
   state;
-  constructor ($target) { // 클래스 생성자 함수. mouted같아 
-    this.$target = $target;
-    this.setup();
-    this.render();
-  }
-  setup () {
-    // this.header = new Header(this.$target);
-    // this.header.setState(['프로필','로그아웃'])
-  };
+  // constructor ($target) { 
+  //   super($target);
+  //   this.$target = $target;
+  //   this.render();
+  // }
   template () { 
     return `
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
         <header></header>
         <main class="p-4">
-          <div class="mb-4 bg-white rounded-lg shadow p-4">
-            <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
-            <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
-          </div>
-
+          <post></post>
           <div class="space-y-4">
-
             <div class="bg-white rounded-lg shadow p-4">
               <div class="flex items-center mb-2">
                 <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
@@ -114,27 +106,11 @@ export default class Home {
   setTemplate() {
     const header = new Header(this.$target.querySelector('header'));
     const footer = new Footer(this.$target.querySelector('footer'));
-    // header.setState(['프로필','로그아웃'])
-
-    // this.footer = new Footer({ $element: this.$element.querySelector('footer') });
-  }
-  render () {
-    console.log(this.$target)
-    this.$target.innerHTML = this.template();
-    this.setEvent();
-    this.setTemplate();
-    // this.updateClass('bg-gray-100', 'min-h-screen', 'flex', 'justify-center'); // 렌더링 후 클래스 업데이트
-  }
-  setEvent () {
-    
-  }
-  
-   // 클래스 변경 메서드
-  // updateClass(...className) {
-  //   this.$target.classList.add(...className); // 렌더링 후 클래스 추가
-  // }
-  setState (newState) {
-    this.state = { ...this.state, ...newState };
-    this.render();
+    this.$target.querySelector('post').innerHTML = this.state.isLogined ? `
+      <div class="mb-4 bg-white rounded-lg shadow p-4">
+        <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
+        <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
+      </div>
+    ` : ''
   }
 }

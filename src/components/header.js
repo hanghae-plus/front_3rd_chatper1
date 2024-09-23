@@ -1,23 +1,13 @@
 import { routes , navigateTo} from "../router";
-export default class Header {
-  $target;
-  state;
-  constructor ($target) { // 클래스 생성자 함수. mouted같아 
-    this.$target = $target;
-    this.state = {menuList:['홈'], isLogined : !!(JSON.parse(localStorage.getItem('user')))};
-    this.setup();
-    // this.menuList = menu;
-    console.log(this.$target )
-    // this.render();
-  }
+import Common from "../common";
+export default class Header extends Common {
   setup () {
+    this.setState({menuList:['홈']});
     if(!this.state.isLogined){
       this.setState({menuList:[...this.state.menuList,'로그인']})
     }else this.setState({menuList:[...this.state.menuList,'프로필']})
   };
   template () { 
-    // const { menuList } = this.state;
-
     return `
         <header class="bg-blue-600 text-white p-4 sticky top-0">
           <h1 class="text-2xl font-bold">항해플러스</h1>
@@ -29,22 +19,12 @@ export default class Header {
         </nav>
     ` 
   }
-  render () {
-    // console.log(this.$target)
-    this.$target.innerHTML = this.template();
-    this.setTemplate();
-    this.setEvent();
-    
-
-  }
   setEvent () {
-    this.$target.addEventListener("click", (e) => {
-      console.log(e.target,e.target.matches("#nav_link"))
-      if (e.target.matches("#nav_link")) {
-        // e.preventDefault();
-        // e.stopPropagation()
+    this.$target.querySelectorAll("#nav_link").forEach(element => {
+      element.addEventListener("click", (e) => {
+        e.preventDefault();
         navigateTo(e.target.href);
-      }
+      })
     });
     // 로그아웃 클릭 이벤트 설정 (로그아웃 메뉴가 있을 때만)
     if (this.state.isLogined) {
@@ -55,9 +35,6 @@ export default class Header {
         navigateTo('/login');
       });
     }
-    // else {
-    //   this.$target.querySelector('#login_link').addEventListener('click')
-    // }
   }
   setTemplate() {
     const { menuList = [] } = this.state; // 기본값 처리
@@ -86,11 +63,5 @@ export default class Header {
       ` : ''
     ].join('');
   
-  }
-  setState (newState) {
-    console.log(newState)
-    this.state = { ...this.state, ...newState };
-
-    this.render();
   }
 }

@@ -1,22 +1,6 @@
+import Common from "../common";
 import { navigateTo } from "../router";
-export default class Profile {
-  $target;
-  state;
-  header;
-
-  constructor ($target) { // 클래스 생성자 함수. mouted같아 
-    this.$target = $target;
-    this.setup();
-    this.render();
-  }
-  setup () {
-    const isLogined = !!(JSON.parse(localStorage.getItem('user')));
-    // if(isLogined) { 
-    //   window.location.replace("/profile"); 
-    //   return;
-    // }
-
-  };
+export default class Login extends Common {
   template () { 
     return `
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -42,14 +26,6 @@ export default class Profile {
     </main>
     ` 
   }
-  setTemplate() {
-  }
-  render () {
-    console.log(this.$target)
-    this.$target.innerHTML = this.template();
-    this.setTemplate();
-    this.setEvent();
-  }
   setEvent () {
     const form = this.$target.querySelector('form');
     const saveUserInfo = (event)=> {
@@ -57,14 +33,10 @@ export default class Profile {
       const username = form.querySelector('#username').value;
       localStorage.setItem('user', JSON.stringify({username,email:'',bio:''}));
       navigateTo('/profile');
-      //   form.keyword.value = '' // FORM 초기화 
     }
-
-
     form.addEventListener("submit", saveUserInfo)
   }
   setState (newState) {
     this.state = { ...this.state, ...newState };
-    // this.render();
   }
 }

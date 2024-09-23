@@ -1,4 +1,6 @@
-export default function createRouter(routes = {}) {
+export default function Router() {
+  const routes = {};
+
   /**
    * 경로 추가
    * @param {string} path
@@ -30,6 +32,54 @@ export default function createRouter(routes = {}) {
     }
   };
 
+  const init = () => {
+    // 현재 경로에 맞는 페이지 렌더링
+    render(window.location.pathname);
+
+    // popstate(앞으로가기/뒤로가기) 라우터 처리
+    window.addEventListener("popstate", () => {
+      render(window.location.pathname);
+    });
+
+    //  a 태그가 동적으로 생성되므로, 이벤트 위임(bubbling) 방법 사용
+    const root = document.getElementById("root");
+    root.addEventListener("click", (e) => {
+      if (e.target.id === "logout") {
+        // 로그아웃 시 사용자 정보 제거
+        localStorage.removeItem("user");
+      }
+      if (e.target.tagName === "A") {
+        // 클릭 시 페이지 이동
+        e.preventDefault();
+        navigateTo(e.target.pathname);
+      }
+    });
+
+    // 로그인/프로필 수정 시 사용자 정보 저장
+    const setUserInfo = () => {
+      const loginForm = {
+        username: document.getElementById("username")?.value || "", // 이메일 또는 전화번호(사용자 이름)
+        email: document.getElementById("email")?.value || "", // 이메일
+        bio: document.getElementById("bio")?.value || "", // 자기소개
+      };
+
+      localStorage.setItem("user", JSON.stringify(loginForm));
+    };
+    root.addEventListener("submit", (e) => {
+      if (e.target?.id === "login-form") {
+        // 로그인 정보 저장
+        e.preventDefault();
+        setUserInfo();
+        navigateTo("/profile");
+      } else if (e.target?.id === "profile-form") {
+        // 프로필 정보 수정
+        e.preventDefault();
+        setUserInfo();
+        alert("프로필 수정이 완료되었습니다 :)");
+      }
+    });
+  };
+
   /**
    * 페이지 이동
    * @param {string} path
@@ -45,5 +95,6 @@ export default function createRouter(routes = {}) {
     addRoute,
     navigateTo,
     render,
+    init,
   };
 }

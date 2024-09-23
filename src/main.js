@@ -8,34 +8,26 @@ const setUserData = (newUserData) => {
   updateLoginUI();
 };
 
-const updateLoginUI = () => {
+const updateLoginUI = (tab) => {
   // 네비게이션 로그인/로그아웃 버튼 업데이트
-  const authLink = document.querySelector('#authLink');
-  if (authLink) {
-    authLink.innerHTML = userData.isLogin
-      ? '<a href="#" id="logout" class="text-gray-600">로그아웃</a>'
-      : '<a href="/login" class="text-gray-600">로그인</a>';
+  const navList = document.getElementById('nav-list');
 
-    if (userData.isLogin) {
-      initLogoutButton();
-    }
+  if (!navList) return;
+
+  navList.innerHTML = userData.isLogin
+    ? `
+      <li><a href="/" class=${tab === 'home' ? 'text-blue-600' : 'text-gray-600'}>홈</a></li>
+      <li><a href="/profile" class=${tab === 'profile' ? 'text-blue-600' : 'text-gray-600'}>프로필</a></li>
+      <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
+    `
+    : `
+      <li><a href="/" class="text-blue-600 tab" data-tab="home">홈</a></li>
+      <li><a href="/login" class="text-gray-600">로그인</a></li>
+    `;
+
+  if (userData.isLogin) {
+    initLogoutButton();
   }
-};
-
-let currentTab = 'home';
-
-const setCurrentTab = (tab) => {
-  currentTab = tab;
-  updateTabUI();
-};
-
-const updateTabUI = () => {
-  document.querySelectorAll('.tab').forEach((tab) => {
-    // 탭이 현재 선택된 탭이면 'text-blue-600' 클래스를 추가하고 'text-gray-600'을 제거, 그렇지 않으면 반대로 처리
-    const isActive = tab.dataset.tab === currentTab;
-    tab.classList.toggle('text-blue-600', isActive);
-    tab.classList.toggle('text-gray-600', !isActive);
-  });
 };
 
 const headerComponent = () => `
@@ -43,12 +35,10 @@ const headerComponent = () => `
     <h1 class="text-2xl font-bold">항해플러스</h1>
   </header>
   <nav class="bg-white shadow-md p-2 sticky top-14">
-    <ul class="flex justify-around">
+    <ul id="nav-list" class="flex justify-around">
       <li><a href="/" class="text-blue-600 tab" data-tab="home">홈</a></li>
       <li><a href="/profile" class="text-gray-600 tab" data-tab="profile">프로필</a></li>
-      <li id="authLink">
-        <a href="/login" class="text-gray-600">로그인</a>
-       </li>
+      <li><a href="/login" class="text-gray-600">로그인</a></li>
     </ul>
   </nav>
 `;
@@ -193,8 +183,7 @@ const loadPage = (page) => {
   document.title = route.title;
 
   if (page === '/') {
-    updateTabUI();
-    updateLoginUI();
+    updateLoginUI('home');
   }
 
   if (page === '/profile') {
@@ -204,8 +193,7 @@ const loadPage = (page) => {
       return;
     }
 
-    updateTabUI();
-    updateLoginUI();
+    updateLoginUI('profile');
     // 프로필 폼 초기화
     initProfileForm();
   }
@@ -235,9 +223,6 @@ const initRouter = () => {
     e.preventDefault();
 
     const path = new URL(e.target.href).pathname;
-    if (path === '/' || path === '/profile') {
-      setCurrentTab(path === '/' ? 'home' : 'profile');
-    }
     navigate(path);
   });
 
@@ -294,7 +279,7 @@ const handleFormSubmit = (e) => {
   if (!username) return;
 
   loginUser(username);
-  navigate('/');
+  navigate('/profile');
 };
 
 // 로그인 폼 초기화
@@ -351,4 +336,6 @@ const handleProfileFormSubmit = (e) => {
   };
 
   localStorage.setItem('user', JSON.stringify(userData));
+
+  alert('프로필이 업데이트 되었습니다.');
 };

@@ -46,31 +46,70 @@ class Router {
     this.setLoginStatus(false);
   }
 }
+class UserPreferences {
+  constructor() {
+    this.preferences = JSON.parse(localStorage.getItem('user')) || {};
+  }
+
+  set(data) {
+    this.preferences = data;
+    this.save();
+  }
+
+  get() {
+    return this.preferences;
+  }
+
+  save() {
+    localStorage.setItem('user', JSON.stringify(this.preferences));
+  }
+
+  delete() {
+    localStorage.removeItem('user', JSON.stringify(this.preferences));
+  }
+}
+
+const prefs = new UserPreferences();
+
+// 컴포넌트 기반 구조 설계
+const Header = (isLoggedIn) => {
+  return `
+    <header class="bg-blue-600 text-white p-4 sticky top-0">
+      <h1 class="text-2xl font-bold">항해플러스</h1>
+    </header>
+  
+    <nav class="bg-white shadow-md p-2 sticky top-14">
+      <ul class="flex justify-around">
+        <li><a href="./" class="text-blue-600">홈</a></li>
+        ${
+          isLoggedIn
+            ? '<li><a href="./profile" class="text-gray-600">프로필</a></li>'
+            : ''
+        }
+        ${
+          isLoggedIn
+            ? '<li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>'
+            : '<li><a href="./login" class="text-gray-600">로그인</a></li>'
+        }
+      </ul>
+    </nav>
+  `;
+};
+
+const Footer = () => {
+  return `  
+    <footer class="bg-gray-200 p-4 text-center">
+      <p>&copy; 2024 항해플러스. All rights reserved.</p>
+    </footer>
+  `;
+};
 
 // 각 라우트에 해당하는 컴포넌트 렌더링 함수 작성
 const renderHomePage = (isLoggedIn) => {
   document.querySelector('#root').innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
-        <header class="bg-blue-600 text-white p-4 sticky top-0">
-          <h1 class="text-2xl font-bold">항해플러스</h1>
-        </header>
-  
-        <nav class="bg-white shadow-md p-2 sticky top-14">
-          <ul class="flex justify-around">
-            <li><a href="./" class="text-blue-600">홈</a></li>
-            ${
-              isLoggedIn
-                ? '<li><a href="./profile" class="text-gray-600">프로필</a></li>'
-                : ''
-            }
-            ${
-              isLoggedIn
-                ? '<li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>'
-                : '<li><a href="./login" class="text-gray-600">로그인</a></li>'
-            }
-          </ul>
-        </nav>
+        ${Header(isLoggedIn)}
   
         <main class="p-4">
           <div class="mb-4 bg-white rounded-lg shadow p-4">
@@ -162,9 +201,7 @@ const renderHomePage = (isLoggedIn) => {
           </div>
         </main>
   
-        <footer class="bg-gray-200 p-4 text-center">
-          <p>&copy; 2024 항해플러스. All rights reserved.</p>
-        </footer>
+        ${Footer()}
       </div>
     </div>
   `;
@@ -175,7 +212,7 @@ const renderHomePage = (isLoggedIn) => {
       e.preventDefault();
 
       // LocalStorage에서 데이터 삭제
-      localStorage.removeItem('user');
+      prefs.delete('user');
 
       router.handleLogout();
       router.navigateTo('/');
@@ -185,22 +222,12 @@ const renderHomePage = (isLoggedIn) => {
 
 const renderProfilePage = (isLoggedIn) => {
   // LocalStorage에서 데이터 가져오기 (key: 'user')
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = prefs.get('user');
 
   document.querySelector('#root').innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
-      <header class="bg-blue-600 text-white p-4 sticky top-0">
-        <h1 class="text-2xl font-bold">항해플러스</h1>
-      </header>
-
-      <nav class="bg-white shadow-md p-2 sticky top-14">
-        <ul class="flex justify-around">
-          <li><a href="./" class="text-gray-600">홈</a></li>
-          <li><a href="#" class="text-blue-600">프로필</a></li>
-          <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
-        </ul>
-      </nav>
+      ${Header(isLoggedIn)}
 
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
@@ -216,16 +243,16 @@ const renderProfilePage = (isLoggedIn) => {
             </div>
             <div class="mb-6">
               <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
-              <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">${user.bio}</textarea>
+              <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">${
+                user.bio
+              }</textarea>
             </div>
             <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
           </form>
         </div>
       </main>
-
-      <footer class="bg-gray-200 p-4 text-center">
-        <p>&copy; 2024 항해플러스. All rights reserved.</p>
-      </footer>
+  
+      ${Footer()}
     </div>
   </div>
   `;
@@ -242,7 +269,7 @@ const renderProfilePage = (isLoggedIn) => {
     };
 
     // // LocalStorage에 데이터 저장 (key: 'user')
-    localStorage.setItem('user', JSON.stringify(userInfo));
+    prefs.set(userInfo);
   });
 
   // 로그아웃 버튼 클릭 이벤트 리스너 추가
@@ -251,7 +278,7 @@ const renderProfilePage = (isLoggedIn) => {
       e.preventDefault();
 
       // LocalStorage에서 데이터 삭제 (key: 'user')
-      localStorage.removeItem('user');
+      prefs.delete('user');
 
       router.handleLogout();
       router.navigateTo('/');
@@ -294,7 +321,7 @@ const renderLoginPage = () => {
     };
 
     // LocalStorage에 데이터 저장 (key: 'user')
-    localStorage.setItem('user', JSON.stringify(userInfo));
+    prefs.set(userInfo);
 
     router.handleLogin();
     router.navigateTo('/');
@@ -330,11 +357,27 @@ document.addEventListener('DOMContentLoaded', () => {
   router.handleRoute(window.location.pathname);
 });
 
+// 메뉴 활성화
+const handleMenuActive = (currentPath) => {
+  const navLinks = document.querySelectorAll('nav a');
+
+  navLinks.forEach((link) => {
+    link.classList.remove('text-blue-600');
+    link.classList.add('text-gray-600');
+
+    if (link.getAttribute('href').replace('.', '') === currentPath) {
+      link.classList.remove('text-gray-600');
+      link.classList.add('text-blue-600');
+    }
+  });
+};
+
 // 네비게이션 이벤트 처리 (링크 클릭 시 페이지 전환)
 document.addEventListener('click', (e) => {
   const link = e.target.closest('nav a');
   if (link) {
     e.preventDefault();
     router.navigateTo(link.pathname);
+    handleMenuActive(link.pathname);
   }
 });

@@ -1,3 +1,5 @@
+import { TypeUserData } from "../type";
+
 class Observer {
     private observers: Array<any>
     constructor() {

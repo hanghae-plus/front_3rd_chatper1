@@ -1,80 +1,47 @@
+import { isLogin, setUser, removeUser } from './utils';
+
+import DefaultView from './layouts/default_view';
+
+import Navigation from './components/navigation';
+import Footer from './components/footer';
+
+import Main from './pages/main';
+import Profile from './pages/profile';
+import Login from './pages/login';
+import Error from './pages/error';
+
 export default class Router {
   constructor() {
-    this.routes = {};
+    this.routes = {
+      '/': { component: Main, isDefaultView: true },
+      '/profile': { component: Profile, isDefaultView: true },
+      '/login': { component: Login, isDefaultView: false },
+    };
     window.addEventListener('popstate', this.handlePopState.bind(this));
   }
 
   init() {
-    this.addRoute('/', () => this.loadHTML('../templates/main.html'));
-    this.addRoute('/profile', () => this.loadHTML('../templates/profile.html'));
-    this.addRoute('/login', () => this.loadHTML('../templates/login.html'));
-
-    this.handleRoute(window.location.pathname);
-
-    this.initMutationObserver();
+    this.navigateTo(window.location.pathname);
   }
-
-  addNavEvent() {
-    const nav = document.querySelector('nav');
-    if (nav) {
-      nav.addEventListener('click', (e) => {
-        if (e.target.tagName === 'A') {
-          e.preventDefault();
-          this.navigateTo(e.target.pathname.replace(/^\.\//, '/').replace(/\.html$/, ''));
-        }
-      });
-    } else {
-      console.error('Nav element not found');
-    }
+  setHTML(html) {
+    document.getElementById('root').innerHTML = html;
   }
+  makeView(route, currentPath) {
+    const { component, isDefaultView } = route;
+    const nav = isDefaultView ? Navigation.template(currentPath) : '';
+    const footer = isDefaultView ? Footer.template() : '';
 
-  initMutationObserver() {
-    const targetNode = document.getElementById('root');
-    if (targetNode) {
-      const config = { childList: true, subtree: true };
-      const callback = (mutationsList) => {
-        for (const mutation of mutationsList) {
-          if (mutation.type === 'childList') {
-            console.log('root element innerHTML changed');
+    const defaultView = new DefaultView();
+    defaultView.setNavigation(nav);
+    defaultView.setContent(component.template());
+    defaultView.setFooter(footer);
+    const view = defaultView.build();
 
-            this.addNavEvent();
-          }
-        }
-      };
-      const observer = new MutationObserver(callback);
-      observer.observe(targetNode, config);
-    } else {
-      console.error('Root element not found for MutationObserver');
-    }
-  }
+    this.setHTML(view);
 
-  async loadHTML(url) {
-    const rootId = 'root';
+    Navigation.bindEvents(this.navigateTo.bind(this));
 
-    try {
-      // HTML 파일을 fetch로 불러옴
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      // HTML 파일의 내용을 텍스트로 변환
-      const html = await response.text();
-      // HTML 문자열을 파싱하여 DOM 객체로 변환
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      // 특정 ID를 가진 요소를 추출
-      const element = doc.getElementById(rootId);
-      // 특정 요소의 innerHTML로 삽입
-      document.getElementById(rootId).innerHTML = element.innerHTML;
-
-      return;
-    } catch (error) {
-      console.error('There has been a problem with your fetch operation:', error);
-    }
-  }
-
-  addRoute(path, handler) {
-    this.routes[path] = handler;
+    component?.bindEvents?.(this.navigateTo.bind(this));
   }
 
   navigateTo(path) {
@@ -88,25 +55,33 @@ export default class Router {
   }
 
   handleRoute(path) {
-    const handler = this.routes[path];
-    if (handler) {
-      handler();
+    const route = this.routes[path];
+
+    if (route) {
+      this.makeView(route, path);
     } else {
-      console.log('404 Not Found');
+      this.setHTML(Error.template());
     }
   }
 
+  getUser() {
+    return JSON.parse(localStorage.getItem('user'));
+  }
+
   routeGuard(path) {
-    if (path === '/' || path === '/main') {
+    if (path === '/') {
       return '/';
     }
 
-    if (path === '/profile' && !localStorage.getItem('user')) {
+    if (path === '/profile' && this.getUser() === null) {
+      console.log(this.getUser());
       return '/login';
     }
 
-    if (path === '/login' && localStorage.getItem('user')) {
+    if (path === '/login' && this.getUser()) {
       return '/';
     }
+
+    return path;
   }
 }

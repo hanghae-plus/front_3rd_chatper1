@@ -92,6 +92,9 @@ export class LoginComponent extends Component {
     if (!loginForm) return;
 
     submitForm(loginForm, ({ username }) => {
+      if (!username) {
+        throw new Error("아이디를 입력해주세요.");
+      }
       const userData = { username, email: "", bio: "" };
       user.login(userData, () => {
         router.navigateTo(ROUTES.PROFILE.path);

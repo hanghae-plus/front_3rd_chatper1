@@ -1,15 +1,16 @@
+import Footer from "../../components/Footer.js";
 import Header from "../../components/Header.js";
-import footer from "../../components/Footer.js";
+import {Store} from "../../utils/store.js";
 
-const ProfilePage = () => {
+
+export const profileTpl = () => {
     return `<div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
     ${Header()}
-
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-          <form>
+          <form id="user-info-form">
             <div class="mb-4">
               <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
               <input type="text" id="username" name="username" value="홍길동" class="w-full p-2 border rounded">
@@ -26,9 +27,7 @@ const ProfilePage = () => {
           </form>
         </div>
       </main>
-      ${footer()}
+      ${Footer()}
     </div>
   </div>`
 }
-
-export default ProfilePage

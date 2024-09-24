@@ -30,6 +30,8 @@ function renderHeader() {
   `
 }
 
+console.log(document.querySelector('nav.text-blue-600.font-bold'))
+
 // 공통 푸터
 function renderFooter() {
   return `
@@ -188,21 +190,24 @@ function renderLogin() {
   })
 
   //에러 바운더리 구현(의도적인 오류입니다.) - 심확과제
+
   const usernameInput = document.getElementById('username')
-  usernameInput.addEventListener(
-    'input',
-    () => {
-      //username이 1일 때 조건 추가
-      if (usernameInput.value === '1') {
-        try {
-          throw new Error('의도적인 오류입니다.')
-        } catch (error) {
-          errorBoundary(error)
+  if (usernameInput) {
+    usernameInput.addEventListener(
+      'input',
+      () => {
+        //username이 1일 때 조건 추가
+        if (usernameInput.value === '1') {
+          try {
+            throw new Error('의도적인 오류입니다.')
+          } catch (error) {
+            errorBoundary(error)
+          }
         }
-      }
-    },
-    { once: true },
-  )
+      },
+      { once: true },
+    )
+  }
 }
 
 // 프로필 페이지
@@ -290,7 +295,7 @@ function route(path = window.location.pathname) {
   if (path === '/' || path === '/main') {
     renderHome()
   } else if (path === '/login') {
-    //라우트 가드(리다이렉트) - 심화과제
+    //라우트 가드(리다이렉트 - 심화과제
     if (isLogIn()) {
       renderHome()
     } else {

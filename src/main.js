@@ -14,15 +14,15 @@ function renderHeader() {
     </header>
     <nav class="bg-white shadow-md p-2 sticky top-14">
       <ul class="flex justify-around">
-        <li><a href="/" class="${currentPath === '/' ? 'text-blue-600' : 'text-gray-600'}">홈</a></li>
+        <li><a href="/" class="${currentPath === '/' ? 'text-blue-600 font-bold' : 'text-gray-600'}">홈</a></li>
         ${
           user
             ? `<li><a href="/profile" class="${
-                currentPath === '/profile' ? 'text-blue-600' : 'text-gray-600'
+                currentPath === '/profile' ? 'text-blue-600 font-bold' : 'text-gray-600'
               }">프로필</a></li>
               <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>`
             : `<li><a href="/login" class="${
-                currentPath === '/login' ? 'text-blue-600' : 'text-gray-600'
+                currentPath === '/login' ? 'text-blue-600 font-bold' : 'text-gray-600'
               }">로그인</a></li>`
         }
       </ul>
@@ -50,15 +50,95 @@ function renderHome() {
             <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
             <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
           </div>
-          <div class="space-y-4">
-            <!-- 게시물 리스트 -->
+         <div class="space-y-4">
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">홍길동</p>
+                <p class="text-sm text-gray-500">5분 전</p>
+              </div>
+            </div>
+            <p>오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
+            </div>
           </div>
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">김철수</p>
+                <p class="text-sm text-gray-500">15분 전</p>
+              </div>
+            </div>
+            <p>새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">이영희</p>
+                <p class="text-sm text-gray-500">30분 전</p>
+              </div>
+            </div>
+            <p>오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">박민수</p>
+                <p class="text-sm text-gray-500">1시간 전</p>
+              </div>
+            </div>
+            <p>주말에 등산 가실 분 계신가요? 함께 가요!</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">정수연</p>
+                <p class="text-sm text-gray-500">2시간 전</p>
+              </div>
+            </div>
+            <p>새로 나온 영화 재미있대요. 같이 보러 갈 사람?</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
+            </div>
+          </div>
+        </div>
         </main>
         ${renderFooter()}
       </div>
     </div>
   `
   pageLoader(homeTemplate)
+
+  const homeLink = document.querySelector('nav a[href="/"]')
+  if (homeLink) {
+    homeLink.classList.add('text-blue-600', 'font-bold')
+  }
+
   addLogoutListener()
 }
 
@@ -85,8 +165,10 @@ function renderLogin() {
 
   // 로그인 클릭 이벤트 리스너
   const loginForm = document.getElementById('login-form')
+
   loginForm.addEventListener('submit', (event) => {
     event.preventDefault()
+
     const username = document.getElementById('username').value
     if (username) {
       // 사용자 정보 로컬 스토리지에 저장
@@ -178,11 +260,15 @@ function renderNotFound() {
 // 라우팅 구현
 function route(path = window.location.pathname) {
   window.history.pushState({}, '', path)
-
   if (path === '/' || path === '/main') {
     renderHome()
   } else if (path === '/login') {
-    renderLogin()
+    //리다이렉트 - 심화과제
+    if (isLogIn()) {
+      renderHome()
+    } else {
+      renderLogin()
+    }
   } else if (path === '/profile') {
     if (isLogIn()) {
       renderProfile()

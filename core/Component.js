@@ -5,13 +5,13 @@ export default class Component {
 
   constructor($target) {
     this.$target = $target;
-    this.init();
-  }
-
-  init() {
+    this.setup();
     this.initEvent();
     this.render();
   }
+
+  // state를 설정하는 생명주기
+  setup() {}
 
   // mounted() {}
 

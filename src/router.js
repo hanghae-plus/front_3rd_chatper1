@@ -13,6 +13,8 @@ const routes = {
   '/profile': ($target) => new ProfilePage($target),
 };
 
+let currentRoute = null;
+
 const navigateTo = (path, replace = false) => {
   if (replace) {
     history.replaceState(null, '', path);
@@ -34,7 +36,9 @@ const handleRoute = (path) => {
     return;
   }
 
-  routes[path](document.querySelector('#root'));
+  currentRoute = routes[path](document.querySelector('#root'));
+
+  console.log('currentRoute', currentRoute);
 };
 
 export { handleRoute, navigateTo };

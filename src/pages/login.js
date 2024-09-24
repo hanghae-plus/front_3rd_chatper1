@@ -1,4 +1,5 @@
-import { setUser } from '../utils.js';
+import { user } from '../utils.js';
+import router from '../router.js';
 
 const loginForm = `
 <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -7,6 +8,7 @@ const loginForm = `
     <form id="login-form">
       <div class="mb-4">
         <input id="username" type="text" placeholder="이름" class="w-full p-2 border rounded" />
+        <div id="error" class="mt-1"></div>
       </div>
       <div class="mb-4">
         <input type="email" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded" />
@@ -31,14 +33,29 @@ class Login {
   template() {
     return loginForm;
   }
-  bindEvents(navigateTo) {
+  activeEvents() {
     document.getElementById('login-form')?.addEventListener('submit', (e) => {
-      const username = e.target.querySelector('input[type="text"]').value;
-      const email = e.target.querySelector('input[type="email"]').value;
-      // const password = e.target.querySelector('input[type="password"]').value;
-      setUser({ username, email, bio: '' });
-      navigateTo('/');
-      e.preventDefault();
+      try {
+        const username = e.target.querySelector('input[type="text"]').value;
+        const email = e.target.querySelector('input[type="email"]').value;
+
+        user.setUser({ username, email, bio: '' });
+        router.navigateTo('/');
+        e.preventDefault();
+      } catch (error) {
+        console.error('프로필 업데이트 에러', error);
+      }
+    });
+
+    document.getElementById('username')?.addEventListener('input', (e) => {
+      const $error = document.getElementById('error');
+      try {
+        if ($error.innerHTML) {
+          $error.innerHTML = '';
+        }
+      } catch (error) {
+        $error.innerHTML = `<span class="test-xs text-red">오류 발생! ${error.message}</span>`;
+      }
     });
   }
 }

@@ -25,7 +25,13 @@ function renderPage(path) {
   // 프로필 페이지에 접근할 때 localStorage에 user가 없으면 로그인 페이지로 리다이렉트
   if (path === '/profile' && !localStorage.getItem('user')) {
     renderPage('/login');
-    return; // 이후 코드 실행을 중단합니다.
+    return;
+  }
+
+  //로그인 상태에서 로그인 페이지로 접근하면 메인 페이지로 리다이렉트
+  if (path === '/login' && localStorage.getItem('user')) {
+    renderPage('/');
+    return; 
   }
 
   const componentInstance = component(); // 이제 component는 함수여야 합니다.

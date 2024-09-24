@@ -1,11 +1,11 @@
-import AsyncStorage from './storage';
+import Storage from './storage';
 
 const Store = (function () {
   let instance;
 
   const initialState = {
-    isLoggedIn: !!AsyncStorage.loadData('user'),
-    user: AsyncStorage.loadData('user') || null,
+    isLoggedIn: !!Storage.loadData('user'),
+    user: Storage.loadData('user') || null,
   };
 
   function createInstance() {
@@ -22,7 +22,7 @@ const Store = (function () {
         isLoggedIn: true,
         user: { ...state.user, ...userInfo },
       };
-      AsyncStorage.saveData('user', state.user);
+        Storage.saveData('user', state.user);
     }
 
     function clearUserInfo() {
@@ -30,7 +30,7 @@ const Store = (function () {
         isLoggedIn: false,
         user: null,
       };
-      AsyncStorage.clearData('user')
+      Storage.clearData('user')
     }
 
     function subscribe(listener) {

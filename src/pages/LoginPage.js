@@ -1,4 +1,4 @@
-import Router from '../routes.js';
+import Router from '../router.js';
 import Store from "../utils/store.js";
 import errorMessage from "../components/ErrorBoundary.js";
 

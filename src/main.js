@@ -1,8 +1,12 @@
-import { getInitComponent } from "./components/pages/Init/Init";
+import { getHomeComponent } from "./components/pages/Home/Home";
+import { getRenderComponent } from "./components/pages/Render/Render";
 import { movePage } from "./utils/navigations/movePage";
 import { render } from "./utils/rendering/render";
 
-document.querySelector("#root").innerHTML = getInitComponent();
+document.querySelector("#root").innerHTML = getRenderComponent({
+  component: getHomeComponent,
+  isLayout: true,
+});
 
 window.addEventListener("popstate", () => {
   const currentPath = window.location.pathname;
@@ -34,6 +38,9 @@ document.getElementById("root").addEventListener("click", (e) => {
 
   if (id === "profile") {
     e.preventDefault();
+
+    const user = localStorage.getItem("user");
+    console.log("user", user);
 
     const profileForm = document.getElementById("profile-form");
     profileForm.addEventListener("submit", (event) => {

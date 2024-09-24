@@ -20,7 +20,9 @@ const getFinalPath = (path) => {
 };
 
 export const renderPage = (path) => {
-  path = getFinalPath(path);
+  const newPath = getFinalPath(path);
+  if (path !== newPath) window.history.replaceState({}, "", newPath);
+  path = newPath;
   const route = routes[path];
 
   render(route.content(), root);

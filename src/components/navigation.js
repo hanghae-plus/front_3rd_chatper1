@@ -1,8 +1,10 @@
-import { isLogin, removeUser } from '../utils';
+import { user } from '../utils';
+import router from '../router';
 
 class Navigation {
-  template(currentPath) {
-    const isCurrentPath = (path) => currentPath === path;
+  template() {
+    const currentPath = window.location.pathname;
+    const isActivated = (path) => (currentPath === path ? 'text-blue-600 font-bold' : 'text-gray-600');
 
     return `
     <header class="bg-blue-600 text-white p-4 sticky top-0">
@@ -10,11 +12,11 @@ class Navigation {
     </header>
     <nav class="bg-white shadow-md p-2 sticky top-14">
       <ul class="flex justify-around">
-        <li><a href="/main" class="text-blue-600 font-bold">홈</a></li>
+        <li><a href="/" class="${isActivated('/')}">홈</a></li>
         ${
-          isLogin()
+          user.isLogin()
             ? `
-          <li><a href="/profile" class="text-gray-600">프로필</a></li>
+          <li><a href="/profile" class="${isActivated('/profile')}">프로필</a></li>
           <li><button id="logout" type="button" class="text-gray-600">로그아웃</button></li>
           `
             : '<li><a href="/login" class="text-gray-600">로그인</a></li>'
@@ -24,20 +26,20 @@ class Navigation {
     `;
   }
 
-  bindEvents(navigateTo) {
+  activeEvents() {
     document.querySelector('nav')?.addEventListener('click', (e) => {
       if (e.target.tagName === 'A') {
         e.preventDefault();
-        navigateTo(e.target.pathname);
+        router.navigateTo(e.target.pathname);
 
         return;
       }
     });
 
-    if (isLogin()) {
+    if (user.isLogin()) {
       document.getElementById('logout')?.addEventListener('click', () => {
-        removeUser();
-        navigateTo('/login');
+        user.removeUser();
+        router.navigateTo('/login');
       });
     }
   }

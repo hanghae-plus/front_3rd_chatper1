@@ -10,7 +10,6 @@ export default class Login extends Common {
   }
   render () {
     this.$target.innerHTML = this.template();
-    this.setTemplate();
     this.setEvent();
   }
   template () { 
@@ -39,29 +38,45 @@ export default class Login extends Common {
     </main>
     ` 
   }
-  setTemplate() {
-    this.$target.querySelector('#error_msg').innerHTML = `<p class="text-red-600 text-sm">${this.state.errorMsg}</p>`;
-  }
   setEvent () {
     const form = this.$target.querySelector('form');
     const $username = form.querySelector('#username');
+    const regex = /^[a-zA-Z]+$/;
+
+    // $username.addEventListener('input', (e)=>{
+    //   console.log(e)
+    //   try {
+    //     if (!regex.test(username) &&( username.length < 3 || username.length > 20)) {
+    //       throw new Error('오류 발생! 사용자 이름에 영어만 사용가능하며, 3자 이상 20자 이하로 입력해야 합니다.');
+    //     }
+        
+    //   } catch (error) {
+    //     const errorContainer = this.$target.querySelector('#error_msg');
+    //     if (errorContainer) {
+    //       errorContainer.innerHTML = `<p class="text-red-600 text-sm">${error.message}</p>`;
+    //       this.render()
+    //     }
+    //   }
+      
+    // })
     const saveUserInfo = (event)=> {
       const username = $username.value;
       event.preventDefault();
-      console.log($username,username)
-      const regex = /^[a-zA-Z]+$/;
-      if (username.length < 3 || username.length > 20) {
-        this.setState({errorMsg:'오류 발생! 사용자 이름은 3자 이상 20자 이하로 입력해야 합니다.'});
-        this.setTemplate();
-        throw new Error('오류 발생!');
+      try {
+        if (!regex.test(username)  || ( username.length < 3 || username.length > 20)) {
+          throw new Error('오류 발생! 사용자 이름에 영어만 사용가능하며, 3자 이상 20자 이하로 입력해야 합니다.');
+          // throw new Error('오류 발생! 사용자 이름에 영어만 사용가능하며, 3자 이상 20자 이하로 입력해야 합니다.');
+        }
+        localStorage.setItem('user', JSON.stringify({username,email:'',bio:''}));
+        navigateTo('/profile');
+      } catch (error) {
+        // 에러 메시지를 화면에 출력 (DOM에 추가)
+        const errorContainer = document.querySelector('#error_msg');
+        if (errorContainer) {
+          errorContainer.innerHTML = `<p class="text-red-600 text-sm">${error.message}</p>`;
+        }
+        console.log(error.message)
       }
-      if (!regex.test(username)) {
-        this.setState({errorMsg:'사용자 이름에 숫자는 의도적인 오류입니다.'});
-        this.setTemplate();
-        throw new Error('의도적인 오류입니다.');
-      }
-      localStorage.setItem('user', JSON.stringify({username,email:'',bio:''}));
-      navigateTo('/profile');
     }
     form.addEventListener("submit", saveUserInfo)
   }

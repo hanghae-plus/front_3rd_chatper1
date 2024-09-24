@@ -52,20 +52,20 @@ describe('심화과제 테스트', () => {
     });
   });
 
-  // describe('2. 이벤트 위임 활용', () => {
-  //   it('네비게이션의 링크를 클릭에서 이벤트 전파를 막았을 때, 아무일도 일어나지 않는다.', async () => {
-  //     goTo('/');
+  describe('2. 이벤트 위임 활용', () => {
+    it('네비게이션의 링크를 클릭에서 이벤트 전파를 막았을 때, 아무일도 일어나지 않는다.', async () => {
+      goTo('/');
 
-  //     const firstTarget = document.querySelector('nav a[href="/login"]');
+      const firstTarget = document.querySelector('nav a[href="/login"]');
 
-  //     firstTarget.addEventListener('click', e => e.stopPropagation());
+      firstTarget.addEventListener('click', e => e.stopPropagation());
 
-  //     await user.click(firstTarget)
+      await user.click(firstTarget)
 
-  //     // 클릭 이벤트 생성 및 트리거
-  //     expect(document.body.querySelector('header')).not.toBeFalsy();
-  //   });
-  // });
+      // 클릭 이벤트 생성 및 트리거
+      expect(document.body.querySelector('header')).not.toBeFalsy();
+    });
+  });
 
   describe('3. 에러 바운더리 구현', () => {
     it('로그인을 하다가 오류가 발생하면, 에러 바운더리에서 에러를 표시한다.', async () => {

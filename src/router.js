@@ -4,7 +4,7 @@ import Login from "./pages/LoginPage";
 import NotFound from "./pages/NotFoundPage";
 import Common from "./common";
 
-const root = document.querySelector('#root')
+const root = document.querySelector('#root');
 
 export const routes = [
   { path: "/", view: ()=> new Home(root), name: '홈' },
@@ -47,10 +47,12 @@ export const router = async () => {
   matchRoute.view();
 };
 export const navigateTo = (path) => {
-  if (path !== window.location.pathname) {
-    window.history.pushState({}, '', path);
-      const popStateEvent = new PopStateEvent('popstate', { state: null });
-      dispatchEvent(popStateEvent);
+  if (path !== window.location.href) {
+      window.history.pushState({}, '', path);
+      router();
+      // const popStateEvent = new PopStateEvent('popstate', { state: null });
+      // dispatchEvent(popStateEvent);
+      // popStateEvent.stopPropagation();
   } else {
       console.log('no render')
   }

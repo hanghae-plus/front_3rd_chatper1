@@ -27,19 +27,20 @@ export default class Header extends Common {
   setEvent () {
     this.$target.querySelectorAll("#nav_link").forEach(element => {
       element.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        navigateTo(e.target.href);
+        // if (e.target.matches("[data-link]")){
+          e.preventDefault();
+          navigateTo(e.target.href);
+        // }
+        console.log(e,e.target.matches("[data-link]"))
       })
     });
     // 로그아웃 클릭 이벤트 설정 (로그아웃 메뉴가 있을 때만)
     if (this.state.isLogined) {
       this.$target.querySelector('#logout').addEventListener('click', (e) => {
-        e.preventDefault(); // 기본 동작 방지 (리다이렉트 방지)
-        e.stopPropagation();
-        // 로그아웃 시 localStorage의 'user' 삭제
-        localStorage.removeItem('user');
-        navigateTo('/login');
+          e.preventDefault(); // 기본 동작 방지 (리다이렉트 방지)
+          // 로그아웃 시 localStorage의 'user' 삭제
+          localStorage.removeItem('user');
+          navigateTo('/login');
       });
     }
   }
@@ -53,8 +54,8 @@ export default class Header extends Common {
     // 템플릿을 생성할 때 현재 경로와 일치하는 항목에 스타일 추가
     this.$target.querySelector('#menu_list').innerHTML = [
       ...menuRoutes.map(menu => `
-        <li>
-          <a id="nav_link" href="${menu.path}" class="${menu.path === currentPath ? 'text-blue-600 font-bold' : 'text-gray-600'}">
+        <li id="nav_link">
+          <a data-link href="${menu.path}" class="${menu.path === currentPath ? 'text-blue-600 font-bold' : 'text-gray-600'}">
             ${menu.name}
           </a>
         </li>
@@ -62,8 +63,8 @@ export default class Header extends Common {
       this.state.isLogined ?
       // 로그아웃 메뉴 추가
       `
-        <li>
-          <a id="logout" href="#" class="text-gray-600">
+        <li id="logout">
+          <a data-link href="#" class="text-gray-600">
             로그아웃
           </a>
         </li>

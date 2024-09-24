@@ -242,9 +242,32 @@ const initRouter = () => {
 window.addEventListener('popstate', route);
 
 // 페이지 로드 시 라우터 초기화
-window.onload = () => {
+window.addEventListener('load', () => {
   checkLoginStatus();
   initRouter();
+});
+
+// 전역 에러 처리
+window.addEventListener('error', (error) => {
+  showErrorMessage(error.message);
+  return true;
+});
+
+const showErrorMessage = (message) => {
+  const root = document.getElementById('root');
+
+  if (!root) return;
+
+  root.innerHTML = `
+    <div class="bg-gray-100 min-h-screen flex items-center justify-center">
+      <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
+        <h1 class="text-2xl font-bold text-blue-600 mb-4">오류 발생!</h1>
+        <p class="text-4xl font-bold text-gray-800 mb-4">😢</p>
+        <p class="text-xl text-gray-600 mb-8">${message}</p>
+        <a href="/" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">홈으로 돌아가기</a>
+      </div>
+    </div>
+  `;
 };
 
 // localStorage에서 사용자 정보를 확인하고 로그인 상태를 설정

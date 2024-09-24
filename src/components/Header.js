@@ -7,7 +7,7 @@ export function Header() {
     currentPath === "/profile" ? "text-blue-600" : "text-gray-600";
 
   const homeLinkeClass =
-    currentPath === "/profile" ? "text-gray-600" : "text-blue-600";
+    currentPath === "/" ? "text-blue-600" : "text-gray-600";
 
   return `
     <header class="bg-blue-600 text-white p-4 sticky top-0">

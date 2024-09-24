@@ -1,5 +1,9 @@
-(function(){
-  const isLogin = JSON.parse(sessionStorage.getItem('user'));
+  // 변수선언
+  const IS_LOGIN = JSON.parse(sessionStorage.getItem('user'));
+
+  /*
+  * 컴포넌트 START
+  */
   const Header = () => {
     return (
     `<header class="bg-blue-600 text-white p-4 sticky top-0">
@@ -12,22 +16,25 @@
           <a
             id="goMainBtn" 
             href="javascript:void(0)"
+            data-link=""
             class="text-blue-600"
           >홈</a>
         </li>
         <li>
           <a 
-          id=""goProfileBtn"
-          href="javascript:void(0)"
-          class="text-gray-600"
+            id="goProfileBtn"
+            href="javascript:void(0)"
+            data-link="profile"
+            class="text-gray-600"
           >프로필</a>
         </li>
         <li>
           <a 
-            id="${isLogin ? 'logOutBtn' : 'logInBtn'}" 
+            id="${IS_LOGIN ? 'goLogOutBtn' : 'goLogInBtn'}" 
             href="javascript:void(0)" 
+            data-link="${IS_LOGIN ? '' : 'login'}"
             class="text-gray-600">
-            ${isLogin ? '로그아웃' : '로그인'}
+            ${IS_LOGIN ? '로그아웃' : '로그인'}
             </a>
         </li>
       </ul>
@@ -155,17 +162,33 @@
       <main class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-          <form>
+          <form id="login-form">
             <div class="mb-4">
-              <input type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+              <input 
+                id="username"
+                type="text" 
+                placeholder="이메일 또는 전화번호" 
+                class="w-full p-2 border rounded"
+                >
             </div>
             <div class="mb-6">
               <input type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
             </div>
-            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
+            <button 
+              id="logInSubmitBtn"
+              type="submit" 
+              class="w-full bg-blue-600 text-white p-2 rounded font-bold"
+            >
+              로그인
+            </button>
           </form>
           <div class="mt-4 text-center">
-            <a href="#" class="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
+            <a 
+              href="javascript:void(0)"
+              class="text-blue-600 text-sm"
+            >
+              비밀번호를 잊으셨나요?
+            </a>
           </div>
           <hr class="my-6">
           <div class="text-center">
@@ -221,7 +244,12 @@
           <p class="text-gray-600 mb-8">
             요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
           </p>
-          <a href="./main.html" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
+          <a
+            id="goMainBtn"
+            data-link=""
+            href="javascript:void(0)" 
+            class="bg-blue-600 text-white px-4 py-2 rounded font-bold"
+          >
             홈으로 돌아가기
           </a>
         </div>
@@ -229,9 +257,11 @@
       `
     )
   }
-    
-  
-  // 라우트 정의
+
+
+  /*
+  * 라우트 정의 START
+  */
   const routes = {
     '/': { title: 'Main', render: Main() },
     '/login': { title: 'Login', render: Login()},
@@ -242,21 +272,42 @@
   // 라우트 렌더링 함수
   function renderContent(route) {
     const root = document.getElementById('root');
-    root.innerHTML = routes[route].render;
-    // document.title = routes[route].title;
+    root.innerHTML = route.render;
+    document.title = route.title;
+
+    // 렌더링 후 이벤트 리스너 설정(동적으로 DOM이 생성되므로 이벤트위임)
+    document.body.addEventListener('click', function(e) {
+      e.stopPropagation(); // 이벤트버블링 막기
+
+      if(e.target.dataset.link !== undefined) {
+        navigate(e);
+      } else if(e.target.id === 'goLogOutBtn'){
+        // 로그아웃 처리 로직
+        sessionStorage.removeItem('user');
+        navigate(e);
+  
+      } else if(e.target.id === 'logInSubmitBtn') {
+        loginSubmit(e);
+      }
+    });
   }
   
   // 라우트 변경 처리 함수
   function handleLocation() {
     const path = window.location.pathname;
-    const route = routes[path] || routes['/'];
-    renderContent(path);
+    console.log(path, IS_LOGIN, '----')
+    // 로그인이 되지 않은 상태에서 profile 경로로 접근하면 로그인 페이지로 리다이렉트 된다.
+    const route = routes[path] || routes['/404']; // 존재하지 않은 경로로 접근하면 404 페이지가 렌더링됨
+
+    renderContent(route);
   }
   
+
   // 네비게이션 함수
   function navigate(event) {
     event.preventDefault();
-    const href = event.target.getAttribute('href');
+    event.stopPropagation(); // 이벤트버블링 막기
+    const href = event.target.dataset.link === '' ? '/' : event.target.dataset.link;
     window.history.pushState({}, '', href);
     handleLocation();
   }
@@ -272,4 +323,3 @@
     handleLocation();
   });
 
-})()

@@ -4,10 +4,11 @@ const createStore = () => {
     isLoggedIn: JSON.parse(localStorage.getItem('user')) ? true : false,
   };
   let state = { ...initialState };
-  const listeners = [];
+  const listeners = new Set();
 
   const subscribe = (listener) => {
-    listeners.push(listener);
+    listeners.add(listener);
+    return () => listeners.delete(listener);
   };
 
   const getState = (targetState) => {

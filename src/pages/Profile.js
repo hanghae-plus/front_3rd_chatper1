@@ -1,9 +1,10 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { getUserInfo } from "../auth/auth";
 
 export default function ProfilePage() {
   // 프로필 조회
-  const profileForm = JSON.parse(localStorage.getItem("user"));
+  const profileForm = getUserInfo();
   return `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">

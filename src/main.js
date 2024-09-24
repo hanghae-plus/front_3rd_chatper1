@@ -1,9 +1,9 @@
-import Router from "./router";
+import Router from "./router/router";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import ProfilePage from "./pages/Profile";
 import NotFoundPage from "./pages/NotFound";
-import { logout, setUserInfo } from "./auth";
+import { logout, setUserInfo } from "./auth/auth";
 
 // 1. 라우터 설정 및 초기화
 const router = Router();
@@ -18,12 +18,12 @@ const root = document.getElementById("root");
 root.addEventListener("click", (e) => {
   const nav = document.querySelector("nav");
   if (nav) {
-    if (e.target.id === "logout") {
-      // 로그아웃 시 사용자 정보 제거
-      logout();
-    }
+    // 클릭 시 페이지 이동
     if (e.target.tagName === "A") {
-      // 클릭 시 페이지 이동
+      // 로그아웃 시 사용자 정보 제거
+      if (e.target.id === "logout") {
+        logout();
+      }
       e.preventDefault();
       router.navigateTo(e.target.pathname);
     }
@@ -32,16 +32,19 @@ root.addEventListener("click", (e) => {
 
 // 로그인/프로필 수정 시 사용자 정보 저장
 root.addEventListener("submit", (e) => {
-  e.preventDefault();
-  setUserInfo({
-    username: document.getElementById("username")?.value || "", // 이메일 또는 전화번호(사용자 이름)
-    email: document.getElementById("email")?.value || "", // 이메일
-    bio: document.getElementById("bio")?.value || "", // 자기소개
-  });
+  const form = document.querySelector("form");
+  if (form) {
+    e.preventDefault();
+    setUserInfo({
+      username: document.getElementById("username")?.value || "", // 이메일 또는 전화번호(사용자 이름)
+      email: document.getElementById("email")?.value || "", // 이메일
+      bio: document.getElementById("bio")?.value || "", // 자기소개
+    });
 
-  if (e.target.id === "login-form") {
-    router.navigateTo("/profile");
-  } else if (e.target.id === "profile-form") {
-    alert("프로필 수정이 완료되었습니다 :)");
+    if (e.target.id === "login-form") {
+      router.navigateTo("/profile");
+    } else if (e.target.id === "profile-form") {
+      alert("프로필 수정이 완료되었습니다 :)");
+    }
   }
 });

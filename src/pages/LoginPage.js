@@ -47,7 +47,6 @@ export function LoginPage() {
 }
 
 function handleLogin() {
-  console.log("handleLogin");
   const loginForm = document.querySelector("#login-form");
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {

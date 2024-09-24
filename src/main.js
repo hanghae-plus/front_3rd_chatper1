@@ -33,7 +33,6 @@ export function Logout() {
     logoutEl.addEventListener("click", () => {
       user.clear();
       router.navigateTo("/");
-      console.log("로그아웃");
     });
 }
 

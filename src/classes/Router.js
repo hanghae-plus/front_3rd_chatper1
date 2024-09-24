@@ -19,8 +19,6 @@ export class Router {
   }
 
   handleRoute(path) {
-    console.log("routes", this.routes);
-    console.log("path", path);
     const handler = this.routes[path];
     if (handler) handler();
     else this.navigateTo("/404");

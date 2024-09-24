@@ -1,4 +1,26 @@
-document.querySelector('#root').innerHTML = `
+document.addEventListener("DOMContentLoaded", () => {
+  function router() {
+    const path = window.location.pathname;
+
+    switch (path) {
+      case "/":
+        renderHome();
+        break;
+      case "/login":
+        renderLogin();
+        break;
+      case "/profile":
+        renderProfile();
+        break;
+      default:
+        renderNotFound();
+        break;
+    }
+  }
+
+  // 각 페이지를 렌더링하는 함수들
+  function renderHome() {
+    document.querySelector("#root").innerHTML = `
 <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
       <header class="bg-blue-600 text-white p-4 sticky top-0">
@@ -7,9 +29,9 @@ document.querySelector('#root').innerHTML = `
 
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
-          <li><a href="./main.html" class="text-blue-600">홈</a></li>
-          <li><a href="./profile.html" class="text-gray-600">프로필</a></li>
-          <li><a href="#" class="text-gray-600">로그아웃</a></li>
+          <li><a href="/" class="text-blue-600">홈</a></li>
+          <li><a href="/profile" class="text-gray-600">프로필</a></li>
+          <li><a href="/login" class="text-gray-600">로그아웃</a></li>
         </ul>
       </nav>
 
@@ -109,3 +131,99 @@ document.querySelector('#root').innerHTML = `
     </div>
   </div>
 `;
+  }
+
+  function renderLogin() {
+    document.title = "Login";
+    document.querySelector("#root").innerHTML = `
+            <h1>Login Page</h1>
+           `;
+
+    // // 로그인 폼 이벤트 리스너
+    // document.getElementById("login-form").addEventListener("submit", (e) => {
+    //   e.preventDefault();
+    //   const username = document.getElementById("username").value;
+    //   localStorage.setItem("username", username);
+    //   history.pushState({}, "", "/profile");
+    //   router();
+    // });
+  }
+
+  function renderProfile() {
+    document.querySelector(
+      "#root"
+    ).innerHTML = `<div class="bg-gray-100 min-h-screen flex justify-center">
+    <div class="max-w-md w-full">
+      <header class="bg-blue-600 text-white p-4 sticky top-0">
+        <h1 class="text-2xl font-bold">항해플러스</h1>
+      </header>
+
+      <nav class="bg-white shadow-md p-2 sticky top-14">
+        <ul class="flex justify-around">
+          <li><a href="/" class="text-gray-600">홈</a></li>
+          <li><a href="/profile" class="text-blue-600">프로필</a></li>
+          <li><a href="/login" class="text-gray-600">로그아웃</a></li>
+        </ul>
+      </nav>
+
+      <main class="p-4">
+      
+      </main>
+
+      <footer class="bg-gray-200 p-4 text-center">
+        <p>&copy; 2024 항해플러스. All rights reserved.</p>
+      </footer>
+    </div>
+  </div>`;
+    // const username = localStorage.getItem("username");
+    // if (!username) {
+    //   history.pushState({}, "", "/login");
+    //   router();
+    //   return;
+    // }
+
+    // document.title = "Profile";
+    // document.getElementById("app").innerHTML = `
+    //         <h1>Profile Page</h1>
+    //         <p>Username: ${username}</p>
+    //         <button id="logout-btn">Logout</button>`;
+
+    // document.getElementById("logout-btn").addEventListener("click", () => {
+    //   localStorage.removeItem("username");
+    //   history.pushState({}, "", "/login");
+    //   router();
+    // });
+  }
+
+  function renderNotFound() {
+    document.title = "404 Not Found";
+    document.querySelector("#root").innerHTML = `
+           <div class="bg-gray-100 min-h-screen flex justify-center">
+    <div class="max-w-md w-full">
+     
+
+      <main class="p-4">
+        NOT
+      </main>
+
+     
+    </div>
+  </div>`;
+  }
+
+  // 브라우저에서 뒤로 가기 등을 처리하기 위한 이벤트 리스너
+  window.addEventListener("popstate", router);
+
+  // 초기 로드 시 라우팅 함수 실행
+  router();
+
+  // 네비게이션 링크 클릭 시 페이지 전환
+  document.querySelectorAll("nav a").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const href = e.target.getAttribute("href");
+      history.pushState({}, "", href);
+      router();
+    });
+  });
+});

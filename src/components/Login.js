@@ -52,6 +52,15 @@ class Login {
       // 로그인 처리하면서 프로필 페이지로 이동
       renderPage("/profile");
     });
+
+    window.addEventListener("error", (error) => {
+      console.log("kyj error", error);
+
+      document.querySelector("#root").innerHTML = `
+        <h2>오류 발생!</h2>
+        <p>의도적인 오류입니다.</p>
+      `;
+    });
   }
 }
 

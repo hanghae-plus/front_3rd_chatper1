@@ -1,11 +1,11 @@
 import { routes, protectedRoutes } from './routes';
 import { useNavigate } from './utils/useNavigate';
 
-const { updateHTML } = useNavigate(routes, protectedRoutes);
+const { renderPage } = useNavigate(routes, protectedRoutes);
 
-updateHTML();
+renderPage();
 
-window.addEventListener('popstate', updateHTML);
+window.addEventListener('popstate', renderPage);
 window.addEventListener('error', (event) => {
   document.getElementById('main').innerHTML = /* HTML */ `
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">

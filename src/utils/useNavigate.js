@@ -5,10 +5,10 @@ import Footer from '../components/Footer';
 export const useNavigate = (routes, protectedRoutes) => {
   const navigate = (path) => {
     window.history.pushState({}, '', path);
-    updateHTML();
+    renderPage();
   };
 
-  const updateHTML = () => {
+  const renderPage = () => {
     const currentPath = window.location.pathname;
     const rootElement = document.getElementById('root');
 
@@ -49,5 +49,5 @@ export const useNavigate = (routes, protectedRoutes) => {
     });
   };
 
-  return { updateHTML, navigate };
+  return { renderPage, navigate };
 };

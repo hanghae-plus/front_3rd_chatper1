@@ -54,6 +54,8 @@ export function LoginPage() {
 function handleLogin() {
   const loginForm = document.querySelector("#login-form");
   if (loginForm) {
+    handleUsernameInput();
+
     loginForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const username = document.querySelector("#username").value;
@@ -64,4 +66,22 @@ function handleLogin() {
       if (isLoggedIn()) router.navigateTo("/profile");
     });
   }
+}
+
+function handleUsernameInput() {
+  const usernameInput = document.querySelector("#username");
+  usernameInput.addEventListener(
+    "input",
+    () => {
+      try {
+        throw new Error("의도적인 오류입니다.");
+      } catch (error) {
+        const errorBoundary = document.createElement("div");
+        errorBoundary.id = "error-boundary";
+        errorBoundary.textContent = `오류 발생! ${error.message}`;
+        document.body.appendChild(errorBoundary);
+      }
+    },
+    { once: true }
+  );
 }

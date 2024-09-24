@@ -1,6 +1,7 @@
-import Footer from "./components/layouts/Footer.js";
-import Header from "./components/layouts/Header.js";
-import routes from "./routes";
+import Footer from './components/layouts/Footer.js';
+import Header from './components/layouts/Header.js';
+import routes from './routes';
+import Router from './router/Router.js';
 
 export default class App {
   constructor($element) {
@@ -12,26 +13,37 @@ export default class App {
   render() {
     this.$element.innerHTML = `
     <div class="bg-gray-100 min-h-screen flex justify-center">
-      <div class="max-w-md w-full">
-        <header></header>
-        <main class="p-4"></main>
-        <footer></footer>
+      <div id="container" class="max-w-md w-full">
       </div>
     </div>
     `;
   }
 
   setTemplate() {
-    this.router = routes(this.$element.querySelector("main"));
-    this.header = new Header({
-      $element: this.$element.querySelector("header"),
-      router: this.router,
-    });
+    const router = new Router();
 
-    this.footer = new Footer({
-      $element: this.$element.querySelector("footer"),
+    const header = new Header({
+      $element: this.$element.querySelector('#container'),
+      router: router,
     });
+    const footer = new Footer({
+      $element: this.$element.querySelector('#container'),
+      router: router,
+    });
+    this.router = routes(
+      this.$element.querySelector('#container'),
+      header,
+      footer
+    );
+    // this.header = new Header({
+    //   $element: this.$element.querySelector('header'),
+    //   router: this.router,
+    // });
+
+    // this.footer = new Footer({
+    //   $element: this.$element.querySelector('footer'),
+    // });
   }
 }
 
-new App(document.querySelector("#root"));
+new App(document.querySelector('#root'));

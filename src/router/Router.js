@@ -19,10 +19,14 @@ export default class Router {
 
   handleRoute(path) {
     const handler = this.routes[path];
+    console.log('handler', handler);
     if (handler) {
       handler();
     } else {
-      this.routes['*']();
+      console.log('404 Not Found');
     }
+    // else {
+    //   this.routes['*']();
+    // }
   }
 }

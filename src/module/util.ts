@@ -29,3 +29,17 @@ export function debounce(func: (args: any) => void, delay: number) {
     timeoutId = setTimeout(() => func.apply(this, args), delay);
   };
 }
+
+export function isEqual(
+  oldValue: { [key: string]: string },
+  newValue: { [key: string]: string }
+) {
+  let isEqual = true;
+  for (const key in newValue) {
+    if (oldValue[key] !== newValue[key]) {
+      isEqual = false;
+      break;
+    }
+  }
+  return isEqual;
+}

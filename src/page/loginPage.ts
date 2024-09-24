@@ -1,7 +1,7 @@
 import { useRouter } from '../module/route';
 import { throttle } from '../module/util';
 import Component from '../core/component';
-import store from '../module/store';
+import store, { useStore } from '../module/store';
 
 const router = useRouter();
 
@@ -14,6 +14,7 @@ function submitHandle() {
 
 export default class LoginPage extends Component {
   init() {
+    useStore(this);
     this.state = { id: '', password: '' };
   }
 

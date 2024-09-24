@@ -1,5 +1,6 @@
 import { attachLoginEvent } from "./loginEvent";
 import { attachNavEvent } from "./navEvent";
+import { attachProfileEvent } from "./profileEvent";
 
 export const attachEventHandler = (path) => {
   switch (path) {
@@ -13,6 +14,7 @@ export const attachEventHandler = (path) => {
     }
     case "/profile": {
       attachNavEvent();
+      attachProfileEvent();
       break;
     }
   }

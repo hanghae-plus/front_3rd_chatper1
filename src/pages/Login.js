@@ -15,6 +15,7 @@ const Login = () => {
     <div class="mt-4 text-center">
       <a href="#" class="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
     </div>
+    <div class="mt-4 text-center text-red-500" id="error-msg"></div>
     <hr class="my-6">
     <div class="text-center">
       <button class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>

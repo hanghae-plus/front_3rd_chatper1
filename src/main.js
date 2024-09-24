@@ -68,8 +68,15 @@ for (const key in routes) {
 }
 
 const logIn = (username) => {
-  updateUserInfo(username, '', '');
-  navigateTo('/');
+  const isValidUsername = /^[a-zA-Z]+$/.test(username);
+
+  if (isValidUsername) {
+    updateUserInfo(username, '', '');
+    navigateTo('/');
+    return;
+  }
+  document.getElementById('error-msg').innerHTML =
+    '오류 발생! 영어로만 입력해주세요.';
 };
 
 const logOut = () => {

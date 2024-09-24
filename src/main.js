@@ -2,25 +2,35 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProfilePage from './pages/ProfilePage';
+import { PATH } from './utils/constants';
+import { movePage } from './utils/functions';
 
-function movePage(path = '') {
-  history.pushState({}, '', path);
-  history.pushState({}, '', path);
-  history.back();
-}
+let user;
 
-function handleLoginForm() {
+function handleLogin() {
   const loginForm = document.getElementById('login-form');
+  if (!loginForm) return;
 
-  if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-    });
-  }
+  const username = document.getElementById('username');
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    user = {
+      username: username.value,
+      email: '',
+      bio: '',
+    };
+
+    localStorage.setItem('user', JSON.stringify(user));
+
+    movePage(PATH.HOME);
+  });
 }
 
 function handleNav() {
   const list = document.getElementById('nav-list');
+
   if (list) {
     list.addEventListener('click', (e) => {
       if (!list.contains(e.target)) return;
@@ -28,32 +38,25 @@ function handleNav() {
       const route = e.target.dataset.route;
       switch (route) {
         case 'home':
-          movePage('/');
+          movePage(PATH.HOME);
           break;
 
         case 'profile':
-          const user = localStorage.getItem('user');
-
-          if (user) {
-            movePage('/profile');
-          } else {
-            movePage('/login');
-          }
+          const user = JSON.parse(localStorage.getItem('user'));
+          user ? movePage(PATH.PROFILE) : movePage(PATH.LOGIN);
           break;
 
         case 'login':
-          movePage('/login');
+          movePage(PATH.LOGIN);
           break;
 
         case 'logout':
-          if (!confirm('로그아웃 하시겠습니까?')) return;
-
           localStorage.removeItem('user');
-          movePage('/');
+          movePage(PATH.LOGIN);
           break;
 
         default:
-          movePage('/404');
+          movePage(PATH.NOT_FOUND);
           break;
       }
     });
@@ -62,19 +65,19 @@ function handleNav() {
 
 function initFunctions() {
   handleNav();
-  handleLoginForm();
+  handleLogin();
 }
 
 function render() {
   const paintMain = () => {
     switch (location.pathname) {
-      case '/':
+      case PATH.HOME:
         return HomePage();
 
-      case '/login':
+      case PATH.LOGIN:
         return LoginPage();
 
-      case '/profile':
+      case PATH.PROFILE:
         return ProfilePage();
 
       default:

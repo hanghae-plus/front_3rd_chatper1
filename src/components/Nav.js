@@ -22,7 +22,7 @@ function paintNavItems() {
         <a data-route="profile" id="nav-item-profile" class="w-full flex align-center justify-center text-gray-600">프로필</a>
       </li>
       <li class="w-1/3">
-        <a data-route="logout" id="nav-item-logout" class="w-full flex align-center justify-center text-gray-600">로그아웃</a>
+        <a data-route="logout" id="logout" class="w-full flex align-center justify-center text-gray-600">로그아웃</a>
       </li>
     `
       : `

@@ -22,6 +22,13 @@ export function handleRouting() {
   links.forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
+
+      if (shouldStopPropagation(e)) {
+        e.stopPropagation();
+        console.log("Event propagation stopped");
+        return;
+      }
+
       router.navigateTo(e.target.getAttribute("href"));
     });
   });

@@ -242,7 +242,7 @@ const initRouter = () => {
 window.addEventListener('popstate', route);
 
 // 페이지 로드 시 라우터 초기화
-window.addEventListener('load', () => {
+window.addEventListener('DOMContentLoaded', () => {
   checkLoginStatus();
   initRouter();
 });

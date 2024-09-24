@@ -1,7 +1,11 @@
+import store from './store';
+
+
 // 사용자 관리 함수 
 function saveUser(username, email="", bio="" ){
   localStorage.setItem('user',JSON.stringify({username, email, bio}));
   localStorage.setItem('isLoggedIn', true);
+
 }
 function getUser(){
   const user = localStorage.getItem('user');
@@ -10,7 +14,13 @@ function getUser(){
 
 //사용자의 로그인 상태 확인하는 함수 
 function isLoggedIn(){
-  return localStorage.getItem('isLoggedIn') === 'true';
+  const loggedIn = store.getState('isLoggedIn');
+  if (loggedIn !== undefined) return loggedIn;
+  
+  const storedLoggedIn = localStorage.getItem('isLoggedIn');
+  const isLoggedIn = storedLoggedIn === 'true';
+  store.setState('isLoggedIn', isLoggedIn);
+  return isLoggedIn;
 }
 
 //로그아웃

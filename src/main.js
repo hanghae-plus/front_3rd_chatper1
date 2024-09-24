@@ -259,11 +259,15 @@ const renderProfilePage = (isLoggedIn) => {
           <form id="profile-form">
             <div class="mb-4">
               <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
-              <input type="text" id="username" name="username" value="홍길동" class="w-full p-2 border rounded">
+              <input type="text" id="username" name="username" value="${
+                user.username
+              }" class="w-full p-2 border rounded">
             </div>
             <div class="mb-4">
               <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
-              <input type="email" id="email" name="email" value="hong@example.com" class="w-full p-2 border rounded">
+              <input type="email" id="email" name="email" value="${
+                user.email
+              }" class="w-full p-2 border rounded">
             </div>
             <div class="mb-6">
               <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
@@ -288,12 +292,14 @@ const renderProfilePage = (isLoggedIn) => {
 
     const userInfo = {
       username: document.getElementById('username').value,
-      email: '',
+      email: document.getElementById('email').value,
       bio: document.getElementById('bio').value,
     };
 
     // // LocalStorage에 데이터 저장 (key: 'user')
     prefs.set(userInfo);
+
+    alert('프로필이 업데이트되었습니다.');
   });
 
   // 로그아웃 버튼 클릭 이벤트 리스너 추가
@@ -348,7 +354,8 @@ const renderLoginPage = () => {
     prefs.set(userInfo);
 
     router.handleLogin();
-    router.navigateTo('/');
+    router.navigateTo('/profile');
+    handleMenuActive(window.location.pathname);
   });
 };
 
@@ -362,7 +369,7 @@ const renderNotFoundPage = () => {
         <p class="text-gray-600 mb-8">
           요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
         </p>
-        <a href="./.html" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
+        <a href="./" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
           홈으로 돌아가기
         </a>
       </div>

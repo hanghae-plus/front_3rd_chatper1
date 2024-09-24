@@ -5,7 +5,26 @@ import ProfilePage from './pages/ProfilePage';
 import { PATH } from './utils/constants';
 import { movePage } from './utils/functions';
 
-let user;
+function handleProfile() {
+  const profileForm = document.getElementById('profile-form');
+  if (!profileForm) return;
+
+  profileForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const bio = document.getElementById('bio');
+
+    let user = JSON.parse(localStorage.getItem('user'));
+
+    user = {
+      ...user,
+      bio: bio.value,
+    };
+
+    localStorage.setItem('user', JSON.stringify(user));
+    alert('프로필이 업데이트 되었습니다.');
+  });
+}
 
 function handleLogin() {
   const loginForm = document.getElementById('login-form');
@@ -16,7 +35,7 @@ function handleLogin() {
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    user = {
+    const user = {
       username: username.value,
       email: '',
       bio: '',
@@ -24,7 +43,7 @@ function handleLogin() {
 
     localStorage.setItem('user', JSON.stringify(user));
 
-    movePage(PATH.HOME);
+    movePage(PATH.PROFILE);
   });
 }
 
@@ -66,6 +85,7 @@ function handleNav() {
 function initFunctions() {
   handleNav();
   handleLogin();
+  handleProfile();
 }
 
 function render() {

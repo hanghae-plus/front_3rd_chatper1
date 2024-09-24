@@ -1,6 +1,9 @@
+import authStore from "../store/store";
+
+// 헤더 컴포넌트
 class Header {
   template(currentPath) {
-    const user = localStorage.getItem("user");
+    const isLogin = authStore.getIsLogin() === true;
 
     // 현재 경로와 일치하는 메뉴에 active 클래스 추가
     const isActive = (path) =>
@@ -14,14 +17,14 @@ class Header {
         <ul class="flex justify-around">
           <li><a href="/" class="menu ${isActive("/")}">홈</a></li>
             ${
-              user
+              isLogin
                 ? `<li><a href="/profile" class="menu ${isActive(
                     "/profile"
                   )}">프로필</a></li>`
                 : ""
             }
           ${
-            user
+            isLogin
               ? `<li><a href="/login" id="logout" class="menu ${isActive(
                   "/login"
                 )}">로그아웃</a></li>`
@@ -41,8 +44,9 @@ class Header {
     if (logoutBtn) {
       logoutBtn.addEventListener("click", (event) => {
         event.preventDefault();
-        // 로그아웃 처리(유저 정보 삭제)
-        localStorage.removeItem("user");
+
+        // 스토어 로그아웃 메서드 호출
+        authStore.userLogout();
 
         renderPage("/login");
       });

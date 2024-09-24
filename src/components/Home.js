@@ -1,3 +1,4 @@
+// 메인(홈) 페이지 컴포넌트
 class Home {
   template() {
     return `

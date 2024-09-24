@@ -1,3 +1,6 @@
+import authStore from "../store/store.js";
+
+// 로그인 페이지 컴포넌트
 class Login {
   template() {
     return `
@@ -37,13 +40,14 @@ class Login {
         return;
       }
 
-      // 사용자 정보 localStorage에 저장
+      // 사용자 정보 객체 생성
       const user = {
         username: username,
         email: "",
         bio: "",
       };
-      localStorage.setItem("user", JSON.stringify(user));
+      // 스토어 로그인 메서드 호출 및 사용자 정보 전달
+      authStore.userLogin(user);
 
       // 로그인 처리하면서 프로필 페이지로 이동
       renderPage("/profile");

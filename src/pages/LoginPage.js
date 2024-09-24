@@ -23,6 +23,7 @@ const LoginPage = () => {
 
     const username = document.getElementById('username').value;
     store.setState('user', { username, email: '', bio: '' });
+    store.setState('isLoggedIn', true);
   };
 
   render();

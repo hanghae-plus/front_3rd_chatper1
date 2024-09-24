@@ -23,6 +23,8 @@ export const useNavigate = (routes) => {
 
       document.getElementById('logout')?.addEventListener('click', () => {
         store.removeState('user');
+        store.setState('isLoggedIn', false);
+
         navigate('/login');
       });
     } else {
@@ -40,7 +42,7 @@ export const useNavigate = (routes) => {
     const targetComponent = routes[currentPath] || routes['/404'];
     targetComponent();
 
-    const user = store.getState('user');
+    const user = store.getState('isLoggedIn');
     if (!user && currentPath === '/profile') {
       navigate('/login');
       return;

@@ -1,6 +1,7 @@
 const createStore = () => {
   const initialState = {
     user: JSON.parse(localStorage.getItem('user')) || null,
+    isLoggedIn: JSON.parse(localStorage.getItem('user')) ? true : false,
   };
   let state = { ...initialState };
   const listeners = [];
@@ -15,7 +16,7 @@ const createStore = () => {
   const setState = (targetState, newState) => {
     state = {
       ...state,
-      [targetState]: { ...state[targetState], ...newState },
+      [targetState]: newState,
     };
     listeners.forEach((listener) => listener(targetState));
     localStorage.setItem(targetState, JSON.stringify(newState));

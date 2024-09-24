@@ -1,10 +1,10 @@
 import { store } from '../store';
 
 const Header = (currentPath) => {
-  const user = store.getState('user');
+  const isLoggedIn = store.getState('isLoggedIn');
 
   const render = () => {
-    if (user)
+    if (isLoggedIn)
       return /* HTML */ `<header class="bg-blue-600 text-white p-4 sticky top-0">
           <h1 class="text-2xl font-bold">항해플러스</h1>
         </header>

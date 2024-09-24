@@ -10,27 +10,35 @@ export default function Nav() {
 
 function paintNavItems() {
   const isLogin = localStorage.getItem('user');
+  const BLUE = 'text-blue-600';
+  const GRAY = 'text-gray-600';
 
   return `${
     isLogin
       ? `
       <li class="w-1/3">
-        <a data-route="home" id="nav-item-home" class="w-full flex align-center justify-center text-blue-600">홈</a>
+        <a data-route="home" id="nav-item-home" class="w-full flex align-center justify-center cursor-pointer ${
+          location.pathname === '/' ? BLUE : GRAY
+        }">홈</a>
       </li>
       
       <li class="w-1/3">
-        <a data-route="profile" id="nav-item-profile" class="w-full flex align-center justify-center text-gray-600">프로필</a>
+        <a data-route="profile" id="nav-item-profile" class="w-full flex align-center justify-center cursor-pointer ${
+          location.pathname === '/profile' ? BLUE : GRAY
+        }">프로필</a>
       </li>
       <li class="w-1/3">
-        <a data-route="logout" id="logout" class="w-full flex align-center justify-center text-gray-600">로그아웃</a>
+        <a data-route="logout" id="logout" class="w-full flex align-center justify-center cursor-pointer ${GRAY}">로그아웃</a>
       </li>
     `
       : `
       <li class="w-1/2">
-        <a data-route="home" id="nav-item-home" class="w-full flex align-center justify-center text-blue-600">홈</a>
+        <a data-route="home" id="nav-item-home" class="w-full flex align-center justify-center cursor-pointer ${
+          location.pathname === '/' ? BLUE : GRAY
+        }">홈</a>
       </li>
       <li class="w-1/2">
-        <a data-route="login" id="nav-item-login" class="w-full flex align-center justify-center text-gray-600">로그인</a>
+        <a data-route="login" id="nav-item-login" class="w-full flex align-center justify-center cursor-pointer ${GRAY}">로그인</a>
       </li>
     `
   }

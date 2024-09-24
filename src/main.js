@@ -14,10 +14,8 @@ function handleProfile() {
 
     const bio = document.getElementById('bio');
 
-    let user = JSON.parse(localStorage.getItem('user'));
-
-    user = {
-      ...user,
+    const user = {
+      ...JSON.parse(localStorage.getItem('user')),
       bio: bio.value,
     };
 
@@ -43,6 +41,7 @@ function handleLogin() {
     localStorage.setItem('user', JSON.stringify(user));
 
     document.querySelector('#root').innerHTML = ProfilePage();
+    movePage(PATH.PROFILE);
     handleNav();
     handleProfile();
   });

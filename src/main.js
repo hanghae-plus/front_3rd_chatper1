@@ -1,5 +1,6 @@
 import { getHomeComponent } from "./components/pages/Home/Home";
 import { getRenderComponent } from "./components/pages/Render/Render";
+import { removeUser, setUser } from "./store/user/userStore";
 import { movePage } from "./utils/navigations/movePage";
 import { render } from "./utils/rendering/render";
 
@@ -22,41 +23,31 @@ document.getElementById("root").addEventListener("click", (e) => {
 
   if (id === "login") {
     movePage("/login", e);
-
-    const loginForm = document.getElementById("login-form");
-    loginForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-
-      localStorage.setItem("user", JSON.stringify({ username, password }));
-
-      movePage("/profile", e);
-    });
   }
 
   if (id === "profile") {
-    e.preventDefault();
-
-    const user = localStorage.getItem("user");
-    console.log("user", user);
-
-    const profileForm = document.getElementById("profile-form");
-    profileForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      const username = document.getElementById("username").value;
-      const email = document.getElementById("email").value;
-      const bio = document.getElementById("bio").value;
-
-      localStorage.setItem("user", JSON.stringify({ username, email, bio }));
-
-      movePage("/profile", e);
-    });
+    movePage("/profile", e);
   }
 
   if (id === "logout") {
+    removeUser();
     movePage("/login", e);
+  }
+});
+
+document.getElementById("root").addEventListener("submit", (e) => {
+  if (e.target.id === "login-form") {
+    e.preventDefault();
+    const username = document.getElementById("username").value;
+    setUser({ username });
+    movePage("/profile", e);
+  }
+
+  if (e.target.id === "profile-form") {
+    e.preventDefault();
+    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
+    const bio = document.getElementById("bio").value;
+    setUser({ username, email, bio });
   }
 });

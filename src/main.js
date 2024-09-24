@@ -27,10 +27,10 @@ document.getElementById("root").addEventListener("click", (e) => {
     loginForm.addEventListener("submit", (event) => {
       event.preventDefault();
 
-      const email = document.getElementById("email").value;
+      const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
 
-      localStorage.setItem("user", JSON.stringify({ email, password }));
+      localStorage.setItem("user", JSON.stringify({ username, password }));
 
       movePage("/profile", e);
     });

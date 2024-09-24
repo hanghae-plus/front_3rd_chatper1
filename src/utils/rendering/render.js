@@ -1,6 +1,6 @@
-import { ROUTES } from "../../components/contents/navigations/navigations";
 import { getErrorComponent } from "../../components/pages/Error/Error";
 import { getRenderComponent } from "../../components/pages/Render/Render";
+import { ROUTES } from "../../contents/navigations/navigations";
 
 export const render = (path) => {
   const rendering = ROUTES[path] || {

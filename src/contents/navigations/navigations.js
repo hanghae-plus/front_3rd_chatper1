@@ -1,6 +1,6 @@
-import { getHomeComponent } from "../../pages/Home/Home";
-import { getLoginComponent } from "../../pages/Login/Login";
-import { getProfileComponent } from "../../pages/Profile/Profile";
+import { getHomeComponent } from "../../components/pages/Home/Home";
+import { getLoginComponent } from "../../components/pages/Login/Login";
+import { getProfileComponent } from "../../components/pages/Profile/Profile";
 
 export const ROUTES = {
   "/": { component: getHomeComponent, isLayout: true },

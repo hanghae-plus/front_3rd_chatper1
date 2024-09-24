@@ -169,6 +169,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderProfile() {
+    const username = localStorage.getItem("username");
+    const email = localStorage.getItem("email")
+      ? localStorage.getItem("email")
+      : "";
+    const introduction = localStorage.getItem("introduction")
+      ? localStorage.getItem("introduction")
+      : "";
+
     document.querySelector(
       "#root"
     ).innerHTML = `<div class="bg-gray-100 min-h-screen flex justify-center">
@@ -186,7 +194,17 @@ document.addEventListener("DOMContentLoaded", () => {
       </nav>
 
       <main class="p-4">
-      
+        <div class="mb-4 bg-white rounded-lg shadow p-6 text-center">
+        <h1 class="text-2xl font-bold text-blue-600 mb-6">내 프로필</h1>
+        <form id="login-form" class="text-left">
+          <label for="" c>사용자 이름 </label>
+          <input id="username" type="text" class="rounded-md w-full border p-2 mb-6" value="${username}" />
+          <label for="" >이메일</label>
+          <input id="" type="text" class="rounded-md w-full border p-2 mb-6" placeholder="이메일" value="${email}"  />
+           <label for="">자기소개</label>
+          <textarea id="" class="rounded-md w-full border p-2 mb-6" placeholder="자기소개" />${introduction}</textarea>
+          <button class="rounded-md w-full bg-blue-600 text-white py-2">프로필 업데이트</button>
+        </form>
       </main>
 
       <footer class="bg-gray-200 p-4 text-center">
@@ -194,24 +212,6 @@ document.addEventListener("DOMContentLoaded", () => {
       </footer>
     </div>
   </div>`;
-    // const username = localStorage.getItem("username");
-    // if (!username) {
-    //   history.pushState({}, "", "/login");
-    //   router();
-    //   return;
-    // }
-
-    // document.title = "Profile";
-    // document.getElementById("app").innerHTML = `
-    //         <h1>Profile Page</h1>
-    //         <p>Username: ${username}</p>
-    //         <button id="logout-btn">Logout</button>`;
-
-    // document.getElementById("logout-btn").addEventListener("click", () => {
-    //   localStorage.removeItem("username");
-    //   history.pushState({}, "", "/login");
-    //   router();
-    // });
   }
 
   function renderNotFound() {

@@ -1,7 +1,13 @@
 export const getUser = () => {
-  return localStorage.getItem("user");
+  const userData = localStorage.getItem("user");
+  return JSON.parse(userData);
 };
 
-export const setUser = (user) => {
-  localStorage.setItem("user", JSON.stringify(user));
+export const setUser = ({ username, email = "", bio = "" }) => {
+  const userData = { username, email, bio };
+  localStorage.setItem("user", JSON.stringify(userData));
+};
+
+export const removeUser = () => {
+  return localStorage.removeItem("user");
 };

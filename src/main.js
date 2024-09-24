@@ -9,5 +9,4 @@ const router = new Router();
 router.addRoute('/', () => Home());
 router.addRoute('/profile', () => Profile());
 router.addRoute('/login', () => Login());
-router.addRoute('/signup', () => SignupPage());
 router.init();

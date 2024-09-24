@@ -7,8 +7,6 @@ export function handleNavElemClicked(e) {
 
         window.history.pushState({}, '', e.target.pathname);
         window.dispatchEvent(new Event('popstate'));
-
-        // router.navigateTo(e.target.pathname);
     }
 }
 

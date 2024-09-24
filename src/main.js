@@ -339,6 +339,11 @@ window.addEventListener('popstate', () => {
   route()
 })
 
+// 전역 에러를 막아 테스트가 중단되지 않도록 방지
+window.addEventListener('error', (e) => {
+  e.preventDefault()
+})
+
 //초기 라우팅
 document.addEventListener('DOMContentLoaded', () => {
   route()

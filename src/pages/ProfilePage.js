@@ -1,6 +1,6 @@
-export default class Profile {
+export default class ProfilePage  {
   constructor() {
-    document.title = "Profile";
+    document.title = "ProfilePage ";
   }
  getHtml() {
     return `

@@ -1,6 +1,6 @@
-export default class Home {
+export default class HomePage {
     constructor() {
-      document.title = "Home";
+      document.title = "HomePage";
     }
     getHtml() {
       return `

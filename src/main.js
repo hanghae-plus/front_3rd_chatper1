@@ -1,14 +1,14 @@
-import Login from "../src/pages/login.js";
-import Profile from "../src/pages/profile.js";
-import Error from "../src/pages/error.js";
-import Home from "../src/pages/home.js";
+import HomePage from "../src/pages/HomePage.js";
+import LoginPage from "../src/pages/LoginPage.js";
+import ProfilePage from "../src/pages/ProfilePage.js";
+import NotFoundPage from "../src/pages/NotFoundPage.js";
 
 /** 페이지 모음 */
 const routes = [
-  { path: "/", view: () => Home },
-  { path: "/login", view: () => Login },
-  { path: "/profile", view: () => Profile },
-  { path: "/error", view: () => Error },
+  { path: "/", view: () => HomePage },
+  { path: "/login", view: () => LoginPage },
+  { path: "/profile", view: () => ProfilePage },
+  { path: "/error", view: () => NotFoundPage },
 ];
 
 window.addEventListener('load', function() {

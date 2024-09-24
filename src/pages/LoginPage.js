@@ -1,6 +1,6 @@
-export default class Login {
+export default class LoginPage {
   constructor() {
-    document.title = "Login";
+    document.title = "LoginPage";
   }
  getHtml() {
     return `

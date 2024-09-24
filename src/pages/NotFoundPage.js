@@ -1,6 +1,6 @@
-export default class Error {
+export default class NotFoundPage  {
   constructor() {
-    document.title = "Error";
+    document.title = "NotFoundPage ";
   }
   getHtml() {
     return `

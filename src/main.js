@@ -30,9 +30,8 @@ document.addEventListener('submit', (e) => {
     e.preventDefault(); // 기본 폼 제출 방지
 
     const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
 
-    if (username && password) {
+    if (username) {
       saveUserData({ username, email: '', bio: '' });
       console.log('저장된 사용자 데이터:', localStorage.getItem('user'));
       setLoginStatus(true);

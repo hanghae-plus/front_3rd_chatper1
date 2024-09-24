@@ -1,1 +1,1 @@
-export { default as UserStore } from './userStore.js'
+export { default as UserStore } from './userStore'

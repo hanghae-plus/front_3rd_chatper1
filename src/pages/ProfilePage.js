@@ -1,4 +1,4 @@
-import HeaderComponent from "../components/header.js"
+import HeaderComponent from "../components/Header.js"
 import FooterComponent from "../components/Footer.js"
 
 const profilePage = (loginStatus) => {

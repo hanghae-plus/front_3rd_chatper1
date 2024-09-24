@@ -1,40 +1,46 @@
-import Header from "../component/header"
-import Footer from "../component/footer"
-import Component from "../core/component"
-import store from "../module/store"
-import { throttle } from "../module/util"
-import { useRouter } from "../module/route"
-
+import Header from '../component/header';
+import Footer from '../component/footer';
+import Component from '../core/component';
+import store from '../module/store';
+import { throttle } from '../module/util';
+import { useRouter } from '../module/route';
 
 const router = useRouter();
 
-function submitHandle(){
-  const username = (document.querySelector('#username') as HTMLInputElement).value
-  const email = (document.querySelector('#email') as HTMLInputElement).value
-  const bio = (document.querySelector('#bio') as HTMLTextAreaElement).value
-  store.setState({username , email, bio})
-  localStorage.setItem('user',JSON.stringify({username , email, bio }))
-  alert('프로필이 업데이트 되었습니다.')
+function submitHandle() {
+  const usernameDiv = document.querySelector('#username') as HTMLInputElement;
+
+  const username = usernameDiv.value;
+  const email = (document.querySelector('#email') as HTMLInputElement).value;
+  const bio = (document.querySelector('#bio') as HTMLTextAreaElement).value;
+
+  const userInfo = { username, email, bio };
+
+  store.setState(userInfo);
+  localStorage.setItem('user', JSON.stringify(userInfo));
+  alert('프로필이 업데이트 되었습니다.');
 }
 
-export default class ProfilePage extends Component{
-  mounted(){
-    new Header("header")
-    new Footer("footer")
-    const { username, email, bio } = store.state
+export default class ProfilePage extends Component {
+  mounted() {
+    new Header('header');
+    new Footer('footer');
+    const { username, email, bio } = store.state;
     this.state = { username, email, bio };
-    if(!this.state['username']) router.push('/login')
+    if (!this.state['username']) router.push('/login');
   }
 
   attachEventListeners() {
-      document.querySelector('#profile-form')?.addEventListener('submit', (event) => {
-        event.preventDefault();
-        throttle( submitHandle ,500)()
-      });
+    const profileForm = document.querySelector('#profile-form');
+
+    profileForm?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      throttle(submitHandle, 500)();
+    });
   }
 
-  template(){
-      return `
+  template() {
+    return `
         <div class="bg-gray-100 min-h-screen flex justify-center">
           <div class="max-w-md w-full">
             <div id="header" ></div>
@@ -61,6 +67,6 @@ export default class ProfilePage extends Component{
             <div id="footer" ></div>
           </div>
         </div>
-      `
+      `;
   }
 }

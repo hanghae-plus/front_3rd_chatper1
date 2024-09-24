@@ -1,5 +1,5 @@
-export interface TypeUserData {
-    username: string,
-    email: string,
-    bio: string
+export interface UserDataType {
+  username: string;
+  email: string;
+  bio: string;
 }

@@ -1,13 +1,13 @@
-import Component from "../core/component";
+import Component from '../core/component';
 
-export default class Post extends Component{
-    state: { src: string, name: string, time: string, sentence: string }
-    init(){
-        this.render()
-    }
+export default class Post extends Component {
+  state: { src: string; name: string; time: string; sentence: string };
+  init() {
+    this.render();
+  }
 
-    template(): string {
-        return `
+  template(): string {
+    return `
               <div class="bg-white rounded-lg shadow p-4">
                 <div class="flex items-center mb-2">
                   <img src="${this.state.src}" alt="프로필" class="rounded-full mr-2">
@@ -23,6 +23,6 @@ export default class Post extends Component{
                   <button>공유</button>
                 </div>
               </div>
-        `
-    }
+        `;
+  }
 }

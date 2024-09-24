@@ -1,39 +1,43 @@
-import { useRouter } from "../module/route";
-import { throttle } from "../module/util";
-import Component from "../core/component"
+import { useRouter } from '../module/route';
+import { throttle } from '../module/util';
+import Component from '../core/component';
 
 const router = useRouter();
 
-function submitHandle(){
-  const username = (document.querySelector('#username') as HTMLInputElement).value
-  localStorage.setItem( 'user', JSON.stringify( { username, email:'', bio: '' } ) )
-  router.push('/profile')
+function submitHandle() {
+  const usernameDiv = document.querySelector('#username') as HTMLInputElement;
+  const username = usernameDiv.value;
+  const userInfo = { username, email: '', bio: '' };
+
+  localStorage.setItem('user', JSON.stringify(userInfo));
+  router.push('/profile');
 }
 
 export default class LoginPage extends Component {
-  init(){
-    this.state = { id: '' , password: '' }
+  init() {
+    this.state = { id: '', password: '' };
   }
 
   attachEventListeners() {
-    document.querySelector('#login-form')!.addEventListener('submit', function(event) {
+    const loginForm = document.querySelector('#login-form')!;
+
+    loginForm.addEventListener('submit', function (event) {
       event.preventDefault();
-      throttle(submitHandle,500)()
+      throttle(submitHandle, 500)();
     });
 
-    const btnList = document.querySelectorAll('[data-path]')
-    btnList.forEach(e=>{
-      e.addEventListener('click', function(event) {
-        event.preventDefault()
-        const path = e.getAttribute('data-path')
-        if(path) router.push(path)
+    const btnList = document.querySelectorAll('[data-path]');
+    btnList.forEach((e) => {
+      e.addEventListener('click', function (event) {
+        event.preventDefault();
+        const path = e.getAttribute('data-path');
+        if (path) router.push(path);
       });
-    })
-    
-  } 
+    });
+  }
 
-  template(){
-        return `
+  template() {
+    return `
           <main class="bg-gray-100 flex items-center justify-center min-h-screen">
             <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
               <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">
@@ -57,8 +61,6 @@ export default class LoginPage extends Component {
               </div>
             </div>
           </main>
-        `
-    }
+        `;
+  }
 }
-
-

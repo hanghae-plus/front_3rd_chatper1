@@ -1,9 +1,8 @@
-export default class Router {
+import { HOME_PAGE, LOGIN_PAGE, PROFILE_PAGE, USERNAME } from "./constants";
+import UserInfo from "./UserInfo";
+
+class Router {
   constructor() {
-    if (Router.instance) {
-      return Router.instance;
-    }
-    Router.instance = this;
     this.routes = [];
 
     window.addEventListener("popstate", () => {
@@ -22,9 +21,10 @@ export default class Router {
   }
 
   push(path) {
-    history.pushState({}, "", path);
+    const validPath = this.routerGuard(path);
+    history.pushState({}, "", validPath);
 
-    const handler = this.routes[path];
+    const handler = this.routes[validPath];
     if (handler) {
       handler();
     } else {
@@ -32,4 +32,21 @@ export default class Router {
       notFoundPage();
     }
   }
+
+  routerGuard(path) {
+    const userInfo = new UserInfo();
+
+    if (path === LOGIN_PAGE && !!userInfo.get(USERNAME)) {
+      return HOME_PAGE;
+    }
+    if (path === PROFILE_PAGE && !userInfo.get(USERNAME)) {
+      return LOGIN_PAGE;
+    }
+
+    return path;
+  }
 }
+
+const router = new Router();
+
+export default router;

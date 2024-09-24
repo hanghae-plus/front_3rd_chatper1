@@ -1,11 +1,9 @@
-import Router from "../router";
+import router from "../router";
 import UserInfo from "../UserInfo";
 
 import { HOME_PAGE, LOGIN_PAGE, PROFILE_PAGE, USERNAME } from "../constants";
 
 export default function Header({ initialState, onLogout }) {
-  const router = new Router();
-
   this.state = initialState;
   this.onLogout = onLogout;
 

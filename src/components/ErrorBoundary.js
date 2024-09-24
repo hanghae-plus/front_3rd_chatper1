@@ -1,8 +1,6 @@
-import Router from "../router";
+import router from "../router";
 
 export default function ErrorBoundary({ $root, errorMessage }) {
-  const router = new Router();
-
   this.errorMessage = errorMessage;
 
   this.$target = document.createElement("div");

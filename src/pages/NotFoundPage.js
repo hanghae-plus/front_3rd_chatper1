@@ -1,10 +1,8 @@
-import Router from "../router";
+import router from "../router";
 
 import { HOME_PAGE } from "../constants";
 
 export default function NotFoundPage({ $root }) {
-  const router = new Router();
-
   this.$target = document.createElement("main");
   this.$target.className =
     "bg-gray-100 flex items-center justify-center min-h-screen";

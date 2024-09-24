@@ -1,4 +1,4 @@
-import Router from "./router";
+import router from "./router";
 import UserInfo from "./UserInfo";
 import customEventListener from "./customEventListener";
 import {
@@ -28,8 +28,6 @@ const initialState = () => {
 };
 
 export default function App($root) {
-  const router = new Router();
-
   this.state = initialState();
 
   const homePage = new HomePage({
@@ -84,18 +82,10 @@ export default function App($root) {
   });
 
   router.addRoute(LOGIN_PAGE, () => {
-    if (!!this.state.username) {
-      router.push(HOME_PAGE);
-      return;
-    }
     loginPage.render();
   });
 
   router.addRoute(PROFILE_PAGE, () => {
-    if (!this.state.username) {
-      router.push(LOGIN_PAGE);
-      return;
-    }
     profilePage.render();
   });
 

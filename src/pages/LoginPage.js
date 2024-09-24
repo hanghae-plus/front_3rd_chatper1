@@ -1,11 +1,9 @@
-import Router from "../router";
+import router from "../router";
 import UserInfo from "../UserInfo";
 
 import { PROFILE_PAGE, USERNAME } from "../constants";
 
 export default function LoginPage({ $root, onSubmit }) {
-  const router = new Router();
-
   this.onSubmit = onSubmit;
 
   this.$target = document.createElement("main");

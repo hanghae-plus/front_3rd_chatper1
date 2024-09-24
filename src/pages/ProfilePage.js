@@ -47,11 +47,14 @@ export default function profilePage() {
     const username = e.target.querySelector('#username').value;
     const email = e.target.querySelector('#email').value;
     const bio = e.target.querySelector('#bio').value;
-
+  
     userStore.updateUser({ username, email, bio });
+  
+    renderPage();
+    setupEventListeners();
     alert('프로필이 업데이트 되었습니다.');
   }
-
+  
   function setupEventListeners() {
     const profileForm = document.getElementById('profile-form');
     profileForm?.addEventListener('submit', handleFormSubmit);

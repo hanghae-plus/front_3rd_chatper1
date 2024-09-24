@@ -2,8 +2,10 @@ import ErrorPage from './components/ErrorPage';
 import LoginPage from './components/LoginPage';
 import MainPage from './components/MainPage';
 import ProfilePage from './components/ProfilePage';
+import { getUser } from './helpers';
 
-const isLogin = false;
+const isLogin = () => getUser();
+
 const routes = {
   '/404': ($target) => new ErrorPage($target),
   '/': ($target) => new MainPage($target),
@@ -27,7 +29,7 @@ const handleRoute = (path) => {
     return;
   }
 
-  if (path === '/profile' && !isLogin) {
+  if (path === '/profile' && !isLogin()) {
     navigateTo('/login', true);
     return;
   }

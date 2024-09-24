@@ -7,3 +7,8 @@ export const login = (userData) => {
 export const logout = () => {
   localStorage.removeItem(USER_KEY);
 };
+
+export const getUser = () => {
+  const user = localStorage.getItem(USER_KEY);
+  return user ? JSON.parse(user) : null;
+};

@@ -4,58 +4,49 @@ import Header from './components/Header';
 import Nav from './components/Nav';
 import Write from './components/Write';
 
+function movePage(path = '') {
+  history.pushState({}, '', path);
+  history.pushState({}, '', path);
+  history.back();
+}
+
 function initFunctions() {
   const list = document.getElementById('nav-list');
   if (list) {
     list.addEventListener('click', (e) => {
       if (!list.contains(e.target)) return;
 
-      console.log('click');
-
       const route = e.target.dataset.route;
       switch (route) {
         case 'home':
-          history.pushState({ state: '홈' }, '', '/');
-          history.pushState({ state: '홈' }, '', '/');
-          history.back();
+          movePage('/');
           break;
 
         case 'profile':
-          history.pushState({ state: '프로필' }, '', '/profile');
-          history.pushState({ state: '프로필' }, '', '/profile');
-          history.back();
+          movePage('/profile');
           break;
 
         case 'login':
-          history.pushState({ state: '로그인' }, '', '/login');
-          history.pushState({ state: '로그인' }, '', '/login');
-          history.back();
+          movePage('/login');
           break;
 
         case 'logout':
           if (!confirm('로그아웃 하시겠습니까?')) return;
 
-          localStorage.removeItem('login');
+          localStorage.removeItem('user');
 
-          history.pushState({ state: '홈' }, '', '/');
-          history.pushState({ state: '홈' }, '', '/');
-          history.back();
+          movePage('/');
           break;
 
         default:
-          history.pushState({ state: 404 }, '', '/404');
-          history.pushState({ state: 404 }, '', '/404');
-          history.back();
+          movePage('/404');
           break;
       }
-      console.log(location.pathname);
-      console.log(history);
     });
   }
 }
 
 function render() {
-  console.log('render');
   const Home = `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
@@ -161,15 +152,11 @@ function render() {
   };
 
   document.querySelector('#root').innerHTML = paintMain();
-
   initFunctions();
 }
 
-localStorage.setItem('login', true);
-
-render();
-
 window.addEventListener('popstate', (e) => {
-  console.log(e);
   render();
 });
+
+render();

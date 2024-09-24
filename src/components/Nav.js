@@ -9,7 +9,7 @@ export default function Nav() {
 }
 
 function paintNavItems() {
-  const isLogin = localStorage.getItem('login');
+  const isLogin = localStorage.getItem('user');
 
   return `${
     isLogin

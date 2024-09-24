@@ -14,7 +14,6 @@ const LoginPage = () => {
   const addEvent = () => {
     document.getElementById('login-form').addEventListener('submit', (event) => {
       login(event);
-      navigate('/profile');
     });
   };
 
@@ -22,8 +21,15 @@ const LoginPage = () => {
     event.preventDefault();
 
     const username = document.getElementById('username').value;
+
+    if (username.trim() === '') {
+      throw new Error('사용자 이름을 입력해주세요.');
+    }
+
     store.setState('user', { username, email: '', bio: '' });
     store.setState('isLoggedIn', true);
+
+    navigate('/profile');
   };
 
   render();

@@ -42,7 +42,7 @@ export default function profilePage() {
 
   const throttledUpdate = throttle(() => {
     const userInfo = makeProfileForm()
-    userStore.updateUser(userInfo)
+    userStore.setState('user', userInfo)
     alert('프로필이 업데이트 되었습니다.')
   }, 500)
 

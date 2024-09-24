@@ -1,5 +1,6 @@
 import Router from '@routers'
 import { UserStore } from '@stores'
+import { ROUTES } from '@constants'
 
 const userStore = UserStore()
 
@@ -11,13 +12,13 @@ export default function LoginPage() {
         <form id="login-form">
           <div class="mb-4">
             <input type="text" id="username" placeholder="사용자 이름" class="w-full p-2 border rounded">
-            <p id="error-message-wrap" class="text-sm text-red-500"></p>
+            <p id="error-message-wrap" class="text-xs text-red-500"></p>
           </div>
           <div class="mb-6">
             <input type="password" id="password" placeholder="비밀번호" class="w-full p-2 border rounded">
           </div>
           <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
-          </form>
+        </form>
         <div class="mt-4 text-center">
           <a href="#" class="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
         </div>
@@ -33,7 +34,8 @@ export default function LoginPage() {
 
   function handleSaveUser(username) {
     const payload = { username, email: '', bio: '' }
-    userStore.updateUser(payload)
+    userStore.setState('user', payload)
+    userStore.setState('isLogin', true)
   }
 
   loginForm?.addEventListener('submit', (e) => {
@@ -45,7 +47,7 @@ export default function LoginPage() {
       return
     }
     handleSaveUser(username)
-    Router.navigate('/profile')
+    Router.navigate(ROUTES.PROFILE)
   })
 
   const username = document.getElementById('username')
@@ -61,7 +63,7 @@ export default function LoginPage() {
 
   username.addEventListener(
     'input',
-    function () {
+    () => {
       try {
         throw new Error('의도적인 오류입니다.')
       } catch (error) {

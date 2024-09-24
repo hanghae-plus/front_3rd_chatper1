@@ -6,7 +6,7 @@ const UserStore = (function () {
   let instance
 
   const initialState = {
-    isLoggedIn: !!Storage.load(USER_STORAGE_KEY),
+    isLogin: !!Storage.load(USER_STORAGE_KEY),
     user: Storage.load(USER_STORAGE_KEY) || null,
   }
 
@@ -20,25 +20,25 @@ const UserStore = (function () {
       return state[type]
     }
 
-    function updateUser(userInfo) {
+    function setState(key, value) {
       state = {
         ...state,
-        isLoggedIn: true,
-        user: { ...state.user, ...userInfo },
+        [key]: value,
       }
       Storage.save(USER_STORAGE_KEY, state.user)
       notify()
     }
 
-    function clearUserInfo() {
+    function clearState() {
       state = {
-        isLoggedIn: false,
+        isLogin: false,
         user: null,
       }
       Storage.remove(USER_STORAGE_KEY)
       notify()
     }
 
+    // 실행시 state변경을 감지해 콜백함수를 실행
     function subscribe(listener) {
       listeners.push(listener)
     }
@@ -50,8 +50,8 @@ const UserStore = (function () {
 
     return {
       getState,
-      updateUser,
-      clearUserInfo,
+      setState,
+      clearState,
       subscribe,
     }
   }

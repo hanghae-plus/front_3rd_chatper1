@@ -1,10 +1,21 @@
 import { render } from "lit-html";
 import { routes } from "./routes";
+import { attachEventHandler } from "./event/eventHandler";
 
 const root = document.querySelector("#root");
 
+const getFinalPath = (path) => {
+  const isValidPath = path in routes;
+  if (!isValidPath) return "/404";
+
+  return path;
+};
+
 export const renderPage = (path) => {
-  const route = routes[path] || routes["/404"];
+  path = getFinalPath(path);
+  const route = routes[path];
 
   render(route.content(), root);
+
+  attachEventHandler(path);
 };

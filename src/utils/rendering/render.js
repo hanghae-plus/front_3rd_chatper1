@@ -1,7 +1,4 @@
-import {
-  IS_ROOT,
-  ROUTES,
-} from "../../components/contents/navigations/navigations";
+import { ROUTES } from "../../components/contents/navigations/navigations";
 import { getErrorComponent } from "../../components/pages/Error/Error";
 import { getRenderComponent } from "../../components/pages/Render/Render";
 

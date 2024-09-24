@@ -1,4 +1,4 @@
-import { ErrorPage } from "../Page/ErrorPage";
+import { ErrorPage } from '../Page/ErrorPage';
 
 export class Router {
     constructor() {
@@ -15,13 +15,8 @@ export class Router {
         this.handleRoute(path);
     }
 
-    goto(path) {
-        window.history.pushState({}, '', path);
-        window.dispatchEvent(new Event('popstate'));
-    }
-
     handlePopState() {
-        console.log('handlePopState!')
+        console.log('handlePopState!');
         this.handleRoute(window.location.pathname);
     }
 
@@ -31,7 +26,18 @@ export class Router {
         if (handler) {
             handler();
         } else {
-            ErrorPage()
+            ErrorPage();
         }
+    }
+
+    init() {
+        console.log('📌 router init');
+        window.addEventListener('hashchange', () => {
+            const path = window.location.hash.slice(1) || '/';
+            this.handleRoute(path);
+        });
+
+        // 초기 라우트 처리
+        this.handleRoute(window.location.hash.slice(1) || '/');
     }
 }

@@ -24,11 +24,11 @@ class Observer {
 
 class Store extends Observer {
   _state: UserDataType;
-  initialState: UserDataType;
+  private initialState: UserDataType;
   constructor(state: UserDataType) {
     super();
     this._state = { ...state };
-    this.initialState = { ...state };
+    this.initialState = Object.freeze({ ...state });
   }
 
   get state() {
@@ -40,10 +40,25 @@ class Store extends Observer {
     this._state = this.initialState;
   }
 
+  isEqual(newValue: UserDataType) {
+    let isEqual = true;
+    for (const key in newValue) {
+      if (newValue[key] !== this._state[key]) {
+        isEqual = false;
+        break;
+      }
+    }
+    return isEqual;
+  }
+
   // 상태 업데이트 및 옵저버들에게 알림
   setState(newState: { username?: string; email?: string; bio?: string }) {
-    this._state = { ...this._state, ...newState };
-    this.notify(this._state);
+    const newValue = { ...this._state, ...newState };
+    if (this.isEqual(newValue)) return;
+
+    this._state = newValue;
+    localStorage.setItem('user', JSON.stringify(newValue));
+    this.notify(newValue);
   }
 }
 

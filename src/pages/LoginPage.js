@@ -9,6 +9,7 @@ const LoginPage = () => {
   const render = () => {
     const rootElement = document.getElementById('main');
     rootElement.innerHTML = LoginTemplate;
+    document.title = '항해플러스 - 로그인';
   };
 
   const addEvent = () => {

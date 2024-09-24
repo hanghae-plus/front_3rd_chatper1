@@ -5,6 +5,7 @@ const ProfilePage = () => {
   const render = () => {
     const rootElement = document.getElementById('main');
     rootElement.innerHTML = ProfileTemplate;
+    document.title = '항해플러스 - 프로필';
   };
 
   const addEvent = () => {

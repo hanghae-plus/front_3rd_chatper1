@@ -19,5 +19,5 @@ window.addEventListener('popstate', router);
  */
 window.addEventListener('error', error=>{
   console.error(error.message);
-  // document.querySelector('main').innerHTML = `<p class="text-red-600 text-sm">전역에러: ${error.message}</p>`;
+  document.querySelector('main').innerHTML = `<p class="text-red-600 text-sm">전역 오류 발생! : ${error.message}</p>`;
 })

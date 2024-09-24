@@ -42,23 +42,7 @@ export default class Login extends Common {
     const form = this.$target.querySelector('form');
     const $username = form.querySelector('#username');
     const regex = /^[a-zA-Z]+$/;
-
-    // $username.addEventListener('input', (e)=>{
-    //   console.log(e)
-    //   try {
-    //     if (!regex.test(username) &&( username.length < 3 || username.length > 20)) {
-    //       throw new Error('오류 발생! 사용자 이름에 영어만 사용가능하며, 3자 이상 20자 이하로 입력해야 합니다.');
-    //     }
-        
-    //   } catch (error) {
-    //     const errorContainer = this.$target.querySelector('#error_msg');
-    //     if (errorContainer) {
-    //       errorContainer.innerHTML = `<p class="text-red-600 text-sm">${error.message}</p>`;
-    //       this.render()
-    //     }
-    //   }
-      
-    // })
+    
     const saveUserInfo = (event)=> {
       const username = $username.value;
       event.preventDefault();

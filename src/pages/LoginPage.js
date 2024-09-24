@@ -1,6 +1,11 @@
 import { handleRouting, isLoggedIn, router, user } from "../main";
 
 export function LoginPage() {
+  if (isLoggedIn()) {
+    router.navigateTo("/");
+    return;
+  }
+
   const html = ` <main class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
       <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">

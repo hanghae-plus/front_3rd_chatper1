@@ -71,8 +71,8 @@ export default class HomePage extends BaseComponent<Post[]> {
   }
 
   afterRender() {
-    new Header(`#${ID.HEADER}`).render();
-    new Footer(`#${ID.FOOTER}`).render();
+    new Header(`#${ID.HEADER}`);
+    new Footer(`#${ID.FOOTER}`);
   }
 
   private renderPosts() {

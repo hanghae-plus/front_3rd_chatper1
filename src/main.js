@@ -1,4 +1,5 @@
 import Articles from './components/Articles';
+import Footer from './components/Footer';
 import Header from './components/Header';
 import Nav from './components/Nav';
 import Write from './components/Write';
@@ -122,10 +123,7 @@ function render() {
 
         ${paintMain()}
         
-
-        <footer class="bg-gray-200 p-4 text-center">
-          <p>&copy; 2024 항해플러스. All rights reserved.</p>
-        </footer>
+        ${Footer()}
       </div>
     </div>
   `;

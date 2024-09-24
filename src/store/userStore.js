@@ -3,7 +3,7 @@ function createUser() {
 
   return {
     getUser: function () {
-      return JSON.parse(userInfo);
+      return userInfo;
     },
     setUser: function (_userInfo) {
       localStorage.setItem("user", JSON.stringify(_userInfo));

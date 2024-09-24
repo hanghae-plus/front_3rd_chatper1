@@ -3,6 +3,7 @@ import MainPage from "@/pages/main/page";
 import RootLayout from "@/components/RootLayout";
 import ProfilePage from "@/pages/profile/page";
 import LoginPage from "@/pages/login/page";
+import ErrorPage from "@/pages/error";
 
 const RootElement = document.getElementById("root");
 
@@ -19,6 +20,9 @@ function createPage(path) {
     },
     "/notFound": {
       render: () => NotFound(),
+    },
+    "/error": {
+      render: () => ErrorPage(),
     },
   };
   return pages[path] || pages["/notFound"];

@@ -6,6 +6,8 @@ export abstract class BaseComponent<S = unknown> {
     this.$root = this.getRootElement(selector);
     this.state = initialState;
     if (this.$root) this.render();
+
+    this.bindGlobalErrorHandling();
   }
 
   private getRootElement(selector: string): Element | null {
@@ -16,10 +18,6 @@ export abstract class BaseComponent<S = unknown> {
       );
     }
     return $root;
-  }
-
-  protected getElement<T extends HTMLElement>(selector: string): T | null {
-    return this.$root?.querySelector(selector) as T | null;
   }
 
   setState(nextState: Partial<S>) {
@@ -42,6 +40,22 @@ export abstract class BaseComponent<S = unknown> {
   beforeRender() {}
 
   afterRender() {}
+
+  protected getElement<T extends HTMLElement>(selector: string) {
+    const $element = this.$root?.querySelector(selector) as T | undefined;
+    if (!$element) {
+      console.error(
+        `Selector "${selector}"에 해당하는 요소를 찾을 수 없습니다.`
+      );
+    }
+    return $element;
+  }
+
+  private bindGlobalErrorHandling() {
+    window.addEventListener('error', (event) => {
+      if (this.$root) this.$root.innerHTML = `오류 발생! ${event.message}`;
+    });
+  }
 
   abstract template(): string;
 }

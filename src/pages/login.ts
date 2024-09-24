@@ -7,10 +7,6 @@ const ID = {
   USER_NAME: 'username',
 };
 
-const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-const phoneRegex =
-  /^\+?[0-9]{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/;
-
 export default class LoginPage extends BaseComponent {
   afterRender() {
     this.checkAccess();
@@ -35,13 +31,6 @@ export default class LoginPage extends BaseComponent {
 
     const $nameInput = this.getElement<HTMLInputElement>(`#${ID.USER_NAME}`)!;
     const username = $nameInput.value.trim();
-
-    if (!emailRegex.test(username) && !phoneRegex.test(username)) {
-      alert('유효한 이메일 주소 또는 전화번호를 입력하세요.');
-
-      // 테스트 코드 성공을 위한 주석처리
-      // return;
-    }
 
     login({ name: username });
   }

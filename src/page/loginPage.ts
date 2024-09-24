@@ -1,15 +1,14 @@
 import { useRouter } from '../module/route';
 import { throttle } from '../module/util';
 import Component from '../core/component';
+import store from '../module/store';
 
 const router = useRouter();
 
 function submitHandle() {
   const usernameDiv = document.querySelector('#username') as HTMLInputElement;
   const username = usernameDiv.value;
-  const userInfo = { username, email: '', bio: '' };
-
-  localStorage.setItem('user', JSON.stringify(userInfo));
+  store.setState({ username, email: '', bio: '' });
   router.push('/profile');
 }
 

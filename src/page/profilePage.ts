@@ -17,7 +17,6 @@ function submitHandle() {
   const userInfo = { username, email, bio };
 
   store.setState(userInfo);
-  localStorage.setItem('user', JSON.stringify(userInfo));
   alert('프로필이 업데이트 되었습니다.');
 }
 

@@ -21,6 +21,8 @@ class Router {
     if (userInfo) {
       const { username, email, bio } = JSON.parse(userInfo!);
       store.setState({ username, email, bio });
+    } else {
+      store.reset();
     }
 
     switch (path) {

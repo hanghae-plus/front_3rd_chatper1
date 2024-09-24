@@ -12,6 +12,25 @@ const userState = {
   isLogged: false,
 };
 
+const routes = {
+  '/': () => render(() => Home({ isLogged: userState.isLogged })),
+  '/login': () => {
+    if (!userState.isLogged) {
+      render(Login);
+      return;
+    }
+    navigateTo('/');
+  },
+  '/profile': () => {
+    if (userState.isLogged) {
+      render(() => Profile(userState.userInfo));
+      return;
+    }
+    navigateTo('/login');
+  },
+  '/404': () => render(NotFound),
+};
+
 const router = () => {
   const routes = {};
 
@@ -44,22 +63,9 @@ const router = () => {
 
 const { addRoute, navigateTo, handleRoute } = router();
 
-addRoute('/', () => render(() => Home({ isLogged: userState.isLogged })));
-addRoute('/login', () => {
-  if (!userState.isLogged) {
-    render(Login);
-    return;
-  }
-  navigateTo('/');
-});
-addRoute('/profile', () => {
-  if (userState.isLogged) {
-    render(() => Profile(userState.userInfo));
-    return;
-  }
-  navigateTo('/login');
-});
-addRoute('/404', () => render(NotFound));
+for (const key in routes) {
+  addRoute(key, routes[key]);
+}
 
 const logIn = (username) => {
   updateUserInfo(username, '', '');
@@ -94,7 +100,7 @@ const loadedUser = () => {
 const addListeners = () => {
   document.querySelector('#root')?.addEventListener('click', (e) => {
     if (e.target.tagName === 'A') {
-      e.preventDefault(); // A 태그 클릭 시에만 preventDefault 호출
+      e.preventDefault();
       if (e.target.id === 'logout') {
         logOut();
         return;

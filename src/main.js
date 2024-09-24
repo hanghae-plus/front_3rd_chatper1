@@ -29,7 +29,52 @@ const Login = () => {
   `;
 };
 
-const render = () => {
+function initFunctions() {
+  const list = document.getElementById('nav-list');
+
+  if (list) {
+    list.addEventListener('click', (e) => {
+      if (!list.contains(e.target)) return;
+
+      const route = e.target.dataset.route;
+      switch (route) {
+        case 'home':
+          history.pushState({ home: 1 }, '', '/');
+          render();
+          break;
+
+        case 'profile':
+          history.pushState({ profile: 1 }, '', '/profile');
+          render();
+          break;
+
+        case 'login':
+          history.pushState({ login: 1 }, '', '/login');
+          render();
+          break;
+
+        case 'logout':
+          if (!confirm('로그아웃 하시겠습니까?')) return;
+
+          localStorage.removeItem('login');
+
+          history.pushState({ home: 1 }, '', '/');
+          render();
+          break;
+
+        default:
+          break;
+      }
+
+      console.log(location.pathname);
+      console.log(history);
+    });
+  }
+}
+
+localStorage.setItem('login', true);
+
+function render() {
   const Home = `
     <main class="p-4">
       ${Write()}
@@ -69,37 +114,7 @@ const render = () => {
     </div>
   `;
 
-  const list = document.getElementById('nav-list');
-
-  if (list) {
-    list.addEventListener('click', (e) => {
-      if (!list.contains(e.target)) return;
-
-      const route = e.target.dataset.route;
-      switch (route) {
-        case 'home':
-          history.pushState({ home: 1 }, '', '/');
-          render();
-          break;
-
-        case 'profile':
-          history.pushState({ profile: 1 }, '', '/profile');
-          render();
-          break;
-
-        case 'login':
-          history.pushState({ login: 1 }, '', '/login');
-          render();
-          break;
-
-        default:
-          break;
-      }
-
-      console.log(location.pathname);
-      console.log(history);
-    });
-  }
-};
+  initFunctions();
+}
 
 render();

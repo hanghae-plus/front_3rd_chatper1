@@ -27,11 +27,11 @@ function event(navigateTo) {
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
-    const username = document.querySelector("#username");
-    if (username.value) {
+    const username = document.querySelector("#username").value;
+    if (username) {
       localStorage.setItem(
         "user",
-        JSON.stringify({ username: username.value, email: "", bio: "" })
+        JSON.stringify({ username, email: "", bio: "" })
       );
       navigateTo("/");
     }

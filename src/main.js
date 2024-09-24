@@ -1,111 +1,68 @@
-document.querySelector('#root').innerHTML = `
-<div class="bg-gray-100 min-h-screen flex justify-center">
-    <div class="max-w-md w-full">
-      <header class="bg-blue-600 text-white p-4 sticky top-0">
-        <h1 class="text-2xl font-bold">항해플러스</h1>
-      </header>
+import Home from "./components/Home";
+import Profile from "./components/Profile";
+import Login from "./components/Login";
+import Error from "./components/Error";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+const $root = document.getElementById("root");
 
-      <nav class="bg-white shadow-md p-2 sticky top-14">
-        <ul class="flex justify-around">
-          <li><a href="./main.html" class="text-blue-600">홈</a></li>
-          <li><a href="./profile.html" class="text-gray-600">프로필</a></li>
-          <li><a href="#" class="text-gray-600">로그아웃</a></li>
-        </ul>
-      </nav>
+const routes = {
+    "/": { component: Home, defaultLayout: true },
+    "/login": { component: Login, defaultLayout: false },
+    "/profile": { component: Profile, defaultLayout: true },
+    "/error": { component: Error, defaultLayout: false },
+};
 
-      <main class="p-4">
-        <div class="mb-4 bg-white rounded-lg shadow p-4">
-          <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
-          <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
-        </div>
+function renderPage(path) {
+    const { component, defaultLayout } = routes[path] || routes["/error"];
 
-        <div class="space-y-4">
+    // 헤더와 푸터 컨텐츠 초기화
+    let headerContent = "";
+    let footerContent = "";
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">홍길동</p>
-                <p class="text-sm text-gray-500">5분 전</p>
-              </div>
-            </div>
-            <p>오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+    // defaultLayout에 따라 헤더, 푸터 설정
+    if (defaultLayout) {
+        headerContent = Header.render(path); // 인스턴스 메서드로 호출
+        footerContent = Footer.render();
+    }
+    // 컴포넌트의 render 메서드를 호출하여 내용을 렌더링
+    const componentContent = component.render(path); // 컴포넌트의 렌더링 결과를 변수에 저장
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">김철수</p>
-                <p class="text-sm text-gray-500">15분 전</p>
-              </div>
-            </div>
-            <p>새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+    // 렌더링된 HTML을 root에 삽입
+    $root.innerHTML = `
+   ${headerContent}
+   ${componentContent} 
+   ${footerContent}
+ `;
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">이영희</p>
-                <p class="text-sm text-gray-500">30분 전</p>
-              </div>
-            </div>
-            <p>오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+    // 헤더 이벤트 바인딩
+    Header.registerEvents(renderPage);
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">박민수</p>
-                <p class="text-sm text-gray-500">1시간 전</p>
-              </div>
-            </div>
-            <p>주말에 등산 가실 분 계신가요? 함께 가요!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+    // 특정 컴포넌트의 이벤트 바인딩
+    if (component.registerEvents) {
+        component.registerEvents(renderPage);
+    }
+}
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">정수연</p>
-                <p class="text-sm text-gray-500">2시간 전</p>
-              </div>
-            </div>
-            <p>새로 나온 영화 재미있대요. 같이 보러 갈 사람?</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
-        </div>
-      </main>
+// 초기 렌더링
+document.addEventListener("DOMContentLoaded", () => {
+    const initialPath = window.location.pathname || "/"; // 현재 경로로 초기 경로 설정
+    renderPage(initialPath); // renderPage 호출
+});
 
-      <footer class="bg-gray-200 p-4 text-center">
-        <p>&copy; 2024 항해플러스. All rights reserved.</p>
-      </footer>
-    </div>
-  </div>
-`;
+// 링크 클릭 시 URL 변경 및 페이지 렌더링
+document.addEventListener("click", (event) => {
+    if (event.target.matches("a")) {
+        event.preventDefault();
+        const path = event.target.getAttribute("href");
+        history.pushState(null, "", path); // URL 변경
+        console.log("path", path);
+
+        renderPage(path); // 페이지 렌더링
+    }
+});
+
+// 브라우저의 뒤로가기/앞으로가기 버튼 클릭 시 페이지를 로드
+window.addEventListener("popstate", () => {
+    renderPage(window.location.pathname);
+});

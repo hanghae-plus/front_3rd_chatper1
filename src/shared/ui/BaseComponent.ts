@@ -5,6 +5,7 @@ export abstract class BaseComponent<S = unknown> {
   constructor(selector: string, initialState?: S) {
     this.$root = this.getRootElement(selector);
     this.state = initialState;
+    if (this.$root) this.render();
   }
 
   private getRootElement(selector: string): Element | null {

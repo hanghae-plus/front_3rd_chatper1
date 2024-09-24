@@ -25,11 +25,11 @@ export default class ProfilePage extends BaseComponent<UserInfo> {
   }
 
   afterRender() {
-    new Header(`#${ID.HEADER}`).render();
-    new Footer(`#${ID.FOOTER}`).render();
+    new Header(`#${ID.HEADER}`);
+    new Footer(`#${ID.FOOTER}`);
 
-    this.checkAccess();
     this.bindSubmitEvent();
+    this.checkAccess();
   }
 
   private checkAccess() {

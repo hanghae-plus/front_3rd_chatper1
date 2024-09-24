@@ -2,7 +2,7 @@ import { BaseComponent } from '../ui/BaseComponent';
 
 type Path = string | '/404';
 type Routes = {
-  [key in Path]: BaseComponent;
+  [key in Path]: () => BaseComponent;
 };
 
 class Router {
@@ -30,8 +30,8 @@ class Router {
   }
 
   #handleRoute(path: Path) {
-    const page = this.#routes[path] ?? this.#routes['/404'];
-    page.render();
+    const renderPage = this.#routes[path] ?? this.#routes['/404'];
+    renderPage();
   }
 
   #setupLinkNavigation() {

@@ -3,10 +3,8 @@ import Header from '../components/Header';
 import Nav from '../components/Nav';
 import LoginPage from './LoginPage';
 
-let user;
-
 export default function ProfilePage() {
-  user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem('user'));
 
   if (!user) {
     return LoginPage();

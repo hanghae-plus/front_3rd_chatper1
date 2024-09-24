@@ -40,10 +40,11 @@ function handleLogin() {
       email: '',
       bio: '',
     };
-
     localStorage.setItem('user', JSON.stringify(user));
 
-    movePage(PATH.PROFILE);
+    document.querySelector('#root').innerHTML = ProfilePage();
+    handleNav();
+    handleProfile();
   });
 }
 

@@ -1,16 +1,16 @@
 class Profile {
-    render(path) {
-        return this.template(path);
-    }
+  render(path) {
+    return this.template(path);
+  }
 
-    template() {
-        const user = JSON.parse(localStorage.getItem("user")) || {
-            username: "",
-            email: "",
-            bio: "",
-        };
+  template() {
+    const user = JSON.parse(localStorage.getItem('user')) || {
+      username: '',
+      email: '',
+      bio: '',
+    };
 
-        return `
+    return `
         <main class="p-4">
           <div class="bg-white p-8 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
@@ -35,25 +35,25 @@ class Profile {
           </div>
         </main>
       `;
-    }
+  }
 
-    registerEvents() {
-        const profileForm = document.getElementById("profile-form");
+  registerEvents() {
+    const profileForm = document.getElementById('profile-form');
 
-        profileForm.addEventListener("submit", (e) => {
-            e.preventDefault();
+    profileForm.addEventListener('submit', (e) => {
+      e.preventDefault();
 
-            const updatedProfile = {
-                username: document.getElementById("username").value,
-                email: document.getElementById("email").value,
-                bio: document.getElementById("bio").value,
-            };
+      const updatedProfile = {
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        bio: document.getElementById('bio').value,
+      };
 
-            // 프로필 업데이트
-            localStorage.setItem("user", JSON.stringify(updatedProfile));
-            alert("프로필이 업데이트 되었습니다!");
-        });
-    }
+      // 프로필 업데이트
+      localStorage.setItem('user', JSON.stringify(updatedProfile));
+      alert('프로필이 업데이트 되었습니다!');
+    });
+  }
 }
 
 export default new Profile();

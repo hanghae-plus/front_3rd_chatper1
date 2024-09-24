@@ -13,7 +13,3 @@ export const ROUTES = {
     isLayout: true,
   },
 };
-
-export const IS_PATCH = ["/", "/login"];
-export const IS_ROOT = ["/login", "/profile"];
-export const IS_MAIN = ["/", "/profile"];

@@ -2,11 +2,8 @@ import Router from "../utils/router.js";
 import {Store} from "../utils/store.js";
 
 const App = () => {
-    const router = new Router()
-    const store = new Store()
-    document.addEventListener('DOMContentLoaded', () => {
-
-    });
+    new Router()
+    new Store()
 }
 
 export default App

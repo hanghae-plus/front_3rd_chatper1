@@ -1,7 +1,5 @@
 import Footer from "../../components/Footer.js";
 import Header from "../../components/Header.js";
-import {Store} from "../../utils/store.js";
-
 
 export const profileTpl = () => {
     return `<div class="bg-gray-100 min-h-screen flex justify-center">

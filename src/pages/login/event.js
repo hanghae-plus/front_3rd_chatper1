@@ -14,7 +14,7 @@ export const addLoginFormEvent = (router) => {
         if(!password) return alert('비밀번호를 입력해 주세요.')
 
         localStorage.setItem('isLogin','true')
-        localStorage.setItem('user',JSON.stringify({name:email,email:"",bio:""}))
+        localStorage.setItem('user',JSON.stringify({username:email}))
         store.setState({isLogin:true, username:email})
         router.navigateTo('/profile')
     });

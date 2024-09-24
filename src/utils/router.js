@@ -10,9 +10,9 @@ export default class Router {
         }
 
         this.router = new Map([
-            ['/', () => setHomeOnDocument()],
+            ['/', () => setHomeOnDocument(this)],
             ['/login', () => setLoginOnDocument(this)],
-            ['/profile', () => setProfileOnDocument()],
+            ['/profile', () => setProfileOnDocument(this)],
         ]);
 
         this.render(location.pathname);

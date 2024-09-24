@@ -4,7 +4,7 @@ export const loginTpl = () => {
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
         <form id="login-form">
           <div class="mb-4">
-            <input type="text" name="email" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+            <input type="text" name="email" id="username" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
           </div>
           <div class="mb-6">
             <input type="password" name="password" placeholder="비밀번호" class="w-full p-2 border rounded">

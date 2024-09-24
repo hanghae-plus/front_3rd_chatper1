@@ -1,8 +1,8 @@
 import Header from './components/Header';
 import Home from './components/Home';
-import Profile from './components/Profile';
+import Profile, { bindEvents as bindProfileEvents} from './components/Profile';
 import Footer from './components/Footer';
-import Login from './components/Login';
+import Login, { bindEvents as bindLoginEvents} from './components/Login';
 import ErrorPage from './components/ErrorPage';
 
 const root = document.querySelector("#root");
@@ -31,7 +31,16 @@ function loadHTML(path) {
     </div>
   `;
 
-  // 페이지가 로드될 때 링크의 클래스를 초기화
+  if (path === "/login") {
+    bindLoginEvents(loadHTML);
+  }
+
+  if (path === "/profile") {
+    const user = JSON.parse(localStorage.getItem("user"));
+    bindProfileEvents(user);
+  }
+
+  // 페이지가 로드될 때 탭 활성색상을 초기화
   updateActiveLink(path);
 }
 
@@ -42,9 +51,7 @@ document.addEventListener('click', (e) => {
     e.preventDefault();
     const url = e.target.getAttribute('href');
     navigateTo(url);
-    console.log(url);
   }
-
 });
 
 // URL 변경 및 페이지 로드

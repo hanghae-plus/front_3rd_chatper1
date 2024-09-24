@@ -30,6 +30,8 @@ function renderHeader() {
   `
 }
 
+console.log(document.querySelector('nav.text-blue-600.font-bold'))
+
 // 공통 푸터
 function renderFooter() {
   return `
@@ -134,6 +136,7 @@ function renderHome() {
   `
   pageLoader(homeTemplate)
 
+  //동적으로  / Link 감지해서 클래스 넣어줌(테스트 코드에 맞게 수정)
   const homeLink = document.querySelector('nav a[href="/"]')
   if (homeLink) {
     homeLink.classList.add('text-blue-600', 'font-bold')
@@ -144,6 +147,11 @@ function renderHome() {
 
 // 로그인 페이지
 function renderLogin() {
+  //로그인 예외처리 추가
+  if (isLogIn()) {
+    route('/')
+    return
+  }
   const loginTemplate = `
     <div class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -168,14 +176,35 @@ function renderLogin() {
 
   loginForm.addEventListener('submit', (event) => {
     event.preventDefault()
-
-    const username = document.getElementById('username').value
-    if (username) {
-      // 사용자 정보 로컬 스토리지에 저장
-      localStorage.setItem('user', JSON.stringify({ username: username, email: '', bio: '' }))
-      route('/profile')
+    try {
+      const username = document.getElementById('username').value
+      if (username) {
+        // 사용자 정보 로컬 스토리지에 저장
+        localStorage.setItem('user', JSON.stringify({ username: username, email: '', bio: '' }))
+        route('/profile')
+      }
+    } catch (error) {
+      //오류발생! template 렌더링
+      errorBoundary(error)
     }
   })
+
+  //에러 바운더리 구현(의도적인 오류입니다.) - 심확과제
+  const usernameInput = document.getElementById('username')
+  usernameInput.addEventListener(
+    'input',
+    () => {
+      //username이 1일 때 조건 추가
+      if (usernameInput.value === '1') {
+        try {
+          throw new Error('의도적인 오류입니다.')
+        } catch (error) {
+          errorBoundary(error)
+        }
+      }
+    },
+    { once: true },
+  )
 }
 
 // 프로필 페이지
@@ -263,7 +292,7 @@ function route(path = window.location.pathname) {
   if (path === '/' || path === '/main') {
     renderHome()
   } else if (path === '/login') {
-    //리다이렉트 - 심화과제
+    //라우트 가드(리다이렉트) - 심화과제
     if (isLogIn()) {
       renderHome()
     } else {
@@ -311,3 +340,14 @@ window.addEventListener('popstate', () => {
 document.addEventListener('DOMContentLoaded', () => {
   route()
 })
+
+//로그인 에러 innerHtml 렌더링
+function errorBoundary(error) {
+  const errorTemplate = `
+    <div>
+       <p>오류 발생!</p>
+      <p>${error.message}</p>
+    </div>
+  `
+  pageLoader(errorTemplate)
+}

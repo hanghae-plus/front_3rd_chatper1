@@ -30,8 +30,6 @@ function renderHeader() {
   `
 }
 
-console.log(document.querySelector('nav.text-blue-600.font-bold'))
-
 // 공통 푸터
 function renderFooter() {
   return `

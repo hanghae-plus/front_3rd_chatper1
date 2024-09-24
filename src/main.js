@@ -45,7 +45,6 @@ const router = () => {
 const { addRoute, navigateTo, handleRoute } = router();
 
 addRoute('/', () => render(() => Home({ isLogged: userState.isLogged })));
-
 addRoute('/login', () => {
   if (!userState.isLogged) {
     render(Login);
@@ -53,7 +52,6 @@ addRoute('/login', () => {
   }
   navigateTo('/');
 });
-
 addRoute('/profile', () => {
   if (userState.isLogged) {
     render(() => Profile(userState.userInfo));
@@ -61,25 +59,24 @@ addRoute('/profile', () => {
   }
   navigateTo('/login');
 });
-
 addRoute('/404', () => render(NotFound));
 
-const logIn = (username, email, bio) => {
-  localStorage.setItem(
-    'user',
-    JSON.stringify({ username: username, email, bio })
-  );
-  loadedUser();
+const logIn = (username) => {
+  updateUserInfo(username, '', '');
   navigateTo('/');
 };
 
 const logOut = () => {
   localStorage.removeItem('user');
   loadedUser();
+  navigateTo('/login');
 };
 
-const updateUserInfo = (bio) => {
-  localStorage.setItem('user', JSON.stringify({ ...userState.userInfo, bio }));
+const updateUserInfo = (username, email, bio) => {
+  localStorage.setItem(
+    'user',
+    JSON.stringify({ ...userState.userInfo, username, email, bio })
+  );
   loadedUser();
 };
 
@@ -113,20 +110,21 @@ const addListeners = () => {
     e.preventDefault();
     if (e.target.id === 'login-form') {
       const username = document.getElementById('username').value;
-      logIn(username, '', '');
+      logIn(username);
     }
     if (e.target.id === 'profile-form') {
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
       const bio = document.getElementById('bio').value;
-      updateUserInfo(bio);
+      updateUserInfo(username, email, bio);
     }
   });
 };
 
 const init = () => {
-  const initialPath = window.location.pathname;
   loadedUser();
   addListeners();
-  handleRoute(initialPath);
+  handleRoute(window.location.pathname);
 };
 
 init();

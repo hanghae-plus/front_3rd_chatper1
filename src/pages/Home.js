@@ -8,7 +8,7 @@ const Home = ({ isLogged }) => `
   <div class="max-w-md w-full">
   ${Header({ isLogged })}
     <main class="p-4">
-    ${PostForm()}
+    ${isLogged ? PostForm() : ''}
       <div class="space-y-4">
       ${Post({
         name: '홍길동',

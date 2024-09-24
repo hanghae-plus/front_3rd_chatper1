@@ -1,6 +1,4 @@
-import { memoize } from '@utils'
-
-const memoizedFeed = memoize((feed) => {
+const FeedItem = (feed) => {
   return `<div class="bg-white rounded-lg shadow p-4">
     <div class="flex items-center mb-2">
       <img src="${feed.profile}" alt="프로필" class="rounded-full mr-2">
@@ -16,6 +14,6 @@ const memoizedFeed = memoize((feed) => {
       <button>공유</button>
     </div>  
   </div>`
-})
+}
 
-export default memoizedFeed
+export default FeedItem

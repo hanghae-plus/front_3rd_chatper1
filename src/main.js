@@ -95,7 +95,7 @@ const LoginPage = () => `
       <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
       <form id="login-form">
         <div class="mb-4">
-          <input type="text" placeholder="이메일 또는 전화번호" id="username" class="w-full p-2 border rounded">
+          <input type="text" placeholder="이름" id="username" class="w-full p-2 border rounded">
         </div>
         <div class="mb-6">
           <input type="password" placeholder="비밀번호" id="password" class="w-full p-2 border rounded">
@@ -306,8 +306,12 @@ const logoutUser = () => {
 const handleFormSubmit = (e) => {
   e.preventDefault();
   const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
 
-  if (!username) return;
+  if (!username || !password) {
+    alert('아이디 또는 비밀번호를 입력해주세요.');
+    return;
+  }
 
   loginUser(username);
   navigate('/profile');
@@ -326,7 +330,8 @@ const initLoginForm = () => {
 const initLogoutButton = () => {
   const logoutButton = document.getElementById('logout');
 
-  if (!logoutButton) return;
+  if (!logoutButton) {
+  }
 
   logoutButton.addEventListener('click', (e) => {
     e.preventDefault();

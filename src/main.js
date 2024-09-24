@@ -44,3 +44,10 @@ export function Logout() {
 document.addEventListener("DOMContentLoaded", () => {
   router.handleRoute(window.location.pathname);
 });
+
+window.addEventListener("error", (event) => {
+  const errorBoundary = document.createElement("div");
+  errorBoundary.id = "error-boundary";
+  errorBoundary.textContent = `오류 발생! ${event.message}`;
+  document.body.appendChild(errorBoundary);
+});

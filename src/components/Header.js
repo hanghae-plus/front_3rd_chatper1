@@ -9,7 +9,7 @@ const Header = () => {
             <header class="bg-blue-600 text-white p-4 sticky top-0">
                 <h1 class="text-2xl font-bold">항해플러스</h1>
             </header>
-            <nav class="bg-white shadow-md p-2 sticky top-14">
+            <nav id="header-nav" class="bg-white shadow-md p-2 sticky top-14">
                 <ul class="flex justify-around">
                   ${isLogin ? `
                     <li><a href="/" class="${activeClass('/')}">홈</a></li>

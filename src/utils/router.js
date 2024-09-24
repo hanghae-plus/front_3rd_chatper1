@@ -42,12 +42,25 @@ export default class Router {
 
     addWholeAnchorEvent() {
         const aTags = document.querySelectorAll('a');
-        aTags.forEach((tag) =>
-            tag.addEventListener('click', (e) => {
-                e.preventDefault();
-                const tagRef = tag.href.replace(location.origin, '');
-                this.render(tagRef);
-            })
-        );
+        const headerNav = document.getElementById('header-nav')
+
+        if(headerNav) {
+            document.querySelectorAll('li').forEach((tag) => {
+                tag.addEventListener('click', (event) => {
+                    event.preventDefault();
+
+                    const tagRef = tag.href.replace(location.origin, '');
+                    this.render(tagRef)
+                });
+            });
+        } else  {
+            aTags.forEach((tag) => {
+                tag.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tagRef = tag.href.replace(location.origin, '');
+                    this.render(tagRef);
+                });
+            });
+        }
     }
 }

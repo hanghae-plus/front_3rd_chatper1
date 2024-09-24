@@ -1,75 +1,99 @@
 // History API를 사용하여 SPA 라우터 구현
-class Router {
-  constructor() {
-    this.routes = {};
-    window.addEventListener('popstate', this.handlePopState.bind(this));
-    this.isLoggedIn = false; // 로그인 상태 초기화
+// 싱글톤 패턴 적용
+const Router = (function () {
+  let instance;
+
+  function createInstance() {
+    return {
+      routes: {},
+      isLoggedIn: false, // 로그인 상태 초기화
+
+      addRoute(path, handler) {
+        this.routes[path] = handler;
+      },
+
+      navigateTo(path) {
+        history.pushState(null, '', path);
+        this.handleRoute(path);
+      },
+
+      handlePopState() {
+        this.handleRoute(window.location.pathname);
+      },
+
+      handleRoute(path) {
+        // 로그인 상태에 따라 프로필 페이지 접근 제어
+        if (path === '/profile' && !this.isLoggedIn) {
+          this.navigateTo('/login');
+          return;
+        }
+
+        const handler = this.routes[path];
+        if (handler) {
+          handler();
+        } else {
+          this.navigateTo('/404');
+        }
+      },
+
+      setLoginStatus(status) {
+        this.isLoggedIn = status;
+      },
+
+      handleLogin() {
+        this.setLoginStatus(true);
+      },
+
+      handleLogout() {
+        this.setLoginStatus(false);
+      },
+
+      init() {
+        window.addEventListener('popstate', this.handlePopState.bind(this));
+      },
+
+      cleanup() {
+        window.removeEventListener('popstate', this.handlePopState.bind(this));
+      },
+    };
   }
 
-  addRoute(path, handler) {
-    this.routes[path] = handler;
-  }
+  return {
+    getInstance: function () {
+      if (!instance) {
+        instance = createInstance();
+      }
+      return instance;
+    },
+  };
+})();
 
-  navigateTo(path) {
-    history.pushState(null, '', path);
-    this.handleRoute(path);
-  }
+const router = Router.getInstance();
+router.init(); // 싱글톤 인스턴스 초기화 및 이벤트 리스너 추가
 
-  handlePopState() {
-    this.handleRoute(window.location.pathname);
-  }
-
-  handleRoute(path) {
-    // 로그인 상태에 따라 프로필 페이지 접근 제어
-    if (path === '/profile' && !this.isLoggedIn) {
-      this.navigateTo('/login');
-      return;
-    }
-
-    const handler = this.routes[path];
-    if (handler) {
-      handler();
-    } else {
-      this.navigateTo('/404');
-    }
-  }
-
-  setLoginStatus(status) {
-    this.isLoggedIn = status;
-  }
-
-  handleLogin() {
-    this.setLoginStatus(true);
-  }
-
-  handleLogout() {
-    this.setLoginStatus(false);
-  }
-}
-class UserPreferences {
-  constructor() {
-    this.preferences = JSON.parse(localStorage.getItem('user')) || {};
-  }
+// UserPreferences를 경량 객체로 상태 관리
+const UserPreferences = {
+  preferences: JSON.parse(localStorage.getItem('user')) || {},
 
   set(data) {
     this.preferences = data;
     this.save();
-  }
+  },
 
   get() {
     return this.preferences;
-  }
+  },
 
   save() {
     localStorage.setItem('user', JSON.stringify(this.preferences));
-  }
+  },
 
   delete() {
-    localStorage.removeItem('user', JSON.stringify(this.preferences));
-  }
-}
+    localStorage.removeItem('user');
+  },
+};
 
-const prefs = new UserPreferences();
+const prefs = UserPreferences;
 
 // 컴포넌트 기반 구조 설계
 const Header = (isLoggedIn) => {
@@ -347,7 +371,6 @@ const renderNotFoundPage = () => {
 };
 
 // 라우터에 경로와 해당 컴포넌트 등록
-const router = new Router();
 router.addRoute('/', () => renderHomePage(router.isLoggedIn));
 router.addRoute('/profile', () => renderProfilePage(router.isLoggedIn));
 router.addRoute('/login', renderLoginPage);

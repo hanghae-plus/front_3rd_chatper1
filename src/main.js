@@ -23,12 +23,10 @@ export function handleRouting() {
     link.addEventListener("click", (e) => {
       e.preventDefault();
 
-      if (shouldStopPropagation(e)) {
+      if (e.target.getAttribute("href") === "/login") {
         e.stopPropagation();
-        console.log("Event propagation stopped");
         return;
       }
-
       router.navigateTo(e.target.getAttribute("href"));
     });
   });

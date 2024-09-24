@@ -1,10 +1,11 @@
 import Home from '../components/Home';
-import Profile, { profileUpdate } from '../components/Profile';
+import Profile, { updateProfile } from '../components/Profile';
 import Login, { loginEvent} from '../components/Login';
 import Error from '../components/Error';
 import  Header from '../components/Header';
 import { Nav, logoutEvent } from '../components/Nav';
 import Footer from '../components/Footer';
+import { state } from '../components/State';
 
 const $root = document.querySelector('#root');
 
@@ -23,16 +24,17 @@ function renderPage(path) {
   const isOnlyComponent = route.isOnlyComponent;
 
   // 프로필 페이지에 접근할 때 localStorage에 user가 없으면 로그인 페이지로 리다이렉트
-  if (path === '/profile' && !localStorage.getItem('user')) {
+  if (path === '/profile' && !state.user) {
     renderPage('/login');
     return;
   }
-  
-  if (path === '/login' && localStorage.getItem('user')) {  //로그인 상태에서 로그인 페이지로 접근하면 메인 페이지로 리다이렉트
+
+  //로그인 상태에서 로그인 페이지로 접근하면 메인 페이지로 리다이렉트
+  if (path === '/login' && state.user) { 
     renderPage('/');
     return; 
   }
-
+  
   const componentInstance = component(); // 이제 component는 함수여야 합니다.
 
   // isOnlyComponent가 true일 경우 헤더와 푸터를 숨김
@@ -53,9 +55,9 @@ function renderPage(path) {
     loginEvent(renderPage);
   }
 
-  // 프로필 컴포넌트의 profileUpdate 호출
+  // 프로필 컴포넌트의 updateProfile 호출
   if (path === '/profile') {
-    profileUpdate(); // 여기에서 호출
+    updateProfile(); 
   }
 
   // 헤더 네비게이션 이벤트 바인딩
@@ -83,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialPath = window.location.pathname;
   renderPage(initialPath);
 
-  // 네비게이션 클릭 이벤트 바인딩
+  // 네비게이션 클릭 시 이벤트 위임
   document.addEventListener('click', handleNavigation);
 });
 
@@ -91,3 +93,5 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('popstate', () => {
   renderPage(window.location.pathname);
 });
+
+export { renderPage };

@@ -1,3 +1,5 @@
+import { setState } from './State';
+
 const Profile = () => {
     // 로그인 정보 가져 오기
     const user = JSON.parse(localStorage.getItem("user")) || {
@@ -32,27 +34,31 @@ const Profile = () => {
   };
   
   // 이벤트 바인딩 함수
-  const profileUpdate = () => {
+  const updateProfile = () => {
     const profileForm = document.getElementById("profile-form");
   
     if (profileForm) {
       profileForm.addEventListener("submit", (e) => {
         e.preventDefault();
   
-        const updatedProfile = {
+        const updatedUser = {
           username: document.getElementById("username").value,
           email: document.getElementById("email").value,
           bio: document.getElementById("bio").value,
         };
   
         //프로필 업데이트
-        localStorage.setItem("user", JSON.stringify(updatedProfile));
+        localStorage.setItem("user", JSON.stringify(updatedUser));
   
         alert("프로필이 성공적으로 업데이트되었습니다.");
+        
+        //상태 변경
+        setState({ user: updatedUser },'/profile')
+
       });
     }
   };
   
   export default Profile; // Profile 컴포넌트 내보내기
-  export { profileUpdate }; // profileUpdate 내보내기
+  export { updateProfile }; // updateProfile 내보내기
   

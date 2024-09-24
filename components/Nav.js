@@ -1,4 +1,6 @@
-const Nav = (currentPath, renderPage) => {
+import { setState } from './State';
+
+const Nav = (currentPath) => {
     const user = JSON.parse(localStorage.getItem("user"))
     
       const isActive = (path) => currentPath === path ? "text-blue-600 font-bold" : "text-gray-600";
@@ -20,8 +22,11 @@ const Nav = (currentPath, renderPage) => {
       if (logout) {
           logout.addEventListener("click", (event) => {
           event.preventDefault();
+          //localStorage user 제거
           localStorage.removeItem("user");
-          renderPage("/login");
+          // 상태 변경
+          setState({ user: null },"/login"); 
+
         });
       }
     };

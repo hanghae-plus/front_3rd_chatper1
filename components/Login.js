@@ -1,3 +1,5 @@
+import { setState } from './State';
+
 const Login = (isError = false) => {
   return `
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -52,9 +54,12 @@ const loginEvent = (renderPage) => {
         email: '',
         bio: '',
       };
-
+      
+      //localStorage에 로그인 정보 저장
       localStorage.setItem('user', JSON.stringify(user));
-      renderPage('/profile');
+
+      // 상태 변경
+      setState({ user: user },'/profile'); 
     });
 
     //username 1 입력 시 에러 체크 부분

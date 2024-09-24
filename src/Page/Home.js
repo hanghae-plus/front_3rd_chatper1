@@ -1,4 +1,5 @@
-import { changeVisibilityBasedOnLoginStatus, setLogoutButtonTappedEvent, setNavElemTapped } from '../Util/util';
+import { changeVisibilityBasedOnLoginStatus, setLogoutButtonTappedEvent } from '../Util/uiControl';
+import { setNavElemTapped } from '../Util/util';
 
 export const Home = () => {
     console.log('Home Components!');

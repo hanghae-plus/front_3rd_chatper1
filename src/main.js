@@ -57,17 +57,16 @@ class App extends Component {
   validatePath() {
     const { router, user } = this.state;
     this.target.addEventListener("click", (e) => {
-      const navElement = e.target.closest("nav");
-      if (!navElement) return;
       const routePaths = Object.values(ROUTES).reduce(
         (acc, cur) => (cur.path ? [...acc, cur.path] : acc),
         []
       );
       const hasPath = routePaths.includes(e.target.pathname);
-      if (hasPath && e.target.tagName === "A") {
+      if (hasPath) {
         e.preventDefault();
         router.navigateTo(e.target.pathname);
       }
+
       if (e.target.id === ROUTES.LOGOUT.id) {
         user.logout(() => {
           router.navigateTo(ROUTES.LOGIN.path);

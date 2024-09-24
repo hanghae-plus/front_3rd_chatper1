@@ -3,9 +3,12 @@ import {
   ROUTES,
 } from "../../components/contents/navigations/navigations";
 import { getErrorComponent } from "../../components/pages/Error/Error";
+import { getRenderComponent } from "../../components/pages/Render/Render";
 
 export const render = (path) => {
-  const component = ROUTES[path] || getErrorComponent;
-  const container = IS_ROOT.includes(path) ? "#root" : "#main";
-  document.querySelector(container).innerHTML = component();
+  const rendering = ROUTES[path] || {
+    component: getErrorComponent,
+    isLayout: false,
+  };
+  document.querySelector("#root").innerHTML = getRenderComponent(rendering);
 };

@@ -3,9 +3,15 @@ import { getLoginComponent } from "../../pages/Login/Login";
 import { getProfileComponent } from "../../pages/Profile/Profile";
 
 export const ROUTES = {
-  "/": getHomeComponent,
-  "/login": getLoginComponent,
-  "/profile": getProfileComponent,
+  "/": { component: getHomeComponent, isLayout: true },
+  "/login": {
+    component: getLoginComponent,
+    isLayout: false,
+  },
+  "/profile": {
+    component: getProfileComponent,
+    isLayout: true,
+  },
 };
 
 export const IS_PATCH = ["/", "/login"];

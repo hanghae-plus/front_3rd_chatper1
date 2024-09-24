@@ -1,12 +1,15 @@
 function TabList({ tabPaths }) {
   const currentPath = window.location.pathname;
   const tabListHtml = tabPaths
-    .map(
-      (tab) =>
-        `<li><a href="${tab.path}" id="${tab.id}" class="${
-          tab.path === currentPath ? "text-blue-600 font-bold" : "text-gray-600"
-        }">${tab.name}</a></li>`
-    )
+    .map((tab) => {
+      const hasPath = !!tab.path;
+      const tag = hasPath ? "a" : "button";
+      return `<li><${tag} ${tab.path ? `href="${tab.path}"` : ""} id="${
+        tab.id
+      }" class="${
+        tab.path === currentPath ? "text-blue-600 font-bold" : "text-gray-600"
+      }">${tab.name}</${tag}></li>`;
+    })
     .join("");
 
   return `

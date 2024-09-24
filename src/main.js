@@ -11,15 +11,15 @@ import { Component, UserController, Router } from "./utils";
 const routeComponentList = [
   {
     path: ROUTES.HOME.path,
-    component: (target, props) => new HomeComponent(target, props),
+    component: (...params) => new HomeComponent(...params),
   },
   {
     path: ROUTES.PROFILE.path,
-    component: (target, props) => new ProfileComponent(target, props),
+    component: (...params) => new ProfileComponent(...params),
   },
   {
     path: ROUTES.LOGIN.path,
-    component: (target, props) => new LoginComponent(target, props),
+    component: (...params) => new LoginComponent(...params),
   },
 ];
 
@@ -39,10 +39,6 @@ class App extends Component {
     };
   }
 
-  setEvent() {
-    this.validatePath();
-  }
-
   afterRender() {
     const { router, user } = this.state;
 
@@ -54,12 +50,21 @@ class App extends Component {
 
     const currentPath = window.location.pathname;
     router.handleRoute(currentPath);
+
+    this.validatePath();
   }
 
   validatePath() {
     const { router, user } = this.state;
     this.target.addEventListener("click", (e) => {
-      if (e.target.tagName === "A") {
+      const navElement = e.target.closest("nav");
+      if (!navElement) return;
+      const routePaths = Object.values(ROUTES).reduce(
+        (acc, cur) => (cur.path ? [...acc, cur.path] : acc),
+        []
+      );
+      const hasPath = routePaths.includes(e.target.pathname);
+      if (hasPath && e.target.tagName === "A") {
         e.preventDefault();
         router.navigateTo(e.target.pathname);
       }

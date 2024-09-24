@@ -5,13 +5,6 @@ export const ROUTES = {
   LOGOUT: { id: "logout", name: "로그아웃" },
 };
 
-export const TAB_LIST = [
-  ROUTES.HOME,
-  ROUTES.PROFILE,
-  ROUTES.LOGOUT,
-  ROUTES.LOGIN,
-];
-
 export const PUBLIC_PATH = [ROUTES.HOME, ROUTES.LOGIN];
 export const AUTH_PATH = [ROUTES.HOME, ROUTES.PROFILE, ROUTES.LOGOUT];
 

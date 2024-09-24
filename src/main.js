@@ -1,11 +1,11 @@
-import Main from "../src/pages/main.js";
 import Login from "../src/pages/login.js";
 import Profile from "../src/pages/profile.js";
 import Error from "../src/pages/error.js";
+import Home from "../src/pages/home.js";
 
 /** 페이지 모음 */
 const routes = [
-  { path: "/", view: () => Main },
+  { path: "/", view: () => Home },
   { path: "/login", view: () => Login },
   { path: "/profile", view: () => Profile },
   { path: "/error", view: () => Error },

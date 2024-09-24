@@ -2,6 +2,7 @@ import { render } from "lit-html";
 import { routes } from "./routes";
 import { attachEventHandler } from "./event/eventHandler";
 import { getUserInfo } from "./localStorage/user";
+import { setUpPage } from "./setup/setupHandler";
 
 const root = document.querySelector("#root");
 
@@ -25,4 +26,5 @@ export const renderPage = (path) => {
   render(route.content(), root);
 
   attachEventHandler(path);
+  setUpPage(path);
 };

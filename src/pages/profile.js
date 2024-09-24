@@ -2,7 +2,7 @@ export default class Profile {
   constructor() {
     document.title = "Profile";
   }
-  async getHtml() {
+ getHtml() {
     return `
           <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">

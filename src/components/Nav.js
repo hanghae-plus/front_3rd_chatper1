@@ -1,6 +1,6 @@
 import { appendChild, createElement } from "@/utils";
-import { getUser } from "@/store/userStore";
-import { logout } from "../store/userStore";
+import { deleteUser, getUser } from "@/store/userStore";
+import { useNavigate } from "../router";
 
 export default function Nav() {
   const Nav = createElement({
@@ -13,9 +13,6 @@ export default function Nav() {
     className: "flex justify-around",
   });
   const isLogin = !!getUser();
-  console.log(getUser());
-  console.log(isLogin);
-
   NavList.forEach(({ title, href }) => {
     if (isLogin) {
       if (href === "login") return;
@@ -29,10 +26,11 @@ export default function Nav() {
       tagName: "a",
       className: "block w-full h-full text-center",
       textContent: title,
-      setAttribute: { href: `#${href}` },
+      id: href,
+      setAttribute: { href: `/${href}` },
     });
 
-    if (window.location.hash.includes(href)) {
+    if (window.location.pathname === `/${href}`) {
       Link.className += " text-blue-600";
     }
 
@@ -41,12 +39,18 @@ export default function Nav() {
   });
 
   NavContainer.addEventListener("click", (e) => {
-    if (e.target.href.includes("#logout")) {
+    e.preventDefault();
+
+    const href = e.target.getAttribute("href");
+
+    if (href === "/logout") {
+      deleteUser();
       alert("로그아웃 되었습니다.");
-      e.preventDefault();
-      logout();
+      useNavigate("/login");
       return;
     }
+
+    useNavigate(href);
   });
   appendChild({ parent: Nav, children: [NavContainer] });
 
@@ -54,7 +58,7 @@ export default function Nav() {
 }
 
 const NavList = [
-  { title: "홈", href: "main" },
+  { title: "홈", href: "" },
   { title: "프로필", href: "profile" },
   { title: "로그아웃", href: "logout" },
   { title: "로그인", href: "login" },

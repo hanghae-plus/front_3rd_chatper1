@@ -1,4 +1,5 @@
 import { appendChild, createElement } from "@/utils";
+import { useNavigate } from "../router";
 
 export default function NotFound() {
   const NotFound = createElement({
@@ -33,9 +34,13 @@ export default function NotFound() {
 
   const NotFoundLink = createElement({
     tagName: "a",
-    className: "bg-blue-600 text-white px-4 py-2 rounded font-bold",
+    className:
+      "bg-blue-600 text-white px-4 py-2 rounded font-bold cursor-pointer",
     textContent: "홈으로 돌아가기",
-    setAttribute: { href: "#main" },
+  });
+
+  NotFoundLink.addEventListener("click", () => {
+    useNavigate("/");
   });
 
   appendChild({

@@ -1,6 +1,7 @@
 import { appendChild } from "@/utils";
 import { createElement } from "@/utils/createElement";
-import { login } from "@/store/userStore";
+import { setUser } from "@/store/userStore";
+import { useNavigate } from "../../router";
 
 export default function LoginPage() {
   const LoginPage = createElement({
@@ -15,7 +16,10 @@ export default function LoginPage() {
     textContent: "로그인",
   });
 
-  const LoginForm = createElement({ tagName: "form" });
+  const LoginForm = createElement({
+    tagName: "form",
+    setAttribute: { id: "login-form" },
+  });
 
   Array(2)
     .fill(0)
@@ -84,13 +88,14 @@ export default function LoginPage() {
 
   LoginForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const [username, password] = e.target;
+    const [username] = e.target;
 
     if (username.value === "") {
+      alert("사용자 이름을 입력해주세요.");
       return;
     }
-    login({ username: username.value, email: "", desc: "" });
-    window.location.hash = "#main";
+    setUser({ username: username.value, email: "", bio: "" });
+    useNavigate("/");
   });
 
   appendChild({ parent: NewAccountBox, children: [NewAccountButton] });
@@ -100,5 +105,6 @@ export default function LoginPage() {
     parent: LoginPage,
     children: [LoginTitle, LoginForm, ForgetPasswordBox, Hr, NewAccountBox],
   });
+
   return LoginPage;
 }

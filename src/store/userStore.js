@@ -1,24 +1,19 @@
 function createUser() {
-  const storageCount = localStorage.getItem("user");
-  let user = storageCount ? storageCount : null;
+  let userInfo = localStorage.getItem("user") || null;
 
   return {
-    login: function (user) {
-      user = user;
-      localStorage.setItem("user", JSON.stringify(user));
-    },
-    logout: function () {
-      user = null;
-      localStorage.removeItem("user");
-    },
-    setUser: function (user) {
-      user = user;
-      localStorage.setItem("user", user);
-    },
     getUser: function () {
-      return user;
+      return JSON.parse(userInfo);
+    },
+    setUser: function (_userInfo) {
+      localStorage.setItem("user", JSON.stringify(_userInfo));
+      userInfo = _userInfo;
+    },
+    deleteUser: function () {
+      userInfo = null;
+      localStorage.removeItem("user");
     },
   };
 }
 
-export const { getUser, setUser, login, logout } = createUser();
+export const { getUser, setUser, deleteUser } = createUser();

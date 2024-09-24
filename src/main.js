@@ -1,3 +1,3 @@
-import { router } from "./router";
+import { init } from "./router";
 
-router();
+init();

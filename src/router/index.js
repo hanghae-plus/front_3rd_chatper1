@@ -6,32 +6,45 @@ import LoginPage from "@/pages/login/page";
 
 const RootElement = document.getElementById("root");
 
-function createPage(type) {
+function createPage(path) {
   const pages = {
-    main: {
+    "/": {
       render: () => MainPage(),
     },
-    profile: {
+    "/profile": {
       render: () => ProfilePage(),
     },
-    login: {
+    "/login": {
       render: () => LoginPage(),
     },
-    notFound: {
+    "/notFound": {
       render: () => NotFound(),
     },
   };
-
-  return pages[type] || pages.notFound;
+  return pages[path] || pages["/notFound"];
 }
 
-export function router() {
-  const path = window.location.hash.slice(1) || "main";
-  const page = createPage(path);
+function Router() {
+  function useNavigate(path) {
+    window.history.pushState({}, "", path);
+    renderPage(path);
+  }
 
-  RootElement.innerHTML = "";
-  RootElement.appendChild(RootLayout(page.render()));
+  function renderPage(path) {
+    const page = createPage(path);
+    RootElement.innerHTML = "";
+    RootElement.appendChild(RootLayout(page.render()));
+  }
+
+  function init() {
+    const path = window.location.pathname;
+    renderPage(path);
+
+    window.addEventListener("popstate", () => {
+      renderPage(window.location.pathname);
+    });
+  }
+  return { useNavigate, init };
 }
 
-window.addEventListener("hashchange", router);
-window.addEventListener("load", router);
+export const { useNavigate, init } = Router();

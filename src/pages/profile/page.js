@@ -1,5 +1,7 @@
 import Layout from "@/components/Layout";
 import { appendChild, createElement } from "@/utils";
+import { getUser } from "@/store/userStore";
+import { useNavigate } from "../../router";
 
 export default function ProfilePage() {
   const ProfilePage = createElement({
@@ -14,7 +16,7 @@ export default function ProfilePage() {
   });
 
   const ProfileForm = createElement({ tagName: "form" });
-
+  const { username = "", bio = "", email = "" } = getUser() || {};
   Array(3)
     .fill(0)
     .forEach((_, idx) => {
@@ -35,11 +37,15 @@ export default function ProfilePage() {
         textContent: ProfileFormLabelText,
         setAttribute: { for: ProfileFormLabelFor },
       });
-
+      console.log(idx === 0 ? username : idx === 1 ? email : bio);
       const ProfileFormInput = createElement({
         tagName: idx === 2 ? "textarea" : "input",
         className: "w-full p-2 border rounded",
-        setAttribute: { id: ProfileFormLabelFor, name: ProfileFormLabelFor },
+        setAttribute: {
+          id: ProfileFormLabelFor,
+          name: ProfileFormLabelFor,
+          value: idx === 0 ? username : idx === 1 ? email : bio,
+        },
       });
 
       appendChild({

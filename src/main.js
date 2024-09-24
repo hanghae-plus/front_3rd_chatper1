@@ -1,11 +1,11 @@
 // 사용자 관리 함수 
-function saveUser(username,email="",bio="" ){
-  localStorage.setItem('user',JSON.stringify({username,email,bio}));
-  localStorage.setItem('isLoggedIn',true);
+function saveUser(username, email="", bio="" ){
+  localStorage.setItem('user',JSON.stringify({username, email, bio}));
+  localStorage.setItem('isLoggedIn', true);
 }
 function getUser(){
   const user = localStorage.getItem('user');
-  return user? JSON.parse(user):null;
+  return user ? JSON.parse(user) : null;
 }
 
 //사용자의 로그인 상태 확인하는 함수 
@@ -16,7 +16,7 @@ function isLoggedIn(){
 //로그아웃
 function logout(){
   localStorage.removeItem('user');
-  localStorage.setItem('isLoggedIn',false)
+  localStorage.setItem('isLoggedIn', false)
 }
 
 
@@ -45,10 +45,11 @@ function Header({isLoggedIn}){
 }
 
 function Footer(){
-  return ` <footer class="bg-gray-200 p-4 text-center">
-      <p>&copy; 2024 항해플러스. All rights reserved.</p>
-    </footer>`;
+  return `<footer class="bg-gray-200 p-4 text-center">
+            <p>&copy; 2024 항해플러스. All rights reserved.</p>
+          </footer>`;
 }
+
 function HomePage() {
   const loggedIn = isLoggedIn();
   const root = document.querySelector('#root');
@@ -149,7 +150,7 @@ function HomePage() {
 `;
 
 addEventListener();
- 
+
 }
 
 function LoginPage() {
@@ -160,10 +161,10 @@ function LoginPage() {
       <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
        <form id='login-form'>
         <div class="mb-4">
-          <input type="text" id="username" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+          <input required type="text" id="username" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
         </div>
         <div class="mb-6">
-          <input type="password" id='password' placeholder="비밀번호" class="w-full p-2 border rounded">
+          <input required type="password" id='password' placeholder="비밀번호" class="w-full p-2 border rounded">
         </div>
         <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
       </form>
@@ -188,6 +189,7 @@ function ProfilePage() {
     history.pushState(null,'','/login');
     return LoginPage();
   }
+
   const root = document.querySelector('#root');
   root.innerHTML = `
     <div class="bg-gray-100 min-h-screen flex justify-center">
@@ -262,7 +264,6 @@ function handleNavigation(e) {
 
 //이벤트 리스너 추가 함수 
 function addEventListener(){
- 
   const loginForm = document.getElementById('login-form');
   if(loginForm) {
     loginForm.addEventListener('submit',handleLogin);
@@ -285,7 +286,6 @@ function handleLogin(e) {
   e.preventDefault();
   const username = document.getElementById('username').value;
   saveUser(username);
-  // localStorage.setItem('isLoggedIn', 'true');
   history.pushState(null, '', '/profile');
   router();
 

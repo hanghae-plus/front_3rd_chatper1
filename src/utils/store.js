@@ -4,7 +4,12 @@ export class Store  {
             return Store.instance;
         }
         Store.instance = this;
-        this.state = {};
+        this.state = {
+            isLogin:false,
+            username:'',
+            email:'',
+            bio:'',
+        };
     }
 
     setState(newState) {

@@ -1,5 +1,3 @@
-import { isLogin, setUser, removeUser } from './utils';
-
 import DefaultView from './layouts/default_view';
 
 import Navigation from './components/navigation';

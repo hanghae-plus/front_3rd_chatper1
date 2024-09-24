@@ -2,9 +2,9 @@ import {Store} from "../../utils/store.js";
 
 export const addUserInfoFormEvent = () => {
     const store = new Store()
-    const {username, email, bio} = store.getState()
+    const {username, email, bio, name} = store.getState()
     const form = document.getElementById('profile-form')
-    document.getElementById('username').value = username
+    document.getElementById('username').value = username || name
     document.getElementById('email').value = email
     document.getElementById('bio').value = bio
 

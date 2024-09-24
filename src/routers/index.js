@@ -1,5 +1,6 @@
 import { LoginPage, MainPage, ProfilePage, NotFoundPage } from '@pages'
 import { UserStore } from '@stores'
+import { ROUTES } from '@constants'
 
 function createRouter(options = {}) {
   const userStore = UserStore()
@@ -7,14 +8,14 @@ function createRouter(options = {}) {
   const rootElement = options.rootElement || 'root'
 
   function protectRoute(path) {
-    const isLoggedIn = userStore.getState('isLoggedIn')
-    if (path === '/profile' && !isLoggedIn) return '/login'
-    if (path === '/login' && isLoggedIn) return '/'
+    const isLogin = userStore.getState('isLogin')
+    if (path === ROUTES.PROFILE && !isLogin) return ROUTES.LOGIN
+    if (path === ROUTES.LOGIN && isLogin) return ROUTES.HOME
     return path
   }
 
   function renderComponent(path) {
-    const component = routes[path] || routes['/404']
+    const component = routes[path] || routes[ROUTES.NOT_FOUND]
     document.getElementById(rootElement).innerHTML = component()
   }
 
@@ -35,8 +36,8 @@ function createRouter(options = {}) {
   }
 
   function handleLogout() {
-    userStore.clearUserInfo()
-    navigate('/login')
+    userStore.clearState()
+    navigate(ROUTES.LOGIN)
   }
 
   function handleLinkClick(e) {
@@ -58,7 +59,7 @@ function createRouter(options = {}) {
   function init() {
     window.addEventListener('popstate', handlePopState)
     document.addEventListener('click', handleLinkClick)
-    navigate(window.location.pathname || '/')
+    navigate(window.location.pathname || ROUTES.HOME)
   }
 
   return {
@@ -69,10 +70,10 @@ function createRouter(options = {}) {
 
 const Router = createRouter({
   routes: {
-    '/': () => MainPage(),
-    '/profile': () => ProfilePage(),
-    '/login': () => LoginPage(),
-    '/404': () => NotFoundPage(),
+    [ROUTES.HOME]: () => MainPage(),
+    [ROUTES.PROFILE]: () => ProfilePage(),
+    [ROUTES.LOGIN]: () => LoginPage(),
+    [ROUTES.NOT_FOUND]: () => NotFoundPage(),
   },
   rootElement: 'root',
 })

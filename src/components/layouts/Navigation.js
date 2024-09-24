@@ -1,4 +1,5 @@
 import { UserStore } from '@stores'
+import { ROUTES } from '@constants'
 
 const userStore = UserStore()
 
@@ -7,32 +8,32 @@ export default function navigation() {
 
   const isActive = (path) => (pathname === path ? 'text-blue-600 font-bold' : 'text-gray-600')
 
-  const isLoggedIn = userStore.getState('isLoggedIn')
+  const isLogin = userStore.getState('isLogin')
 
   const navList = [
     {
       name: '홈',
-      link: '/',
+      link: ROUTES.HOME,
       id: 'home',
       condition: () => true,
     },
     {
       name: '프로필',
-      link: '/profile',
+      link: ROUTES.PROFILE,
       id: 'profile',
-      condition: () => isLoggedIn,
+      condition: () => isLogin,
     },
     {
       name: '로그인',
-      link: '/login',
+      link: ROUTES.LOGIN,
       id: 'login',
-      condition: () => !isLoggedIn,
+      condition: () => !isLogin,
     },
     {
       name: '로그아웃',
-      link: '/login',
+      link: ROUTES.LOGIN,
       id: 'logout',
-      condition: () => isLoggedIn,
+      condition: () => isLogin,
     },
   ]
 

@@ -1,9 +1,9 @@
 import Home from '../components/Home';
-import Profile, { bindProfileEvents } from '../components/Profile';
-import Login, { bindEvents as bindLoginEvents } from '../components/Login';
+import Profile, { profileUpdate } from '../components/Profile';
+import Login, { loginEvent} from '../components/Login';
 import Error from '../components/Error';
 import  Header from '../components/Header';
-import { Nav, bindLogoutEvent } from '../components/Nav';
+import { Nav, logoutEvent } from '../components/Nav';
 import Footer from '../components/Footer';
 
 const $root = document.querySelector('#root');
@@ -27,9 +27,8 @@ function renderPage(path) {
     renderPage('/login');
     return;
   }
-
-  //로그인 상태에서 로그인 페이지로 접근하면 메인 페이지로 리다이렉트
-  if (path === '/login' && localStorage.getItem('user')) {
+  
+  if (path === '/login' && localStorage.getItem('user')) {  //로그인 상태에서 로그인 페이지로 접근하면 메인 페이지로 리다이렉트
     renderPage('/');
     return; 
   }
@@ -49,18 +48,21 @@ function renderPage(path) {
     ${footer}
   `;
 
-  // 로그인 컴포넌트의 bindEvents 호출
+  // 로그인 컴포넌트의 loginEvent 호출
   if (path === '/login') {
-    bindLoginEvents(renderPage);
+    loginEvent(renderPage);
   }
 
-  // 프로필 컴포넌트의 bindProfileEvents 호출
+  // 프로필 컴포넌트의 profileUpdate 호출
   if (path === '/profile') {
-    bindProfileEvents(); // 여기에서 호출
+    profileUpdate(); // 여기에서 호출
   }
 
   // 헤더 네비게이션 이벤트 바인딩
-  bindLogoutEvent(renderPage);
+  logoutEvent(renderPage);
+  
+  // URL 업데이트
+  window.history.pushState({}, '', path);
 }
 
 

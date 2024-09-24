@@ -14,8 +14,8 @@ const Nav = (currentPath, renderPage) => {
       `;
     };
     
-    // 이벤트 바인딩 함수
-    const bindLogoutEvent = (renderPage) => {
+    // 로그아웃 함수
+    const logoutEvent = (renderPage) => {
       const logout = document.getElementById("logout");
       if (logout) {
           logout.addEventListener("click", (event) => {
@@ -26,5 +26,5 @@ const Nav = (currentPath, renderPage) => {
       }
     };
     
-    export { Nav, bindLogoutEvent };
+    export { Nav, logoutEvent };
     

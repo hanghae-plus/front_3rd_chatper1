@@ -32,7 +32,7 @@ const Profile = () => {
   };
   
   // 이벤트 바인딩 함수
-  const bindProfileEvents = () => {
+  const profileUpdate = () => {
     const profileForm = document.getElementById("profile-form");
   
     if (profileForm) {
@@ -54,5 +54,5 @@ const Profile = () => {
   };
   
   export default Profile; // Profile 컴포넌트 내보내기
-  export { bindProfileEvents }; // bindProfileEvents 내보내기
+  export { profileUpdate }; // profileUpdate 내보내기
   

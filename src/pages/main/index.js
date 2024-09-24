@@ -37,7 +37,7 @@ export default function mainPage() {
     'scroll',
     debounce(() => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-        if (totalCount < page * 10) return
+        if (feeds.length >= totalCount) return
         fetchFeeds(++page)
       }
     }, 300)
@@ -58,5 +58,6 @@ export default function mainPage() {
     feeds = [newMessage, ...feeds]
     document.getElementById('feeds').innerHTML = feeds.map((feed) => FeedItem(feed)).join('')
     document.getElementById('message').value = ''
+    document.getElementById('message').focus()
   })
 }

@@ -1,5 +1,5 @@
-import { useNavigate } from './utils/navigate';
 import { routes } from './routes';
+import { useNavigate } from './utils/useNavigate';
 
 const { updateHTML } = useNavigate(routes);
 

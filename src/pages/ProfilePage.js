@@ -1,5 +1,5 @@
-import ProfileTemplate from '../../templates/profile';
 import { store } from '../store';
+import ProfileTemplate from '../../templates/profile';
 
 const ProfilePage = () => {
   const render = () => {

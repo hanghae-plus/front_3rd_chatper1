@@ -1,7 +1,7 @@
-import LoginTemplate from '../../templates/login';
 import { routes } from '../routes';
 import { store } from '../store';
-import { useNavigate } from '../utils/navigate';
+import { useNavigate } from '../utils/useNavigate';
+import LoginTemplate from '../../templates/login';
 
 const LoginPage = () => {
   const { navigate } = useNavigate(routes);

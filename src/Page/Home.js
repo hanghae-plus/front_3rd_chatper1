@@ -1,16 +1,7 @@
+import { changeVisibilityBasedOnLoginStatus, setLogoutButtonTappedEvent, setNavElemTapped } from '../Util/util';
+
 export const Home = () => {
     console.log('Home Components!');
-
-    window.addEventListener('DOMContentLoaded', (event) => {
-        const logoutButton = document.getElementById('logout');
-        console.log(logoutButton);
-        console.log('DOM fully loaded and parsed');
-
-        // 로그아웃 버튼 클릭 처리
-        logoutButton.addEventListener('click', function () {
-            localStorage.removeItem('user');
-        });
-    });
 
     document.querySelector('#root').innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
@@ -21,11 +12,11 @@ export const Home = () => {
   
         <nav class="bg-white shadow-md p-2 sticky top-14">
           <ul class="flex justify-around">
-            <li><a href="/" class="text-blue-600">홈</a></li>
-            <li><a href="/profile" class="text-gray-600">프로필</a></li>
+            <li><a href="/" class="text-blue-600 font-bold">홈</a></li>
+            <li><a id="profile" href="/profile" class="hidden text-gray-600">프로필</a></li>
             <li>
-              <a  href="/login" class="text-gray-600">로그인</a>
-              <button id="logout" class="text-gray-600 hidden">로그아웃</button>
+              <a id="login"  href="/login" class="text-gray-600">로그인</a>
+              <button id="logout" class="hidden text-gray-600">로그아웃</button>
             </li>
           </ul>
         </nav>
@@ -126,4 +117,12 @@ export const Home = () => {
       </div>
     </div>
   `;
+    const loginButton = document.getElementById('login');
+    const logoutButton = document.getElementById('logout');
+    const profileButton = document.getElementById('profile');
+    const isUserLogin = window.localStorage.getItem('user') !== null;
+
+    changeVisibilityBasedOnLoginStatus(isUserLogin, loginButton, logoutButton, profileButton);
+    setLogoutButtonTappedEvent(loginButton, logoutButton, profileButton);
+    setNavElemTapped();
 };

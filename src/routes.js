@@ -1,3 +1,4 @@
+import { store } from './store';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
@@ -9,3 +10,22 @@ export const routes = {
   '/profile': () => ProfilePage(),
   '/404': () => NotFoundPage(),
 };
+
+export const protectedRoutes = [
+  {
+    path: '/profile',
+    condition: () => {
+      const isLoggedIn = store.getState('isLoggedIn');
+      return !isLoggedIn;
+    },
+    redirect: '/login',
+  },
+  {
+    path: '/login',
+    condition: () => {
+      const isLoggedIn = store.getState('isLoggedIn');
+      return isLoggedIn;
+    },
+    redirect: '/',
+  },
+];

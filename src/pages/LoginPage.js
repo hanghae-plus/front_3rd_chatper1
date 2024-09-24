@@ -1,10 +1,10 @@
-import { routes } from '../routes';
+import { protectedRoutes, routes } from '../routes';
 import { store } from '../store';
 import { useNavigate } from '../utils/useNavigate';
 import LoginTemplate from '../../templates/login';
 
 const LoginPage = () => {
-  const { navigate } = useNavigate(routes);
+  const { navigate } = useNavigate(routes, protectedRoutes);
 
   const render = () => {
     const rootElement = document.getElementById('main');

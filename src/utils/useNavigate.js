@@ -2,7 +2,7 @@ import { store } from '../store';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-export const useNavigate = (routes) => {
+export const useNavigate = (routes, protectedRoutes) => {
   const navigate = (path) => {
     window.history.pushState({}, '', path);
     updateHTML();
@@ -42,15 +42,11 @@ export const useNavigate = (routes) => {
     const targetComponent = routes[currentPath] || routes['/404'];
     targetComponent();
 
-    const user = store.getState('isLoggedIn');
-    if (!user && currentPath === '/profile') {
-      navigate('/login');
-      return;
-    }
-    if (user && currentPath === '/login') {
-      navigate('/');
-      return;
-    }
+    protectedRoutes.forEach((route) => {
+      if (route.path === currentPath && route.condition()) {
+        navigate(route.redirect);
+      }
+    });
   };
 
   return { updateHTML, navigate };

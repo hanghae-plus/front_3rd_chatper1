@@ -1,111 +1,63 @@
-document.querySelector('#root').innerHTML = `
-<div class="bg-gray-100 min-h-screen flex justify-center">
-    <div class="max-w-md w-full">
-      <header class="bg-blue-600 text-white p-4 sticky top-0">
-        <h1 class="text-2xl font-bold">항해플러스</h1>
-      </header>
+import { Router } from './services/router.js';
+import { homePage } from './components/HomePage.js';
+import { profilePage } from './components/ProfilePage.js';
+import { loginPage } from './components/LoginPage.js';
+import { errorPage } from './components/ErrorPage.js';
+import {
+  saveUserData,
+  clearUserData,
+  setLoginStatus,
+} from './services/auth.js';
 
-      <nav class="bg-white shadow-md p-2 sticky top-14">
-        <ul class="flex justify-around">
-          <li><a href="./main.html" class="text-blue-600">홈</a></li>
-          <li><a href="./profile.html" class="text-gray-600">프로필</a></li>
-          <li><a href="#" class="text-gray-600">로그아웃</a></li>
-        </ul>
-      </nav>
+// 전역 라우터 인스턴스 생성
+export const router = new Router();
 
-      <main class="p-4">
-        <div class="mb-4 bg-white rounded-lg shadow p-4">
-          <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
-          <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
-        </div>
+// 각 경로와 해당 컴포넌트를 연결
+router.addRoute('/', homePage);
+router.addRoute('/profile', profilePage);
+router.addRoute('/login', loginPage);
+router.addRoute('/404', errorPage);
 
-        <div class="space-y-4">
+// 페이지가 처음 로드되었을 때 라우터 실행
+window.addEventListener('DOMContentLoaded', () => {
+  router.handleRoute(window.location.pathname); // 현재 경로에 맞는 페이지 렌더링
+  router.initializeRouter(); // 라우터 초기화 (이벤트 등록)
+});
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">홍길동</p>
-                <p class="text-sm text-gray-500">5분 전</p>
-              </div>
-            </div>
-            <p>오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+// 이벤트 위임을 통한 폼 제출 처리 및 로그아웃 처리
+document.addEventListener('submit', (e) => {
+  if (e.target && e.target.id === 'login-form') {
+    e.preventDefault(); // 기본 폼 제출 방지
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">김철수</p>
-                <p class="text-sm text-gray-500">15분 전</p>
-              </div>
-            </div>
-            <p>새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">이영희</p>
-                <p class="text-sm text-gray-500">30분 전</p>
-              </div>
-            </div>
-            <p>오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+    if (username && password) {
+      saveUserData({ username, email: '', bio: '' });
+      console.log('저장된 사용자 데이터:', localStorage.getItem('user'));
+      setLoginStatus(true);
+      router.navigateTo('/profile');
+    } else {
+      alert('로그인 정보를 입력해주세요.');
+    }
+  }
+});
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">박민수</p>
-                <p class="text-sm text-gray-500">1시간 전</p>
-              </div>
-            </div>
-            <p>주말에 등산 가실 분 계신가요? 함께 가요!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+// 로그아웃 클릭 이벤트 위임
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'logout') {
+    e.preventDefault();
+    let navContainer = document.querySelector('nav'); // 기존 네비게이션 바를 선택
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">정수연</p>
-                <p class="text-sm text-gray-500">2시간 전</p>
-              </div>
-            </div>
-            <p>새로 나온 영화 재미있대요. 같이 보러 갈 사람?</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
-        </div>
-      </main>
+    if (navContainer) {
+      // 기존 네비게이션 바의 내용을 업데이트
+      console.log('네비게이션 바 있음');
+    } else {
+      console.log('네비게이션 바 없음');
+    }
 
-      <footer class="bg-gray-200 p-4 text-center">
-        <p>&copy; 2024 항해플러스. All rights reserved.</p>
-      </footer>
-    </div>
-  </div>
-`;
+    clearUserData();
+    setLoginStatus(false);
+    router.navigateTo('/login');
+  }
+});

@@ -41,7 +41,6 @@ class login {
 
   // 로그인
   userLogin(userData) {
-    console.log("kyj login");
     this.state.user = {
       isLogin: true,
       data: userData,
@@ -52,7 +51,6 @@ class login {
 
   // 로그아웃
   userLogout() {
-    console.log("kyj logout");
     this.state.user = {
       isLogin: false,
       data: null,

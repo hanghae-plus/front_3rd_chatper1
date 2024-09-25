@@ -42,12 +42,14 @@ class Router {
       document.getElementById('root').innerHTML = page.render();
       page.mount();
       this.#lastPage = page;
+
     } else if (localStorage.getItem('user') !== null && path === '/login') {
       history.pushState({}, '', '/');
       const page = this.#routes['/'];
       document.getElementById('root').innerHTML = page.render();
       page.mount();
       this.#lastPage = page;
+      
     } else {
       const page = this.#routes[path];
       document.getElementById('root').innerHTML = page.render();

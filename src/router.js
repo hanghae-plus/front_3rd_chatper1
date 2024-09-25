@@ -6,6 +6,7 @@ import { getUser } from './helpers';
 
 const isLogin = () => getUser();
 
+// TODO: vue-router routes와 같은 형태로 리팩토링
 const routes = {
   '/404': ($target) => new ErrorPage($target),
   '/': ($target) => new MainPage($target),
@@ -34,6 +35,10 @@ const handleRoute = (path) => {
   if (path === '/profile' && !isLogin()) {
     navigateTo('/login', true);
     return;
+  }
+
+  if (currentRoute) {
+    currentRoute.destroy();
   }
 
   currentRoute = routes[path](document.querySelector('#root'));

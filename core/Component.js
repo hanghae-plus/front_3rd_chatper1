@@ -3,6 +3,8 @@ export default class Component {
 
   state = {};
 
+  events = [];
+
   constructor($target) {
     this.$target = $target;
     this.setup();
@@ -14,6 +16,12 @@ export default class Component {
   setup() {}
 
   mounted() {}
+
+  destroy() {
+    this.events.forEach(({ eventType, handler }) => {
+      this.$target.removeEventListener(eventType, handler);
+    });
+  }
 
   template() {
     return '';
@@ -32,9 +40,16 @@ export default class Component {
   }
 
   addEvent(eventType, selector, callback) {
-    this.$target.addEventListener(eventType, (event) => {
+    const handler = (event) => {
       if (!event.target.closest(selector)) return false;
       callback(event);
+    };
+
+    this.$target.addEventListener(eventType, handler);
+
+    this.events.push({
+      eventType,
+      handler,
     });
   }
 }

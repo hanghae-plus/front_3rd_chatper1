@@ -19,7 +19,6 @@ export default class HomePage extends Component {
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
           ${this.#children.header.render()}
-
           <main class="p-4">
             <div class="mb-4 bg-white rounded-lg shadow p-4">
               <textarea
@@ -133,13 +132,13 @@ export default class HomePage extends Component {
               </div>
             </div>
           </main>
-
           ${this.#children.footer.render()}
         </div>
       </div>`;
   }
 
   #addEventListeners() {
+
   }
 
   mount() {
@@ -147,6 +146,16 @@ export default class HomePage extends Component {
       child.mount();
     }
     this.#addEventListeners();
+  }
+
+  #removeEventListeners() {
+  }
+
+  unmount() {
+    for (const child of Object.values(this.#children)) {
+      child.unmount();
+    }
+    this.#removeEventListeners();
   }
 }
 

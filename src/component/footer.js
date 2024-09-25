@@ -20,4 +20,11 @@ export default class Footer extends Component {
   mount() {
     this.#addEventListeners();
   }
+
+  #removeEventListeners() {
+  }
+
+  unmount() {
+    this.#removeEventListeners();
+  }
 }

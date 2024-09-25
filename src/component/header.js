@@ -3,20 +3,43 @@ import router from '../router.js';
 import { html } from 'code-tag';
 
 export default class Header extends Component {
+  #handleEvents = {
+    handleHomeClickBound: null,
+    handleProfileClickBound: null,
+    handlerLogoutClickBound: null
+  };
+
   constructor() {
     super();
+
+    this.#handleEvents.handleHomeClickBound = this.#handleHomeClick.bind(this);
+    this.#handleEvents.handleProfileClickBound = this.#handleProfileClick.bind(this);
+    this.#handleEvents.handlerLogoutClickBound = this.#handleLogoutClick.bind(this);
   }
 
-  #navigate(path, menu) {
+  #navigate(path) {
     window.history.pushState({}, '', path);
-    this.unmount();
     router.router();
   }
 
   #logout() {
     localStorage.removeItem('user');
-    this.unmount();
     router.router();
+  }
+
+  #handleHomeClick(e) {
+    e.preventDefault();
+    this.#navigate('/');
+  }
+
+  #handleProfileClick(e) {
+    e.preventDefault();
+    this.#navigate('/profile');
+  }
+
+  #handleLogoutClick(e) {
+    e.preventDefault();
+    this.#logout();
   }
 
   render() {
@@ -43,20 +66,13 @@ export default class Header extends Component {
     const profile = document.getElementById('profile');
     const logout = document.getElementById('logout');
 
-    home.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.#navigate('/');
-    });
+    home.addEventListener('click', this.#handleEvents.handleHomeClickBound);
+    profile.addEventListener('click', this.#handleEvents.handleProfileClickBound);
+    logout.addEventListener('click', this.#handleEvents.handlerLogoutClickBound);
+  }
 
-    profile.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.#navigate('/profile');
-    });
-
-    logout.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.#logout();
-    });
+  mount() {
+    this.#addEventListeners();
   }
 
   #removeEventListeners() {
@@ -64,13 +80,9 @@ export default class Header extends Component {
     const profile = document.getElementById('profile');
     const logout = document.getElementById('logout');
 
-    home.removeEventListener('click', this.#navigate);
-    profile.removeEventListener('click', this.#navigate);
-    logout.removeEventListener('click', this.#logout);
-  }
-
-  mount() {
-    this.#addEventListeners();
+    home.removeEventListener('click', this.#handleEvents.handleHomeClickBound);
+    profile.removeEventListener('click', this.#handleEvents.handleProfileClickBound);
+    logout.removeEventListener('click', this.#handleEvents.handlerLogoutClickBound);
   }
 
   unmount() {

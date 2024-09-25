@@ -4,6 +4,21 @@ import router from '../src/router.js';
 
 
 export default class ErrorPage extends Component {
+  #handleEvents = {
+    handlerClickBound: null
+  };
+
+  constructor() {
+    super();
+
+    this.#handleEvents.handlerClickBound = this.#handlerClick.bind(this);
+  }
+
+  #handlerClick(e) {
+    e.preventDefault();
+    router.navigateTo('/');
+  }
+
   render() {
     return html`
       <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -31,14 +46,22 @@ export default class ErrorPage extends Component {
 
   #addEventListeners() {
     const backHomeBtn = document.getElementById('back-home');
-    backHomeBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      router.navigateTo('/');
-    });
+
+    backHomeBtn.addEventListener('click', this.#handleEvents.handlerClickBound);
   }
 
   mount() {
     this.#addEventListeners();
+  }
+
+  #removeEventListeners() {
+    const backHomeBtn = document.getElementById('back-home');
+
+    backHomeBtn.removeEventListener('click', this.#handleEvents.handlerClickBound);
+  }
+
+  unmount() {
+    this.#removeEventListeners();
   }
 }
 

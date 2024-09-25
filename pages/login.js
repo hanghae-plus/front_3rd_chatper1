@@ -9,6 +9,18 @@ export default class LoginPage extends Component {
     password: ''
   };
 
+  #handleEvents = {
+    handleSubmitBound: null,
+    handleInputBound: null
+  };
+
+  constructor() {
+    super();
+
+    this.#handleEvents.handleSubmitBound = this.#handleSubmit.bind(this);
+    this.#handleEvents.handleInputBound = this.#handleInput.bind(this);
+  }
+
   #validate(id) {
     if (!id) {
       alert('아이디를 입력해주세요');
@@ -18,7 +30,7 @@ export default class LoginPage extends Component {
     return true;
   }
 
-  login(id) {
+  #login(id) {
     if (!this.#validate(id)) {
       return;
     }
@@ -29,6 +41,15 @@ export default class LoginPage extends Component {
     } else {
       alert('아이디 또는 비밀번호가 일치하지 않습니다');
     }
+  }
+
+  #handleSubmit(event) {
+    event.preventDefault();
+    this.#login(this.#state.username);
+  }
+
+  #handleInput(event) {
+    this.#state.username = event.target.value;
   }
 
   render() {
@@ -78,18 +99,25 @@ export default class LoginPage extends Component {
 
   #addEventListeners() {
     const form = document.getElementById('login-form');
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      this.login(this.#state.username);
-    });
+    form.addEventListener('submit', this.#handleEvents.handleSubmitBound);
 
     const input = document.getElementById('username');
-    input.addEventListener('input', (event) => {
-      this.#state.username = event.target.value;
-    });
+    input.addEventListener('input', this.#handleEvents.handleInputBound);
   }
 
   mount() {
     this.#addEventListeners();
+  }
+
+  #removeEventListeners() {
+    const form = document.getElementById('login-form');
+    form.removeEventListener('submit', this.#handleEvents.handleSubmitBound);
+
+    const input = document.getElementById('username');
+    input.removeEventListener('input', this.#handleEvents.handleInputBound);
+  }
+
+  unmount() {
+    this.#removeEventListeners();
   }
 }

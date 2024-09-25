@@ -2,6 +2,7 @@ import Component from '../src/component/component.js';
 import { html } from 'code-tag';
 import Header from '../src/component/header.js';
 import Footer from '../src/component/footer.js';
+import router from '../src/router.js';
 
 export default class ProfilePage extends Component {
   #children = {
@@ -9,8 +10,14 @@ export default class ProfilePage extends Component {
     footer: new Footer()
   };
 
+  #handleEvents = {
+    handleSubmitBound: null
+  };
+
   constructor() {
     super();
+
+    this.#handleEvents.handleSubmitBound = this.#handleSubmit.bind(this);
   }
 
   #saveProfile() {
@@ -21,6 +28,14 @@ export default class ProfilePage extends Component {
     localStorage.setItem('user', JSON.stringify({ username, email, bio }));
 
     alert('프로필이 업데이트 되었습니다.');
+  }
+
+  #handleSubmit(event) {
+    event.preventDefault();
+
+    this.#saveProfile();
+
+    router.router();
   }
 
   render() {
@@ -95,11 +110,7 @@ export default class ProfilePage extends Component {
   #addEventListeners() {
     const form = document.querySelector('#profile-form');
 
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-
-      this.#saveProfile();
-    });
+    form.addEventListener('submit', this.#handleEvents.handleSubmitBound);
   }
 
   mount() {
@@ -107,5 +118,18 @@ export default class ProfilePage extends Component {
       child.mount();
     }
     this.#addEventListeners();
+  }
+
+  #removeEventListeners() {
+    const form = document.querySelector('#profile-form');
+
+    form.removeEventListener('submit', this.#handleEvents.handleSubmitBound);
+  }
+
+  unmount() {
+    for (const child of Object.values(this.#children)) {
+      child.unmount();
+    }
+    this.#removeEventListeners();
   }
 }

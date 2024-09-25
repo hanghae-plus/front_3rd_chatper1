@@ -63,7 +63,7 @@ const Profile = () => {
                 rows="4"
                 class="w-full p-2 border rounded"
               >
-                {value=${(user != null && user?.bio) || ""}}</textarea
+${(user != null && user?.bio) || ""}</textarea
               >
             </div>
             <button

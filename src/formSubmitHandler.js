@@ -11,9 +11,6 @@ export const formSubmitHandler = (
     const isUserName = nameInput.value.trim() !== "";
     const isUserPassword = passwordInput.value.trim() !== "";
 
-    console.log("isUserName:", isUserName);
-    console.log("isUserPassword", isUserPassword);
-
     if (isUserName && isUserPassword) {
       loginButton.removeAttribute("disabled");
     } else {

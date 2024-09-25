@@ -33,8 +33,9 @@ export default function LoginPage() {
   }
 
   function handleErrorCatch(e) {
+    const TEST_KEY = '1'
     try {
-      if (e.target.value === '1') {
+      if (e.target.value === TEST_KEY) {
         throw new Error(MESSAGE.INTENTIONAL_ERROR)
       }
     } catch (error) {

@@ -1,8 +1,8 @@
-import { MainLayout } from '@components/layouts'
-import { FeedItem } from '@components/main'
-import { debounce } from '@utils'
-import { UserStore } from '@stores'
 import { DATA_URL, FEEDS_LIMIT, MESSAGE, SCROLL_DEBOUNCE_DELAY, USER_PROFILE_URL } from '@constants'
+import { debounce } from '@utils'
+import { FeedItem } from '@components/main'
+import { MainLayout } from '@components/layouts'
+import { UserStore } from '@stores'
 
 let feeds = []
 

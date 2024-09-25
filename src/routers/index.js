@@ -1,6 +1,6 @@
 import { LoginPage, MainPage, ProfilePage, NotFoundPage } from '@pages'
+import { ROUTES, MESSAGE, LINK_TAG, NAVIGATION } from '@constants'
 import { UserStore } from '@stores'
-import { ROUTES, MESSAGE } from '@constants'
 
 let currentPage = null
 
@@ -43,10 +43,10 @@ function createRouter(options = {}) {
   function handleLinkClick(e) {
     const target = e.target
 
-    if (target.tagName === 'A' && target.href.startsWith(window.location.origin)) {
+    if (target.tagName === LINK_TAG && target.href.startsWith(window.location.origin)) {
       e.preventDefault()
 
-      if (target.id === 'logout') {
+      if (target.id === NAVIGATION.LOGOUT.ENG) {
         handleLogout()
         return
       }

@@ -1,7 +1,7 @@
-import { UserStore } from '@stores'
 import { MainLayout } from '@components/layouts'
-import { throttle } from '@utils'
 import { MESSAGE, PROFILE_SAVE_DELAY } from '@constants'
+import { throttle } from '@utils'
+import { UserStore } from '@stores'
 
 const userStore = UserStore()
 

@@ -1,12 +1,21 @@
 import { UserStore } from '@stores'
 import { MainLayout } from '@components/layouts'
 import { throttle } from '@utils'
+import { MESSAGE, PROFILE_SAVE_DELAY } from '@constants'
 
 const userStore = UserStore()
 
 export default function profilePage() {
   const user = userStore.getState('user')
-  document.getElementById('root').innerHTML = MainLayout(`
+
+  function getProfileFormData() {
+    const username = document.getElementById('username').value
+    const email = document.getElementById('email').value
+    const bio = document.getElementById('bio').value
+    return { username, email, bio }
+  }
+
+  const template = MainLayout(`
     <main class="p-4">
       <div class="bg-white p-8 rounded-lg shadow-md">
         <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
@@ -31,24 +40,29 @@ export default function profilePage() {
     </main>
   `)
 
-  function makeProfileForm() {
-    const username = document.getElementById('username').value
-    const email = document.getElementById('email').value
-    const bio = document.getElementById('bio').value
-    return { username, email, bio }
+  let throttledUpdate = throttle(() => {
+    const userInfo = getProfileFormData()
+    userStore.setState('user', userInfo)
+    alert(MESSAGE.PROFILE_UPDATED)
+  }, PROFILE_SAVE_DELAY)
+
+  function render() {
+    document.getElementById('root').innerHTML = template
+    const profileForm = document.getElementById('profile-form')
+
+    profileForm?.addEventListener('submit', (e) => {
+      e.preventDefault()
+      throttledUpdate()
+    })
   }
 
-  const profileForm = document.getElementById('profile-form')
+  function cleanup() {
+    const profileForm = document.getElementById('profile-form')
+    profileForm?.removeEventListener('submit', throttledUpdate)
+  }
 
-  const throttledUpdate = throttle(() => {
-    const userInfo = makeProfileForm()
-    userStore.setState('user', userInfo)
-    alert('프로필이 업데이트 되었습니다.')
-  }, 500)
-
-  profileForm?.addEventListener('submit', (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    throttledUpdate()
-  })
+  return {
+    render,
+    cleanup,
+  }
 }

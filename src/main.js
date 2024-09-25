@@ -1,84 +1,67 @@
 import Header from './components/Header';
-import Home from './components/Home';
-import Profile, { bindEvents as bindProfileEvents} from './components/Profile';
 import Footer from './components/Footer';
-import Login, { bindEvents as bindLoginEvents} from './components/Login';
+import Home from './components/Home';
+import Profile from './components/Profile';
+import Login from './components/Login';
 import ErrorPage from './components/ErrorPage';
+import user from './User';
 
 const root = document.querySelector("#root");
 
-// 라우팅 관리 객체
 const routes = {
-  "/": { component: Home, isOnlyComponent: false },
-  "/login": { component: Login, isOnlyComponent: true },
-  "/profile": { component: Profile, isOnlyComponent: false },
-  "/error": { component: ErrorPage, isOnlyComponent: true },
-};
+  "/": {component: Home.template(), isOnlyComponent: false},
+  "/profile": {component: Profile.template(), isOnlyComponent: false},
+  "/login": {component: Login.template(), isOnlyComponent: true},
+  "/error": {component: ErrorPage.template(), isOnlyComponent: true},
+}
 
-loadHTML('/');
-
-// HTML을 로드하는 함수
-function loadHTML(path) {
+const renderHTML = (path) => {
   const { component, isOnlyComponent } = routes[path] || routes['/error'];
-  
+  const headerComponent = !isOnlyComponent ? Header.template(user.isLoggedIn(), path) : "";
+  const footerComponent = !isOnlyComponent ? Footer.template() : "";
+
   root.innerHTML = `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
-        ${!isOnlyComponent ? Header : ""}
+        ${headerComponent}
         ${component}
-        ${!isOnlyComponent ? Footer : ""}
+        ${footerComponent}
       </div>
     </div>
-  `;
+  `
 
-  if (path === "/login") {
-    bindLoginEvents(loadHTML);
+  if (path === '/login') {
+    Login.bindEvents(renderHTML)
   }
 
-  if (path === "/profile") {
-    const user = JSON.parse(localStorage.getItem("user"));
-    bindProfileEvents(user);
+  if (path === '/profile') {
+    Profile.bindEvents();
   }
 
-  // 페이지가 로드될 때 탭 활성색상을 초기화
-  updateActiveLink(path);
+  Header.bindEvents(renderHTML);
 }
-
-// 네비게이션 클릭 이벤트 처리
-document.addEventListener('click', (e) => {
-  // 클릭된 요소가 'a[data-link]'인지 확인
-  if (e.target.matches('a[data-link]')) {
-    e.preventDefault();
-    const url = e.target.getAttribute('href');
-    navigateTo(url);
-  }
-});
 
 // URL 변경 및 페이지 로드
-function navigateTo(url) {
+const navigateTo = (url) => {
   history.pushState(null, null, url);  // URL 변경
-  loadHTML(url);  // 해당 URL에 맞는 페이지 로드
+  renderHTML(url);  // 해당 URL에 맞는 페이지 로드
 }
 
-// 링크에 active 클래스를 추가하는 함수
-function updateActiveLink(currentPath) {
-  const links = document.querySelectorAll('a[data-link]');
+document.addEventListener("DOMContentLoaded", () => {
+  const initialPath = window.location.pathname;
+  renderHTML(initialPath);
 
-  links.forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === currentPath) {
-      // 현재 경로와 일치하는 링크에 active 클래스 추가
-      link.classList.remove('text-gray-600');
-      link.classList.add('text-blue-600');
-    } else {
-      // 다른 링크에는 기본 클래스 적용
-      link.classList.remove('text-blue-600');
-      link.classList.add('text-gray-600');
+  document.addEventListener('click', (e) => {
+    if (e.target.matches('a[data-link]')) {
+      e.preventDefault();
+      const url = e.target.getAttribute('href');
+      navigateTo(url);
     }
-  });
-}
+  })
+});
+
 
 // 브라우저의 뒤로/앞으로 가기 버튼 동작 처리
 window.addEventListener('popstate', () => {
-  loadHTML(location.pathname);  // 현재 URL에 맞는 콘텐츠 로드
+  renderHTML(location.pathname);  // 현재 URL에 맞는 콘텐츠 로드
 });

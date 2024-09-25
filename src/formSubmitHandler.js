@@ -1,4 +1,4 @@
-import { navigateTo, router } from "./router";
+import { navigateTo } from "./router";
 
 export const formSubmitHandler = (
   form,
@@ -35,8 +35,28 @@ export const formSubmitHandler = (
 export const logoutHandler = (logoutButton) => {
   const removeUser = () => {
     localStorage.removeItem("user");
-    router();
+    navigateTo("/");
   };
 
   logoutButton.addEventListener("click", removeUser);
+};
+
+export const profileSubmitHandler = (
+  form,
+  nameInput,
+  emailInput,
+  contentInput
+) => {
+  form.addEventListener("submit", (e) => {
+    e.preventDefault(); // 폼 제출 시 페이지 리로드 방지
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        username: nameInput.value,
+        email: emailInput.value,
+        bio: contentInput.value,
+      })
+    );
+  });
 };

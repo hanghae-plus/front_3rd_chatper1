@@ -4,7 +4,7 @@ import UserInfo from "./UserInfo";
 class Router {
   constructor() {
     this.routes = [];
-
+    this.notfound = () => {};
     window.addEventListener("popstate", () => {
       const path = window.location.pathname;
 
@@ -20,6 +20,10 @@ class Router {
     this.routes[path] = handler;
   }
 
+  addNotFoundRoute(handler) {
+    this.notfound = handler;
+  }
+
   push(path) {
     const validPath = this.routerGuard(path);
     history.pushState({}, "", validPath);
@@ -28,8 +32,7 @@ class Router {
     if (handler) {
       handler();
     } else {
-      const notFoundPage = this.routes["*"];
-      notFoundPage();
+      this.notfound();
     }
   }
 

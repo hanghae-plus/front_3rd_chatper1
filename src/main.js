@@ -111,127 +111,122 @@ document.querySelector('#root').innerHTML = `
 `;
 const root = document.querySelector('#root');
 
-// 페이지를 로드하고 렌더링하는 함수
-const renderPage = async (page) => {
-  let content;
-
-  const validPages = ['main', 'profile', 'login'];
-
-  // 페이지 이름이 없으면 기본 페이지(main)를 로드
-  if (page === '') {
-    content = await fetch('./templates/main.html').then(res => res.text());
-  } else if (validPages.includes(page)) {
-    // 유효한 페이지 이름일 경우 해당 페이지를 로드
-    content = await fetch(`./templates/${page}.html`).then(res => res.text());
-  } else {
-    // 유효하지 않은 페이지일 경우 에러 페이지를 로드
-    content = await fetch('./templates/error.html').then(res => res.text());
-  }
-
-  // 내용을 root에 렌더링
-  root.innerHTML = content;
-
-  // 페이지가 렌더링된 후 네비게이션 및 페이지별 추가 로직 업데이트
-  updateNavigation();  
-  handlePageSpecificLogic(page);
+// 페이지별 템플릿을 불러오는 함수
+const loadTemplate = async (template) => {
+  return fetch(`./templates/${template}.html`).then(res => res.text());
 };
 
-// 페이지별 추가 처리 (로그인 이벤트 등)
-const handlePageSpecificLogic = (page) => {
-  if (page === 'login') {
-    const loginForm = document.querySelector('form');
+// 각 페이지 컴포넌트 정의
+const MainPage = async () => {
+  const content = await loadTemplate('main');
+  root.innerHTML = content;
+};
 
-    if (loginForm) {
-      loginForm.addEventListener('submit', (e) => {
-        e.preventDefault(); // 기본 제출 동작 방지
+const LoginPage = async () => {
+  const content = await loadTemplate('login');
+  root.innerHTML = content;
 
-        const username = document.querySelector('input[type="text"]').value;
-        const password = document.querySelector('input[type="password"]').value;
+  const loginForm = document.querySelector('form');
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.querySelector('input[type="text"]').value;
+      const password = document.querySelector('input[type="password"]').value;
 
-        // 입력값 확인 후 로컬스토리지에 저장
-        if (username && password) {
-          localStorage.setItem('username', username);
-          localStorage.setItem('password', password);
-          localStorage.setItem('loggedIn', true);
-
-          // 프로필 페이지로 이동
-          history.pushState({}, '', '/profile');
-          renderPage('profile');
-        } else {
-          alert('사용자이름과 비밀번호를 입력하세요.');
-        }
-      });
-    }
-  }
-
-   // 프로필 페이지 처리
-  if (page === 'profile') {
-    const storedUsername = localStorage.getItem('username');
-    const storedEmail = localStorage.getItem('email');
-    const storedBio = localStorage.getItem('bio');
-
-    const usernameInput = document.getElementById('username');
-    const emailInput = document.getElementById('email');
-    const bioInput = document.getElementById('bio');
-
-    // 저장된 값이 있으면 각 필드에 설정
-    if (storedUsername && usernameInput) usernameInput.value = storedUsername;
-    if (storedEmail && emailInput) emailInput.value = storedEmail;
-    if (storedBio && bioInput) bioInput.value = storedBio;
-
-    const profileForm = document.querySelector('form');
-
-    // 프로필 업데이트 이벤트 처리
-    profileForm.addEventListener('submit', (e) => {
-      e.preventDefault(); // 기본 폼 제출 동작 방지
-
-      const updatedUsername = usernameInput.value;
-      const updatedEmail = emailInput.value;
-      const updatedBio = bioInput.value;
-
-      // 로컬스토리지에 새 값을 저장
-      if (updatedUsername && updatedEmail && updatedBio) {
-        localStorage.setItem('username', updatedUsername);
-        localStorage.setItem('email', updatedEmail);
-        localStorage.setItem('bio', updatedBio);
-        alert('프로필이 업데이트되었습니다.');
+      if (username && password) {
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
+        localStorage.setItem('loggedIn', true);
+        history.pushState({}, '', '/profile');
+        renderPage('profile');
       } else {
-        alert('모든 필드를 입력하세요.');
+        alert('사용자이름과 비밀번호를 입력하세요.');
       }
     });
   }
 };
 
+const ProfilePage = async () => {
+  const content = await loadTemplate('profile');
+  root.innerHTML = content;
+
+  const storedUsername = localStorage.getItem('username');
+  const storedEmail = localStorage.getItem('email');
+  const storedBio = localStorage.getItem('bio');
+
+  const usernameInput = document.getElementById('username');
+  const emailInput = document.getElementById('email');
+  const bioInput = document.getElementById('bio');
+
+  if (storedUsername && usernameInput) usernameInput.value = storedUsername;
+  if (storedEmail && emailInput) emailInput.value = storedEmail;
+  if (storedBio && bioInput) bioInput.value = storedBio;
+
+  const profileForm = document.querySelector('form');
+  profileForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const updatedUsername = usernameInput.value;
+    const updatedEmail = emailInput.value;
+    const updatedBio = bioInput.value;
+
+    if (updatedUsername && updatedEmail && updatedBio) {
+      localStorage.setItem('username', updatedUsername);
+      localStorage.setItem('email', updatedEmail);
+      localStorage.setItem('bio', updatedBio);
+      alert('프로필이 업데이트되었습니다.');
+    } else {
+      alert('모든 필드를 입력하세요.');
+    }
+  });
+};
+
+const ErrorPage = async () => {
+  const content = await loadTemplate('error');
+  root.innerHTML = content;
+};
+
+// 페이지 컴포넌트를 매핑하는 객체
+const pageComponents = {
+  'main': MainPage,
+  'profile': ProfilePage,
+  'login': LoginPage,
+  'error': ErrorPage
+};
+
+// 페이지를 렌더링하는 함수
+const renderPage = async (page) => {
+  const validPages = Object.keys(pageComponents);
+  if (!validPages.includes(page)) page = 'error';
+
+  await pageComponents[page](); // 해당 페이지 컴포넌트를 호출
+  updateNavigation(); // 네비게이션 업데이트
+};
 
 // 네비게이션 업데이트 함수
 const updateNavigation = () => {
-  const nav = document.querySelector('nav ul'); // 네비게이션 요소 가져오기
-  if (!nav) return; // nav가 존재하지 않으면 함수를 종료
+  const nav = document.querySelector('nav ul');
+  if (!nav) return;
 
-  const isLoggedIn = localStorage.getItem('loggedIn'); // 로그인 상태 확인
-
+  const isLoggedIn = localStorage.getItem('loggedIn');
   if (isLoggedIn) {
-    // 로그인 상태일 때 네비게이션
     nav.innerHTML = `
-      <li><a href="./main.html" class="text-blue-600">홈</a></li>
-      <li><a href="./profile.html" class="text-gray-600">프로필</a></li>
+      <li><a href="/main" class="text-blue-600">홈</a></li>
+      <li><a href="/profile" class="text-gray-600">프로필</a></li>
       <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
     `;
   } else {
-    // 비로그인 상태일 때 네비게이션
     nav.innerHTML = `
-      <li><a href="./main.html" class="text-blue-600">홈</a></li>
-      <li><a href="./login.html" class="text-gray-600">로그인</a></li>
+      <li><a href="/main" class="text-blue-600">홈</a></li>
+      <li><a href="/login" class="text-gray-600">로그인</a></li>
     `;
   }
 
-  // 로그아웃 버튼 클릭 시 처리
   const logoutButton = document.getElementById('logout');
   if (logoutButton) {
     logoutButton.addEventListener('click', (e) => {
       e.preventDefault();
-      localStorage.removeItem('loggedIn'); // 로그인 상태 제거
-      window.location.reload(); // 페이지 새로고침
+      localStorage.removeItem('loggedIn');
+      window.location.reload();
     });
   }
 };
@@ -239,8 +234,8 @@ const updateNavigation = () => {
 // 현재 URL에서 페이지 이름을 가져오는 함수
 const getCurrentPage = () => {
   const path = window.location.pathname;
-  const page = path.replace('/', '').replace('.html', ''); // 경로에서 불필요한 부분을 제거
-  return page || 'main'; // 기본 페이지를 'main'으로 설정
+  const page = path.replace('/', '').replace('.html', '');
+  return page || 'main';
 };
 
 // 초기 페이지 로드
@@ -249,19 +244,14 @@ renderPage(getCurrentPage());
 // 네비게이션 링크 클릭 이벤트 처리
 document.addEventListener('click', (e) => {
   if (e.target.tagName === 'A') {
-    e.preventDefault(); // 기본 링크 동작을 막음
-    const page = e.target.getAttribute('href').replace('./', '').replace('.html', ''); // 링크에서 페이지 이름을 추출
-    history.pushState({}, '', `/${page}`); // URL을 히스토리 스택에 푸시
-    renderPage(page); // 페이지 렌더링
+    e.preventDefault();
+    const page = e.target.getAttribute('href').replace('/', '');
+    history.pushState({}, '', `/${page}`);
+    renderPage(page);
   }
 });
 
 // 브라우저의 뒤로가기 및 앞으로가기 버튼 처리
 window.onpopstate = () => {
-  renderPage(getCurrentPage()); // URL에 맞는 페이지를 렌더링
-};
-
-// 페이지가 처음 로드될 때 현재 URL에 맞는 페이지 렌더링
-window.onload = () => {
   renderPage(getCurrentPage());
 };

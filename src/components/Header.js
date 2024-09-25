@@ -19,11 +19,13 @@ export function Header() {
       <li>
         <a href="/" class="${homeLinkeClass} cursor-pointer">홈</a>
       </li>
-      <li>
-        <a href="/profile" class="${profileLinkClass} cursor-pointer"
-          >프로필</a
-        >
-      </li>
+      ${
+        isLoggedIn()
+          ? `<li>
+          <a href="/profile" class="${profileLinkClass} cursor-pointer">프로필</a>
+        </li>`
+          : ""
+      }
       <li>
         <a href="/login" class="text-gray-600 cursor-pointer" id=${
           isLoggedIn() ? "logout" : "login"

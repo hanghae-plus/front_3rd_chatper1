@@ -70,7 +70,6 @@ describe('기본과제 테스트', () => {
       const logoutButton = document.getElementById('logout');
       logoutButton.click();
 
-      console.log(localStorage.getItem('user'));
       expect(localStorage.getItem('user')).toEqual(null);
     });
   });

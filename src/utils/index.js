@@ -1,50 +1,61 @@
 import { PERMISSION, STORAGE_KEY } from "../constants";
 
 export class StorageController {
-  constructor() {
+  constructor(key) {
     this.storage = localStorage;
+    this.key = key;
   }
-  get(key) {
-    return this.storage.getItem(key);
+
+  get() {
+    return this.storage.getItem(this.key);
   }
-  getParsed(key) {
-    return JSON.parse(this.storage.getItem(key));
+
+  getParsed() {
+    const item = this.get();
+    return item ? JSON.parse(item) : null;
   }
-  set(key, value) {
-    this.storage.setItem(key, JSON.stringify(value));
+
+  set(value) {
+    this.storage.setItem(this.key, JSON.stringify(value));
   }
-  remove(key) {
-    this.storage.removeItem(key);
+
+  remove() {
+    this.storage.removeItem(this.key);
   }
 }
 
 export class UserController {
   constructor() {
-    this.storage = new StorageController();
-    this.user = this.storage.getParsed(STORAGE_KEY.USER);
+    this.userStorage = new StorageController(STORAGE_KEY.USER);
+    this.user = this.userStorage.getParsed();
   }
 
   login(data, callback) {
-    this.storage.set(STORAGE_KEY.USER, data);
-    this.user = data;
-    callback();
+    this._updateUser(data, callback);
   }
+
   update(data, callback) {
-    this.storage.set(STORAGE_KEY.USER, data);
-    this.user = data;
-    callback();
+    this._updateUser(data, callback);
   }
+
   logout(callback) {
-    this.storage.remove(STORAGE_KEY.USER);
+    this.userStorage.remove();
     this.user = null;
     callback();
   }
+
   getUser() {
     return this.user;
   }
 
   status() {
     return this.getUser() ? PERMISSION.AUTH.key : PERMISSION.PUBLIC.key;
+  }
+
+  _updateUser(data, callback) {
+    this.userStorage.set(data);
+    this.user = data;
+    callback();
   }
 }
 
@@ -76,6 +87,7 @@ export class Router {
       this.notFound();
     }
   }
+
   redirectTo(path, condition) {
     if (condition) {
       this.navigateTo(path);
@@ -105,6 +117,7 @@ export class Component {
   template() {
     return "";
   }
+
   render() {
     this.target.innerHTML = this.template();
     this.afterRender();

@@ -33,7 +33,7 @@ export default class LoginPage extends BaseComponent {
     const username = $nameInput.value.trim();
 
     if (username) {
-      login({ name: username });
+      login({ username });
     }
   }
 

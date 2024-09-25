@@ -4,21 +4,14 @@ import { safeLocalStorage } from './localStorage';
 export const USER_INFO_KEY = 'user';
 
 export type UserInfo = {
-  /** 로그인 id */
-  name: string;
+  username: string;
 
-  /** 프로필 */
-  username?: string;
-
-  /** 이메일 */
   email: string;
 
-  /** 자기소개 */
   bio: string;
 };
 
 export const defaultUserInfo: UserInfo = {
-  name: '',
   bio: '',
   email: '',
   username: '',
@@ -38,7 +31,7 @@ export const logout = () => {
   router.navigateTo('/');
 };
 
-export const login = (payload: Pick<UserInfo, 'name'>) => {
+export const login = (payload: Pick<UserInfo, 'username'>) => {
   setUserInfo({
     ...payload,
     email: '',

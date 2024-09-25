@@ -29,12 +29,11 @@ function renderRoute() {
   function renderErrorMessage(message) {
     const errorMessage = document.createElement('div');
     errorMessage.id = 'error-message';
-    errorMessage.style.color = 'red';
     errorMessage.textContent = message;
     document.body.appendChild(errorMessage);
   }
 
-  function loginErrorHandler() {
+  function triggerLoginError() {
     const username = document.getElementById('username');
 
     username.addEventListener(
@@ -52,7 +51,7 @@ function renderRoute() {
 
   const loginForm = document.getElementById('login-form');
   if (loginForm) {
-    loginErrorHandler();
+    triggerLoginError();
     loginForm.addEventListener('submit', (event) => {
       event.preventDefault();
       const username = document.getElementById('username').value;
@@ -110,3 +109,7 @@ window.addEventListener('popstate', renderRoute);
 document.addEventListener('DOMContentLoaded', () => {
   renderRoute();
 });
+
+window.addEventListener('error', error => {
+  renderErrorMessage();
+})

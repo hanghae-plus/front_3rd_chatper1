@@ -11,6 +11,13 @@ export const navigateTo = (url) => {
 };
 
 export const router = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (user && location.pathname === "/login") {
+    navigateTo("/");
+    return;
+  }
+
   const routes = [
     {
       path: "/",
@@ -74,12 +81,14 @@ export const router = () => {
 
   // 메인과 프로필 페이지만 헤더 컴포넌트 생성
   if (match.isHeader) {
-    const user = JSON.parse(localStorage.getItem("user"));
     user
       ? pageContainer.appendChild(loginHeaderComponent)
       : pageContainer.appendChild(headerComponent);
-
+    pageContainer.appendChild(page);
     pageContainer.appendChild(footerComponent);
+    layout.appendChild(pageContainer);
+    root.appendChild(layout);
+    return;
   }
 
   //match에 맞는 page dom을 root에 새로 붙여준다.

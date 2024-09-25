@@ -1,9 +1,20 @@
 import Error from "../components/error.component";
+import Footer from "../components/footer.component";
+import Header from "../components/header.component";
 import Home from "../components/home.component";
 import Login from "../components/login.component";
 import Profile from "../components/profile.component";
 import { isNullorUndefined } from "../util";
-import { error, login, home, profile, metadata } from "./html";
+import {
+  error,
+  login,
+  home,
+  profile,
+  metadata,
+  footer,
+  header,
+  bodyLayout,
+} from "./html";
 
 class Router {
   constructor() {
@@ -13,6 +24,8 @@ class Router {
       PROFILE: profile,
       LOGIN: login,
       ERROR: error,
+      FOOTER: footer,
+      HEADER: header,
     };
     window.addEventListener("popstate", this.handlePopState.bind(this));
   }
@@ -43,6 +56,10 @@ class Router {
     document.head.innerHTML = metadata(templateName);
   }
 
+  bodyLayoutInit() {
+    document.body.innerHTML = bodyLayout;
+  }
+
   activateLink(elementId, path) {
     document.getElementById(elementId).addEventListener("click", (event) => {
       event.preventDefault();
@@ -55,18 +72,23 @@ class Router {
     if (!isLogin) {
       this.navigateTo("/login");
     }
-    return isLogin;
+    return !isLogin;
   }
 }
 
 export const router = new Router();
 
 router.addRoute("/", () => {
+  Header("HOME");
   Home();
+  Footer();
 });
 
 router.addRoute("/profile", () => {
-  router.loginGuard() && Profile();
+  if (router.loginGuard()) return;
+  Header("PROFILE");
+  Profile();
+  Footer();
 });
 
 router.addRoute("/login", () => {

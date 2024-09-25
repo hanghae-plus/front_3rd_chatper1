@@ -277,7 +277,10 @@ export const footer = `
 export const bodyLayout = `
   <div id="root">
     <div class="bg-gray-100 min-h-screen flex justify-center">
-      <div id="content" class="max-w-md w-full">
+      <div class="max-w-md w-full">
+        <header></header>
+        <div id="content"></div>
+        <footer></footer>
       </div>
     </div>
   </div>

@@ -1,5 +1,4 @@
 import { user } from "../main";
-import { bodyLayout, footer, header } from "../router/html";
 import { router } from "../router/router";
 
 export default function Profile() {
@@ -9,19 +8,10 @@ export default function Profile() {
     // html 페이지 주입
     router.metadataInit("프로필");
     const html = router.templates[templateName];
-    document.body.innerHTML = bodyLayout;
-    document.querySelector("#content").innerHTML = `
-      ${header}
-      ${html}
-      ${footer}
-    `;
+    document.querySelector("#content").innerHTML = html;
   };
 
   const hydratePage = () => {
-    // 가변 CSS 적용
-    document.querySelector("#home").classList.add("text-gray-600");
-    document.querySelector("#profile").classList.add("text-blue-600");
-
     // 전역 상태 적용 버튼 활성화
     document
       .querySelector("#global-state-button")
@@ -50,15 +40,10 @@ export default function Profile() {
       localStorage.setItem("user", JSON.stringify(userInfo));
       router.navigateTo("/");
     });
-
-    // 링크 활성화
-    router.activateLink("home", "/");
-    router.activateLink("profile", "/profile");
-    router.activateLink("logout", "/login");
   };
 
+  // 전역 변수 구독
   const subscribe = () => {
-    // 전역 변수 구독
     user.subscribe(() => {
       initHTML();
       initForm();

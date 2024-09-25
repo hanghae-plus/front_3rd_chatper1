@@ -1,3 +1,5 @@
+import { navigate } from "./router.js";
+
 const handleLinkClick = (event) => {
   if (event.target.tagName === "A" && event.target.href) {
     event.preventDefault();

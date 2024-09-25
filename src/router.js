@@ -3,6 +3,7 @@ import HomePage from "./pages/Home.js";
 import ProfilePage from "./pages/Profile.js";
 import NotFoundPage from "./pages/NotFound.js";
 import Layout from "./layout/Layout.js";
+import { handleTabClick } from "./eventHandlers.js";
 
 const renderPage = (path) => {
   const currentRoute = path || window.location.pathname;

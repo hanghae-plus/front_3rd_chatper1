@@ -1,4 +1,5 @@
-import { navigate, renderPage } from "./router.js";
+import { renderPage } from "./router.js";
+import { handleLinkClick, handleLogout, handleLogin } from "./eventHandlers.js";
 
 document.addEventListener("click", (event) => {
   handleLinkClick(event);

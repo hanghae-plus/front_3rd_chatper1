@@ -1,4 +1,4 @@
-import { Logger, Storage } from '@services'
+import { Storage, Publisher } from '@services'
 
 const USER_STORAGE_KEY = 'user'
 
@@ -10,14 +10,13 @@ const UserStore = (function () {
     user: Storage.load(USER_STORAGE_KEY) || null,
   }
 
-  const logger = Logger()
+  const publisher = Publisher()
 
   function createInstance() {
     let state = { ...initialState }
-    const listeners = []
 
     function getState(type) {
-      return state[type]
+      return state[type] || null
     }
 
     function setState(key, value) {
@@ -38,14 +37,12 @@ const UserStore = (function () {
       notify()
     }
 
-    // 실행시 state변경을 감지해 콜백함수를 실행
     function subscribe(listener) {
-      listeners.push(listener)
+      publisher.subscribe(listener)
     }
 
     function notify() {
-      listeners.forEach((listener) => listener())
-      logger.log(`상태 변경: ${JSON.stringify(state)}`)
+      publisher.publish(state)
     }
 
     return {

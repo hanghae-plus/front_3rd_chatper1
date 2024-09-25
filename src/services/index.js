@@ -1,2 +1,2 @@
-export { default as Logger } from './logger'
 export { default as Storage } from './storage'
+export { default as Publisher } from './publisher'

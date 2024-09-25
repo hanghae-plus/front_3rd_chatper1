@@ -3,6 +3,7 @@ import { html } from 'code-tag';
 import Header from '../src/component/header.js';
 import Footer from '../src/component/footer.js';
 import router from '../src/router.js';
+import UserStore from '../src/store/userStore.js';
 
 export default class ProfilePage extends Component {
   #children = {
@@ -10,12 +11,16 @@ export default class ProfilePage extends Component {
     footer: new Footer()
   };
 
+  #userStore = null;
+
   #handleEvents = {
     handleSubmitBound: null
   };
 
   constructor() {
     super();
+
+    this.#userStore = new UserStore();
 
     this.#handleEvents.handleSubmitBound = this.#handleSubmit.bind(this);
   }
@@ -25,7 +30,9 @@ export default class ProfilePage extends Component {
     const email = document.getElementById('email').value;
     const bio = document.getElementById('bio').value;
 
-    localStorage.setItem('user', JSON.stringify({ username, email, bio }));
+    const user = { username, email, bio };
+    localStorage.setItem('user', JSON.stringify(user));
+    this.#userStore.updateUser(user);
 
     alert('프로필이 업데이트 되었습니다.');
   }
@@ -39,8 +46,8 @@ export default class ProfilePage extends Component {
   }
 
   render() {
-    const user = JSON.parse(localStorage.getItem('user'));
-
+    const user = this.#userStore.getUser();
+    
     return html`
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
@@ -62,7 +69,7 @@ export default class ProfilePage extends Component {
                     id="username"
                     name="username"
                     type="text"
-                    value="${user.username}"
+                    value="${user.username ?? ''}"
                   />
                 </div>
                 <div class="mb-4">
@@ -76,7 +83,7 @@ export default class ProfilePage extends Component {
                     id="email"
                     name="email"
                     type="email"
-                    value="${user.email}"
+                    value="${user.email ?? ''}"
                   />
                 </div>
                 <div class="mb-6">
@@ -90,7 +97,7 @@ export default class ProfilePage extends Component {
                     id="bio"
                     name="bio"
                     rows="4"
-                  >${user.bio}</textarea>
+                  >${user.bio ?? ''}</textarea>
                 </div>
                 <button
                   class="w-full bg-blue-600 text-white p-2 rounded font-bold"

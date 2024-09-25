@@ -1,5 +1,7 @@
+import { formSubmitHandler } from "./formSubmitHandler";
+
 export const Login = () => {
-  const getHTML = async () => {
+  const getHTML = () => {
     const main = document.createElement("main");
     main.setAttribute(
       "class",
@@ -22,17 +24,19 @@ export const Login = () => {
 
     // 폼 생성
     const form = document.createElement("form");
+    form.setAttribute("id", "login-form");
 
     // 이메일/전화번호 입력 필드 생성
-    const emailField = document.createElement("div");
-    emailField.setAttribute("class", "mb-4");
+    const userNameField = document.createElement("div");
+    userNameField.setAttribute("class", "mb-4");
 
-    const emailInput = document.createElement("input");
-    emailInput.setAttribute("type", "text");
-    emailInput.setAttribute("placeholder", "이메일 또는 전화번호");
-    emailInput.setAttribute("class", "w-full p-2 border rounded");
+    const userNameInput = document.createElement("input");
+    userNameInput.setAttribute("type", "text");
+    userNameInput.setAttribute("id", "username");
+    userNameInput.setAttribute("placeholder", "사용자 이름");
+    userNameInput.setAttribute("class", "w-full p-2 border rounded");
 
-    emailField.appendChild(emailInput);
+    userNameField.appendChild(userNameInput);
 
     // 비밀번호 입력 필드 생성
     const passwordField = document.createElement("div");
@@ -40,6 +44,7 @@ export const Login = () => {
 
     const passwordInput = document.createElement("input");
     passwordInput.setAttribute("type", "password");
+    passwordInput.setAttribute("id", "password");
     passwordInput.setAttribute("placeholder", "비밀번호");
     passwordInput.setAttribute("class", "w-full p-2 border rounded");
 
@@ -50,14 +55,16 @@ export const Login = () => {
     loginButton.setAttribute("type", "submit");
     loginButton.setAttribute(
       "class",
-      "w-full bg-blue-600 text-white p-2 rounded font-bold"
+      "w-full bg-blue-600 text-white p-2 rounded font-bold button"
     );
     loginButton.textContent = "로그인";
 
     // 폼에 입력 필드와 버튼 추가
-    form.appendChild(emailField);
+    form.appendChild(userNameField);
     form.appendChild(passwordField);
     form.appendChild(loginButton);
+
+    formSubmitHandler(form, userNameInput, passwordInput, loginButton);
 
     // 비밀번호 찾기 링크 생성
     const forgotPasswordDiv = document.createElement("div");

@@ -1,13 +1,52 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { getUserInfo } from "../auth/auth";
+import { logout } from "../auth/auth";
+import { getState, navigateTo, setState, subscribe } from "../main";
 
 export default function ProfilePage() {
-  // 프로필 조회
-  const profileForm = getUserInfo();
-  return `
+  const init = () => {
+    render();
+    addEventListener();
+  };
+
+  const render = () => {
+    document.querySelector("#root").innerHTML = template();
+  };
+
+  const addEventListener = () => {
+    document.querySelector("nav").addEventListener("click", (e) => {
+      // 클릭 시 페이지 이동
+      if (e.target.tagName === "A") {
+        // 로그아웃 시 사용자 정보 제거
+        if (e.target.id === "logout") {
+          logout();
+        }
+        e.preventDefault();
+        navigateTo(e.target.pathname);
+      }
+    });
+
+    document.getElementById("profile-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      setState({
+        username: document.getElementById("username")?.value || "", // 이메일 또는 전화번호(사용자 이름)
+        email: document.getElementById("email")?.value || "", // 이메일
+        bio: document.getElementById("bio")?.value || "", // 자기소개
+      });
+      localStorage.setItem("user", JSON.stringify(getState()));
+      alert("프로필 수정이 완료되었습니다 :)");
+    });
+  };
+
+  const template = () => {
+    const profileForm = getState();
+    return `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
+        <header class="bg-blue-600 text-white p-4 sticky top-0">
+          <h1 class="text-2xl font-bold">항해플러스</h1>
+        </header>
+
         ${Header()}
 
         <main class="p-4">
@@ -71,4 +110,8 @@ export default function ProfilePage() {
       </div>
     </div>
   `;
+  };
+
+  subscribe(init);
+  init();
 }

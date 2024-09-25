@@ -13,15 +13,6 @@ export default function Router() {
   };
 
   /**
-   * 화면 렌더링
-   * @param {function} route
-   */
-  const render = (route) => {
-    // 정상 접근 시 렌더링 && 비정상 URL 접근 시 404 화면
-    document.querySelector("#root").innerHTML = route();
-  };
-
-  /**
    * 라우터 가드
    * @param {string} path
    */
@@ -35,12 +26,11 @@ export default function Router() {
     } else {
       // 정상 접근 시 렌더링 && 비정상 URL 접근 시 404 화면
       const route = routes[path] || routes["/404"];
-      render(route);
+      route();
     }
   };
 
   const init = () => {
-    // 현재 경로에 맞는 페이지 렌더링
     guard(window.location.pathname);
 
     // popstate(앞으로가기/뒤로가기) 라우터 처리
@@ -63,7 +53,6 @@ export default function Router() {
   return {
     addRoute,
     navigateTo,
-    render,
     init,
     guard,
   };

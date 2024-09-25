@@ -22,7 +22,7 @@ const Profile = () => {
           <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
             내 프로필
           </h2>
-          <form>
+          <form id="profile-form">
             <div class="mb-4">
               <label
                 for="username"
@@ -33,7 +33,7 @@ const Profile = () => {
                 type="text"
                 id="username"
                 name="username"
-                value=${(user != null && user?.username) || ""}
+                value="${(user != null && user?.username) || ""}"
                 class="w-full p-2 border rounded"
               />
             </div>
@@ -47,7 +47,7 @@ const Profile = () => {
                 type="email"
                 id="email"
                 name="email"
-                value=${(user != null && user?.email) || ""}
+                value="${(user != null && user?.email) || ""}"
                 class="w-full p-2 border rounded"
               />
             </div>

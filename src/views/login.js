@@ -29,6 +29,7 @@ const LoginPage = () => html`
           로그인
         </button>
       </form>
+      <div class="p-2" id="error"></div>
       <div class="mt-4 text-center">
         <a href="#" class="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
       </div>

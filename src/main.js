@@ -1,3 +1,4 @@
+let isError = false;
 // 페이지 렌더링 함수들
 const renderHeader = () => {
   const user = JSON.parse(localStorage.getItem("user")) || null; // 사용자 정보 가져오기 , null 처리
@@ -8,7 +9,7 @@ const renderHeader = () => {
     </header>
     <nav class="bg-white shadow-md p-2 sticky top-14">
       <ul class="flex justify-around">
-        <li><a href="/" class="text-blue-600">홈</a></li>
+        <li><a href="/" class="text-blue-600 font-bold">홈</a></li>
         ${
           isLoggedIn
             ? "<li><a href='/profile' class='text-gray-600'>프로필</a></li><li><a id='logout' class='text-gray-600'>로그아웃</a></li>"
@@ -140,45 +141,61 @@ const renderHomePage = () => {
 };
 
 const renderLoginPage = () => {
+  // throw new Error("의도적인 오류입니다.");
+  const user = JSON.parse(localStorage.getItem("user")) || null; // 사용자 정보 가져오기 , null 처리
+  const isLoggedIn = user; // 로그인 상태 확인
+
+  if (isLoggedIn) {
+    window.history.pushState({}, "", "/home");
+    renderHomePage();
+    return;
+  }
+
   document.querySelector("#root").innerHTML = `
-    <main class="bg-gray-100 flex items-center justify-center min-h-screen">
-      <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form id="login-form">
-          <div class="mb-4">
-            <input type="text"  id="username" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+      <main class="bg-gray-100 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
+          <form id="login-form">
+            <div class="mb-4">
+              <input type="text" id="username" placeholder="사용자 이름" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-6">
+              <input type="password" id="password" placeholder="비밀번호" class="w-full p-2 border rounded">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
+          </form>
+          <div class="mt-4 text-center">
+            <a href="#" class="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
           </div>
-          <div class="mb-6">
-            <input type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
+          <hr class="my-6">
+          <div class="text-center">
+            <button class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
           </div>
-          <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
-        </form>
-        <div class="mt-4 text-center">
-          <a href="#" class="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
         </div>
-        <hr class="my-6">
-        <div class="text-center">
-          <button class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
-        </div>
+
+      </main>
+      <div class="bg-red-500 text-white p-4 rounded mt-4" style="display: ${
+        isError ? "block" : "none"
+      };">
+        오류 발생!<br/>
+        의도적인 오류입니다.
       </div>
-    </main>
-  `;
+      
+    `;
 
   document.getElementById("login-form").addEventListener("submit", (e) => {
     e.preventDefault();
+    const username = document.getElementById("username").value || "";
+    const password = document.getElementById("password").value || "";
 
-    const username = document.getElementById("username").value || ""; // 사용자 이름 가져오기
     const email = ""; // 이메일 필드는 일단 빈 값
-
     const user = {
       username,
       email,
       bio: "",
     };
-
     // 사용자 정보를 localStorage에 저장
     localStorage.setItem("user", JSON.stringify(user));
-
     // 로그인 상태이므로 즉시 프로필 페이지로 이동
     window.history.pushState({}, "", "/profile");
     router(); // 프로필 페이지로 이동
@@ -260,7 +277,7 @@ const renderNotFoundPage = () => {
   document.querySelector("#root").innerHTML = `
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full text-center" style="max-width: 480px">
-        <h1 class="text-2xl font-bold text-blue-600 mb-4">항해플러스</h1>
+        <h1 class="text-2xl font-bold text-blue-600 font-bold mb-4">항해플러스</h1>
         <p class="text-4xl font-bold text-gray-800 mb-4">404</p>
         <p class="text-xl text-gray-600 mb-8">페이지를 찾을 수 없습니다</p>
         <p class="text-gray-600 mb-8">요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.</p>
@@ -268,6 +285,22 @@ const renderNotFoundPage = () => {
       </div>
     </main>
   `;
+};
+// 전역 에러 핸들러 추가
+window.onerror = function (message, source, lineno, colno, error) {
+  window.history.pushState({}, "", "/error");
+  isError = true;
+  return true; // 기본 브라우저 에러 메시지 방지
+};
+
+// 에러 바운더리 함수
+const errorBoundary = () => {
+  document.querySelector("#root").innerHTML = `
+  <div class="bg-red-500 text-white p-4 rounded">
+    오류 발생!<br/>
+    의도적인 오류입니다.
+  </div>
+`;
 };
 
 // 라우팅 함수
@@ -283,6 +316,9 @@ const router = () => {
       break;
     case "/profile":
       renderProfilePage();
+      break;
+    case "/error":
+      errorBoundary();
       break;
     default:
       renderNotFoundPage();

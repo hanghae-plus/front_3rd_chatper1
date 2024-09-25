@@ -78,7 +78,7 @@ const handleLogout = (event) => {
   if (event.target.tagName === "A" && event.target.id === "logout") {
     event.preventDefault();
     localStorage.removeItem("user");
-    navigate("/");
+    navigate("/login");
   }
 };
 

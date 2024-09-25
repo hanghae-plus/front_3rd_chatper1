@@ -2,7 +2,6 @@ import { getHomeComponent } from "./components/pages/Home/Home";
 import { getRenderComponent } from "./components/pages/Render/Render";
 import { removeUser, setUser } from "./store/user/userStore";
 import { movePage } from "./utils/navigations/movePage";
-import { render } from "./utils/rendering/render";
 
 document.querySelector("#root").innerHTML = getRenderComponent({
   component: getHomeComponent,
@@ -11,7 +10,7 @@ document.querySelector("#root").innerHTML = getRenderComponent({
 
 window.addEventListener("popstate", () => {
   const currentPath = window.location.pathname;
-  render(currentPath);
+  movePage(currentPath);
 });
 
 document.getElementById("root").addEventListener("click", (e) => {

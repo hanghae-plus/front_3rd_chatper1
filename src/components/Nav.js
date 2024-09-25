@@ -17,7 +17,7 @@ const Nav = (currentPath) => {
     };
     
     // 로그아웃 함수
-    const logoutEvent = (renderPage) => {
+    const logoutEvent = () => {
       const logout = document.getElementById("logout");
       if (logout) {
           logout.addEventListener("click", (event) => {

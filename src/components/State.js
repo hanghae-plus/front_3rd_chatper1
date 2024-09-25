@@ -1,4 +1,4 @@
-import { renderPage } from '../src/main';
+import { renderPage } from '../main';
 
 //로그인 정보 상태
 const state = {

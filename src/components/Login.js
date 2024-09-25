@@ -37,7 +37,7 @@ const render = (root, isError = false) => {
   root.innerHTML = Login(isError);
 };
 
-const loginEvent = (renderPage) => {
+const loginEvent = () => {
   const loginForm = document.getElementById("login-form");
   if (loginForm) {
     loginForm.addEventListener('submit', (e) => {

@@ -67,6 +67,14 @@ document.addEventListener("submit", (event) => {
     event.preventDefault();
     handleLogin();
   }
+  if (event.target.id === "profile-form") {
+    event.preventDefault();
+    const username = document.querySelector("#username").value;
+    const email = document.querySelector("#email").value;
+    const bio = document.querySelector("#bio").value;
+    localStorage.setItem("user", JSON.stringify({ username, email, bio }));
+    navigate("/profile");
+  }
 });
 
 window.addEventListener("popstate", () => {

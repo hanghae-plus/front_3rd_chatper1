@@ -1,11 +1,12 @@
 import { LoginPage, MainPage, ProfilePage, NotFoundPage } from '@pages'
 import { UserStore } from '@stores'
-import { ROUTES } from '@constants'
+import { ROUTES, MESSAGE } from '@constants'
+
+let currentPage = null
 
 function createRouter(options = {}) {
   const userStore = UserStore()
   const routes = options.routes || {}
-  const rootElement = options.rootElement || 'root'
 
   function protectRoute(path) {
     const isLogin = userStore.getState('isLogin')
@@ -15,19 +16,18 @@ function createRouter(options = {}) {
   }
 
   function renderComponent(path) {
+    if (currentPage && currentPage.cleanup) {
+      currentPage.cleanup()
+    }
     const component = routes[path] || routes[ROUTES.NOT_FOUND]
-    document.getElementById(rootElement).innerHTML = component()
+    currentPage = component()
+    currentPage.render()
   }
 
   function navigate(path) {
     const protectedPath = protectRoute(path)
-    renderComponent(protectedPath)
     history.pushState(null, null, protectedPath)
-
-    const currentComponent = routes[protectedPath]
-    if (currentComponent && typeof currentComponent === 'function') {
-      currentComponent()
-    }
+    renderComponent(protectedPath)
   }
 
   function handlePopState() {
@@ -70,12 +70,12 @@ function createRouter(options = {}) {
 
 const Router = createRouter({
   routes: {
-    [ROUTES.HOME]: () => MainPage(),
-    [ROUTES.PROFILE]: () => ProfilePage(),
-    [ROUTES.LOGIN]: () => LoginPage(),
-    [ROUTES.NOT_FOUND]: () => NotFoundPage(),
+    [ROUTES.HOME]: MainPage,
+    [ROUTES.PROFILE]: ProfilePage,
+    [ROUTES.LOGIN]: LoginPage,
+    [ROUTES.NOT_FOUND]: () =>
+      NotFoundPage({ title: MESSAGE.NOT_FOUND, buttonMessage: MESSAGE.REPLACE_HOME, replacePath: ROUTES.HOME }),
   },
-  rootElement: 'root',
 })
 
 export default Router

@@ -117,6 +117,7 @@ export class ErrorBoundaryComponent extends Component {
   }
 
   template() {
+    if (!this.state.errorMessage) return;
     return ErrorBoundaryPage({ message: this.state.errorMessage });
   }
 }

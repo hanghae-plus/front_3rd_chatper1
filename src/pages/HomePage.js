@@ -2,7 +2,7 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Nav from '../components/Nav';
 
-export default function HomePage() {
+const HomePage = () => {
   return `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
@@ -102,4 +102,10 @@ export default function HomePage() {
       </div>
     </div>
   `;
-}
+};
+
+HomePage.listeners = {
+  ...Nav.listeners,
+};
+
+export default HomePage;

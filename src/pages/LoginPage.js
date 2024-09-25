@@ -1,14 +1,7 @@
-import { movePage } from '../utils/functions';
-import HomePage from './HomePage';
+import router from '../router';
+import { localSetItem } from '../utils/storage';
 
-export default function LoginPage() {
-  const user = localStorage.getItem('user');
-
-  if (user) {
-    movePage('/');
-    return HomePage();
-  }
-
+const LoginPage = () => {
   return `
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -32,4 +25,28 @@ export default function LoginPage() {
       </div>
     </main>
   `;
-}
+};
+
+LoginPage.listeners = {
+  handleSubmitLogin() {
+    const loginForm = document.getElementById('login-form');
+    const username = document.getElementById('username');
+
+    if (!loginForm || !username) return;
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const user = {
+        username: username.value,
+        email: '',
+        bio: '',
+      };
+      localSetItem({ key: 'user', value: user });
+
+      router.push('/profile');
+    });
+  },
+};
+
+export default LoginPage;

@@ -1,4 +1,7 @@
-export default function Nav() {
+import router from '../router';
+import { localGetItem, localRemoveItem } from '../utils/storage';
+
+const Nav = () => {
   return `
     <nav class="w-full bg-white shadow-md p-2 sticky top-14">
       <ul id="nav-list" class="w-full flex justify-around">
@@ -6,10 +9,10 @@ export default function Nav() {
       </ul>
     </nav>
   `;
-}
+};
 
 function paintNavItems() {
-  const isLogin = localStorage.getItem('user');
+  const isLogin = !!localGetItem('user');
   const BLUE = 'text-blue-600 font-bold';
   const GRAY = 'text-gray-600';
 
@@ -44,3 +47,41 @@ function paintNavItems() {
   }
   `;
 }
+
+Nav.listeners = {
+  handleClickNavItem() {
+    const list = document.getElementById('nav-list');
+
+    if (!list) return;
+
+    list.addEventListener('click', (e) => {
+      const route = e.target.dataset.route;
+
+      switch (route) {
+        case 'home':
+          router.push('/');
+          break;
+
+        case 'profile':
+          router.push('/profile');
+          break;
+
+        case 'login':
+          router.push('/login');
+          break;
+
+        case 'logout':
+          // 로그아웃 버튼 클릭 시 local storage 삭제 후 로그인 페이지 이동
+          localRemoveItem('user');
+          router.push('/login');
+          break;
+
+        default:
+          router.push('/404');
+          break;
+      }
+    });
+  },
+};
+
+export default Nav;

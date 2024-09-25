@@ -1,16 +1,10 @@
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Nav from '../components/Nav';
-import { movePage } from '../utils/functions';
-import LoginPage from './LoginPage';
+import { localGetItem, localSetItem } from '../utils/storage';
 
-export default function ProfilePage() {
-  const user = JSON.parse(localStorage.getItem('user'));
-
-  if (!user) {
-    movePage('/login');
-    return LoginPage();
-  }
+const ProfilePage = () => {
+  const user = localGetItem('user');
 
   return `
     <div class="bg-gray-100 min-h-screen flex justify-center">
@@ -49,4 +43,29 @@ export default function ProfilePage() {
       </div>
     </div>
   `;
-}
+};
+
+ProfilePage.listeners = {
+  ...Nav.listeners,
+
+  handleSubmitProfile() {
+    const profileForm = document.getElementById('profile-form');
+    const bio = document.getElementById('bio');
+
+    if (!profileForm || !bio) return;
+
+    profileForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const user = {
+        ...localGetItem('user'),
+        bio: bio.value,
+      };
+
+      localSetItem({ key: 'user', value: user });
+      alert('프로필이 업데이트 되었습니다.');
+    });
+  },
+};
+
+export default ProfilePage;

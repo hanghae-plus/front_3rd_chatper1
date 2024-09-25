@@ -13,18 +13,29 @@ export default class ProfilePage extends Component {
     super();
   }
 
+  #saveProfile() {
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const bio = document.getElementById('bio').value;
+
+    localStorage.setItem('user', JSON.stringify({ username, email, bio }));
+
+    alert('프로필이 업데이트 되었습니다.');
+  }
+
   render() {
+    const user = JSON.parse(localStorage.getItem('user'));
+
     return html`
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
           ${this.#children.header.render()}
-
           <main class="p-4">
             <div class="bg-white p-8 rounded-lg shadow-md">
               <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
                 내 프로필
               </h2>
-              <form>
+              <form id="profile-form">
                 <div class="mb-4">
                   <label
                     class="block text-gray-700 text-sm font-bold mb-2"
@@ -36,6 +47,7 @@ export default class ProfilePage extends Component {
                     id="username"
                     name="username"
                     type="text"
+                    value="${user.username}"
                   />
                 </div>
                 <div class="mb-4">
@@ -49,6 +61,7 @@ export default class ProfilePage extends Component {
                     id="email"
                     name="email"
                     type="email"
+                    value="${user.email}"
                   />
                 </div>
                 <div class="mb-6">
@@ -62,8 +75,7 @@ export default class ProfilePage extends Component {
                     id="bio"
                     name="bio"
                     rows="4"
-                  >
-              </textarea>
+                  >${user.bio}</textarea>
                 </div>
                 <button
                   class="w-full bg-blue-600 text-white p-2 rounded font-bold"
@@ -81,6 +93,13 @@ export default class ProfilePage extends Component {
   }
 
   #addEventListeners() {
+    const form = document.querySelector('#profile-form');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      this.#saveProfile();
+    });
   }
 
   mount() {

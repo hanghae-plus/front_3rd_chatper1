@@ -3,6 +3,7 @@ import HomePage from "./pages/Home.js";
 import ProfilePage from "./pages/Profile.js";
 import NotFoundPage from "./pages/NotFound.js";
 import Layout from "./layout/Layout.js";
+import { user as userStore } from "./store/user.js";
 
 const updateActiveTabFromURL = () => {
   const tabs = document.querySelectorAll("a.tab");
@@ -21,6 +22,7 @@ const updateActiveTabFromURL = () => {
 
 const renderPage = (path) => {
   const currentRoute = path || window.location.pathname;
+  const { isLoggedIn } = userStore();
   let currentPage;
 
   switch (currentRoute) {
@@ -29,14 +31,14 @@ const renderPage = (path) => {
       break;
 
     case "/login":
-      if (localStorage.getItem("user")) {
+      if (isLoggedIn()) {
         return navigate("/");
       }
       currentPage = LoginPage();
       break;
 
     case "/profile":
-      if (!localStorage.getItem("user")) {
+      if (!isLoggedIn()) {
         currentPage = LoginPage();
       } else {
         currentPage = Layout(ProfilePage());

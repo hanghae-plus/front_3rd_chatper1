@@ -1,5 +1,8 @@
+import { user as userStore } from "../store/user.js";
+
 const Profile = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { getUser } = userStore();
+  const user = getUser();
 
   return /* HTML */ ` <main class="p-4">
     <div class="bg-white p-8 rounded-lg shadow-md">

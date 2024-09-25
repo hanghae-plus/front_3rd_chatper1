@@ -47,6 +47,11 @@ export class Router {
       return;
     }
 
+    if (path === '/login' && !!UserInfo.get('username')) {
+      this.redirect('/');
+      return;
+    }
+
     const route =
       this.routes.find((route) => route.path === path) ||
       this.routes.find((route) => route.path === '/404');

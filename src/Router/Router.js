@@ -34,10 +34,11 @@ export class Router {
         console.log('📌 router init');
         window.addEventListener('hashchange', () => {
             const path = window.location.hash.slice(1) || '/';
+            console.log(window.location.pathname)
             this.handleRoute(path);
         });
 
         // 초기 라우트 처리
-        this.handleRoute(window.location.hash.slice(1) || '/');
+        this.handleRoute(window.location.pathname || '/');
     }
 }

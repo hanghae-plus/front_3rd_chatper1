@@ -3,7 +3,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Nav from './Nav';
 import { logout } from '../helpers';
-import { navigateTo } from '../router';
+import router from '../router';
 
 class MainPage extends Component {
   template() {
@@ -128,7 +128,7 @@ class MainPage extends Component {
 
     logout();
 
-    navigateTo('/login');
+    router.push('/login');
   }
 }
 

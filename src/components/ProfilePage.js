@@ -3,7 +3,7 @@ import Header from './Header';
 import Nav from './Nav';
 import Footer from './Footer';
 import { getUser, logout, updateUser } from '../helpers';
-import { navigateTo } from '../router';
+import router from '../router';
 
 class ProfilePage extends Component {
   setup() {
@@ -87,7 +87,7 @@ class ProfilePage extends Component {
 
     logout();
 
-    navigateTo('/login');
+    router.push('/login');
   }
 }
 

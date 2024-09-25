@@ -1,6 +1,6 @@
 import Component from '../../core/Component';
 import { login } from '../helpers';
-import { navigateTo } from '../router';
+import router from '../router';
 
 class LoginPage extends Component {
   template() {
@@ -52,7 +52,7 @@ class LoginPage extends Component {
       bio: '',
     });
 
-    navigateTo('/profile', true);
+    router.replace('/profile');
   }
 }
 

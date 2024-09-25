@@ -6,44 +6,103 @@ import { getUser } from './helpers';
 
 const isLogin = () => getUser();
 
-// TODO: vue-router routes와 같은 형태로 리팩토링
-const routes = {
-  '/404': ($target) => new ErrorPage($target),
-  '/': ($target) => new MainPage($target),
-  '/login': ($target) => new LoginPage($target),
-  '/profile': ($target) => new ProfilePage($target),
-};
+const needLoginPages = ['/profile'];
+const loginUserInaccessiblePages = ['/login'];
 
-let currentRoute = null;
+const routes = [
+  {
+    title: '홈',
+    path: '/',
+    renderer: ($target) => new MainPage($target),
+  },
+  {
+    title: '로그인',
+    path: '/login',
+    renderer: ($target) => new LoginPage($target),
+  },
+  {
+    title: '프로필',
+    path: '/profile',
+    renderer: ($target) => new ProfilePage($target),
+  },
+  {
+    title: '오류',
+    path: '/404',
+    renderer: ($target) => new ErrorPage($target),
+  },
+];
 
-const navigateTo = (path, replace = false) => {
-  if (replace) {
-    history.replaceState(null, '', path);
-  } else {
+class Router {
+  constructor({ $target, routes }) {
+    this.routes = routes;
+
+    /**
+     * 현재 라우트에서 활성화된 컴포넌트
+     */
+    this.currentRoute = null;
+
+    this.$target = $target;
+
+    window.addEventListener('popstate', () => {
+      this.handleRoute(window.location.pathname);
+    });
+  }
+
+  init() {
+    this.handleRoute(window.location.pathname);
+  }
+
+  push(path) {
     history.pushState(null, '', path);
+    this.handleRoute(path);
   }
 
-  handleRoute(path);
-};
-
-const handleRoute = (path) => {
-  if (!routes[path]) {
-    navigateTo('/404', true);
-    return;
+  replace(path) {
+    history.replaceState(null, '', path);
+    this.handleRoute(path);
   }
 
-  if (path === '/profile' && !isLogin()) {
-    navigateTo('/login', true);
-    return;
+  handleRoute(path) {
+    const route = this.#findRoute(path);
+
+    if (!route) {
+      return this.replace('/404');
+      // return
+    }
+
+    if (isLogin() && loginUserInaccessiblePages.includes(path)) {
+      return this.replace('/');
+    }
+
+    if (!isLogin() && needLoginPages.includes(path)) {
+      return this.replace('/login');
+    }
+
+    this.#render(route);
   }
 
-  if (currentRoute) {
-    currentRoute.destroy();
+  #findRoute(path) {
+    return this.routes.find((r) => r.path === path) ?? null;
   }
 
-  currentRoute = routes[path](document.querySelector('#root'));
+  #render(route) {
+    if (this.currentRoute?.component) {
+      this.currentRoute.component.destroy();
+    }
 
-  console.log('currentRoute', currentRoute);
-};
+    const component = route.renderer(this.$target);
+    document.title = `항해플러스 - ${route.title}`;
 
-export { handleRoute, navigateTo };
+    this.currentRoute = {
+      ...route,
+      component,
+    };
+  }
+}
+
+const router = new Router({
+  $target: document.getElementById('root'),
+  routes,
+});
+
+export default router;

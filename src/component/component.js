@@ -12,4 +12,8 @@ export default class Component {
   mount() {
     throw new Error('Abstract method must be implemented in subclass.');
   }
+
+  unmount() {
+    throw new Error('Abstract method must be implemented in subclass.');
+  }
 }

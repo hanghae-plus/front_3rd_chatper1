@@ -1,3 +1,5 @@
+import { router } from "../main";
+
 export const Login = () => {
   return `
     <main class="p-4">
@@ -15,6 +17,12 @@ export const Login = () => {
       </main>
     
     `;
+};
+
+export const loginInit = () => {
+  localStorage.removeItem("username");
+  localStorage.removeItem("email");
+  localStorage.removeItem("introduction");
 };
 
 export const loginEvent = () => {

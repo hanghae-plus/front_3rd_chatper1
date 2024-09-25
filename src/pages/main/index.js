@@ -1,10 +1,14 @@
-import { DATA_URL, FEEDS_LIMIT, MESSAGE, DELAY_TIME, USER_PROFILE_URL } from '@constants'
+import { DELAY_TIME } from '@constants'
 import { debounce } from '@utils'
 import { FeedItem } from '@components/main'
 import { MainLayout } from '@components/layouts'
 import { UserStore } from '@stores'
 
 let feeds = []
+const DATA_URL = '/data.json'
+const FEEDS_LIMIT = 10
+const USER_PROFILE_URL = 'https://via.placeholder.com/41'
+const LOGIN_REQUIRED_MESSAGE = '로그인이 필요합니다.'
 
 export default function mainPage() {
   let page = 1
@@ -28,7 +32,7 @@ export default function mainPage() {
     const user = userStore.getState('user')
 
     if (!user || !user.username) {
-      alert(MESSAGE.LOGIN_REQUIRED)
+      alert(LOGIN_REQUIRED_MESSAGE)
       return
     }
 
@@ -63,7 +67,7 @@ export default function mainPage() {
     <div id="feeds" class="space-y-4"></div>
   </main>`)
 
-  let debounceScroll = debounce(handleScroll, DELAY_TIME.SHORT)
+  const debounceScroll = debounce(handleScroll, DELAY_TIME.SHORT)
 
   function render() {
     document.getElementById('root').innerHTML = template

@@ -1,8 +1,12 @@
 import Router from '@routers'
 import { UserStore } from '@stores'
-import { ROUTES, MESSAGE, PAGE_TITLE } from '@constants'
+import { ROUTES, PAGE_TITLE } from '@constants'
 
 const userStore = UserStore()
+const LOGIN_REQUIRED_FIELD = '이름과 비밀번호를 입력해주세요.'
+const INTENTIONAL_ERROR_MESSAGE = '의도적인 오류입니다.'
+const ERROR_MESSAGE = '오류 발생!'
+const TEST_KEY = '1'
 
 export default function LoginPage() {
   function handleSaveUser(username) {
@@ -15,7 +19,7 @@ export default function LoginPage() {
     e.preventDefault()
     const username = e.target.querySelector('#username').value
     if (!username) {
-      alert(MESSAGE.LOGIN_REQUIRED_FIELD)
+      alert(LOGIN_REQUIRED_FIELD)
       return
     }
     handleSaveUser(username)
@@ -29,14 +33,13 @@ export default function LoginPage() {
       errorDiv.id = 'error-message'
       document.getElementById('error-message-wrap').appendChild(errorDiv)
     }
-    errorDiv.textContent = `${MESSAGE.ERROR} ${message}`
+    errorDiv.textContent = `${ERROR_MESSAGE} ${message}`
   }
 
   function handleErrorCatch(e) {
-    const TEST_KEY = '1'
     try {
       if (e.target.value === TEST_KEY) {
-        throw new Error(MESSAGE.INTENTIONAL_ERROR)
+        throw new Error(INTENTIONAL_ERROR_MESSAGE)
       }
     } catch (error) {
       displayError(error.message)

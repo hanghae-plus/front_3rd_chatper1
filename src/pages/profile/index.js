@@ -1,9 +1,10 @@
 import { MainLayout } from '@components/layouts'
-import { MESSAGE, DELAY_TIME } from '@constants'
+import { DELAY_TIME } from '@constants'
 import { throttle } from '@utils'
 import { UserStore } from '@stores'
 
 const userStore = UserStore()
+const PROFILE_UPDATED_MESSAGE = '프로필이 업데이트 되었습니다.'
 
 export default function profilePage() {
   const user = userStore.getState('user')
@@ -43,7 +44,7 @@ export default function profilePage() {
   let throttledUpdate = throttle(() => {
     const userInfo = getProfileFormData()
     userStore.setState('user', userInfo)
-    alert(MESSAGE.PROFILE_UPDATED)
+    alert(PROFILE_UPDATED_MESSAGE)
   }, DELAY_TIME.LONG)
 
   function render() {

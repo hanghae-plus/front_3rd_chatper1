@@ -1,8 +1,14 @@
 import { PAGE_TITLE } from '@constants'
 import { UserStore } from '@stores'
-import { ROUTES, NAVIGATION } from '@constants'
+import { ROUTES } from '@constants'
 
 const userStore = UserStore()
+const NAVIGATION = {
+  HOME: { KOR: '홈', ENG: 'home' },
+  PROFILE: { KOR: '프로필', ENG: 'profile' },
+  LOGIN: { KOR: '로그인', ENG: 'login' },
+  LOGOUT: { KOR: '로그아웃', ENG: 'logout' },
+}
 
 export default function header() {
   let pathname = location.pathname

@@ -1,8 +1,12 @@
 import { LoginPage, MainPage, ProfilePage, NotFoundPage } from '@pages'
-import { ROUTES, MESSAGE, LINK_TAG, NAVIGATION } from '@constants'
+import { ROUTES } from '@constants'
 import { UserStore } from '@stores'
 
 let currentPage = null
+const LINK_TAG = 'A'
+const LOGOUT = 'logout'
+const REPLACE_HOME_MESSAGE = '홈으로 돌아가기'
+const NOT_FOUND_MESSAGE = '요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.'
 
 function createRouter(options = {}) {
   const userStore = UserStore()
@@ -46,7 +50,7 @@ function createRouter(options = {}) {
     if (target.tagName === LINK_TAG && target.href.startsWith(window.location.origin)) {
       e.preventDefault()
 
-      if (target.id === NAVIGATION.LOGOUT.ENG) {
+      if (target.id === LOGOUT) {
         handleLogout()
         return
       }
@@ -74,7 +78,7 @@ const Router = createRouter({
     [ROUTES.PROFILE]: ProfilePage,
     [ROUTES.LOGIN]: LoginPage,
     [ROUTES.NOT_FOUND]: () =>
-      NotFoundPage({ title: MESSAGE.NOT_FOUND, buttonMessage: MESSAGE.REPLACE_HOME, replacePath: ROUTES.HOME }),
+      NotFoundPage({ title: NOT_FOUND_MESSAGE, buttonMessage: REPLACE_HOME_MESSAGE, replacePath: ROUTES.HOME }),
   },
 })
 

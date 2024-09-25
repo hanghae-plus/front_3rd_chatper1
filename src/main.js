@@ -1,7 +1,7 @@
 import Footer from "./components/Footer";
 import Header, { logout } from "./components/Header";
 import { Home } from "./page/HomePage";
-import { Login, loginEvent } from "./page/LoginPage";
+import { Login, loginEvent, userLoginCheck } from "./page/LoginPage";
 import NotFound, { routingHome } from "./page/NotFoundPage";
 import { Profile, profileUpdate } from "./page/ProfilePage";
 
@@ -24,32 +24,6 @@ export function router() {
   }
 }
 
-function renderHome() {
-  const root = document.getElementById("root");
-  root.innerHTML = `${Header()}${Home()}${Footer()}`;
-  logout();
-}
-
-function renderLogin() {
-  document.getElementById("root").innerHTML = Login();
-  loginEvent();
-}
-
-function renderProfile() {
-  document.getElementById("root").innerHTML = Header();
-  document.getElementById("root").innerHTML += Profile();
-  document.getElementById("root").innerHTML += Footer();
-
-  profileUpdate();
-  logout();
-}
-
-function renderNotFound() {
-  document.title = "404 Not Found";
-  document.getElementById("root").innerHTML = NotFound();
-  routingHome();
-}
-
 // 브라우저에서 뒤로 가기 등을 처리하기 위한 이벤트 리스너
 window.addEventListener("popstate", () => router());
 
@@ -68,3 +42,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+export function renderHome() {
+  const root = document.getElementById("root");
+  root.innerHTML = `${Header()}${Home()}${Footer()}`;
+  logout();
+}
+
+function renderLogin() {
+  document.getElementById("root").innerHTML = Login();
+  loginEvent();
+  userLoginCheck();
+}
+
+function renderProfile() {
+  document.getElementById("root").innerHTML = Header();
+  document.getElementById("root").innerHTML += Profile();
+  document.getElementById("root").innerHTML += Footer();
+
+  profileUpdate();
+  logout();
+}
+
+function renderNotFound() {
+  document.title = "404 Not Found";
+  document.getElementById("root").innerHTML = NotFound();
+  routingHome();
+}

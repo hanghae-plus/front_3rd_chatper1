@@ -2,11 +2,8 @@ export default function Header() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const pathname = window.location.pathname;
-  const selectNavCss = "text-blue-600";
+  const selectNavCss = "text-blue-600 font-bold";
   const navCss = "text-gray-600";
-
-  const login = `<button id="login">로그인</button>`;
-  const logout = `<button id="logout">로그아웃</button>`;
 
   return `
         <header class="bg-blue-600 text-white p-4 sticky top-0">
@@ -27,11 +24,19 @@ export default function Header() {
          }
          
           <li><a href="/login" class="text-gray-600">
-          ${user ? logout : login}
+          ${renderAuthButton()}
           </a></li>
         </ul>
       </nav>
     `;
+}
+
+// 로그인/로그아웃 버튼 렌더링 함수
+function renderAuthButton() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  return user
+    ? `<button id="logout">로그아웃</button>`
+    : `<button id="login">로그인</button>`;
 }
 
 export const logout = () => {

@@ -35,3 +35,10 @@ export const loginEvent = () => {
     router();
   });
 };
+
+export const userLoginCheck = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  if (user) history.pushState({}, "", "/");
+  router();
+};

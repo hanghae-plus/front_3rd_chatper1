@@ -2,7 +2,7 @@ import { Main, LoginMain } from '../components/Main';
 import Profile from '../components/Profile';
 import Login from '../components/Login';
 import Error from '../components/Error';
-import Router from '../utils/router';
+import Router from './router';
 import User from '../store/User';
 
 //renderMainPage
@@ -21,7 +21,7 @@ const logout = () => {
 };
 const renderProfilePage = () => {
   if (!user.getUser()) {
-    history.replaceState(null, null, '/');
+    router.navigateTo('/login');
     return;
   }
 
@@ -74,6 +74,10 @@ const renderProfilePage = () => {
 };
 
 const renderLoginPage = () => {
+  if (user.getUser()) {
+    router.navigateTo('/');
+    return;
+  }
   console.log('Login Page');
   document.querySelector('#root').innerHTML = Login();
 
@@ -117,6 +121,7 @@ router.addRoute('/profile', renderProfilePage);
 router.addRoute('/404', renderErrorPage);
 
 document.querySelector('nav').addEventListener('click', (e) => {
+  e.stopPropagation();
   if (e.target.tagName === 'A') {
     e.preventDefault();
     router.navigateTo(e.target.pathname);

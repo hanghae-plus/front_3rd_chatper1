@@ -1,44 +1,43 @@
 import router from "../router";
 import UserInfo from "../UserInfo";
-
 import { PROFILE_PAGE, USERNAME } from "../constants";
 
-export default function LoginPage({ $root, onSubmit }) {
-  this.onSubmit = onSubmit;
+import BasePage from "../base/BasePage";
 
-  this.$target = document.createElement("main");
-  this.$target.className =
-    "bg-gray-100 flex items-center justify-center min-h-screen";
+export default class LoginPage extends BasePage {
+  constructor({ props, onSubmit }) {
+    super({ props });
 
-  this.template = () => {
+    this.onSubmit = onSubmit;
+  }
+
+  template() {
     return `
-      <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form id="login-form">
-          <div class="mb-4">
-            <input id="username" type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+      <main class="bg-gray-100 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
+          <form id="login-form">
+            <div class="mb-4">
+              <input id="username" type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-6">
+              <input id="password" type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
+          </form>
+          <div class="mt-4 text-center">
+            <a href="#" class="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
           </div>
-          <div class="mb-6">
-            <input id="password" type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
+          <hr class="my-6">
+          <div class="text-center">
+            <button class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
           </div>
-          <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
-        </form>
-        <div class="mt-4 text-center">
-          <a href="#" class="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
         </div>
-        <hr class="my-6">
-        <div class="text-center">
-          <button class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
-        </div>
-      </div>
+      </main>
     `;
-  };
+  }
 
-  this.render = () => {
-    $root.innerHTML = "";
-    this.$target.innerHTML = this.template();
-    $root.appendChild(this.$target);
-
+  attachEventListeners() {
     const $usernameInput = document.getElementById("username");
 
     // 로그인 시
@@ -47,19 +46,11 @@ export default function LoginPage({ $root, onSubmit }) {
       e.preventDefault();
 
       const userInfo = new UserInfo();
+
       userInfo.set(USERNAME, $usernameInput.value);
       this.onSubmit({ username: $usernameInput.value });
 
       router.push(PROFILE_PAGE);
     });
-  };
-
-  this.setState = (newState) => {
-    this.state = {
-      ...this.state,
-      ...newState,
-    };
-
-    this.render();
-  };
+  }
 }

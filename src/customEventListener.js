@@ -1,4 +1,4 @@
-import ErrorBoundary from "./components/ErrorBoundary";
+import ErrorBoundaryPage from "./pages/ErrorBoundaryPage";
 
 const customEventListener = () => {
   const originalAddEventListener = EventTarget.prototype.addEventListener;
@@ -8,10 +8,13 @@ const customEventListener = () => {
       try {
         return listener.bind(this)(...args);
       } catch (error) {
-        new ErrorBoundary({
-          $root: document.getElementById("root"),
-          errorMessage: error.message,
+        const errorBoundary = new ErrorBoundaryPage({
+          props: {
+            errorMessage: error.message,
+          },
         });
+
+        errorBoundary.render();
       }
     };
 

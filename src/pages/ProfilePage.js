@@ -1,88 +1,80 @@
 import UserInfo from "../UserInfo";
+import { BIO, EMAIL, USERNAME } from "../constants";
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import BasePage from "../base/BasePage";
 
-import { BIO, EMAIL, USERNAME } from "../constants";
+export default class ProfilePage extends BasePage {
+  constructor({ props, onClickUpdateProfile, onUpdateProfile, onLogout }) {
+    super({ props, onClickUpdateProfile, onUpdateProfile, onLogout });
+  }
 
-export default function ProfilePage({
-  $root,
-  initialState,
-  onUpdateProfile,
-  onLogout,
-}) {
-  this.state = initialState;
-  this.onUpdateProfile = onUpdateProfile;
-  this.onLogout = onLogout;
+  init() {
+    this.header = new Header({
+      props: this.props,
+      onLogout: this.onLogout,
+    });
+    this.footer = new Footer();
+  }
 
-  const header = new Header({
-    initialState: this.state,
-    onLogout: this.onLogout,
-  });
-
-  const footer = new Footer();
-
-  this.$target = document.createElement("div");
-  this.$target.className = "bg-gray-100 min-h-screen flex justify-center";
-
-  this.template = () => {
+  template() {
     return `
-      <div class="max-w-md w-full">
-      ${header.template()}
+      <div class="bg-gray-100 min-h-screen flex justify-center">
+        <div class="max-w-md w-full">
+        ${this.header.template()}
 
-        <main class="p-4">
-          <div class="bg-white p-8 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-            <form id="profile-form">
-              <div class="mb-4">
-                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
-                <input type="text" id="username" name="username" class="w-full p-2 border rounded">
-              </div>
-              <div class="mb-4">
-                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
-                <input type="email" id="email" name="email" class="w-full p-2 border rounded">
-              </div>
-              <div class="mb-6">
-                <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
-                <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded"></textarea>
-              </div>
-              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
-            </form>
-          </div>
-        </main>
+          <main class="p-4">
+            <div class="bg-white p-8 rounded-lg shadow-md">
+              <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
+              <form id="profile-form">
+                <div class="mb-4">
+                  <label for=${USERNAME} class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
+                  <input type="text" id=${USERNAME} name=${USERNAME} class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-4">
+                  <label for=${EMAIL} class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
+                  <input type=${EMAIL} id=${EMAIL} name=${EMAIL} class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-6">
+                  <label for=${BIO} class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
+                  <textarea id=${BIO} name=${BIO} rows="4" class="w-full p-2 border rounded"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
+              </form>
+            </div>
+          </main>
 
-        ${footer.template()}
+          ${this.footer.template()}
+        </div>
       </div>
     `;
-  };
+  }
 
-  this.render = () => {
-    $root.innerHTML = "";
-    this.$target.innerHTML = this.template();
-    $root.appendChild(this.$target);
-
+  attachEventListeners() {
     const $usernameInput = document.getElementById("username");
     const $emailInput = document.getElementById("email");
     const $bioInput = document.getElementById("bio");
 
-    $usernameInput.value = this.state.username;
-    $emailInput.value = this.state.email;
-    $bioInput.value = this.state.bio;
+    $usernameInput.value = this.props.username;
+    $emailInput.value = this.props.email;
+    $bioInput.value = this.props.bio;
 
-    // 업데이트 tl
+    // 업데이트 시
     const $profileForm = document.getElementById("profile-form");
+
     $profileForm.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const $usernameInput = document.getElementById("username");
-      const $emailInput = document.getElementById("email");
-      const $bioInput = document.getElementById("bio");
+      const $usernameInput = document.getElementById(USERNAME);
+      const $emailInput = document.getElementById(EMAIL);
+      const $bioInput = document.getElementById(BIO);
 
       const userInfo = new UserInfo();
 
-      userInfo.set("username", $usernameInput.value);
-      userInfo.set("email", $emailInput.value);
-      userInfo.set("bio", $bioInput.value);
+      userInfo.set(USERNAME, $usernameInput.value);
+      userInfo.set(EMAIL, $emailInput.value);
+      userInfo.set(BIO, $bioInput.value);
 
       this.onUpdateProfile({
         username: userInfo.get(USERNAME),
@@ -92,19 +84,18 @@ export default function ProfilePage({
 
       alert("프로필이 업데이트 되었습니다.");
     });
+  }
 
-    header.render();
-    footer.render();
-  };
+  update(newState) {
+    super.update(newState);
 
-  this.setState = (newState) => {
-    this.state = {
-      ...this.state,
-      ...newState,
-    };
+    this.header.update(newState);
+  }
 
-    header.setState(newState);
+  render() {
+    super.render();
 
-    this.render();
-  };
+    this.header.render();
+    this.footer.render();
+  }
 }

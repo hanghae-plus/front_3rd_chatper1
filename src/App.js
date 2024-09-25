@@ -29,46 +29,42 @@ const initialState = () => {
 
 export default function App($root) {
   this.state = initialState();
+  const props = { ...this.state };
 
   const homePage = new HomePage({
-    $root,
-    initialState: { ...this.state },
+    props,
     onLogout: () => {
       this.setState(initialState());
-      homePage.setState(initialState());
+      homePage.update(initialState());
     },
   });
 
   const loginPage = new LoginPage({
-    $root,
     onSubmit: (newState) => {
       this.setState(newState);
-      homePage.setState(newState);
-      profilePage.setState(newState);
+      homePage.update(newState);
+      profilePage.update(newState);
     },
   });
 
   const profilePage = new ProfilePage({
-    $root,
-    initialState: this.state,
+    props,
     onClickUpdateProfile: (newState) => {
       this.setState(newState);
-      profilePage.setState(newState);
+      profilePage.update(newState);
     },
     onUpdateProfile: (newState) => {
       this.setState(newState);
-      profilePage.setState(newState);
+      profilePage.update(newState);
     },
     onLogout: () => {
       this.setState(initialState());
-      profilePage.setState(initialState());
-      homePage.setState(initialState());
+      profilePage.update(initialState());
+      homePage.update(initialState());
     },
   });
 
-  const notFoundPage = new NotFoundPage({
-    $root,
-  });
+  const notFoundPage = new NotFoundPage();
 
   this.setState = (newState) => {
     this.state = {
@@ -89,7 +85,7 @@ export default function App($root) {
     profilePage.render();
   });
 
-  router.addRoute("*", () => {
+  router.addNotFoundRoute(() => {
     notFoundPage.render();
   });
 

@@ -7,7 +7,7 @@ const Login = (isError = false) => {
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
         <form id="login-form">
           ${isError ? `
-            <div id="error"> 
+            <div> 
               <h2>오류 발생!</h2>
               <p>의도적인 오류입니다.</p>
             </div>`
@@ -33,22 +33,30 @@ const Login = (isError = false) => {
   `;
 };
 
+//에러 발생 시 isError를 true로 만들어서 에러 메시지 부분 렌더링
 const render = (root, isError = false) => {
   root.innerHTML = Login(isError);
 };
 
 const loginEvent = () => {
+
   const loginForm = document.getElementById("login-form");
+
+  //login 페이지에 진입한 것 자체가 login-form이 있는 상황이지만 체크 후 login 로직 진행
   if (loginForm) {
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
+
+      //username을 trim()으로 처음과 마지막 값 잘라서 가져오기
       const username = document.getElementById("username").value.trim();
 
+      //ID 입력 유효성 검사
       if (!username) {
         alert("이메일 또는 전화번호를 입력해 주세요.");
         return;
       }
 
+      // 로그인 시에는 username만 저장해서 다른 값은 빈문자열로 저장하고 username만 input의 값으로 세팅
       const user = {
         username: username,
         email: '',

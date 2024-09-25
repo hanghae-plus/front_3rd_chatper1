@@ -33,14 +33,16 @@ const Profile = () => {
     `;
   };
   
-  // 이벤트 바인딩 함수
+  // 프로필 업데이트
   const updateProfile = () => {
     const profileForm = document.getElementById("profile-form");
   
+    //profile-form 유무 확인 후 프로필 업데이트 진행
     if (profileForm) {
       profileForm.addEventListener("submit", (e) => {
         e.preventDefault();
   
+        //변경될 user의 값
         const updatedUser = {
           username: document.getElementById("username").value,
           email: document.getElementById("email").value,

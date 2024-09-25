@@ -19,6 +19,8 @@ const Nav = (currentPath) => {
     // 로그아웃 함수
     const logoutEvent = () => {
       const logout = document.getElementById("logout");
+
+      //위의 user가 localStorage에 값이 있을 때 logout 요소가 있어서 그때 로그아웃 클릭 시 실행 가능 
       if (logout) {
           logout.addEventListener("click", (event) => {
           event.preventDefault();

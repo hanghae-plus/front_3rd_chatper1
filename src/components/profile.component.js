@@ -38,7 +38,7 @@ export default function Profile() {
     const profileForm = document.getElementById("profile-form");
     profileForm.addEventListener("submit", (event) => {
       event.preventDefault();
-      
+
       const usernameInput = document.getElementById("username");
       const emailInput = document.getElementById("email");
       const bioInput = document.getElementById("bio");
@@ -63,18 +63,21 @@ export default function Profile() {
       initHTML();
       initForm();
       hydratePage();
+      setForm(user.get());
     });
   };
 
   const initForm = () => {
-    // init profile form
-    let userInfo = JSON.parse(localStorage.getItem("user"));
+    setForm(JSON.parse(localStorage.getItem("user")));
+  };
+
+  const setForm = ({ username, email, bio }) => {
     const usernameInput = document.getElementById("username");
     const emailInput = document.getElementById("email");
     const bioInput = document.getElementById("bio");
-    usernameInput.value = userInfo?.username ?? "";
-    emailInput.value = userInfo?.email ?? "";
-    bioInput.value = userInfo?.bio ?? "";
+    usernameInput.value = username ?? "";
+    emailInput.value = email ?? "";
+    bioInput.value = bio ?? "";
   };
 
   initHTML();

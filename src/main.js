@@ -18,14 +18,6 @@ export default class App {
 
   setTemplate() {
     this.router = routes(this.$element.querySelector("#container"));
-    // this.header = new Header({
-    //   $element: this.$element.querySelector('header'),
-    //   router: this.router,
-    // });
-
-    // this.footer = new Footer({
-    //   $element: this.$element.querySelector('footer'),
-    // });
   }
 }
 

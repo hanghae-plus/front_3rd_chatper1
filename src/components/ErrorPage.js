@@ -16,5 +16,6 @@ class ErrorPage {
       </main>
     `
   }
+
 } 
 export default new ErrorPage()

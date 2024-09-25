@@ -30,6 +30,14 @@ class Login {
   }
 
   bindEvents(renderHTML) {
+    // 로그인 여부 확인
+    if (user.isLoggedIn()) {
+      // 로그인이 되어있는 경우 메인페이지로 이동
+      history.pushState(null, null, '/');
+      renderHTML('/');
+      return; // 메인 페이지로 이동 후 나머지 코드 실행 방지
+    }
+
     const loginForm = document.querySelector("#login-form");
 
     loginForm && loginForm.addEventListener('submit', (e) => {
@@ -50,6 +58,13 @@ class Login {
 
       history.pushState(null, null, '/profile');
       renderHTML('/profile');
+    })
+
+    window.addEventListener('error', () => {
+      document.querySelector("#root").innerHTML = `
+        <h2>오류 발생!</h2>
+        <p>의도적인 오류입니다.</p>
+      `
     })
   }
 }

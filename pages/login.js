@@ -24,7 +24,7 @@ export default class LoginPage extends Component {
     }
 
     if (this.#state.username === TEST_USER_NAME) {
-      localStorage.setItem('user', JSON.stringify({ 'name': `${id}`, 'email': '', 'bio': '' }));
+      localStorage.setItem('user', JSON.stringify({ 'username': `${id}`, 'email': '', 'bio': '' }));
       router.navigateTo('/');
     } else {
       alert('아이디 또는 비밀번호가 일치하지 않습니다');

@@ -3,8 +3,11 @@
  *
  */
 export default class BaseView {
-  constructor(params) {
-    this.params = params;
+  // constructor(params) {
+  //   this.params = params;
+  //   this.element = this.createElement();
+  // }
+  constructor() {
     this.element = this.createElement();
   }
 
@@ -17,9 +20,9 @@ export default class BaseView {
   render() {
     const appRoot = document.querySelector('#root');
 
-    // // todo: 만약 root 를 못찾았으면..??
+    // 오류 처리: root를 찾지 못했을 경우
     // if (!appRoot) {
-    //   return;
+    //   throw new Error('오류 발생! - root 못찾음');
     // }
 
     appRoot.innerHTML = '';

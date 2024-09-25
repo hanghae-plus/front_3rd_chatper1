@@ -1,18 +1,32 @@
-import Component from '../core/component';
+import App from '../page/app';
+import { RouteType } from '../type';
 import store from './store';
 
 class Router {
   private static instance: Router;
-  private routes: {};
+  private routes: { [key: string]: RouteType };
+  private app;
   constructor() {
     if (Router.instance) return Router.instance;
     Router.instance = this;
     this.routes = {};
+    this.app = new App(this);
     window.addEventListener('popstate', this.handlePopState.bind(this));
   }
 
-  addRoute(path: string, handler: Component) {
-    this.routes[path] = handler;
+  init(routes: { [key: string]: RouteType }) {
+    this.app.init();
+    this.routes = routes;
+  }
+
+  addRoute(routes: { [key: string]: RouteType }) {
+    this.routes = routes;
+  }
+
+  getRoute(routename: string) {
+    return this.routes[routename]
+      ? this.routes[routename]
+      : this.routes['/404'];
   }
 
   push(path: string) {
@@ -20,22 +34,23 @@ class Router {
     const userInfo = localStorage.getItem('user');
     if (userInfo) {
       const { username, email, bio } = JSON.parse(userInfo!);
-      store.setState({ username, email, bio });
+      store.setState('userData', { username, email, bio });
     } else {
-      store.reset();
+      store.reset('userData');
     }
 
+    const { username } = store.getState('userData');
     switch (path) {
       case '/profile':
-        if (store.state.username == '') nextPath = '/login';
+        if (!username) nextPath = '/login';
         break;
 
       case '/login':
-        if (store.state.username) nextPath = '/';
+        if (username) nextPath = '/';
         break;
 
       case '/logout':
-        store.reset();
+        store.reset('userData');
         nextPath = '/login';
         break;
 
@@ -51,10 +66,12 @@ class Router {
   }
 
   handleRoute(path: string) {
-    const nextPath = this.routes[path] ? path : '/404';
-    this.routes[nextPath].render();
+    this.app.render(this.getRoute(path));
+    store.setState('pathname', { pathname: path });
   }
 }
 
 const useRouter = () => new Router();
+
+export type { Router };
 export { useRouter };

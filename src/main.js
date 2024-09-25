@@ -3,12 +3,42 @@ import HomePage from './page/homePage';
 import LoginPage from './page/loginPage';
 import ProfilePage from './page/profilePage';
 import NotFoundPage from './page/notFoundPage';
+import store from './module/store';
+import { isEqual } from './module/util';
+store.add('pathname', { pathname: location.pathname });
+store.add('userData', { username: '', email: '', bio: '' });
+
+const userInfo = localStorage.getItem('user');
+const isUpdate = !isEqual(JSON.parse(userInfo), store.getState('userData'));
+if (userInfo && isUpdate) {
+  store.setState('userData', JSON.parse(userInfo));
+}
+if (!userInfo) store.reset('userData');
 
 const router = useRouter();
-router.addRoute('/', new HomePage('root'));
-router.addRoute('/login', new LoginPage('root'));
-router.addRoute('/profile', new ProfilePage('root'));
-router.addRoute('/404', new NotFoundPage('root'));
+const routeList = {
+  '/': {
+    path: '/',
+    element: new HomePage('main'),
+    layout: true,
+  },
+  '/login': {
+    path: '/login',
+    element: new LoginPage('main'),
+    layout: false,
+  },
+  '/profile': {
+    path: '/profile',
+    element: new ProfilePage('main'),
+    layout: true,
+  },
+  '/404': {
+    path: '/404',
+    element: new NotFoundPage('main'),
+    layout: false,
+  },
+};
+router.init(routeList);
 router.push(location.pathname);
 
 window.addEventListener('error', (error) => {

@@ -1,32 +1,26 @@
-export const ProfilePage = () => {
-  return `<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>항해플러스 - 프로필</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-<div id="root">
-  <div class="bg-gray-100 min-h-screen flex justify-center">
-    <div class="max-w-md w-full">
-      <header class="bg-blue-600 text-white p-4 sticky top-0">
-        <h1 class="text-2xl font-bold">항해플러스</h1>
-      </header>
+import Component from "../component.js";
+import Footer from "../components/footer.js";
+import Header from "../components/header.js";
 
-      <nav class="bg-white shadow-md p-2 sticky top-14">
-        <ul class="flex justify-around">
-          <li><a href="./main.html" class="text-gray-600">홈</a></li>
-          <li><a href="#" class="text-blue-600">프로필</a></li>
-          <li><a href="#" class="text-gray-600">로그아웃</a></li>
-        </ul>
-      </nav>
+//TODO: localStorage user에 bio 업데이트
+export default class Profile extends Component {
+  mounted() {
+    const $header = this.target.querySelector("#header");
+    const $footer = this.target.querySelector("#footer");
+    new Header($header, this.store).render();
+    new Footer($footer).render();
+  }
+
+  template() {
+    return `
+    <div id="header" ></div>
+    <div class="bg-gray-100 min-h-screen flex justify-center">
+    <div class="max-w-md w-full">
 
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-          <form>
+          <form id='profile-form'>
             <div class="mb-4">
               <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
               <input type="text" id="username" name="username" value="홍길동" class="w-full p-2 border rounded">
@@ -44,13 +38,29 @@ export const ProfilePage = () => {
         </div>
       </main>
 
-      <footer class="bg-gray-200 p-4 text-center">
-        <p>&copy; 2024 항해플러스. All rights reserved.</p>
-      </footer>
+      <div id="footer" ></div>
     </div>
-  </div>
-</div>
-</body>
-</html>
-`;
-};
+  </div>`;
+  }
+
+  addEvent() {
+    const user = this.store.getState("user");
+    const $form = this.target.querySelector("#profile-form");
+    const $username = this.target.querySelector("#username");
+    const $bio = this.target.querySelector("#bio");
+
+    if (user) {
+      $username.value = user.username;
+    }
+
+    $form.addEventListener("submit", (e) => {
+      if ($bio.value) {
+        e.preventDefault();
+        this.store.setState("user", (prev) => ({
+          ...prev,
+          bio: "Updated bio",
+        }));
+      }
+    });
+  }
+}

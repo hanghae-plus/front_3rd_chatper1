@@ -1,22 +1,31 @@
-export class Store {
-  constructor() {
-    if (Store.instance) {
-      return Store.instance;
+export const createStore = () => {
+  let state = {};
+
+  const setState = (key, newState) => {
+    if (typeof newState === "function") {
+      state = newState(state);
+    } else {
+      state = { ...state[key], ...newState };
     }
-    Store.instance = this;
-    this.state = {};
-  }
+    localStorage.setItem(key, JSON.stringify(state));
+  };
 
-  setState(newState) {
-    this.state = { ...this.state, ...newState };
-    this.notify();
-  }
+  const getState = (key) => {
+    try {
+      return JSON.parse(localStorage.getItem(key));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  getState() {
-    return this.state;
-  }
+  const clearState = () => {
+    state = {};
+    localStorage.clear();
+  };
 
-  notify() {
-    // 상태 변경을 구독자에게 알림
-  }
-}
+  return {
+    setState,
+    getState,
+    clearState,
+  };
+};

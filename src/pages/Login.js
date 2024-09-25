@@ -6,12 +6,13 @@ const Login = () => {
       <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">
         항해플러스
       </h1>
-      <form>
+      <form id="login-form">
         <div class="mb-4">
           <input
             type="text"
             placeholder="이메일 또는 전화번호"
             class="w-full p-2 border rounded"
+            id="username"
           />
         </div>
         <div class="mb-6">

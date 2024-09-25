@@ -47,15 +47,9 @@ class Login {
       }
     });
 
-    document.getElementById('username')?.addEventListener('input', (e) => {
+    window.addEventListener('error', (error) => {
       const $error = document.getElementById('error');
-      try {
-        if ($error.innerHTML) {
-          $error.innerHTML = '';
-        }
-      } catch (error) {
-        $error.innerHTML = `<span class="test-xs text-red">오류 발생! ${error.message}</span>`;
-      }
+      $error.innerHTML = `<span class="test-xs text-red">오류 발생! ${error.message}</span>`;
     });
   }
 }

@@ -11,6 +11,8 @@ class Router {
     'notFound': new ErrorPage()
   };
 
+  #lastPage = null;
+
   constructor() {
     if (Router.instance) {
       return Router.instance;
@@ -23,12 +25,14 @@ class Router {
   }
 
   router() {
+    this.#lastPage?.unmount();
     const path = this.path();
 
     if (!this.#routes.hasOwnProperty(path)) {
       const page = this.#routes['notFound'];
       document.getElementById('root').innerHTML = page.render();
       page.mount();
+      this.#lastPage = page;
       return;
     }
 
@@ -36,10 +40,12 @@ class Router {
       const page = this.#routes['/login'];
       document.getElementById('root').innerHTML = page.render();
       page.mount();
+      this.#lastPage = page;
     } else {
       const page = this.#routes[path];
       document.getElementById('root').innerHTML = page.render();
       page.mount();
+      this.#lastPage = page;
     }
   }
 

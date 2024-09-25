@@ -1,11 +1,11 @@
-import Home from '../components/Home';
-import Profile, { updateProfile } from '../components/Profile';
-import Login, { loginEvent} from '../components/Login';
-import Error from '../components/Error';
-import  Header from '../components/Header';
-import { Nav, logoutEvent } from '../components/Nav';
-import Footer from '../components/Footer';
-import { state } from '../components/State';
+import Home from './components/Home';
+import Profile, { updateProfile } from './components/Profile';
+import Login, { loginEvent} from './components/Login';
+import Error from './components/Error';
+import  Header from './components/Header';
+import { Nav, logoutEvent } from './components/Nav';
+import Footer from './components/Footer';
+import { state } from './components/State';
 
 const $root = document.querySelector('#root');
 
@@ -52,7 +52,7 @@ function renderPage(path) {
 
   // 로그인 컴포넌트의 loginEvent 호출
   if (path === '/login') {
-    loginEvent(renderPage);
+    loginEvent();
   }
 
   // 프로필 컴포넌트의 updateProfile 호출
@@ -61,7 +61,7 @@ function renderPage(path) {
   }
 
   // 헤더 네비게이션 이벤트 바인딩
-  logoutEvent(renderPage);
+  logoutEvent();
   
   // URL 업데이트
   window.history.pushState({}, '', path);

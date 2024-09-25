@@ -1,9 +1,13 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-const mainPage = () => {
-  
-  return `${Header}
+const mainPage = (loginStatus) => {
+
+  return () => {
+    const isLogin = loginStatus.getIsLogin()
+
+    return `
+    ${Header}
     <main class="p-4">
         <div class="mb-4 bg-white rounded-lg shadow p-4">
           <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
@@ -95,8 +99,9 @@ const mainPage = () => {
       </main>
 
       ${Footer}
-    `;
+    `
+  }
 
-};
+}
 
 export default mainPage;

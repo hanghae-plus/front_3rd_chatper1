@@ -1,4 +1,4 @@
-import { DATA_URL, FEEDS_LIMIT, MESSAGE, SCROLL_DEBOUNCE_DELAY, USER_PROFILE_URL } from '@constants'
+import { DATA_URL, FEEDS_LIMIT, MESSAGE, DELAY_TIME, USER_PROFILE_URL } from '@constants'
 import { debounce } from '@utils'
 import { FeedItem } from '@components/main'
 import { MainLayout } from '@components/layouts'
@@ -63,7 +63,7 @@ export default function mainPage() {
     <div id="feeds" class="space-y-4"></div>
   </main>`)
 
-  let debounceScroll = debounce(handleScroll, SCROLL_DEBOUNCE_DELAY)
+  let debounceScroll = debounce(handleScroll, DELAY_TIME.SHORT)
 
   function render() {
     document.getElementById('root').innerHTML = template

@@ -1,5 +1,5 @@
 import { MainLayout } from '@components/layouts'
-import { MESSAGE, PROFILE_SAVE_DELAY } from '@constants'
+import { MESSAGE, DELAY_TIME } from '@constants'
 import { throttle } from '@utils'
 import { UserStore } from '@stores'
 
@@ -44,7 +44,7 @@ export default function profilePage() {
     const userInfo = getProfileFormData()
     userStore.setState('user', userInfo)
     alert(MESSAGE.PROFILE_UPDATED)
-  }, PROFILE_SAVE_DELAY)
+  }, DELAY_TIME.LONG)
 
   function render() {
     document.getElementById('root').innerHTML = template

@@ -1,4 +1,9 @@
 export const DATA_URL = '/data.json'
+export const DELAY_TIME = {
+  SHORT: 300,
+  MEDIUM: 500,
+  LONG: 1000,
+}
 export const FEEDS_LIMIT = 10
 export const LINK_TAG = 'A'
 export const NAVIGATION = {
@@ -8,6 +13,4 @@ export const NAVIGATION = {
   LOGOUT: { KOR: '로그아웃', ENG: 'logout' },
 }
 export const PAGE_TITLE = '항해플러스'
-export const PROFILE_SAVE_DELAY = 1000
-export const SCROLL_DEBOUNCE_DELAY = 300
 export const USER_PROFILE_URL = 'https://via.placeholder.com/41'

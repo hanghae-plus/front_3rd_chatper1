@@ -2,7 +2,6 @@ import user from "../User";
 
 class Profile {
   template() {
-
     return `
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
@@ -33,12 +32,15 @@ class Profile {
       history.pushState(null, null, '/login')
       renderHTML('/login');
     }
+
+
     const profileForm = document.querySelector("#profile-form");
 
     document.querySelector("#username").value = user !== null ? user.getUser().username : "";
     document.querySelector("#email").value = user !== null ? user.getUser().email : "";
     document.querySelector("#bio").value = user !== null ? user.getUser().bio : "";
 
+    //프로필 업데이트
     profileForm.addEventListener("submit", (e) => {
       e.preventDefault();
 

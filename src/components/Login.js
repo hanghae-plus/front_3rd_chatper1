@@ -48,6 +48,7 @@ class Login {
         bio: ''
       });
 
+      history.pushState(null, null, '/profile');
       renderHTML('/profile');
     })
   }

@@ -23,7 +23,7 @@ export function throttle(func: (args: any) => void, limit: number) {
 }
 
 export function debounce(func: (args: any) => void, delay: number) {
-  let timeoutId: number;
+  let timeoutId: NodeJS.Timeout;
   return function (...args: any) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => func.apply(this, args), delay);
@@ -31,15 +31,22 @@ export function debounce(func: (args: any) => void, delay: number) {
 }
 
 export function isEqual(
-  oldValue: { [key: string]: string },
-  newValue: { [key: string]: string }
+  obj1: { [key: string]: any },
+  obj2: { [key: string]: any }
 ) {
-  let isEqual = true;
-  for (const key in newValue) {
-    if (oldValue[key] !== newValue[key]) {
-      isEqual = false;
-      break;
+  if (obj1 === obj2) return true;
+  if (!obj1 || !obj2) return false;
+
+  for (const key in obj1) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
     }
   }
-  return isEqual;
+  for (const key in obj2) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  return true;
 }

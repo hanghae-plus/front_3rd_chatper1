@@ -5,6 +5,8 @@ import ProfilePage from './page/profilePage';
 import NotFoundPage from './page/notFoundPage';
 import store from './module/store';
 import { isEqual } from './module/util';
+import errorBoundary from './module/errorBoundary';
+
 store.add('pathname', { pathname: location.pathname });
 store.add('userData', { username: '', email: '', bio: '' });
 
@@ -41,13 +43,4 @@ const routeList = {
 router.init(routeList);
 router.push(location.pathname);
 
-window.addEventListener('error', (error) => {
-  // 에러 UI 표시
-  const root = document.getElementById('root');
-  const errorComponent = document.createElement('div');
-
-  root.innerHTML = '';
-  errorComponent.innerHTML = `<p style="color:red;">오류 발생! ${error.message}</p>`;
-  root.appendChild(errorComponent);
-  return true;
-});
+errorBoundary();

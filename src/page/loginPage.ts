@@ -1,38 +1,23 @@
-import { useRouter } from '../module/route';
-import { throttle } from '../module/util';
 import Component from '../core/component';
-import store, { useStore } from '../module/store';
+import { useRouter } from '../module/route';
+import store from '../module/store';
 
 const router = useRouter();
 
-function submitHandle() {
+const loginHandle = () => {
   const usernameDiv = document.querySelector('#username') as HTMLInputElement;
   const username = usernameDiv.value;
-  store.setState({ username, email: '', bio: '' });
+  const userData = { username, email: '', bio: '' };
+  store.setState('userData', userData);
   router.push('/profile');
-}
+};
 
 export default class LoginPage extends Component {
-  init() {
-    useStore(this);
-    this.state = { id: '', password: '' };
-  }
-
   attachEventListeners() {
-    const loginForm = document.querySelector('#login-form')!;
-
+    const loginForm = this.container.querySelector('#login-form')!;
     loginForm.addEventListener('submit', function (event) {
       event.preventDefault();
-      throttle(submitHandle, 500)();
-    });
-
-    const btnList = document.querySelectorAll('[data-path]');
-    btnList.forEach((e) => {
-      e.addEventListener('click', function (event) {
-        event.preventDefault();
-        const path = e.getAttribute('data-path');
-        if (path) router.push(path);
-      });
+      loginHandle();
     });
   }
 

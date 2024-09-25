@@ -2,10 +2,6 @@ import Component from '../core/component';
 
 export default class Post extends Component {
   state: { src: string; name: string; time: string; sentence: string };
-  init() {
-    this.render();
-  }
-
   template(): string {
     return `
               <div class="bg-white rounded-lg shadow p-4">

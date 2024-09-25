@@ -1,6 +1,6 @@
 import { routes } from './router';
 import NotFoundPage from './pages/NotFoundPage';
-import { getUserInfoStorage } from './utils/storage';
+import { deleteUserInfoStorage, getUserInfoStorage, setUserInfoStorage } from './utils/storage';
 
 export function navigate (requestUrl) {
   history.pushState(null, null, requestUrl);
@@ -25,6 +25,34 @@ function renderRoute() {
   const route = routes[path] || NotFoundPage;
 
   document.getElementById('root').innerHTML = route();
+
+  const loginForm = document.getElementById('login-form');
+  if (loginForm) {
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+
+      const userInfo = {
+        username: username,
+        email: '',
+        bio: '',
+      };
+      setUserInfoStorage('user', userInfo);
+      setUserInfoStorage('isLogin', true);
+      navigate('/profile');
+    });
+  }
+
+  const logoutButton = document.getElementById('logout');
+  if (logoutButton) {
+    logoutButton.addEventListener('click', () => {
+      deleteUserInfoStorage('user');
+      deleteUserInfoStorage('isLogin');
+      navigate('/');
+    });
+  }
+
+
 }
 
 window.addEventListener('popstate', renderRoute);

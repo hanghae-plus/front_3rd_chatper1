@@ -1,3 +1,5 @@
+import { profileSubmitHandler } from "./formSubmitHandler";
+
 export const Profile = () => {
   const getHTML = () => {
     const main = document.createElement("main");
@@ -17,6 +19,7 @@ export const Profile = () => {
 
     // 폼 생성
     const form = document.createElement("form");
+    form.setAttribute("id", "profile-form");
 
     // 사용자 이름 필드 생성
     const usernameField = document.createElement("div");
@@ -34,7 +37,6 @@ export const Profile = () => {
     usernameInput.setAttribute("type", "text");
     usernameInput.setAttribute("id", "username");
     usernameInput.setAttribute("name", "username");
-    usernameInput.setAttribute("value", "홍길동");
     usernameInput.setAttribute("class", "w-full p-2 border rounded");
 
     usernameField.appendChild(usernameLabel);
@@ -56,7 +58,6 @@ export const Profile = () => {
     emailInput.setAttribute("type", "email");
     emailInput.setAttribute("id", "email");
     emailInput.setAttribute("name", "email");
-    emailInput.setAttribute("value", "hong@example.com");
     emailInput.setAttribute("class", "w-full p-2 border rounded");
 
     emailField.appendChild(emailLabel);
@@ -79,11 +80,17 @@ export const Profile = () => {
     bioTextarea.setAttribute("name", "bio");
     bioTextarea.setAttribute("rows", "4");
     bioTextarea.setAttribute("class", "w-full p-2 border rounded");
-    bioTextarea.textContent =
-      "안녕하세요, 항해플러스에서 열심히 공부하고 있는 홍길동입니다.";
 
     bioField.appendChild(bioLabel);
     bioField.appendChild(bioTextarea);
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+      usernameInput.setAttribute("value", user.username);
+      emailInput.setAttribute("value", user.email);
+      bioTextarea.value = user.bio;
+    }
 
     // 버튼 생성
     const submitButton = document.createElement("button");
@@ -93,6 +100,8 @@ export const Profile = () => {
       "w-full bg-blue-600 text-white p-2 rounded font-bold"
     );
     submitButton.textContent = "프로필 업데이트";
+
+    profileSubmitHandler(form, usernameInput, emailInput, bioTextarea);
 
     // 각 요소들을 폼과 컨테이너에 추가
     form.appendChild(usernameField);

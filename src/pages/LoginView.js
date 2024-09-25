@@ -63,6 +63,12 @@ export class LoginView extends BaseView {
 
   handleLogin() {
     const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (!username) {
+      alert('아이디를 입력해 주세요.');
+      return;
+    }
 
     UserInfo.set('username', username);
 

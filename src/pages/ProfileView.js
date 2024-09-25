@@ -99,6 +99,6 @@ ${userBio}</textarea
     UserInfo.set('email', updatedEmail);
     UserInfo.set('bio', updatedBio);
 
-    alert('updated!');
+    alert('업데이트 되었어요');
   }
 }

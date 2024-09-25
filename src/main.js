@@ -117,6 +117,10 @@ const addListeners = () => {
         navigateTo(url.pathname);
       }
     }
+
+    if (e.target.id === 'goback') {
+      handleRoute(window.location.pathname);
+    }
   });
 
   document.querySelector('#root')?.addEventListener('submit', (e) => {
@@ -131,6 +135,14 @@ const addListeners = () => {
       const bio = document.getElementById('bio').value;
       updateUserInfo(username, email, bio);
     }
+  });
+
+  window.addEventListener('error', (e) => {
+    e.preventDefault();
+
+    document.querySelector(
+      '#root'
+    ).innerHTML = `<span>오류 발생!</span><p>${e.message}</p><button id='goback'>돌아가기</button>`;
   });
 };
 

@@ -1,13 +1,11 @@
 import { router } from './Router';
 import { safeLocalStorage } from './localStorage';
 
-export const USER_INFO_KEY = 'user';
+const USER_INFO_KEY = 'user';
 
 export type UserInfo = {
   username: string;
-
   email: string;
-
   bio: string;
 };
 

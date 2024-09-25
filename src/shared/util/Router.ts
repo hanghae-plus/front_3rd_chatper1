@@ -6,7 +6,7 @@ type Routes = {
 };
 
 class Router {
-  #routes: Routes;
+  #routes: Routes = {};
 
   init(routes: Routes) {
     if (!routes['/404']) {

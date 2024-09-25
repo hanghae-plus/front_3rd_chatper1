@@ -19,7 +19,7 @@ export default function Header() {
             pathname === "/" ? selectNavCss : navCss
           }"><a href="/">홈</a></li>
          ${
-           user.username
+           user?.username
              ? `<li class="${
                  pathname === "/profile" ? selectNavCss : navCss
                }"><a href="/profile">프로필</a></li>`
@@ -35,7 +35,7 @@ export default function Header() {
 }
 
 export const logout = () => {
-  document.getElementById("logout").addEventListener("click", () => {
+  document.getElementById("logout")?.addEventListener("click", () => {
     localStorage.removeItem("user");
   });
 };

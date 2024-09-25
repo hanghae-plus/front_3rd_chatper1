@@ -6,11 +6,11 @@ export const Profile = () => {
         <h1 class="text-2xl font-bold text-blue-600 mb-6">내 프로필</h1>
         <form id="profile-form" class="text-left">
           <label for="">사용자 이름 </label>
-          <input id="username" type="text" class="rounded-md w-full border p-2 mb-6" value="${user.username}" />
+          <input id="username" type="text" class="rounded-md w-full border p-2 mb-6" value="${user?.username}" />
           <label  for="" >이메일</label>
-          <input id="email" type="text" class="rounded-md w-full border p-2 mb-6" placeholder="이메일" value="${user.email}"  />
+          <input id="email" type="text" class="rounded-md w-full border p-2 mb-6" placeholder="이메일" value="${user?.email}"  />
           <label for="">자기소개</label>
-          <textarea id="bio" class="rounded-md w-full border p-2 mb-6" placeholder="자기소개" />${user.bio}</textarea>
+          <textarea id="bio" class="rounded-md w-full border p-2 mb-6" placeholder="자기소개" />${user?.bio}</textarea>
           <button class="rounded-md w-full bg-blue-600 text-white py-2">프로필 업데이트</button>
         </form>
       </main>`;

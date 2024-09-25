@@ -3,7 +3,7 @@ class Home {
     return this.template(path);
   }
   template() {
-    const user = localStorage.getItem('user');
+    const user = !!localStorage.getItem('user');
     return `
         <main class="p-4">
             ${

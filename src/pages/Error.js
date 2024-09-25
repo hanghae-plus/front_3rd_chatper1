@@ -1,6 +1,6 @@
 class Error {
   render(path) {
-    return this.template(path); // 템플릿을 반환
+    return this.template(path);
   }
   template() {
     return `

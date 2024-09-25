@@ -4,11 +4,13 @@ class Header {
   }
 
   template(path) {
-    const user = localStorage.getItem('user');
-    const homeClass = path === '/' ? 'text-blue-600' : 'text-gray-600';
+    const user = !!localStorage.getItem('user');
+    const homeClass =
+      path === '/' ? 'text-blue-600 font-bold' : 'text-gray-600';
     const profileClass =
-      path === '/profile' ? 'text-blue-600' : 'text-gray-600';
-    const loginClass = path === '/login' ? 'text-blue-600' : 'text-gray-600';
+      path === '/profile' ? 'text-blue-600 font-bold' : 'text-gray-600';
+    const loginClass =
+      path === '/login' ? 'text-blue-600 font-bold' : 'text-gray-600';
 
     return `
         <div class="bg-gray-100 min-h-screen flex justify-center">

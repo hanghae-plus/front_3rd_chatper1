@@ -18,7 +18,8 @@ function renderPage(path) {
   const { component, defaultLayout, isLoggedIn } =
     routes[path] || routes['/error'];
 
-  const user = localStorage.getItem('user');
+  const user = !!localStorage.getItem('user');
+  console.log('user', user);
 
   // 헤더와 푸터 컨텐츠 초기화
   let headerContent = '';

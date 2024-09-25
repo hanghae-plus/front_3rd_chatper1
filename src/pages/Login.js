@@ -30,6 +30,7 @@ class Login {
 
   registerEvents(renderPage) {
     const loginForm = document.getElementById('login-form');
+
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -46,12 +47,9 @@ class Login {
           bio: '',
         };
 
-        // 사용자 정보 localStorage에 저장
         localStorage.setItem('user', JSON.stringify(user));
-
-        //프로필 페이지로 이동
         renderPage('/profile');
-        history.pushState(null, '', '/profile'); // URL 변경
+        history.pushState(null, '', '/profile');
       } catch (error) {
         throw new Error('error: ', `${error.message}`);
       }

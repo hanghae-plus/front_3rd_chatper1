@@ -10,7 +10,7 @@ export default function Nav() {
 
 function paintNavItems() {
   const isLogin = localStorage.getItem('user');
-  const BLUE = 'text-blue-600';
+  const BLUE = 'text-blue-600 font-bold';
   const GRAY = 'text-gray-600';
 
   return `${
@@ -38,7 +38,7 @@ function paintNavItems() {
         }">홈</a>
       </li>
       <li class="w-1/2">
-        <a data-route="login" id="nav-item-login" class="w-full flex align-center justify-center cursor-pointer ${GRAY}">로그인</a>
+        <a data-route="login" href="/login" id="nav-item-login" class="w-full flex align-center justify-center cursor-pointer ${GRAY}">로그인</a>
       </li>
     `
   }

@@ -1,3 +1,4 @@
+import ErrorBoundary from './components/ErrorBoundary';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -130,7 +131,13 @@ function render() {
   initFunctions();
 }
 
-window.addEventListener('popstate', (e) => {
+window.addEventListener('error', (event) => {
+  const errorMessage = event.error.message || '알 수 없는 에러입니다.';
+
+  putElementsInRoot(ErrorBoundary({ errorMessage }));
+});
+
+window.addEventListener('popstate', () => {
   render();
 });
 

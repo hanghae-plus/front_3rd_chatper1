@@ -1,12 +1,14 @@
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Nav from '../components/Nav';
+import { movePage } from '../utils/functions';
 import LoginPage from './LoginPage';
 
 export default function ProfilePage() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   if (!user) {
+    movePage('/login');
     return LoginPage();
   }
 

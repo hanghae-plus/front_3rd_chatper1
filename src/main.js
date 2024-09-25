@@ -26,8 +26,33 @@ function renderRoute() {
 
   document.getElementById('root').innerHTML = route();
 
+  function renderErrorMessage(message) {
+    const errorMessage = document.createElement('div');
+    errorMessage.id = 'error-message';
+    errorMessage.style.color = 'red';
+    errorMessage.textContent = message;
+    document.body.appendChild(errorMessage);
+  }
+
+  function loginErrorHandler() {
+    const username = document.getElementById('username');
+
+    username.addEventListener(
+      'input',
+      () => {
+        try {
+          throw new Error('의도적인 오류입니다.');
+        } catch (e) {
+          renderErrorMessage('오류 발생! 의도적인 오류입니다.');
+        }
+      },
+      { once: true }
+    );
+  }
+
   const loginForm = document.getElementById('login-form');
   if (loginForm) {
+    loginErrorHandler();
     loginForm.addEventListener('submit', (event) => {
       event.preventDefault();
       const username = document.getElementById('username').value;

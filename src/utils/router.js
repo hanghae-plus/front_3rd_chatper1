@@ -49,7 +49,7 @@ export default class Router {
                 tag.addEventListener('click', (event) => {
                     event.preventDefault();
 
-                    const tagRef = tag.href.replace(location.origin, '');
+                    const tagRef = event.target.href.replace(location.origin, '');
                     this.render(tagRef)
                 });
             });

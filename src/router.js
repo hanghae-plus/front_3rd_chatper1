@@ -30,32 +30,29 @@ class Router {
 
     if (!this.#routes.hasOwnProperty(path)) {
       const page = this.#routes['notFound'];
-      document.getElementById('root').innerHTML = page.render();
+      page.render();
       page.mount();
       this.#lastPage = page;
       return;
     }
 
+    let page;
+    
     if (localStorage.getItem('user') === null && path === '/profile') {
       history.pushState({}, '', '/login');
-      const page = this.#routes['/login'];
-      document.getElementById('root').innerHTML = page.render();
-      page.mount();
-      this.#lastPage = page;
+      page = this.#routes['/login'];
 
     } else if (localStorage.getItem('user') !== null && path === '/login') {
       history.pushState({}, '', '/');
-      const page = this.#routes['/'];
-      document.getElementById('root').innerHTML = page.render();
-      page.mount();
-      this.#lastPage = page;
-      
+      page = this.#routes['/'];
+
     } else {
-      const page = this.#routes[path];
-      document.getElementById('root').innerHTML = page.render();
-      page.mount();
-      this.#lastPage = page;
+      page = this.#routes[path];
     }
+
+    page.render();
+    page.mount();
+    this.#lastPage = page;
   }
 
   navigateTo(url) {

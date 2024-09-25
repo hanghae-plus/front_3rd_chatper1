@@ -1,5 +1,3 @@
-import router from '../router.js';
-
 export default class UserStore {
   static #instance;
   #user = {};
@@ -19,10 +17,11 @@ export default class UserStore {
 
   clear() {
     this.#user = {};
+    localStorage.removeItem('user');
   }
 
-  #notice() {
-    router.router();
+  #notice(page) {
+    page.render();
   }
 
   getUser() {
@@ -33,8 +32,9 @@ export default class UserStore {
     this.#user = user;
   }
 
-  updateUser(user) {
+  updateUser(user, page) {
+    localStorage.setItem('user', JSON.stringify(user));
     this.#setUser(user);
-    this.#notice();
+    this.#notice(page);
   }
 }

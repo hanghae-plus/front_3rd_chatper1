@@ -1,11 +1,11 @@
-import Header from "../components/layouts/Header";
-import Footer from "../components/layouts/Footer";
+import Header from '../components/layouts/Header';
+import Footer from '../components/layouts/Footer';
 
 export default class Home {
   constructor({ $element, router }) {
     this.$element = $element;
     this.router = router;
-    this.$element.innerHTML = "";
+
     this.render();
   }
 
@@ -19,8 +19,9 @@ export default class Home {
       $element: this.$element,
     });
 
-    const main = document.createElement("main");
-    main.classList.add("p-4");
+    const main = document.createElement('main');
+    main.classList.add('p-4');
+    main.id = 'home';
     main.innerHTML = `
     <main class="p-4">
       <div class="mb-4 bg-white rounded-lg shadow p-4">
@@ -110,8 +111,8 @@ export default class Home {
       </div>
     </main>
     `;
-    this.$element.prepend(header.$element.querySelector("#header"));
+    this.$element.prepend(header.$element.querySelector('#header'));
     this.$element.append(main);
-    this.$element.append(footer.$element.querySelector("#footer"));
+    this.$element.append(footer.$element.querySelector('#footer'));
   }
 }

@@ -1,24 +1,14 @@
-import routes from "./routes";
+import routes from './routes';
 
 export default class App {
   constructor($element) {
     this.$element = $element;
     this.render();
-    this.setTemplate();
   }
 
   render() {
-    this.$element.innerHTML = `
-    <div class="bg-gray-100 min-h-screen flex justify-center">
-      <div id="container" class="max-w-md w-full">
-      </div>
-    </div>
-    `;
-  }
-
-  setTemplate() {
-    this.router = routes(this.$element.querySelector("#container"));
+    this.router = routes(this.$element.querySelector('#container'));
   }
 }
 
-new App(document.querySelector("#root"));
+new App(document.querySelector('#root'));

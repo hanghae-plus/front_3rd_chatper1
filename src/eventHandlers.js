@@ -29,4 +29,15 @@ const handleLogout = (event) => {
   }
 };
 
-export { handleLinkClick, handleLogin, handleLogout };
+const handleUpdateProfile = (event) => {
+  if (event.target.id === "profile-form") {
+    event.preventDefault();
+    const username = document.querySelector("#username").value;
+    const email = document.querySelector("#email").value;
+    const bio = document.querySelector("#bio").value;
+    localStorage.setItem("user", JSON.stringify({ username, email, bio }));
+    alert("프로필이 업데이트되었습니다.");
+  }
+};
+
+export { handleLinkClick, handleLogin, handleLogout, handleUpdateProfile };

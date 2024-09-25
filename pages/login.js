@@ -7,14 +7,16 @@ const TEST_USER_NAME = 'testuser';
 export default class LoginPage extends Component {
   #state = {
     username: '',
-    password: ''
+    password: '',
+    hasError: false
   };
 
   #userStore = null;
 
   #handleEvents = {
     handleSubmitBound: null,
-    handleInputBound: null
+    handleInputBound: null,
+    handleErrorBound: null
   };
 
   constructor() {
@@ -24,6 +26,7 @@ export default class LoginPage extends Component {
 
     this.#handleEvents.handleSubmitBound = this.#handleSubmit.bind(this);
     this.#handleEvents.handleInputBound = this.#handleInput.bind(this);
+    this.#handleEvents.handleErrorBound = this.#handleError.bind(this);
   }
 
   #validate(id) {
@@ -59,6 +62,11 @@ export default class LoginPage extends Component {
     this.#state.username = event.target.value;
   }
 
+  #handleError() {
+    this.#state.hasError = true;
+    router.router();
+  }
+
   render() {
     return `
       <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -66,6 +74,12 @@ export default class LoginPage extends Component {
           <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">
             항해플러스
           </h1>
+          ${this.#state.hasError ?
+      '<div class="text-red-500 text-sm mb-4">' +
+      '<p>오류 발생!</p>' +
+      '<p>의도적인 오류입니다.</p>' +
+      '</div>'
+      : ''}
           <form id="login-form">
             <div class="mb-4">
               <input
@@ -108,6 +122,8 @@ export default class LoginPage extends Component {
     const form = document.getElementById('login-form');
     form.addEventListener('submit', this.#handleEvents.handleSubmitBound);
 
+    window.addEventListener('error', this.#handleEvents.handleErrorBound);
+
     const input = document.getElementById('username');
     input.addEventListener('input', this.#handleEvents.handleInputBound);
   }
@@ -119,6 +135,8 @@ export default class LoginPage extends Component {
   #removeEventListeners() {
     const form = document.getElementById('login-form');
     form.removeEventListener('submit', this.#handleEvents.handleSubmitBound);
+
+    window.removeEventListener('error', this.#handleEvents.handleErrorBound);
 
     const input = document.getElementById('username');
     input.removeEventListener('input', this.#handleEvents.handleInputBound);

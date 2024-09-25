@@ -7,10 +7,8 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("submit", (event) => {
-  if (event.target.id === "login-form") {
-    event.preventDefault();
-    handleLogin();
-  }
+  handleLogin(event);
+
   if (event.target.id === "profile-form") {
     event.preventDefault();
     const username = document.querySelector("#username").value;

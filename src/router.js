@@ -1,3 +1,4 @@
+import { Footer } from "./\bfooter";
 import { Error } from "./error";
 import { Header, LoginHeader } from "./header";
 import { Home } from "./home";
@@ -47,6 +48,7 @@ export const router = () => {
       view: Error,
       isMatch: true,
       isHeader: false,
+      isFooter: false,
     };
   }
 
@@ -56,6 +58,8 @@ export const router = () => {
   const { getLoginHeader } = LoginHeader();
   const headerComponent = getHeader();
   const loginHeaderComponent = getLoginHeader();
+  const { getFooter } = Footer();
+  const footerComponent = getFooter();
 
   const root = document.querySelector("#root");
   // 다른 페이지를 route 하기전에 이전 페이지 요소들을 삭제해서 root 리셋.
@@ -74,6 +78,8 @@ export const router = () => {
     user
       ? pageContainer.appendChild(loginHeaderComponent)
       : pageContainer.appendChild(headerComponent);
+
+    pageContainer.appendChild(footerComponent);
   }
 
   //match에 맞는 page dom을 root에 새로 붙여준다.

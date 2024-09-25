@@ -46,7 +46,7 @@ export default class LoginPage extends Component {
     if (this.#state.username === TEST_USER_NAME) {
       const user = { username: `${id}`, email: '', bio: '' };
       localStorage.setItem('user', JSON.stringify(user));
-      this.#userStore.updateUser(user);
+      this.#userStore.updateUser(user, this);
       router.navigateTo('/');
     } else {
       alert('아이디 또는 비밀번호가 일치하지 않습니다');
@@ -67,7 +67,7 @@ export default class LoginPage extends Component {
     router.router();
   }
 
-  render() {
+  template() {
     return `
       <main class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">

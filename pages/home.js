@@ -14,11 +14,11 @@ export default class HomePage extends Component {
     super();
   }
 
-  render() {
+  template() {
     return html`
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
-          ${this.#children.header.render()}
+          ${this.#children.header.template()}
           <main class="p-4">
             <div class="mb-4 bg-white rounded-lg shadow p-4">
               <textarea
@@ -132,13 +132,12 @@ export default class HomePage extends Component {
               </div>
             </div>
           </main>
-          ${this.#children.footer.render()}
+          ${this.#children.footer.template()}
         </div>
       </div>`;
   }
 
   #addEventListeners() {
-
   }
 
   mount() {

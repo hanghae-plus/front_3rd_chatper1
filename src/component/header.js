@@ -30,7 +30,6 @@ export default class Header extends Component {
   }
 
   #logout() {
-    localStorage.removeItem('user');
     this.#userStore.clear();
     router.router();
   }
@@ -55,7 +54,7 @@ export default class Header extends Component {
     this.#logout();
   }
 
-  render() {
+  template() {
     const user = this.#userStore.getUser();
 
     return html`

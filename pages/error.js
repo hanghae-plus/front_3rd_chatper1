@@ -19,7 +19,7 @@ export default class ErrorPage extends Component {
     router.navigateTo('/');
   }
 
-  render() {
+  template() {
     return html`
       <main class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div

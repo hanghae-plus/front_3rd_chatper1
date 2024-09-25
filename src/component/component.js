@@ -5,8 +5,12 @@ export default class Component {
     }
   }
 
-  render() {
+  template() {
     throw new Error('Abstract method must be implemented in subclass.');
+  }
+
+  render() {
+    document.getElementById('root').innerHTML = this.template();
   }
 
   mount() {

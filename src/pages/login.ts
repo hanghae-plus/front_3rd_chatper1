@@ -32,7 +32,9 @@ export default class LoginPage extends BaseComponent {
     const $nameInput = this.getElement<HTMLInputElement>(`#${ID.USER_NAME}`)!;
     const username = $nameInput.value.trim();
 
-    login({ name: username });
+    if (username) {
+      login({ name: username });
+    }
   }
 
   template() {

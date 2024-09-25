@@ -1,5 +1,9 @@
+import {Logger} from "../../utils/logger.js";
+
 export const logTpl = () => {
-    const loggerList = JSON.parse(localStorage.getItem('logger'))
+    const logger = new Logger()
+    const loggerList = logger.getLogs() || []
+
 
     return `
     <main class="w-full flex justify-center p-6">

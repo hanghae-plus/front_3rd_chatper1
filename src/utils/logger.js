@@ -10,7 +10,7 @@ export class Logger {
     log(logs) {
         const timestamp = new Date().toISOString();
         const newLog = { timestamp, ...logs };
-        const existingLogs = this.getLogs() || this.logs;
+        const existingLogs = this.logs || [];
         existingLogs.push(newLog);
 
         localStorage.setItem('logger', JSON.stringify(existingLogs));
@@ -20,9 +20,9 @@ export class Logger {
 
     getLogs() {
         try {
-           return [...this.logs,...JSON.parse(localStorage.getItem('logger'))]
+           return [...this.logs,...JSON.parse(localStorage.getItem('logger')) || []]
         } catch (e) {
-            this.logs({type : 'error', location : 'Logger' , message : 'log storage parse error'})
+            this.log({type : 'error', location : 'Logger' , message : 'log storage parse error'})
         }
     }
 }

@@ -19,6 +19,7 @@ export const addGlobalErrorHandler = () => {
 
     window.addEventListener('error', (event) => {
         const {error} = event
+
         try{
             const {errorMessage,errorLog} = JSON.parse(error.message)
             setTpl(errorMessageTpl(errorMessage))($('#root'));

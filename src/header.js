@@ -1,3 +1,5 @@
+import { logoutHandler } from "./formSubmitHandler";
+
 export const Header = () => {
   const getHeader = () => {
     const header = document.createElement("div");
@@ -82,9 +84,10 @@ export const LoginHeader = () => {
 
     const logoutLink = document.createElement("li");
     const logoutLinkAnchor = document.createElement("a");
-    logoutLinkAnchor.setAttribute("class", "text-gray-600 logout");
-    // logoutLinkAnchor.setAttribute("href", "/login");
+    logoutLinkAnchor.setAttribute("class", "text-gray-600");
+    logoutLinkAnchor.setAttribute("id", "logout");
     logoutLinkAnchor.textContent = "로그아웃";
+    logoutHandler(logoutLinkAnchor);
     logoutLink.appendChild(logoutLinkAnchor);
     links.appendChild(logoutLink);
     navigation.appendChild(links);

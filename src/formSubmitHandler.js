@@ -1,4 +1,4 @@
-import { navigateTo } from "./router";
+import { navigateTo, router } from "./router";
 
 export const formSubmitHandler = (
   form,
@@ -33,4 +33,13 @@ export const formSubmitHandler = (
     );
     navigateTo("/");
   });
+};
+
+export const logoutHandler = (logoutButton) => {
+  const removeUser = () => {
+    localStorage.removeItem("user");
+    router();
+  };
+
+  logoutButton.addEventListener("click", removeUser);
 };

@@ -1,6 +1,6 @@
 import { getUser } from "../../../store/user/userStore";
 
-export const getHeaderComponent = (isLoginUser = false) => {
+export const getHeaderComponent = () => {
   const user = getUser();
 
   return `
@@ -10,7 +10,7 @@ export const getHeaderComponent = (isLoginUser = false) => {
 
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
-        <li><a href="/" class="text-blue-600" id="home">홈</a></li>
+        <li><a href="/" class="text-blue-600 font-bold" id="home">홈</a></li>
         ${
           user
             ? `

@@ -6,7 +6,7 @@ const Router = (function () {
   function createInstance() {
     return {
       routes: {},
-      isLoggedIn: false, // 로그인 상태 초기화
+      isLoggedIn: !!localStorage.getItem('user'), // 로그인 상태 초기화
 
       addRoute(path, handler) {
         this.routes[path] = handler;
@@ -22,9 +22,19 @@ const Router = (function () {
       },
 
       handleRoute(path) {
-        // 로그인 상태에 따라 프로필 페이지 접근 제어
+        // 비로그인 상태에서 프로필 페이지 접근 시 로그인 페이지로 리다이렉트
         if (path === '/profile' && !this.isLoggedIn) {
+          alert('비로그인 상태입니다. 로그인 페이지로 이동합니다.');
+
           this.navigateTo('/login');
+          return;
+        }
+
+        // 로그인 상태에서 로그인 페이지 접근 시 메인 페이지로 리다이렉트
+        if (path === '/login' && this.isLoggedIn) {
+          alert('이미 로그인되어 있습니다. 메인 페이지로 이동합니다.');
+
+          this.navigateTo('/');
           return;
         }
 
@@ -104,16 +114,16 @@ const Header = (isLoggedIn) => {
   
     <nav class="bg-white shadow-md p-2 sticky top-14">
       <ul class="flex justify-around">
-        <li><a href="./" class="text-blue-600">홈</a></li>
+        <li><a href="/" class="text-blue-600 font-bold">홈</a></li>
         ${
           isLoggedIn
-            ? '<li><a href="./profile" class="text-gray-600">프로필</a></li>'
+            ? '<li><a href="/profile" class="text-gray-600">프로필</a></li>'
             : ''
         }
         ${
           isLoggedIn
             ? '<li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>'
-            : '<li><a href="./login" class="text-gray-600">로그인</a></li>'
+            : '<li><a href="/login" class="text-gray-600">로그인</a></li>'
         }
       </ul>
     </nav>
@@ -341,18 +351,35 @@ const renderLoginPage = () => {
     </main>
   `;
 
+  const $username = document.querySelector('#username');
+
+  // submit 이벤트 핸들러 등록 전에 input 핸들러를 등록
+  $username.addEventListener(
+    'input',
+    (e) => {
+      try {
+        if (e.target.value === '1') {
+          throw new Error('의도적인 오류입니다.');
+        }
+      } catch (error) {
+        errorBoundary(error); // 에러를 에러 바운더리에 전달
+      }
+    },
+    { once: true }
+  );
+
   document.getElementById('login-form').addEventListener('submit', (e) => {
     e.preventDefault(); // 폼 제출 기본 동작 방지
 
     const userInfo = {
-      username: document.getElementById('username').value,
+      username: $username.value,
       email: '',
       bio: '',
     };
 
     // LocalStorage에 데이터 저장 (key: 'user')
     prefs.set(userInfo);
-
+    router.isLoggedIn = true;
     router.handleLogin();
     router.navigateTo('/profile');
     handleMenuActive(window.location.pathname);
@@ -369,7 +396,7 @@ const renderNotFoundPage = () => {
         <p class="text-gray-600 mb-8">
           요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
         </p>
-        <a href="./" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
+        <a href="/" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
           홈으로 돌아가기
         </a>
       </div>
@@ -385,19 +412,30 @@ router.addRoute('/404', renderNotFoundPage);
 
 document.addEventListener('DOMContentLoaded', () => {
   router.handleRoute(window.location.pathname);
+  handleMenuActive(window.location.pathname); // 메뉴 활성화 처리
 });
+
+function errorBoundary(error) {
+  // 에러 메시지를 표시하는 부분
+  document.querySelector('#root').innerHTML = `
+    <div>
+      <p>오류 발생!</p>
+      <p>${error.message}</p>
+    </div>
+  `;
+}
 
 // 메뉴 활성화
 const handleMenuActive = (currentPath) => {
   const navLinks = document.querySelectorAll('nav a');
 
   navLinks.forEach((link) => {
-    link.classList.remove('text-blue-600');
+    link.classList.remove('text-blue-600', 'font-bold');
     link.classList.add('text-gray-600');
 
     if (link.getAttribute('href').replace('.', '') === currentPath) {
       link.classList.remove('text-gray-600');
-      link.classList.add('text-blue-600');
+      link.classList.add('text-blue-600', 'font-bold');
     }
   });
 };
@@ -410,4 +448,8 @@ document.addEventListener('click', (e) => {
     router.navigateTo(link.pathname);
     handleMenuActive(link.pathname);
   }
+});
+
+window.addEventListener('error', (e) => {
+  e.preventDefault();
 });

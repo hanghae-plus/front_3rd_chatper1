@@ -68,7 +68,7 @@ export const LoginHeader = () => {
 
     const homeLink = document.createElement("li");
     const homeLinkAnchor = document.createElement("a");
-    homeLinkAnchor.setAttribute("class", "text-blue-600 home");
+    homeLinkAnchor.setAttribute("class", "text-blue-600 font-bold home");
     // homeLinkAnchor.setAttribute("href", "/");
     homeLinkAnchor.textContent = "홈";
     homeLink.appendChild(homeLinkAnchor);

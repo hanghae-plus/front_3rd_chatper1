@@ -11,7 +11,8 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "sourceMap": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "jsxFactory": "h"
   },
   "include": ["src/**/*"],
   "exclude": ["src/__tests__/**", "node_modules"]

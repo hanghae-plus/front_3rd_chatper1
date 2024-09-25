@@ -3,4 +3,6 @@ import './router.js';
 
 const rootElement = document.getElementById('root');
 
-// rootElement.innerHTML = `${LayoutApp()}`;
+if (rootElement !== null) {
+  rootElement.append(LayoutApp());
+}

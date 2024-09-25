@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitest/config';
+import babel from 'vite-plugin-babel';
 
 export default defineConfig({
   test: {
@@ -6,4 +7,10 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/setupTests.js',
   },
+  plugins: [
+    babel({
+      babelHelpers: 'bundled',
+      plugins: [['@babel/plugin-transform-react-jsx', { runtime: 'automatic' }]],
+    }),
+  ],
 });

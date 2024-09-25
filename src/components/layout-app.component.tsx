@@ -1,17 +1,16 @@
+import { h } from '../virtual-dom.js';
 import Header from './header.component.js';
+import nav from './nav.component.jsx';
 import Footer from './footer.component.js';
-import { updateContent } from '../router.js';
 
-function LayoutApp() {
-  updateContent();
-  return `
+export default function LayoutApp() {
+  return (
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
-        ${Header()}
-        ${Footer()}
+        {Header()}
+        {nav()}
+        {Footer()}
       </div>
     </div>
-  `;
+  );
 }
-
-export default LayoutApp;

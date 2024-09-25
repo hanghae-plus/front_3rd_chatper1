@@ -3,9 +3,9 @@ import {Store} from "../utils/store.js";
 import {addGlobalErrorHandler} from "../events/addGlobalErrorHandler.js";
 
 const App = () => {
-    addGlobalErrorHandler()
     new Router()
     new Store()
+    addGlobalErrorHandler()
 }
 
 export default App

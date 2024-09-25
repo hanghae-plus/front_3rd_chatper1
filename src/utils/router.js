@@ -2,6 +2,7 @@ import setLoginOnDocument from "../pages/login/render.js";
 import setProfileOnDocument from "../pages/profile/render.js";
 import setHomeOnDocument from "../pages/home/render.js";
 import setErrorOnDocument from "../pages/error/render.js";
+import setLogOnDocument from "../pages/log/render.js";
 
 export default class Router {
     constructor() {
@@ -13,6 +14,7 @@ export default class Router {
             ['/', () => setHomeOnDocument()],
             ['/login', () => setLoginOnDocument(this)],
             ['/profile', () => setProfileOnDocument(this)],
+            ['/log', () => setLogOnDocument()]
         ]);
 
         this.render(location.pathname);

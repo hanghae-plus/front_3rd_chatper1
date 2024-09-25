@@ -31,6 +31,7 @@ const renderPage = (path) => {
   }
 
   document.querySelector("#root").innerHTML = currentPage;
+  handleTabClick();
 };
 
 const navigate = (path) => {
@@ -44,6 +45,21 @@ const handleLinkClick = (event) => {
     const href = event.target.getAttribute("href");
     navigate(href);
   }
+};
+
+const handleTabClick = () => {
+  const tabs = document.querySelectorAll("a.tab");
+  tabs.forEach((tab) => {
+    tab.classList.remove("text-blue-600");
+    tab.classList.remove("font-bold");
+    tab.classList.add("text-gray-600");
+  });
+  const currentTab = window.location.pathname;
+  const tab = document.querySelector(`a[href="${currentTab}"]`);
+  if (!tab) return;
+  tab.classList.remove("text-gray-600");
+  tab.classList.add("text-blue-600");
+  tab.classList.add("font-bold");
 };
 
 const handleLogin = () => {

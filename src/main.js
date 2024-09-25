@@ -14,8 +14,10 @@ const renderPage = (path) => {
       break;
 
     case "/login":
+      if (localStorage.getItem("user")) {
+        return navigate("/");
+      }
       currentPage = LoginPage();
-      handleLogout();
       break;
 
     case "/profile":
@@ -71,12 +73,17 @@ const handleLogin = () => {
   navigate("/profile");
 };
 
-const handleLogout = () => {
-  localStorage.removeItem("user");
+const handleLogout = (event) => {
+  if (event.target.tagName === "A" && event.target.id === "logout") {
+    event.preventDefault();
+    localStorage.removeItem("user");
+    navigate("/");
+  }
 };
 
 document.addEventListener("click", (event) => {
   handleLinkClick(event);
+  handleLogout(event);
 });
 
 document.addEventListener("submit", (event) => {

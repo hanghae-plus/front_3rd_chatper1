@@ -1,3 +1,3 @@
-import HomePage from './pages/HomePage';
+import Router from './router/Router';
 
-document.querySelector('#root').innerHTML = HomePage();
+Router.init();

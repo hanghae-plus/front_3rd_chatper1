@@ -26,10 +26,13 @@ window.addEventListener('popstate', function(event) {
     //원하는 페이지로 이동
     const page = new (currentRoute.view())();
     document.getElementById('root').innerHTML = page.getHtml();
+    
+    page.addEventListeners(); //페이지별 이벤트 리스너
   } else {
     //해당 주소 페이지 없음
     const errorRoute = routes.find((val) => val.path == "/error");
     const errorPage = new (errorRoute.view())();
     document.getElementById('root').innerHTML = errorPage.getHtml();
+    errorPage.addEventListeners();
   }
 });

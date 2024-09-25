@@ -14,6 +14,7 @@ const renderPage = (path) => {
 
     case "/login":
       currentPage = LoginPage();
+      handleLogout();
       break;
 
     case "/profile":
@@ -44,8 +45,28 @@ const handleLinkClick = (event) => {
   }
 };
 
+const handleLogin = () => {
+  const username = document.querySelector("#username").value;
+  localStorage.setItem(
+    "user",
+    JSON.stringify({ username, email: "", bio: "" })
+  );
+  navigate("/profile");
+};
+
+const handleLogout = () => {
+  localStorage.removeItem("user");
+};
+
 document.addEventListener("click", (event) => {
   handleLinkClick(event);
+});
+
+document.addEventListener("submit", (event) => {
+  if (event.target.id === "login-form") {
+    event.preventDefault();
+    handleLogin();
+  }
 });
 
 window.addEventListener("popstate", () => {

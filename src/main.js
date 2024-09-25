@@ -2,8 +2,7 @@ import Home from './components/Home';
 import Profile, { updateProfile } from './components/Profile';
 import Login, { loginEvent} from './components/Login';
 import Error from './components/Error';
-import  Header from './components/Header';
-import { Nav, logoutEvent } from './components/Nav';
+import { Header, logoutEvent }   from './components/Header';
 import Footer from './components/Footer';
 import { state } from './components/State';
 
@@ -38,14 +37,12 @@ function renderPage(path) {
   const componentInstance = component(); // 이제 component는 함수여야 합니다.
 
   // isOnlyComponent가 true일 경우 헤더와 푸터를 숨김
-  const header = !isOnlyComponent ? Header() : '';
-  const nav = !isOnlyComponent ? Nav(path) : '';
+  const header = !isOnlyComponent ? Header(path) : '';
   const footer = !isOnlyComponent ? Footer() : '';
 
   // 헤더, 네비게이션, 컴포넌트, 푸터 템플릿을 root 요소에 삽입하여 페이지 렌더링
   $root.innerHTML = `
     ${header}  
-    ${nav}
     ${componentInstance} 
     ${footer}
   `;

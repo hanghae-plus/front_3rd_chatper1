@@ -286,22 +286,11 @@ const renderNotFoundPage = () => {
     </main>
   `;
 };
-// 전역 에러 핸들러 추가
-window.onerror = function (message, source, lineno, colno, error) {
-  window.history.pushState({}, "", "/error");
-  isError = true;
-  return true; // 기본 브라우저 에러 메시지 방지
-};
 
-// 에러 바운더리 함수
-const errorBoundary = () => {
-  document.querySelector("#root").innerHTML = `
-  <div class="bg-red-500 text-white p-4 rounded">
-    오류 발생!<br/>
-    의도적인 오류입니다.
-  </div>
-`;
-};
+window.addEventListener("error", () => {
+  window.history.pushState({}, "", "/error");
+  router();
+});
 
 // 라우팅 함수
 const router = () => {
@@ -318,7 +307,7 @@ const router = () => {
       renderProfilePage();
       break;
     case "/error":
-      errorBoundary();
+      () => "<div>오류 발생! <br> 의도적인 오류입니다.</div>";
       break;
     default:
       renderNotFoundPage();

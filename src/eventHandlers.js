@@ -8,21 +8,6 @@ const handleLinkClick = (event) => {
   }
 };
 
-const handleTabClick = () => {
-  const tabs = document.querySelectorAll("a.tab");
-  tabs.forEach((tab) => {
-    tab.classList.remove("text-blue-600");
-    tab.classList.remove("font-bold");
-    tab.classList.add("text-gray-600");
-  });
-  const currentTab = window.location.pathname;
-  const tab = document.querySelector(`a[href="${currentTab}"]`);
-  if (!tab) return;
-  tab.classList.remove("text-gray-600");
-  tab.classList.add("text-blue-600");
-  tab.classList.add("font-bold");
-};
-
 const handleLogin = () => {
   const username = document.querySelector("#username").value;
   if (!username) return alert("아이디를 입력해주세요.");
@@ -41,4 +26,4 @@ const handleLogout = (event) => {
   }
 };
 
-export { handleLinkClick, handleTabClick, handleLogin, handleLogout };
+export { handleLinkClick, handleLogin, handleLogout };

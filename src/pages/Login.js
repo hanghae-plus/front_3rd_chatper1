@@ -2,20 +2,30 @@ import authStore from "../store/authStore.js";
 import UserStorage from "../utils/UserStorage.js";
 
 export default class Login {
-  constructor({ $element, router, header, footer }) {
-    this.$element = $element;
-    this.router = router;
+  constructor({ $element, router }) {
     this.userStorage = new UserStorage();
-    this.render();
+
+    // 로그연 상태라면 홈으로 이동
+    const isLoggedIn = this.userStorage.get("name");
+
+    if (isLoggedIn) {
+      router.navigateTo("/");
+      return;
+    }
+
+    this.$element = $element;
+    this.$element.innerHTML = "";
+    this.router = router;
     this.errorMessage = "";
+    this.render();
     this.handleLogIn();
-    header.hide();
-    footer.hide();
   }
 
   render() {
-    this.$element.innerHTML = `
-    <div class="h-screen flex items-center">
+    const loginContainer = document.createElement("div");
+    loginContainer.classList.add("h-screen", "flex", "items-center");
+    loginContainer.innerHTML = `
+    
       <main class="p-4 w-full max-w-md">
         <div class="bg-white p-8 rounded-lg shadow-md">
           <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
@@ -42,8 +52,10 @@ export default class Login {
           </div>
         </div>
       </main>
-    </div>
+    
         `;
+
+    this.$element.append(loginContainer);
   }
 
   handleLogIn() {

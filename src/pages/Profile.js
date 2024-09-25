@@ -1,24 +1,43 @@
 import UserStorage from "../utils/UserStorage";
+import Header from "../components/layouts/Header";
+import Footer from "../components/layouts/Footer";
 
 export default class Profile {
-  constructor({ $element, router, header, footer }) {
+  constructor({ $element, router }) {
     this.$element = $element;
     this.router = router;
     this.userStorage = new UserStorage();
+    this.$element.innerHTML = "";
+
+    // 로그인 상태가 아니라면 로그인 페이지로 이동
+    const isLoggedIn = this.userStorage.get("name");
+
+    if (!isLoggedIn) {
+      this.router.navigateTo("/login");
+      return;
+    }
+
     this.render();
     this.updateProfile();
-    header.show();
-    footer.show();
   }
 
   render() {
+    const header = new Header({
+      $element: this.$element,
+      router: this.router,
+    });
+
+    const footer = new Footer({
+      $element: this.$element,
+    });
+
     const username = this.userStorage.get("name");
-
     const email = this.userStorage.get("email") || "";
-
     const bio = this.userStorage.get("bio") || "";
 
-    this.$element.innerHTML = `
+    const main = document.createElement("main");
+    main.classList.add("p-4");
+    main.innerHTML = `
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
@@ -40,6 +59,10 @@ export default class Profile {
         </div>
       </main>
     `;
+
+    this.$element.prepend(header.$element.querySelector("#header"));
+    this.$element.append(main);
+    this.$element.append(footer.$element.querySelector("#footer"));
   }
 
   updateProfile() {

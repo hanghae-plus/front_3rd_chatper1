@@ -1,27 +1,17 @@
 import authStore from "../../store/authStore.js";
-import UserPreferences from "../../utils/UserStorage.js";
+import UserStorage from "../../utils/UserStorage.js";
 
 export default class Header {
   constructor({ $element, router }) {
     this.$element = $element;
-    $element.classList.add("sibal");
-    this.isVisible = false;
     this.router = router;
-    this.userPreferences = new UserPreferences();
+    this.userStorage = new UserStorage();
+    // authoSotre의 상태값을 구독하고 상태값이 변경될 때마다 render 메서드를 호출
     authStore.subscribe(() => {
       this.render();
     });
-    authStore.setState({ isLoggedIn: !!this.userPreferences.get("name") });
-  }
-
-  show() {
-    this.isVisible = true;
-    this.render();
-  }
-
-  hide() {
-    this.isVisible = false;
-    this.render();
+    // 초기값 설정
+    authStore.setState({ isLoggedIn: !!this.userStorage.get("name") });
   }
 
   render() {
@@ -31,10 +21,7 @@ export default class Header {
       existingHeader.remove();
     }
 
-    if (!this.isVisible) return;
-
     const isLoggedIn = authStore.getState("isLoggedIn");
-    console.log("isLoggedIn", isLoggedIn);
 
     const headerContainer = document.createElement("div");
     headerContainer.id = "header";
@@ -56,7 +43,7 @@ export default class Header {
       </nav>
     `;
 
-    document.querySelector(".sibal").prepend(headerContainer);
+    document.querySelector("#container").prepend(headerContainer);
 
     this.setEvent();
   }
@@ -69,7 +56,7 @@ export default class Header {
         e.preventDefault();
         this.router.navigateTo(e.target.getAttribute("href"));
       } else if (e.target.id === "logout") {
-        this.userPreferences.reset();
+        this.userStorage.reset();
         this.router.navigateTo("/login");
         authStore.setState({ isLoggedIn: false });
       }

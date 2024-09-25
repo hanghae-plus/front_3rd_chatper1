@@ -1,14 +1,27 @@
+import Header from "../components/layouts/Header";
+import Footer from "../components/layouts/Footer";
+
 export default class Home {
-  constructor({ $element, router, header, footer }) {
+  constructor({ $element, router }) {
     this.$element = $element;
     this.router = router;
+    this.$element.innerHTML = "";
     this.render();
-    header.show();
-    footer.show();
   }
 
   render() {
-    this.$element.innerHTML = `
+    const header = new Header({
+      $element: this.$element,
+      router: this.router,
+    });
+
+    const footer = new Footer({
+      $element: this.$element,
+    });
+
+    const main = document.createElement("main");
+    main.classList.add("p-4");
+    main.innerHTML = `
     <main class="p-4">
       <div class="mb-4 bg-white rounded-lg shadow p-4">
         <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
@@ -97,5 +110,8 @@ export default class Home {
       </div>
     </main>
     `;
+    this.$element.prepend(header.$element.querySelector("#header"));
+    this.$element.append(main);
+    this.$element.append(footer.$element.querySelector("#footer"));
   }
 }

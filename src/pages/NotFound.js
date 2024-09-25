@@ -1,17 +1,14 @@
 export default class NotFound {
-  constructor({ $element, header, footer }) {
+  constructor({ $element }) {
     this.$element = $element;
+    this.$element.innerHTML = "";
     this.render();
-    header.hide();
-    footer.hide();
   }
 
   render() {
-    this.$element.innerHTML = this.template();
-  }
-
-  template() {
-    return `
+    const main = document.createElement("main");
+    main.classList.add("p-4");
+    main.innerHTML = `
     <div class="h-screen flex items-center">
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md w-full text-center" style="max-width: 480px">
@@ -28,5 +25,7 @@ export default class NotFound {
       </main>
     </div>
         `;
+
+    this.$element.append(main);
   }
 }

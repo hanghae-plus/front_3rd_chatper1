@@ -37,6 +37,7 @@ function Router() {
   function renderPage(path) {
     const page = createPage(path);
     RootElement.innerHTML = "";
+    console.log(RootElement);
     RootElement.appendChild(RootLayout(page.render()));
   }
 

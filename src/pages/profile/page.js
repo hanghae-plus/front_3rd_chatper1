@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import { appendChild, createElement } from "@/utils";
 import { getUser } from "@/store/userStore";
-import { useNavigate } from "../../router";
+import { setUser } from "../../store/userStore";
 
 export default function ProfilePage() {
   const ProfilePage = createElement({
@@ -16,7 +16,18 @@ export default function ProfilePage() {
   });
 
   const ProfileForm = createElement({ tagName: "form" });
-  const { username = "", bio = "", email = "" } = getUser() || {};
+  const {
+    username = "",
+    bio = "",
+    email = "",
+  } = JSON.parse(localStorage.getItem("user")) || {};
+
+  const ProfileFormBtn = createElement({
+    tagName: "button",
+    className: "w-full bg-blue-600 text-white p-2 rounded font-bold",
+    textContent: "프로필 업데이트",
+    setAttribute: { type: "submit" },
+  });
   Array(3)
     .fill(0)
     .forEach((_, idx) => {
@@ -37,10 +48,10 @@ export default function ProfilePage() {
         textContent: ProfileFormLabelText,
         setAttribute: { for: ProfileFormLabelFor },
       });
-      console.log(idx === 0 ? username : idx === 1 ? email : bio);
       const ProfileFormInput = createElement({
         tagName: idx === 2 ? "textarea" : "input",
         className: "w-full p-2 border rounded",
+        textContent: idx === 2 ? bio : undefined,
         setAttribute: {
           id: ProfileFormLabelFor,
           name: ProfileFormLabelFor,
@@ -53,19 +64,24 @@ export default function ProfilePage() {
         children: [ProfileFormLabel, ProfileFormInput],
       });
 
-      appendChild({ parent: ProfileForm, children: [ProfileFormContainer] });
+      appendChild({
+        parent: ProfileForm,
+        children: [ProfileFormContainer, ProfileFormBtn],
+      });
     });
 
-  const ProfileFormBtn = createElement({
-    tagName: "button",
-    className: "w-full bg-blue-600 text-white p-2 rounded font-bold",
-    textContent: "프로필 업데이트",
-    setAttribute: { type: "submit" },
+  ProfileForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const [username, email, bio] = e.target;
+    const _username = username.value;
+    const _email = email.value;
+    const _bio = bio.value;
+    setUser({ username: _username, email: _email, bio: _bio });
   });
 
   appendChild({
     parent: ProfilePage,
-    children: [ProfileTitle, ProfileForm, ProfileFormBtn],
+    children: [ProfileTitle, ProfileForm],
   });
 
   return Layout(ProfilePage);

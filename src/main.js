@@ -1,5 +1,5 @@
 import { Router } from './router.js';
-import { Error } from '/src/component/error.js';
+import { Error } from '/src/component/Error.js';
 import { useUserStore } from '/src/store/useUserStore.js';
 import { homePage } from '/src/views/contents/homePage.js';
 import { loginPage } from '/src/views/contents/loginPage.js';

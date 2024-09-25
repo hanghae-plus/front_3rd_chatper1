@@ -98,7 +98,7 @@ document.addEventListener("submit", (event) => {
     const email = document.querySelector("#email").value;
     const bio = document.querySelector("#bio").value;
     localStorage.setItem("user", JSON.stringify({ username, email, bio }));
-    navigate("/profile");
+    alert("프로필이 업데이트되었습니다.");
   }
 });
 

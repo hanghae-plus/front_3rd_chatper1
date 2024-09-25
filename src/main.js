@@ -1,5 +1,7 @@
   // 변수선언
-  const IS_LOGIN = JSON.parse(sessionStorage.getItem('user'));
+  const isUserLoggedIn = () => !!localStorage.getItem('user');
+  // 전역 변수로 이벤트 리스너 참조를 저장(렌더 후 이벤트 바인딩)
+  let globalClickListener = null;
 
   /*
   * 컴포넌트 START
@@ -15,26 +17,23 @@
         <li>
           <a
             id="goMainBtn" 
-            href="javascript:void(0)"
-            data-link=""
+            href="/"
             class="text-blue-600"
           >홈</a>
         </li>
         <li>
           <a 
             id="goProfileBtn"
-            href="javascript:void(0)"
-            data-link="profile"
+            href="/profile"
             class="text-gray-600"
           >프로필</a>
         </li>
         <li>
           <a 
-            id="${IS_LOGIN ? 'goLogOutBtn' : 'goLogInBtn'}" 
-            href="javascript:void(0)" 
-            data-link="${IS_LOGIN ? '' : 'login'}"
+            id="${isUserLoggedIn() ? 'logout' : 'goLogInBtn'}" 
+            href="${isUserLoggedIn() ? '/' : '/login'}"
             class="text-gray-600">
-            ${IS_LOGIN ? '로그아웃' : '로그인'}
+            ${isUserLoggedIn() ? '로그아웃' : '로그인'}
             </a>
         </li>
       </ul>
@@ -221,7 +220,12 @@
                   <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
                   <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">안녕하세요, 항해플러스에서 열심히 공부하고 있는 홍길동입니다.</textarea>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
+                <button 
+                  id="updateProfileBtn"
+                  type="submit" 
+                  class="w-full bg-blue-600 text-white p-2 rounded font-bold"
+                >
+                프로필 업데이트</button>
               </form>
             </div>
           </main>
@@ -246,8 +250,7 @@
           </p>
           <a
             id="goMainBtn"
-            data-link=""
-            href="javascript:void(0)" 
+            href="/" 
             class="bg-blue-600 text-white px-4 py-2 rounded font-bold"
           >
             홈으로 돌아가기
@@ -258,68 +261,143 @@
     )
   }
 
+  /*
+  * 초기 설정 및 이벤트 리스너
+  */
+  // 뒤로가기 시 설정
+  window.addEventListener('popstate', handleLocation);
+  window.addEventListener('DOMContentLoaded', () => {
+    handleLocation();
+  });
+
 
   /*
   * 라우트 정의 START
   */
   const routes = {
-    '/': { title: 'Main', render: Main() },
-    '/login': { title: 'Login', render: Login()},
-    '/profile': { title: 'Profile', render: Profile()},
-    '/404': { title: '404', render: Error() },
+    '/': { title: 'Main', render: Main(), hasHeader: true },
+    '/login': { title: 'Login', render: Login(), hasHeader: false},
+    '/profile': { title: 'Profile', render: Profile(), hasHeader: true},
+    '/404': { title: '404', render: Error(), hasHeader: false },
   };
-  
-  // 라우트 렌더링 함수
-  function renderContent(route) {
-    const root = document.getElementById('root');
-    root.innerHTML = route.render;
-    document.title = route.title;
-
-    // 렌더링 후 이벤트 리스너 설정(동적으로 DOM이 생성되므로 이벤트위임)
-    document.body.addEventListener('click', function(e) {
-      e.stopPropagation(); // 이벤트버블링 막기
-
-      if(e.target.dataset.link !== undefined) {
-        navigate(e);
-      } else if(e.target.id === 'goLogOutBtn'){
-        // 로그아웃 처리 로직
-        sessionStorage.removeItem('user');
-        navigate(e);
-  
-      } else if(e.target.id === 'logInSubmitBtn') {
-        loginSubmit(e);
-      }
-    });
-  }
-  
+    
   // 라우트 변경 처리 함수
   function handleLocation() {
     const path = window.location.pathname;
-    console.log(path, IS_LOGIN, '----')
-    // 로그인이 되지 않은 상태에서 profile 경로로 접근하면 로그인 페이지로 리다이렉트 된다.
-    const route = routes[path] || routes['/404']; // 존재하지 않은 경로로 접근하면 404 페이지가 렌더링됨
+    
+    let route = routes[path] || routes['/404']; // 존재하지 않은 경로로 접근하면 404 페이지가 렌더링됨
 
+    if(!isUserLoggedIn() && path === '/profile') {//url로 비로그인일 때 프로필 페이지 접근 시 
+      route = routes['/login']
+      navigate('/login'); // URL을 login으로 변경하며 handleLocation 호출
+      return;
+    } 
     renderContent(route);
   }
-  
+
+
+  // 라우트 렌더링 함수
+  function renderContent(route) {
+    const root = document.getElementById('root');
+
+    root.innerHTML = route.render;
+    document.title = route.title;
+
+
+    if(route.title === 'Profile') {
+      setuUserInfo()
+    }
+
+    // 기존 이벤트 리스너 제거
+    if (globalClickListener) {
+      document.removeEventListener('click', globalClickListener);
+    }
+
+    // 렌더링 후 이벤트 리스너 설정(동적으로 DOM이 생성되므로 이벤트위임)
+    // 새로운 이벤트 리스너 생성 및 추가
+    globalClickListener = function(e) {
+      if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+
+        e.preventDefault()
+        e.stopPropagation(); // 이벤트버블링 막기
+
+        switch(e.target.id) {
+          case 'logout': 
+            goLogOut(e);
+            break;
+        
+          case 'logInSubmitBtn':
+            loginSubmit(e);
+            break;
+          case 'updateProfileBtn':
+            updateProfile(e);
+            break
+          case 'goLogInBtn':
+          case 'goProfileBtn':
+          case 'goMainBtn':
+            navigate(e.target.getAttribute('href'));
+            break;
+          default:
+        }
+      } 
+    }
+
+    document.addEventListener('click', globalClickListener);
+    
+  }
+
 
   // 네비게이션 함수
-  function navigate(event) {
-    event.preventDefault();
-    event.stopPropagation(); // 이벤트버블링 막기
-    const href = event.target.dataset.link === '' ? '/' : event.target.dataset.link;
-    window.history.pushState({}, '', href);
+  function navigate(path) {
+    
+    if(path === '/profile' && !isUserLoggedIn()){
+      path = '/login'
+    }
+    window.history.pushState({}, '', path);
     handleLocation();
   }
+
+
+  /*
+  * 로그인/로그아웃 관련 로직
+  */
+ function loginSubmit(e) {
+  e.preventDefault();
+  const username = document.getElementById('username').value
+  localStorage.setItem('user', JSON.stringify({"username":username, "email":"", "bio":""}))
+  navigate('/profile');
+ }
+
+ function goLogOut(e) {
+  e.preventDefault();
+  localStorage.removeItem('user')
+  renderContent(routes['/login']); 
+  navigate('/login');
+ }
+
+/*
+* 프로필페이지 관련 로직
+*/
+// 프로필 페이지 로그인한 사용자의 이름과 소개 초기 주입
+function setuUserInfo() {
+  const userInfo = JSON.parse(localStorage.getItem('user'))
+  const username = userInfo.username
+  const email = userInfo.email
+  const bio = userInfo.bio
+
+  document.getElementById('username').value = username
+  document.getElementById('email').value = email
+  document.getElementById('bio').value = bio
+}
+
+// 프로필 업데이트
+function updateProfile(e) {
+  const username = document.getElementById('username').value
+  const email = document.getElementById('email').value
+  const bio = document.getElementById('bio').value
   
-  // 초기 설정 및 이벤트 리스너
-  window.addEventListener('popstate', handleLocation);
-  window.addEventListener('DOMContentLoaded', () => {
-    document.body.addEventListener('click', e => {
-      if (e.target.matches('[data-link]')) {
-        navigate(e);
-      }
-    });
-    handleLocation();
-  });
+  localStorage.setItem('user', JSON.stringify({username, email, bio}))
+
+  alert('프로필이 업데이트 되었습니다.')
+}
 

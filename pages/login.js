@@ -1,5 +1,6 @@
 import Component from '../src/component/component.js';
 import router from '../src/router.js';
+import UserStore from '../src/store/userStore.js';
 
 const TEST_USER_NAME = 'testuser';
 
@@ -9,6 +10,8 @@ export default class LoginPage extends Component {
     password: ''
   };
 
+  #userStore = null;
+
   #handleEvents = {
     handleSubmitBound: null,
     handleInputBound: null
@@ -16,6 +19,8 @@ export default class LoginPage extends Component {
 
   constructor() {
     super();
+
+    this.#userStore = new UserStore();
 
     this.#handleEvents.handleSubmitBound = this.#handleSubmit.bind(this);
     this.#handleEvents.handleInputBound = this.#handleInput.bind(this);
@@ -36,7 +41,9 @@ export default class LoginPage extends Component {
     }
 
     if (this.#state.username === TEST_USER_NAME) {
-      localStorage.setItem('user', JSON.stringify({ 'username': `${id}`, 'email': '', 'bio': '' }));
+      const user = { username: `${id}`, email: '', bio: '' };
+      localStorage.setItem('user', JSON.stringify(user));
+      this.#userStore.updateUser(user);
       router.navigateTo('/');
     } else {
       alert('아이디 또는 비밀번호가 일치하지 않습니다');

@@ -70,21 +70,11 @@ const loginEvent = () => {
       setState({ user: user },'/profile'); 
     });
 
-    //username 1 입력 시 에러 체크 부분
-    const usernameInput = document.getElementById("username");
-    if (usernameInput) {
-      usernameInput.addEventListener('input', () => {
-        try {
-          // 에러 발생 조건 확인
-          if (usernameInput.value === '1') {
-            render(document.getElementById('root'), true); // 에러 메시지를 포함한 로그인 컴포넌트 렌더링
-            throw new Error('의도적인 오류입니다.');
-          }
-        } catch (error) {
-          console.error(error.message);
-        }
-      }, { once: true }); 
-    }
+    //에러 발생 시 처리 추가
+    window.addEventListener("error", () => {
+      render(document.getElementById('root'), true); // 에러 메시지를 포함한 로그인 컴포넌트 렌더링
+    });
+
   }
 };
 

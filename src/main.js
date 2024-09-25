@@ -2,6 +2,7 @@ import LoginPage from "./pages/Login.js";
 import MainPage from "./pages/Main.js";
 import ProfilePage from "./pages/Profile.js";
 import ErrorPage from "./pages/Error.js";
+import Layout from "./layout/Layout.js";
 
 const renderPage = (path) => {
   const currentRoute = path || window.location.pathname;
@@ -9,7 +10,7 @@ const renderPage = (path) => {
 
   switch (currentRoute) {
     case "/":
-      currentPage = MainPage();
+      currentPage = Layout(MainPage());
       break;
 
     case "/login":
@@ -21,7 +22,7 @@ const renderPage = (path) => {
       if (!localStorage.getItem("user")) {
         currentPage = LoginPage();
       } else {
-        currentPage = ProfilePage();
+        currentPage = Layout(ProfilePage());
       }
       break;
 

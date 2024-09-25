@@ -37,7 +37,7 @@ class Router {
     }
 
     let page;
-    
+
     if (localStorage.getItem('user') === null && path === '/profile') {
       history.pushState({}, '', '/login');
       page = this.#routes['/login'];
@@ -51,7 +51,6 @@ class Router {
     }
 
     page.render();
-    page.mount();
     this.#lastPage = page;
   }
 

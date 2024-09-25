@@ -11,6 +11,7 @@ export default class Component {
 
   render() {
     document.getElementById('root').innerHTML = this.template();
+    this.mount();
   }
 
   mount() {

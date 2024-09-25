@@ -1,4 +1,6 @@
 const Profile = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   return /* HTML */ ` <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
       <header class="bg-blue-600 text-white p-4 sticky top-0">
@@ -31,7 +33,7 @@ const Profile = () => {
                 type="text"
                 id="username"
                 name="username"
-                value="홍길동"
+                value=${(user != null && user?.username) || ""}
                 class="w-full p-2 border rounded"
               />
             </div>
@@ -45,7 +47,7 @@ const Profile = () => {
                 type="email"
                 id="email"
                 name="email"
-                value="hong@example.com"
+                value=${(user != null && user?.email) || ""}
                 class="w-full p-2 border rounded"
               />
             </div>
@@ -61,7 +63,7 @@ const Profile = () => {
                 rows="4"
                 class="w-full p-2 border rounded"
               >
-안녕하세요, 항해플러스에서 열심히 공부하고 있는 홍길동입니다.</textarea
+                {value=${(user != null && user?.bio) || ""}}</textarea
               >
             </div>
             <button

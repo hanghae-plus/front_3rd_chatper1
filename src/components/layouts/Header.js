@@ -1,5 +1,5 @@
-import authStore from "../../store/authStore.js";
-import UserStorage from "../../utils/UserStorage.js";
+import authStore from '../../store/authStore.js';
+import UserStorage from '../../utils/UserStorage.js';
 
 export default class Header {
   constructor({ $element, router }) {
@@ -11,20 +11,20 @@ export default class Header {
       this.render();
     });
     // 초기값 설정
-    authStore.setState({ isLoggedIn: !!this.userStorage.get("name") });
+    authStore.setState({ isLoggedIn: !!this.userStorage.get('name') });
   }
 
   render() {
-    const existingHeader = document.querySelector("#header");
+    const existingHeader = document.querySelector('#header');
 
     if (existingHeader) {
       existingHeader.remove();
     }
 
-    const isLoggedIn = authStore.getState("isLoggedIn");
+    const isLoggedIn = authStore.getState('isLoggedIn');
 
-    const headerContainer = document.createElement("div");
-    headerContainer.id = "header";
+    const headerContainer = document.createElement('div');
+    headerContainer.id = 'header';
 
     headerContainer.innerHTML = ` 
       <header class="bg-blue-600 text-white p-4 sticky top-0">
@@ -33,7 +33,11 @@ export default class Header {
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
           <li><a href="/" class="text-blue-600">홈</a></li>
-          <li><a href="/profile" class="text-gray-600">프로필</a></li>
+          ${
+            isLoggedIn
+              ? `<li><a href="/profile" class="text-gray-600">프로필</a></li>`
+              : ''
+          }
           ${
             isLoggedIn
               ? `<button id="logout">로그아웃</button>`
@@ -43,21 +47,21 @@ export default class Header {
       </nav>
     `;
 
-    document.querySelector("#container").prepend(headerContainer);
+    document.querySelector('#container').prepend(headerContainer);
 
     this.setEvent();
   }
 
   setEvent() {
-    const nav = this.$element.querySelector("nav");
+    const nav = this.$element.querySelector('nav');
 
-    nav.addEventListener("click", (e) => {
-      if (e.target.tagName === "A") {
+    nav.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
         e.preventDefault();
-        this.router.navigateTo(e.target.getAttribute("href"));
-      } else if (e.target.id === "logout") {
+        this.router.navigateTo(e.target.getAttribute('href'));
+      } else if (e.target.id === 'logout') {
         this.userStorage.reset();
-        this.router.navigateTo("/login");
+        this.router.navigateTo('/login');
         authStore.setState({ isLoggedIn: false });
       }
     });

@@ -1,5 +1,5 @@
 export const Home = () => {
-  const getHTML = async () => {
+  const getHTML = () => {
     const main = document.createElement("main");
     main.setAttribute("class", "p-4");
 

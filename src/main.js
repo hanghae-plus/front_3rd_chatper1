@@ -159,7 +159,7 @@ function HomePage() {
   </div>
 `;
 
-addEventListener();
+// addEventListener();
 
 }
 
@@ -195,7 +195,7 @@ function LoginPage() {
   </main>
 `;
 
-addEventListener();
+// addEventListener();
 
 }
 
@@ -236,7 +236,7 @@ function ProfilePage() {
     </div>
   `;
 
-  addEventListener();
+  // addEventListener();
 
 }
 
@@ -258,7 +258,7 @@ function NotFoundPage() {
   </main>
   `;
   
-  addEventListener();
+  // addEventListener();
 }
 
 //라우터 함수
@@ -270,31 +270,31 @@ function router() {
 
 //네비게이션 이벤트 처리
 function handleNavigation(e) {
-  if (e.target.matches('a')) {
-    e.preventDefault();
-    const href = e.target.getAttribute('href');
-    history.pushState(null, '', href);
-    router();
-  }
+  e.preventDefault();
+  const href = e.target.getAttribute('href');
+  history.pushState(null, '', href);
+  router();
 }
 
 //이벤트 리스너 추가 함수 
 function addEventListener(){
-  const loginForm = document.getElementById('login-form');
-  if(loginForm) {
-    loginForm.addEventListener('submit',handleLogin);
-  }
+  document.body.addEventListener('click', (e) => {
+    if (e.target.matches('nav a')) {
+      handleNavigation(e);
+    }
+    if (e.target.id === 'logout') {
+      handleLogout(e);
+    }
+  });
 
-  const logoutBtn = document.getElementById('logout');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', handleLogout);
-  }
-
-  const profileForm = document.getElementById('profile-form');
-  if(profileForm) {
-    profileForm.addEventListener('submit',handleProfile);
-  }
-
+  document.body.addEventListener('submit', (e) => {
+    if (e.target.id === 'login-form') {
+      handleLogin(e);
+    }
+    if (e.target.id === 'profile-form') {
+      handleProfile(e);
+    }
+  });
 }
 
 // 로그인 폼 제출 처리 함수
@@ -326,8 +326,9 @@ function handleProfile(e){
 
 //초기화 함수
 function init() {
-  document.body.addEventListener('click', handleNavigation);
   window.addEventListener('popstate', router);
+
+  addEventListener();
   router();
 }
 

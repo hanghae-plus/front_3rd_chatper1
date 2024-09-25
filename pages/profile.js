@@ -31,8 +31,7 @@ export default class ProfilePage extends Component {
     const bio = document.getElementById('bio').value;
 
     const user = { username, email, bio };
-    localStorage.setItem('user', JSON.stringify(user));
-    this.#userStore.updateUser(user);
+    this.#userStore.updateUser(user, this);
 
     alert('프로필이 업데이트 되었습니다.');
   }
@@ -45,13 +44,13 @@ export default class ProfilePage extends Component {
     router.router();
   }
 
-  render() {
+  template() {
     const user = this.#userStore.getUser();
-    
+
     return html`
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
-          ${this.#children.header.render()}
+          ${this.#children.header.template()}
           <main class="p-4">
             <div class="bg-white p-8 rounded-lg shadow-md">
               <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
@@ -109,7 +108,7 @@ export default class ProfilePage extends Component {
             </div>
           </main>
 
-          ${this.#children.footer.render()}
+          ${this.#children.footer.template()}
         </div>
       </div>`;
   }

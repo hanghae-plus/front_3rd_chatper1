@@ -1,14 +1,51 @@
 import Router from '@routers'
 import { UserStore } from '@stores'
-import { ROUTES } from '@constants'
+import { ROUTES, MESSAGE, PAGE_TITLE } from '@constants'
 
 const userStore = UserStore()
 
 export default function LoginPage() {
-  document.getElementById('root').innerHTML = `
+  function handleSaveUser(username) {
+    const payload = { username, email: '', bio: '' }
+    userStore.setState('user', payload)
+    userStore.setState('isLogin', true)
+  }
+
+  function handleLogin(e) {
+    e.preventDefault()
+    const username = e.target.querySelector('#username').value
+    if (!username) {
+      alert(MESSAGE.LOGIN_REQUIRED_FIELD)
+      return
+    }
+    handleSaveUser(username)
+    Router.navigate(ROUTES.PROFILE)
+  }
+
+  function displayError(message) {
+    let errorDiv = document.getElementById('error-message')
+    if (!errorDiv) {
+      errorDiv = document.createElement('div')
+      errorDiv.id = 'error-message'
+      document.getElementById('error-message-wrap').appendChild(errorDiv)
+    }
+    errorDiv.textContent = `${MESSAGE.ERROR} ${message}`
+  }
+
+  function handleErrorCatch(e) {
+    try {
+      if (e.target.value === '1') {
+        throw new Error(MESSAGE.INTENTIONAL_ERROR)
+      }
+    } catch (error) {
+      displayError(error.message)
+    }
+  }
+
+  const template = `
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
+        <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">${PAGE_TITLE}</h1>
         <form id="login-form">
           <div class="mb-4">
             <input type="text" id="username" placeholder="사용자 이름" class="w-full p-2 border rounded">
@@ -30,46 +67,20 @@ export default function LoginPage() {
     </main>
   `
 
-  const loginForm = document.getElementById('login-form')
-
-  function handleSaveUser(username) {
-    const payload = { username, email: '', bio: '' }
-    userStore.setState('user', payload)
-    userStore.setState('isLogin', true)
+  function render() {
+    document.getElementById('root').innerHTML = template
+    const loginForm = document.getElementById('login-form')
+    const username = document.getElementById('username')
+    loginForm.addEventListener('submit', handleLogin)
+    username.addEventListener('input', handleErrorCatch, { once: true })
   }
 
-  loginForm?.addEventListener('submit', (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const username = e.target.querySelector('#username').value
-    if (!username) {
-      alert('이름과 비밀번호를 입력해주세요')
-      return
-    }
-    handleSaveUser(username)
-    Router.navigate(ROUTES.PROFILE)
-  })
-
-  const username = document.getElementById('username')
-  function displayError(message) {
-    let errorDiv = document.getElementById('error-message')
-    if (!errorDiv) {
-      errorDiv = document.createElement('div')
-      errorDiv.id = 'error-message'
-      document.getElementById('error-message-wrap').appendChild(errorDiv)
-    }
-    errorDiv.textContent = `오류 발생! ${message}`
+  function cleanup() {
+    const loginForm = document.getElementById('login-form')
+    const username = document.getElementById('username')
+    loginForm.removeEventListener('submit', handleLogin)
+    username.removeEventListener('input', handleErrorCatch)
   }
 
-  username.addEventListener(
-    'input',
-    () => {
-      try {
-        throw new Error('의도적인 오류입니다.')
-      } catch (error) {
-        displayError(error.message)
-      }
-    },
-    { once: true }
-  )
+  return { render, cleanup }
 }

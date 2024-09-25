@@ -52,6 +52,31 @@ function renderRoute() {
     });
   }
 
+  const profileForm = document.getElementById('profile-form');
+  if (profileForm) {
+    const userInfo = getUserInfoStorage('user');
+
+    const parsedUser = JSON.parse(userInfo);
+
+    document.getElementById('username').value = parsedUser.username;
+    document.getElementById('email').value = parsedUser.email;
+    document.getElementById('bio').value = parsedUser.bio;
+
+    profileForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const usernameInput = document.getElementById('username');
+      const emailInput = document.getElementById('email');
+      const bioInput = document.getElementById('bio');
+
+      const userInfo = {
+        username: usernameInput.value,
+        email: emailInput.value,
+        bio: bioInput.value,
+      };
+      setUserInfoStorage('user', userInfo);
+      alert('프로필이 수정되었습니다.');
+    });
+  }
 
 }
 

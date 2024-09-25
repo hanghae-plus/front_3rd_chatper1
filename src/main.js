@@ -39,7 +39,7 @@ function renderPage(path) {
 
   // isOnlyComponent가 true일 경우 헤더와 푸터를 숨김
   const header = !isOnlyComponent ? Header() : '';
-  const nav = !isOnlyComponent ? Nav(path, renderPage) : '';
+  const nav = !isOnlyComponent ? Nav(path) : '';
   const footer = !isOnlyComponent ? Footer() : '';
 
   // 헤더, 네비게이션, 컴포넌트, 푸터 템플릿을 root 요소에 삽입하여 페이지 렌더링

@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>항해플러스 - 홈</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div id="root">
+import footerTemplate from "./footerTemplate";
+import headerTemplate from "./headerTemplate";
+
+export default function mainTemplate(isUserLoggedIn) {
+  return `
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
-          <div id="header-placeholder"></div>
+          <div id="header">
+            ${headerTemplate(isUserLoggedIn)}
+          </div>
           <main class="p-4">
             <div class="mb-4 bg-white rounded-lg shadow p-4">
               <textarea
@@ -125,11 +122,8 @@
             </div>
           </main>
 
-          <footer class="bg-gray-200 p-4 text-center">
-            <p>&copy; 2024 항해플러스. All rights reserved.</p>
-          </footer>
+          ${footerTemplate()}
         </div>
       </div>
-    </div>
-  </body>
-</html>
+    `;
+}

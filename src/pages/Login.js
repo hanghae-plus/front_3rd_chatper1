@@ -51,6 +51,7 @@ class Login {
 
         //프로필 페이지로 이동
         renderPage('/profile');
+        history.pushState(null, '', '/profile'); // URL 변경
       } catch (error) {
         throw new Error('error: ', `${error.message}`);
       }

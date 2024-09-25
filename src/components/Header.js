@@ -22,7 +22,7 @@ class Header {
                       <li><a href="/" class="navItem ${homeClass}">홈</a></li>
                       ${
                         user
-                          ? `<li><a href="/profile" class="navItem ${profileClass}">프로필</a></li>`
+                          ? `<li><a href="/profile" class="navItem ${profileClass}" id="profile">프로필</a></li>`
                           : ''
                       }
                       ${
@@ -40,7 +40,6 @@ class Header {
   registerEvents(renderPage) {
     const logoutBtn = document.getElementById('logout');
     const loginBtn = document.getElementById('login');
-    const user = localStorage.getItem('user');
 
     // 화면에 로그아웃 버튼이 있는 경우(로그인 상태)
     if (logoutBtn) {
@@ -48,17 +47,6 @@ class Header {
         event.preventDefault();
         localStorage.removeItem('user');
         renderPage('/login');
-      });
-    }
-
-    if (loginBtn) {
-      loginBtn.addEventListener('click', (event) => {
-        event.preventDefault();
-        if (user) {
-          renderPage('/');
-        } else {
-          renderPage('/login');
-        }
       });
     }
   }

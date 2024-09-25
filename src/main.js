@@ -1,4 +1,119 @@
-document.querySelector('#root').innerHTML = `
+const getMainPage = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user) {
+    document.querySelector('#root').innerHTML = `
+<div class="bg-gray-100 min-h-screen flex justify-center">
+    <div class="max-w-md w-full">
+      <header class="bg-blue-600 text-white p-4 sticky top-0">
+        <h1 class="text-2xl font-bold">항해플러스</h1>
+      </header>
+
+      <nav class="bg-white shadow-md p-2 sticky top-14">
+        <ul class="flex justify-around">
+          <li><a href="/" class="text-blue-600">홈</a></li>
+          <li><a href="/profile" class="text-gray-600">프로필</a></li>
+          <li><a id="logout" href="/logout" class="text-gray-600">로그아웃</a></li>
+        </ul>
+      </nav>
+
+      <main class="p-4">
+        <div class="mb-4 bg-white rounded-lg shadow p-4">
+          <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
+          <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
+        </div>
+
+        <div class="space-y-4">
+
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">홍길동</p>
+                <p class="text-sm text-gray-500">5분 전</p>
+              </div>
+            </div>
+            <p>오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">김철수</p>
+                <p class="text-sm text-gray-500">15분 전</p>
+              </div>
+            </div>
+            <p>새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">이영희</p>
+                <p class="text-sm text-gray-500">30분 전</p>
+              </div>
+            </div>
+            <p>오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">박민수</p>
+                <p class="text-sm text-gray-500">1시간 전</p>
+              </div>
+            </div>
+            <p>주말에 등산 가실 분 계신가요? 함께 가요!</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">정수연</p>
+                <p class="text-sm text-gray-500">2시간 전</p>
+              </div>
+            </div>
+            <p>새로 나온 영화 재미있대요. 같이 보러 갈 사람?</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="bg-gray-200 p-4 text-center">
+        <p>&copy; 2024 항해플러스. All rights reserved.</p>
+      </footer>
+    </div>
+  </div>
+`;
+  } else {
+    document.querySelector('#root').innerHTML = `
 <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
       <header class="bg-blue-600 text-white p-4 sticky top-0">
@@ -108,55 +223,70 @@ document.querySelector('#root').innerHTML = `
     </div>
   </div>
 `;
-class Router {
-  constructor() {
-    this.routes = {};
-    window.addEventListener('popstate', this.handlePopState.bind(this));
+  }
+};
+
+function createRouter() {
+  const routes = {};
+
+  function addRoute(path, handler) {
+    routes[path] = handler;
   }
 
-  addRoute(path, handler) {
-    this.routes[path] = handler;
-  }
-
-  navigateTo(path) {
+  function navigateTo(path) {
     history.pushState(null, '', path);
-    this.handleRoute(path);
+    handleRoute(path);
   }
 
-  handlePopState() {
-    this.handleRoute(window.location.pathname);
+  function handlePopState() {
+    handleRoute(window.location.pathname);
   }
 
-  handleRoute(path) {
-    const handler = this.routes[path];
+  function handleRoute(path) {
+    const handler = routes[path];
     if (handler) {
       handler();
     } else {
-      console.log('404 Not Found');
+      getErrorPage();
     }
   }
+
+  window.addEventListener('popstate', handlePopState);
+
+  return {
+    addRoute,
+    navigateTo,
+  };
 }
+
+const logout = () => {
+  localStorage.removeItem('user');
+  router.navigateTo('/login');
+};
 const getProfilePage = () => {
-  console.log('Profile Page');
+  let user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    history.replaceState(null, null, '/');
+    return;
+  }
+
   document.querySelector('#root').innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
       <header class="bg-blue-600 text-white p-4 sticky top-0">
         <h1 class="text-2xl font-bold">항해플러스</h1>
       </header>
-
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
           <li><a href="/" class="text-gray-600">홈</a></li>
           <li><a href="/profile" class="text-blue-600">프로필</a></li>
-          <li><a href="/login" class="text-gray-600">로그아웃</a></li>
+          <li><a href="/logout" id="logout" class="text-gray-600">로그아웃</a></li>
         </ul>
       </nav>
-
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-          <form>
+          <form id="profile-form">
             <div class="mb-4">
               <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
               <input type="text" id="username" name="username" value="" class="w-full p-2 border rounded">
@@ -173,42 +303,71 @@ const getProfilePage = () => {
           </form>
         </div>
       </main>
-
       <footer class="bg-gray-200 p-4 text-center">
         <p>&copy; 2024 항해플러스. All rights reserved.</p>
       </footer>
     </div>
   </div>`;
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (user.id) {
-    document.querySelector('input[id="username"]').value = user.id;
+  user = JSON.parse(localStorage.getItem('user'));
+  if (user.username) {
+    document.querySelector('input[id="username"]').value = user.username;
+  }
+  if (user.email) {
+    document.querySelector('input[id="email"]').value = user.email;
+  }
+  if (user.bio) {
+    document.querySelector('textArea[id="bio"]').value = user.bio;
   }
 
-  const updateButton = document.querySelector('button[type="submit"]');
-  const update = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    let email = document.querySelector('input[name="email"]').value;
-    let bio = document.querySelector('textarea[name="bio"]').value;
-
-    localStorage.setItem('user', JSON.stringify({ ...user, email, bio }));
-  };
-  updateButton.addEventListener('click', (e) => {
+  const logoutButton = document.querySelector('a[id="logout"]');
+  logoutButton.addEventListener('click', (e) => {
     e.preventDefault();
-    update();
+    logout();
+  });
+
+  const profileForm = document.getElementById('profile-form'); // form 요소를 가져옵니다.
+
+  const update = (username, email = '', bio = '') => {
+    const updatedUser = {
+      username: document.getElementById('username').value,
+      email: document.getElementById('email').value,
+      bio: document.getElementById('bio').value,
+    };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    alert('프로필이 업데이트되었습니다.');
+  };
+
+  profileForm.addEventListener('submit', (e) => {
+    // form의 submit 이벤트를 사용합니다.
+    e.preventDefault();
+    console.log('update!');
+    const updatedUser = {
+      username: document.getElementById('username').value,
+      email: document.getElementById('email').value,
+      bio: document.getElementById('bio').value,
+    };
+    if (!updatedUser.username) {
+      alert('사용자 이름을 입력해주세요.');
+      return;
+    }
+
+    // 여기서 username과 함께 기본값을 사용하여 login 함수를 호출합니다.
+    update(updatedUser);
   });
 };
+
 const getLoginPage = () => {
   console.log('Login Page');
   document.querySelector('#root').innerHTML = `
   <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form>
+        <form id="login-form">
           <div class="mb-4">
-            <input type="text" name="id" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+            <input type="text" name="username" id="username" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
           </div>
           <div class="mb-6">
-            <input type="password" name="password" placeholder="비밀번호" class="w-full p-2 border rounded">
+            <input type="password" name="password" id="password" placeholder="비밀번호" class="w-full p-2 border rounded">
           </div>
           <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
         </form>
@@ -222,28 +381,36 @@ const getLoginPage = () => {
       </div>
     </main>`;
 
-  const loginButton = document.querySelector('button[type="submit"]');
-  const login = () => {
-    let id = document.querySelector('input[name="id"]').value;
-    let password = document.querySelector('input[name="password"]').value;
-    localStorage.setItem('user', JSON.stringify({ id, password }));
-    if (JSON.parse(localStorage.getItem('user'))) {
-      //profile이동
-      router.navigateTo('/profile');
-      getProfilePage();
-    }
-    //데이터가 없으면 저장 있으면 바로 /profile로
-  };
-  const logout = () => {
-    localStorage.removeItem('user');
+  const loginForm = document.getElementById('login-form'); // form 요소를 가져옵니다.
+
+  const login = (username, email = '', bio = '') => {
+    let userInfo = {
+      username,
+      email,
+      bio,
+    };
+
+    localStorage.setItem('user', JSON.stringify(userInfo)); // user 정보를 localStorage에 저장합니다.
+    router.navigateTo('/profile'); // 로그인 후 프로필 페이지로 이동합니다.
   };
 
-  loginButton.addEventListener('click', (e) => {
+  loginForm.addEventListener('submit', (e) => {
+    // form의 submit 이벤트를 사용합니다.
     e.preventDefault();
     console.log('login!');
-    login();
+    let username = document
+      .querySelector('input[name="username"]')
+      .value.trim();
+    if (!username) {
+      alert('사용자 이름을 입력해주세요.');
+      return;
+    }
+
+    // 여기서 username과 함께 기본값을 사용하여 login 함수를 호출합니다.
+    login(username);
   });
 };
+
 const getErrorPage = () => {
   console.log('Error Page');
   document.querySelector('#root').innerHTML = `
@@ -255,15 +422,17 @@ const getErrorPage = () => {
         <p class="text-gray-600 mb-8">
           요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
         </p>
-        <a href="./main.html" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
+        <a href="/" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
           홈으로 돌아가기
         </a>
       </div>
     </main>`;
 };
-const router = new Router();
-router.addRoute('/', () => console.log('Main Page'));
+getMainPage();
+const router = createRouter();
+router.addRoute('/', getMainPage);
 router.addRoute('/login', getLoginPage);
+// router.addRoute('/logout', logout);
 router.addRoute('/profile', getProfilePage);
 router.addRoute('/404', getErrorPage);
 
@@ -272,4 +441,8 @@ document.querySelector('nav').addEventListener('click', (e) => {
     e.preventDefault();
     router.navigateTo(e.target.pathname);
   }
+});
+
+window.addEventListener('load', () => {
+  router.navigateTo(window.location.pathname);
 });

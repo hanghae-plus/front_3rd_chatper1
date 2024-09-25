@@ -1,5 +1,5 @@
 import { UserStore } from '@stores'
-import { ROUTES, NAVIGATiON } from '@constants'
+import { ROUTES, NAVIGATION } from '@constants'
 
 const userStore = UserStore()
 
@@ -12,27 +12,27 @@ export default function navigation() {
 
   const navList = [
     {
-      name: NAVIGATiON.HOME.KOR,
+      name: NAVIGATION.HOME.KOR,
       link: ROUTES.HOME,
-      id: NAVIGATiON.HOME.ENG,
+      id: NAVIGATION.HOME.ENG,
       condition: () => true,
     },
     {
-      name: NAVIGATiON.PROFILE.KOR,
+      name: NAVIGATION.PROFILE.KOR,
       link: ROUTES.PROFILE,
-      id: NAVIGATiON.PROFILE.ENG,
+      id: NAVIGATION.PROFILE.ENG,
       condition: () => isLogin,
     },
     {
-      name: NAVIGATiON.LOGIN.KOR,
+      name: NAVIGATION.LOGIN.KOR,
       link: ROUTES.LOGIN,
-      id: NAVIGATiON.LOGIN.ENG,
+      id: NAVIGATION.LOGIN.ENG,
       condition: () => !isLogin,
     },
     {
-      name: NAVIGATiON.LOGOUT.KOR,
+      name: NAVIGATION.LOGOUT.KOR,
       link: ROUTES.LOGIN,
-      id: NAVIGATiON.LOGOUT.ENG,
+      id: NAVIGATION.LOGOUT.ENG,
       condition: () => isLogin,
     },
   ]

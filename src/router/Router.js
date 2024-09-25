@@ -12,9 +12,11 @@ const Router = (function () {
 	}
 
 	function loadRoute(path) {
-		const { component } = routes[path];
-		document.querySelector('#root').outerHTML = component();
+		const { render } = routes[path];
+		render();
 	}
+
+	function navigateTo() {}
 
 	return {
 		addRoute,
@@ -26,7 +28,10 @@ const Router = (function () {
 
 routes.map((route) => {
 	Router.addRoute(route.path, {
-		component: route.component,
+		render: () => {
+			const $app = document.getElementById('app');
+			new route.component($app);
+		},
 		title: route.title,
 	});
 });

@@ -1,4 +1,4 @@
-import { HomePage, LoginPage } from '../pages';
+import { HomePage, LoginPage, ProfilePage, NotFoundPage } from '../pages';
 
 const routes = [
 	{
@@ -10,6 +10,16 @@ const routes = [
 		path: '/',
 		title: '홈',
 		component: HomePage,
+	},
+	{
+		path: '/profile',
+		title: '프로필',
+		component: ProfilePage,
+	},
+	{
+		path: '*',
+		title: '404',
+		component: NotFoundPage,
 	},
 ];
 

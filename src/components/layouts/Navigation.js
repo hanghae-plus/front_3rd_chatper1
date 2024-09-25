@@ -1,5 +1,5 @@
 import { UserStore } from '@stores'
-import { ROUTES } from '@constants'
+import { ROUTES, NAVIGATiON } from '@constants'
 
 const userStore = UserStore()
 
@@ -12,27 +12,27 @@ export default function navigation() {
 
   const navList = [
     {
-      name: '홈',
+      name: NAVIGATiON.HOME.KOR,
       link: ROUTES.HOME,
-      id: 'home',
+      id: NAVIGATiON.HOME.ENG,
       condition: () => true,
     },
     {
-      name: '프로필',
+      name: NAVIGATiON.PROFILE.KOR,
       link: ROUTES.PROFILE,
-      id: 'profile',
+      id: NAVIGATiON.PROFILE.ENG,
       condition: () => isLogin,
     },
     {
-      name: '로그인',
+      name: NAVIGATiON.LOGIN.KOR,
       link: ROUTES.LOGIN,
-      id: 'login',
+      id: NAVIGATiON.LOGIN.ENG,
       condition: () => !isLogin,
     },
     {
-      name: '로그아웃',
+      name: NAVIGATiON.LOGOUT.KOR,
       link: ROUTES.LOGIN,
-      id: 'logout',
+      id: NAVIGATiON.LOGOUT.ENG,
       condition: () => isLogin,
     },
   ]
@@ -40,7 +40,7 @@ export default function navigation() {
   return `<nav class="bg-white shadow-md p-2 sticky top-14">
     <ul class="flex justify-around">
       ${navList
-        .filter((item) => item.condition()) // 조건을 만족하는 항목만 필터링
+        .filter((item) => item.condition())
         .map(
           (item) => `<li>
               <a id="${item.id}" href="${item.link}" class="${isActive(item.link)}">${item.name}</a>

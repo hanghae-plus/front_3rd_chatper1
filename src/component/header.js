@@ -1,6 +1,7 @@
 import Component from './component.js';
 import router from '../router.js';
 import { html } from 'code-tag';
+import UserStore from '../store/userStore.js';
 
 export default class Header extends Component {
   #handleEvents = {
@@ -24,6 +25,7 @@ export default class Header extends Component {
 
   #logout() {
     localStorage.removeItem('user');
+    new UserStore().clear();
     router.router();
   }
 

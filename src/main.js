@@ -3,8 +3,8 @@ import MainPage from "./pages/Main.js";
 import ProfilePage from "./pages/Profile.js";
 import ErrorPage from "./pages/Error.js";
 
-const renderPage = () => {
-  const currentRoute = window.location.pathname;
+const renderPage = (path) => {
+  const currentRoute = path || window.location.pathname;
   let currentPage;
 
   switch (currentRoute) {
@@ -30,6 +30,23 @@ const renderPage = () => {
 
   document.querySelector("#root").innerHTML = currentPage;
 };
+
+const navigate = (path) => {
+  window.history.pushState({}, "", path);
+  renderPage(path);
+};
+
+const handleLinkClick = (event) => {
+  if (event.target.tagName === "A" && event.target.href) {
+    event.preventDefault();
+    const href = event.target.getAttribute("href");
+    navigate(href);
+  }
+};
+
+document.addEventListener("click", (event) => {
+  handleLinkClick(event);
+});
 
 window.addEventListener("popstate", () => {
   renderPage();

@@ -30,19 +30,26 @@ const LoginPage = () => {
 LoginPage.listeners = {
   handleSubmitLogin() {
     const loginForm = document.getElementById('login-form');
-    const username = document.getElementById('username');
 
-    if (!loginForm || !username) return;
+    if (!loginForm) return;
 
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      const username = document.getElementById('username');
 
-      const user = {
-        username: username.value,
-        email: '',
-        bio: '',
-      };
-      localSetItem({ key: 'user', value: user });
+      if (!username.value.trim()) {
+        alert('이메일 혹은 전화번호를 입력하세요.');
+        return;
+      }
+
+      localSetItem({
+        key: 'user',
+        value: {
+          username: username.value,
+          email: '',
+          bio: '',
+        },
+      });
 
       router.push('/profile');
     });

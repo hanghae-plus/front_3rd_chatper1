@@ -27,12 +27,13 @@ class Profile {
   }
 
   bindEvents(renderHTML) {
-    //로그인 안되어있을 시 로그인 페이지로 이동
+    // 로그인 여부 확인
     if (!user.isLoggedIn()) {
-      history.pushState(null, null, '/login')
+      // 로그인되지 않은 경우 즉시 로그인 페이지로 이동
+      history.pushState(null, null, '/login');
       renderHTML('/login');
+      return; // 로그인 페이지로 이동 후 나머지 코드 실행 방지
     }
-
 
     const profileForm = document.querySelector("#profile-form");
 

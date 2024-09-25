@@ -47,7 +47,7 @@ const navigateTo = (url) => {
   renderHTML(url);  // 해당 URL에 맞는 페이지 로드
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   const initialPath = window.location.pathname;
   renderHTML(initialPath);
 

@@ -38,6 +38,7 @@ describe('기본과제 테스트', () => {
       expect(document.body.innerHTML).toContain('로그인');
     });
 
+
     it('로그인이 되지 않은 상태에서 "/profile" 경로로 접근하면, 로그인 페이지로 리다이렉션 된다.', () => {
       // 로그인 상태 시뮬레이션
       goTo('/profile');
@@ -59,13 +60,9 @@ describe('기본과제 테스트', () => {
 
       await user.type(document.getElementById('username'), 'testuser');
 
-      loginForm.dispatchEvent(
-        new SubmitEvent('submit', { bubbles: true, cancelable: true })
-      );
+      loginForm.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
 
-      expect(localStorage.getItem('user')).toEqual(
-        `{"name":"testuser","email":"","bio":""}`
-      );
+      expect(localStorage.getItem('user')).toEqual(`{"username":"testuser","email":"","bio":""}`);
 
       const logoutButton = document.getElementById('logout');
       logoutButton.click();
@@ -82,9 +79,7 @@ describe('기본과제 테스트', () => {
 
       await user.type(document.getElementById('username'), 'testuser');
 
-      loginForm.dispatchEvent(
-        new SubmitEvent('submit', { bubbles: true, cancelable: true })
-      );
+      loginForm.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
 
       goTo('/profile');
     });
@@ -104,17 +99,14 @@ describe('기본과제 테스트', () => {
       const bioInput = document.getElementById('bio');
 
       bioInput.value = 'Updated bio';
-      profileForm.dispatchEvent(
-        new SubmitEvent('submit', { bubbles: true, cancelable: true })
-      );
+      profileForm.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
 
-      expect(localStorage.getItem('user')).toEqual(
-        `{"name":"testuser","email":"","bio":"Updated bio","username":"testuser"}`
-      );
+      expect(localStorage.getItem('user')).toEqual(`{"username":"testuser","email":"","bio":"Updated bio"}`);
     });
   });
 
   describe('4. 컴포넌트 기반 구조 설계', () => {
+
     beforeEach(async () => {
       goTo('/login');
 
@@ -122,9 +114,7 @@ describe('기본과제 테스트', () => {
 
       await user.type(document.getElementById('username'), 'testuser');
 
-      loginForm.dispatchEvent(
-        new SubmitEvent('submit', { bubbles: true, cancelable: true })
-      );
+      loginForm.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
 
       window.history.pushState({}, '', '/profile');
       window.dispatchEvent(new Event('popstate'));
@@ -168,9 +158,8 @@ describe('기본과제 테스트', () => {
 
       await user.type(document.getElementById('username'), 'testuser');
 
-      loginForm.dispatchEvent(
-        new SubmitEvent('submit', { bubbles: true, cancelable: true })
-      );
+      loginForm.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+
 
       // 로그인 상태
       expect(document.body.innerHTML).toContain('로그아웃');

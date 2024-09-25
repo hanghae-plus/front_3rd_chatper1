@@ -19,10 +19,6 @@ export const Login = () => {
     `;
 };
 
-export const loginInit = () => {
-  localStorage.removeItem("user");
-};
-
 export const loginEvent = () => {
   document.getElementById("login-form").addEventListener("submit", (e) => {
     e.preventDefault();

@@ -1,7 +1,7 @@
 import Footer from "./components/Footer";
-import Header from "./components/Header";
+import Header, { logout } from "./components/Header";
 import { Home } from "./page/HomePage";
-import { Login, loginEvent, loginInit } from "./page/LoginPage";
+import { Login, loginEvent } from "./page/LoginPage";
 import NotFound, { routingHome } from "./page/NotFoundPage";
 import { Profile, profileUpdate } from "./page/ProfilePage";
 
@@ -27,10 +27,10 @@ export function router() {
 function renderHome() {
   const root = document.getElementById("root");
   root.innerHTML = `${Header()}${Home()}${Footer()}`;
+  logout();
 }
 
 function renderLogin() {
-  // loginInit();
   document.getElementById("root").innerHTML = Login();
   loginEvent();
 }
@@ -41,6 +41,7 @@ function renderProfile() {
   document.getElementById("root").innerHTML += Footer();
 
   profileUpdate();
+  logout();
 }
 
 function renderNotFound() {

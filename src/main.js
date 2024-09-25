@@ -22,3 +22,15 @@ router.addRoute("/404", NotFoundPage); // Not Found
 router.init(); // 초기 화면 렌더링 및 이벤트 핸들러 실행
 
 export const navigateTo = router.navigateTo;
+
+// 3. 에러 바운더리
+window.addEventListener("error", (e) => {
+  const $root = document.querySelector("#root");
+  if ($root) {
+    $root.innerHTML = `
+        <div style="background-color: #ffe6e6; color: #ff4d4d; padding: 12px; text-align: center;">
+          <strong>오류 발생!</strong> <span>${e.message}</span>
+        </div>
+      `;
+  }
+});

@@ -1,4 +1,4 @@
-const Main = () => {
+const Home = () => {
   return /* HTML */ `
     <main class="p-4">
       <div class="mb-4 bg-white rounded-lg shadow p-4">
@@ -116,4 +116,4 @@ const Main = () => {
   `;
 };
 
-export default Main;
+export default Home;

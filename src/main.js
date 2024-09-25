@@ -1,7 +1,7 @@
 import LoginPage from "./pages/Login.js";
-import MainPage from "./pages/Main.js";
+import HomePage from "./pages/Home.js";
 import ProfilePage from "./pages/Profile.js";
-import ErrorPage from "./pages/Error.js";
+import NotFoundPage from "./pages/NotFound.js";
 import Layout from "./layout/Layout.js";
 
 const renderPage = (path) => {
@@ -10,7 +10,7 @@ const renderPage = (path) => {
 
   switch (currentRoute) {
     case "/":
-      currentPage = Layout(MainPage());
+      currentPage = Layout(HomePage());
       break;
 
     case "/login":
@@ -27,7 +27,7 @@ const renderPage = (path) => {
       break;
 
     default:
-      currentPage = ErrorPage();
+      currentPage = NotFoundPage();
   }
 
   document.querySelector("#root").innerHTML = currentPage;

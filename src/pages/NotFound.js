@@ -1,4 +1,4 @@
-const ErrorPage = () => {
+const NotFound = () => {
   return /* HTML */ `<main
     class="bg-gray-100 flex items-center justify-center min-h-screen"
   >
@@ -19,4 +19,4 @@ const ErrorPage = () => {
   </main> `;
 };
 
-export default ErrorPage;
+export default NotFound;

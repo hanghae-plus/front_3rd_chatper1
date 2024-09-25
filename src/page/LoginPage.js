@@ -20,20 +20,21 @@ export const Login = () => {
 };
 
 export const loginInit = () => {
-  localStorage.removeItem("username");
-  localStorage.removeItem("email");
-  localStorage.removeItem("introduction");
+  localStorage.removeItem("user");
 };
 
 export const loginEvent = () => {
   document.getElementById("login-form").addEventListener("submit", (e) => {
     e.preventDefault();
     const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
 
-    if (username === "" || password === "")
-      return alert("모든 정보를 입력해주세요.");
-    localStorage.setItem("username", username);
+    if (username === "") return alert("정보를 입력해주세요.");
+    const user = {
+      username,
+      email: "",
+      bio: "",
+    };
+    localStorage.setItem("user", JSON.stringify(user));
     history.pushState({}, "", "/profile");
     router();
   });

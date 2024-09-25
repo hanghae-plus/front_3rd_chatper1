@@ -1,23 +1,21 @@
 import Component from '../../core/Component';
+import Header from './Header';
+import Footer from './Footer';
+import Nav from './Nav';
 import { logout } from '../helpers';
 import { navigateTo } from '../router';
 
 class MainPage extends Component {
   template() {
+    // TODO: ProfilePage처럼 state에서 getUser()로 데이터를 주입받고, 프로필, 로그아웃
+    // 엘리먼트를 전환하는 것은 간단
+    // 이때, 전역 상태를 이용해야 하나?
     return `
 			<div class="bg-gray-100 min-h-screen flex justify-center">
 				<div class="max-w-md w-full">
-					<header class="bg-blue-600 text-white p-4 sticky top-0">
-						<h1 class="text-2xl font-bold">항해플러스</h1>
-					</header>
-		
-					<nav class="bg-white shadow-md p-2 sticky top-14">
-						<ul class="flex justify-around">
-							<li><a href="/" class="link text-blue-600">홈</a></li>
-							<li><a href="/profile" class="link text-gray-600">프로필</a></li>
-							<li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
-						</ul>
-					</nav>
+					<header id="header"></header>
+
+					<nav id="nav"></nav>
 		
 					<main class="p-4">
 						<div class="mb-4 bg-white rounded-lg shadow p-4">
@@ -109,12 +107,16 @@ class MainPage extends Component {
 						</div>
 					</main>
 		
-					<footer class="bg-gray-200 p-4 text-center">
-						<p>&copy; 2024 항해플러스. All rights reserved.</p>
-					</footer>
+					<footer id="footer"></footer>
 				</div>
 			</div>
 		`;
+  }
+
+  mounted() {
+    this.footer = new Footer(this.$target.querySelector('#footer'));
+    this.header = new Header(this.$target.querySelector('#header'));
+    this.nav = new Nav(this.$target.querySelector('#nav'));
   }
 
   initEvent() {

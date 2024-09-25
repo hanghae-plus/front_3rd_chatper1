@@ -13,7 +13,7 @@ export default class Component {
   // state를 설정하는 생명주기
   setup() {}
 
-  // mounted() {}
+  mounted() {}
 
   template() {
     return '';
@@ -21,7 +21,7 @@ export default class Component {
 
   render() {
     this.$target.innerHTML = this.template();
-    // this.mounted();
+    this.mounted();
   }
 
   initEvent() {}

@@ -1,7 +1,9 @@
 export default class NotFound {
-  constructor({ $element }) {
+  constructor({ $element, header, footer }) {
     this.$element = $element;
     this.render();
+    header.hide();
+    footer.hide();
   }
 
   render() {
@@ -10,6 +12,7 @@ export default class NotFound {
 
   template() {
     return `
+    <div class="h-screen flex items-center">
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md w-full text-center" style="max-width: 480px">
             <h1 class="text-2xl font-bold text-blue-600 mb-4">항해플러스</h1>
@@ -23,6 +26,7 @@ export default class NotFound {
             </a>
         </div>
       </main>
+    </div>
         `;
   }
 }

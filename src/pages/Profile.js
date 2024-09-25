@@ -1,24 +1,22 @@
-import UserPreferences from "../utils/UserPreferences.js";
+import UserStorage from "../utils/UserStorage";
 
 export default class Profile {
-  constructor({ $element, router }) {
+  constructor({ $element, router, header, footer }) {
     this.$element = $element;
     this.router = router;
-    this.userPreferences = new UserPreferences();
+    this.userStorage = new UserStorage();
     this.render();
     this.updateProfile();
+    header.show();
+    footer.show();
   }
 
   render() {
-    const username =
-      this.userPreferences.get("username") || this.userPreferences.get("name");
-    if (!username) {
-      this.router.navigateTo("/login");
-      return;
-    }
-    const email = this.userPreferences.get("email") || "";
+    const username = this.userStorage.get("name");
 
-    const bio = this.userPreferences.get("bio") || "";
+    const email = this.userStorage.get("email") || "";
+
+    const bio = this.userStorage.get("bio") || "";
 
     this.$element.innerHTML = `
       <main class="p-4">
@@ -53,9 +51,9 @@ export default class Profile {
       const email = this.$element.querySelector("#email").value;
       const bio = this.$element.querySelector("#bio").value;
 
-      this.userPreferences.set("name", name);
-      this.userPreferences.set("email", email);
-      this.userPreferences.set("bio", bio);
+      this.userStorage.set("name", name);
+      this.userStorage.set("email", email);
+      this.userStorage.set("bio", bio);
       alert("프로필이 업데이트 되었습니다.");
     });
   }

@@ -1,7 +1,4 @@
-import Footer from './components/layouts/Footer.js';
-import Header from './components/layouts/Header.js';
-import routes from './routes';
-import Router from './router/Router.js';
+import routes from "./routes";
 
 export default class App {
   constructor($element) {
@@ -20,21 +17,7 @@ export default class App {
   }
 
   setTemplate() {
-    const router = new Router();
-
-    const header = new Header({
-      $element: this.$element.querySelector('#container'),
-      router: router,
-    });
-    const footer = new Footer({
-      $element: this.$element.querySelector('#container'),
-      router: router,
-    });
-    this.router = routes(
-      this.$element.querySelector('#container'),
-      header,
-      footer
-    );
+    this.router = routes(this.$element.querySelector("#container"));
     // this.header = new Header({
     //   $element: this.$element.querySelector('header'),
     //   router: this.router,
@@ -46,4 +29,4 @@ export default class App {
   }
 }
 
-new App(document.querySelector('#root'));
+new App(document.querySelector("#root"));

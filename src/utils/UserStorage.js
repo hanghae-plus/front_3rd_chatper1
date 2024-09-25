@@ -1,4 +1,4 @@
-export default class UserPreferences {
+export default class UserStorage {
   constructor() {
     this.preferences = JSON.parse(localStorage.getItem("user")) || {};
   }

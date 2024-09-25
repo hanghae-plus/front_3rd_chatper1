@@ -1,7 +1,10 @@
+import authStore from "../store/authStore.js";
+
 export default class Router {
   constructor() {
     this.routes = {};
-    window.addEventListener('popstate', this.handlePopState.bind(this));
+
+    window.addEventListener("popstate", this.handlePopState.bind(this));
   }
 
   addRoute(path, handler) {
@@ -9,7 +12,20 @@ export default class Router {
   }
 
   navigateTo(path) {
-    history.pushState(null, '', path);
+    const isLoggedIn = authStore.getState("isLoggedIn");
+    if (path === "/profile") {
+      if (!isLoggedIn) {
+        this.navigateTo("/login");
+        return;
+      }
+    } else if (path === "/login") {
+      if (isLoggedIn) {
+        this.navigateTo("/");
+        return;
+      }
+    }
+
+    history.pushState(null, "", path);
     this.handleRoute(path);
   }
 
@@ -19,14 +35,11 @@ export default class Router {
 
   handleRoute(path) {
     const handler = this.routes[path];
-    console.log('handler', handler);
+
     if (handler) {
       handler();
     } else {
-      console.log('404 Not Found');
+      this.routes["*"]();
     }
-    // else {
-    //   this.routes['*']();
-    // }
   }
 }

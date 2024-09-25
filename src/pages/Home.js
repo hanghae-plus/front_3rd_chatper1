@@ -1,8 +1,10 @@
 export default class Home {
-  constructor({ $element, router }) {
+  constructor({ $element, router, header, footer }) {
     this.$element = $element;
     this.router = router;
     this.render();
+    header.show();
+    footer.show();
   }
 
   render() {

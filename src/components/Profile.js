@@ -27,12 +27,17 @@ class Profile {
     `
   }
 
-  bindEvents() {
+  bindEvents(renderHTML) {
+    //로그인 안되어있을 시 로그인 페이지로 이동
+    if (!user.isLoggedIn()) {
+      history.pushState(null, null, '/login')
+      renderHTML('/login');
+    }
     const profileForm = document.querySelector("#profile-form");
 
-    document.querySelector("#username").value = user.getUser().username;
-    document.querySelector("#email").value = user.getUser().email;
-    document.querySelector("#bio").value = user.getUser().bio;
+    document.querySelector("#username").value = user !== null ? user.getUser().username : "";
+    document.querySelector("#email").value = user !== null ? user.getUser().email : "";
+    document.querySelector("#bio").value = user !== null ? user.getUser().bio : "";
 
     profileForm.addEventListener("submit", (e) => {
       e.preventDefault();

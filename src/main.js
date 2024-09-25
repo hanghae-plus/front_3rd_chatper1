@@ -10,7 +10,7 @@ const root = document.querySelector("#root");
 
 const routes = {
   "/": {component: Home.template(), isOnlyComponent: false},
-  "/profile": {component: Profile.template(), isOnlyComponent: false},
+  "/profile": {component: Profile.template(), isOnlyComponent: false, requiresLogin: true},
   "/login": {component: Login.template(), isOnlyComponent: true},
   "/error": {component: ErrorPage.template(), isOnlyComponent: true},
 }
@@ -35,7 +35,7 @@ const renderHTML = (path) => {
   }
 
   if (path === '/profile') {
-    Profile.bindEvents();
+    Profile.bindEvents(renderHTML);
   }
 
   Header.bindEvents(renderHTML);
@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })
 });
-
 
 // 브라우저의 뒤로/앞으로 가기 버튼 동작 처리
 window.addEventListener('popstate', () => {

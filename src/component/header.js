@@ -7,15 +7,21 @@ export default class Header extends Component {
   #handleEvents = {
     handleHomeClickBound: null,
     handleProfileClickBound: null,
-    handlerLogoutClickBound: null
+    handleLoginClickBound: null,
+    handleLogoutClickBound: null
   };
+
+  #userStore = null;
 
   constructor() {
     super();
 
+    this.#userStore = new UserStore();
+
     this.#handleEvents.handleHomeClickBound = this.#handleHomeClick.bind(this);
     this.#handleEvents.handleProfileClickBound = this.#handleProfileClick.bind(this);
-    this.#handleEvents.handlerLogoutClickBound = this.#handleLogoutClick.bind(this);
+    this.#handleEvents.handleLoginClickBound = this.#handleLoginClick.bind(this);
+    this.#handleEvents.handleLogoutClickBound = this.#handleLogoutClick.bind(this);
   }
 
   #navigate(path) {
@@ -25,7 +31,7 @@ export default class Header extends Component {
 
   #logout() {
     localStorage.removeItem('user');
-    new UserStore().clear();
+    this.#userStore.clear();
     router.router();
   }
 
@@ -39,12 +45,19 @@ export default class Header extends Component {
     this.#navigate('/profile');
   }
 
+  #handleLoginClick(e) {
+    e.preventDefault();
+    this.#navigate('/login');
+  }
+
   #handleLogoutClick(e) {
     e.preventDefault();
     this.#logout();
   }
 
   render() {
+    const user = this.#userStore.getUser();
+
     return html`
       <header class="bg-blue-600 text-white p-4 sticky top-0">
         <h1 class="text-2xl font-bold">항해플러스</h1>
@@ -52,12 +65,15 @@ export default class Header extends Component {
 
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
-          <li><a class="${router.path() === '/' ? 'text-blue-600' : 'text-gray-600'}" href="#"
-                 id="home">홈</a>
+          <li id="home"><a class="${router.path() === '/' ? 'text-blue-600 font-bold' : 'text-gray-600'}" href="#">홈</a>
           </li>
-          <li><a class="${router.path() === '/profile' ? 'text-blue-600' : 'text-gray-600'}" href="#"
-                 id="profile">프로필</a></li>
-          <li><a class="text-gray-600" href="#" id="logout">로그아웃</a></li>
+          <li id="profile"><a class="${router.path() === '/profile' ? 'text-blue-600 font-bold' : 'text-gray-600'}"
+                              href="#">프로필</a>
+          </li>
+          ${user?.username ? html`
+              <li id="logout"><a class="text-gray-600" href="#">로그아웃</a></li>` :
+            html`
+              <li id="login"><a class="text-gray-600" href="/login">로그인</a></li>`}
         </ul>
       </nav>
     `;
@@ -66,11 +82,13 @@ export default class Header extends Component {
   #addEventListeners() {
     const home = document.getElementById('home');
     const profile = document.getElementById('profile');
+    const login = document.getElementById('login');
     const logout = document.getElementById('logout');
 
     home.addEventListener('click', this.#handleEvents.handleHomeClickBound);
     profile.addEventListener('click', this.#handleEvents.handleProfileClickBound);
-    logout.addEventListener('click', this.#handleEvents.handlerLogoutClickBound);
+    login?.addEventListener('click', this.#handleEvents.handleLoginClickBound);
+    logout?.addEventListener('click', this.#handleEvents.handleLogoutClickBound);
   }
 
   mount() {
@@ -80,11 +98,13 @@ export default class Header extends Component {
   #removeEventListeners() {
     const home = document.getElementById('home');
     const profile = document.getElementById('profile');
+    const login = document.getElementById('login');
     const logout = document.getElementById('logout');
 
     home.removeEventListener('click', this.#handleEvents.handleHomeClickBound);
     profile.removeEventListener('click', this.#handleEvents.handleProfileClickBound);
-    logout.removeEventListener('click', this.#handleEvents.handlerLogoutClickBound);
+    login?.removeEventListener('click', this.#handleEvents.handleLogoutClickBound);
+    logout?.removeEventListener('click', this.#handleEvents.handleLogoutClickBound);
   }
 
   unmount() {

@@ -1,10 +1,4 @@
 import { renderPage } from "./router.js";
-import {
-  handleLinkClick,
-  handleLogout,
-  handleLogin,
-  handleUpdateProfile,
-} from "./eventHandlers.js";
 import { navigate } from "./router.js";
 import { user as userStore } from "./store/user.js";
 

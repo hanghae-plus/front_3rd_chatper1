@@ -1,29 +1,29 @@
-import UserInfo from "../UserInfo";
+import userStore from "../store/userStore";
 import { BIO, EMAIL, USERNAME } from "../constants";
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import BasePage from "../base/BasePage";
+import AbstractComponent from "../abstract/AbstractComponent";
 
-export default class ProfilePage extends BasePage {
-  constructor({ props, onClickUpdateProfile, onUpdateProfile, onLogout }) {
-    super({ props, onClickUpdateProfile, onUpdateProfile, onLogout });
+export default class ProfilePage extends AbstractComponent {
+  constructor($root) {
+    super($root);
   }
 
-  init() {
-    this.header = new Header({
-      props: this.props,
-      onLogout: this.onLogout,
-    });
-    this.footer = new Footer();
+  mount() {
+    const $header = document.getElementById("header");
+    new Header($header);
+
+    const $footer = document.getElementById("footer");
+    new Footer($footer);
   }
 
   template() {
     return `
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
-        ${this.header.template()}
-
+          <div id='header'></div>
+          
           <main class="p-4">
             <div class="bg-white p-8 rounded-lg shadow-md">
               <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
@@ -44,8 +44,8 @@ export default class ProfilePage extends BasePage {
               </form>
             </div>
           </main>
-
-          ${this.footer.template()}
+          
+          <footer id='footer'></footer>
         </div>
       </div>
     `;
@@ -56,9 +56,9 @@ export default class ProfilePage extends BasePage {
     const $emailInput = document.getElementById("email");
     const $bioInput = document.getElementById("bio");
 
-    $usernameInput.value = this.props.username;
-    $emailInput.value = this.props.email;
-    $bioInput.value = this.props.bio;
+    $usernameInput.value = userStore.getState().username;
+    $emailInput.value = userStore.getState().email;
+    $bioInput.value = userStore.getState().bio;
 
     // 업데이트 시
     const $profileForm = document.getElementById("profile-form");
@@ -70,32 +70,13 @@ export default class ProfilePage extends BasePage {
       const $emailInput = document.getElementById(EMAIL);
       const $bioInput = document.getElementById(BIO);
 
-      const userInfo = new UserInfo();
-
-      userInfo.set(USERNAME, $usernameInput.value);
-      userInfo.set(EMAIL, $emailInput.value);
-      userInfo.set(BIO, $bioInput.value);
-
-      this.onUpdateProfile({
-        username: userInfo.get(USERNAME),
-        email: userInfo.get(EMAIL),
-        bio: userInfo.get(BIO),
+      userStore.setState({
+        [USERNAME]: $usernameInput.value,
+        [EMAIL]: $emailInput.value,
+        [BIO]: $bioInput.value,
       });
 
       alert("프로필이 업데이트 되었습니다.");
     });
-  }
-
-  update(newState) {
-    super.update(newState);
-
-    this.header.update(newState);
-  }
-
-  render() {
-    super.render();
-
-    this.header.render();
-    this.footer.render();
   }
 }

@@ -1,4 +1,4 @@
-import BaseComponent from "../base/BaseComponent";
+import AbstractComponent from "../abstract/AbstractComponent";
 
 const transAgo = (minute) => {
   if (minute < 60) {
@@ -14,9 +14,9 @@ const transAgo = (minute) => {
   }
 };
 
-export default class ThinkCard extends BaseComponent {
-  constructor({ props }) {
-    super({ props });
+export default class ThinkCard extends AbstractComponent {
+  constructor(elementId, ...args) {
+    super(elementId, ...args);
   }
 
   template() {

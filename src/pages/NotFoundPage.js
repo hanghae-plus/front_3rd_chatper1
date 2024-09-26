@@ -1,11 +1,11 @@
 import router from "../router";
 import { HOME_PAGE } from "../constants";
 
-import BasePage from "../base/BasePage";
+import AbstractComponent from "../abstract/AbstractComponent";
 
-export default class NotFoundPage extends BasePage {
-  constructor() {
-    super();
+export default class NotFoundPage extends AbstractComponent {
+  constructor($root) {
+    super($root);
   }
 
   template() {

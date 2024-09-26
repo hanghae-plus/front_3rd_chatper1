@@ -1,14 +1,12 @@
 import router from "../router";
-import UserInfo from "../UserInfo";
 import { PROFILE_PAGE, USERNAME } from "../constants";
 
-import BasePage from "../base/BasePage";
+import userStore from "../store/userStore";
+import AbstractComponent from "../abstract/AbstractComponent";
 
-export default class LoginPage extends BasePage {
-  constructor({ props, onSubmit }) {
-    super({ props });
-
-    this.onSubmit = onSubmit;
+export default class LoginPage extends AbstractComponent {
+  constructor($root) {
+    super($root);
   }
 
   template() {
@@ -45,10 +43,7 @@ export default class LoginPage extends BasePage {
     $loginForm.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const userInfo = new UserInfo();
-
-      userInfo.set(USERNAME, $usernameInput.value);
-      this.onSubmit({ username: $usernameInput.value });
+      userStore.setState({ [USERNAME]: $usernameInput.value });
 
       router.push(PROFILE_PAGE);
     });

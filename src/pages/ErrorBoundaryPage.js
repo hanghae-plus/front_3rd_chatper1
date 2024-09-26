@@ -1,14 +1,15 @@
 import router from "../router";
 
-import BasePage from "../base/BasePage";
+import AbstractComponent from "../abstract/AbstractComponent";
 
-export default class ErrorBoundaryPage extends BasePage {
-  constructor({ props }) {
-    super({ props });
+export default class ErrorBoundaryPage extends AbstractComponent {
+  constructor($root, errorMessage) {
+    super($root, errorMessage);
   }
 
   template() {
     const { errorMessage } = this.props;
+
     return `
       <div class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md"> 

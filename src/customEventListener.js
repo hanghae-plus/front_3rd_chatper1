@@ -8,13 +8,8 @@ const customEventListener = () => {
       try {
         return listener.bind(this)(...args);
       } catch (error) {
-        const errorBoundary = new ErrorBoundaryPage({
-          props: {
-            errorMessage: error.message,
-          },
-        });
-
-        errorBoundary.render();
+        const $root = document.getElementById("root");
+        new ErrorBoundaryPage($root, { errorMessage: error.message });
       }
     };
 

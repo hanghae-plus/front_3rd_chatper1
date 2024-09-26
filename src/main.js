@@ -1,5 +1,5 @@
-import App from "./App.js";
+import App from "./app.js";
 
-const $root = document.querySelector("#root");
+const $root = document.getElementById("root");
 
 new App($root);

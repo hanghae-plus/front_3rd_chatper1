@@ -1,15 +1,17 @@
 import {Store} from "../utils/store.js";
 import {Logger} from "../utils/logger.js";
+import {Storage} from "../utils/storage.js";
 
 export const addLogoutEvent = () => {
     const store = new Store()
     const logger = new Logger()
+    const storage = new Storage()
     const logoutBtn = document.getElementById('logout');
 
     if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {
-            localStorage.removeItem('isLogin');
-            localStorage.removeItem('user');
+            storage.removeData('isLogin')
+            storage.removeData('user')
             store.setState({ isLogin: false });
             logger.log({
                 type : 'event',

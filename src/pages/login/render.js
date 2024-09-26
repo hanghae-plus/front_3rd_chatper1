@@ -1,21 +1,23 @@
-import {addLoginFormEvent, getUserInfoFromStorage} from "./event.js";
+import {addLoginFormEvent} from "./event.js";
 import {$, setTpl} from "../../utils/dom.js";
 import {loginTpl} from "./templates.js";
 import {Store} from "../../utils/store.js";
+import {Storage} from "../../utils/storage.js";
 
 const setLoginOnDocument = (router) => {
-    const isLogin = localStorage.getItem('isLogin')
-
     const store = new Store()
+    const storage = new Storage()
+    const isLogin = storage.loadData('isLogin')
 
     if(isLogin) {
-        const userinfo = getUserInfoFromStorage()
+        const userinfo = storage.loadData('user')
 
         if(userinfo) {
             store.setState({isLogin:true , ...userinfo})
         } else {
             store.setState({isLogin:false})
-            localStorage.removeItem('isLogin')
+            storage.removeData('isLogin')
+            storage.removeData('user')
         }
 
         return router.navigateTo('/')

@@ -1,9 +1,11 @@
 import {Store} from "../../utils/store.js";
 import {Logger} from "../../utils/logger.js";
+import {Storage} from "../../utils/storage.js";
 
 export const addLoginFormEvent = (router) => {
     const store = new Store()
     const logger = new Logger()
+    const storage = new Storage()
     const form = document.getElementById('login-form')
 
     form.addEventListener('submit',(event) => {
@@ -22,8 +24,8 @@ export const addLoginFormEvent = (router) => {
                 }
             }))
 
-            localStorage.setItem('user', JSON.stringify({username: email, email: '', bio: '',}));
-            localStorage.setItem('isLogin','true')
+            storage.saveData('user', {username: email, email: '', bio: '',})
+            storage.saveData('isLogin',true)
             store.setState({isLogin:true, username:email})
             logger.log({
                 type : 'event',
@@ -35,20 +37,4 @@ export const addLoginFormEvent = (router) => {
             throw new Error(errorMessage)
         }
     });
-}
-
-export const getUserInfoFromStorage = () => {
-    const logger = new Logger()
-
-    let userInfo
-
-    try{
-       userInfo = JSON.parse(localStorage.getItem('user'))
-    } catch (e) {
-        alert('예기치 못한 오류가 발생했습니다.')
-        localStorage.removeItem('user')
-        logger.log({type:'error', location : 'getUserInfoFromStorage', message : 'user storage parse error'})
-    }
-
-    return userInfo
 }

@@ -1,12 +1,14 @@
 import {Store} from "../../utils/store.js";
 import {Logger} from "../../utils/logger.js";
+import {Storage} from "../../utils/storage.js";
 
 export const addUserInfoFormEvent = () => {
     const store = new Store()
     const logger = new Logger()
-    const {username, email, bio, name} = store.getState()
+    const storage = new Storage()
+    const {username, email, bio} = store.getState()
     const form = document.getElementById('profile-form')
-    document.getElementById('username').value = username || name
+    document.getElementById('username').value = username
     document.getElementById('email').value = email
     document.getElementById('bio').value = bio
 
@@ -17,7 +19,7 @@ export const addUserInfoFormEvent = () => {
         const email = formData.get('email')
         const bio = formData.get('bio')
 
-        localStorage.setItem('user' , JSON.stringify({username,email,bio}))
+        storage.saveData('user',{username,email,bio})
         store.setState({username,email,bio})
         alert('프로필이 업데이트되었습니다.')
         logger.log({

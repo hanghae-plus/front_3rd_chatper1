@@ -5,20 +5,18 @@ import Footer from '../src/component/footer.js';
 
 
 export default class HomePage extends Component {
-  #children = {
-    header: new Header(),
-    footer: new Footer()
-  };
-
   constructor() {
     super();
+
+    this._children.header = new Header();
+    this._children.footer = new Footer();
   }
 
   template() {
     return html`
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
-          ${this.#children.header.template()}
+          ${this._children.header.template()}
           <main class="p-4">
             <div class="mb-4 bg-white rounded-lg shadow p-4">
               <textarea
@@ -132,29 +130,9 @@ export default class HomePage extends Component {
               </div>
             </div>
           </main>
-          ${this.#children.footer.template()}
+          ${this._children.footer.template()}
         </div>
       </div>`;
-  }
-
-  #addEventListeners() {
-  }
-
-  hydrate() {
-    for (const child of Object.values(this.#children)) {
-      child.hydrate();
-    }
-    this.#addEventListeners();
-  }
-
-  #removeEventListeners() {
-  }
-
-  dehydrate() {
-    for (const child of Object.values(this.#children)) {
-      child.dehydrate();
-    }
-    this.#removeEventListeners();
   }
 }
 

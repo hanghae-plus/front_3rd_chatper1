@@ -4,14 +4,10 @@ import router from '../src/router.js';
 
 
 export default class ErrorPage extends Component {
-  #handleEvents = {
-    handlerClickBound: null
-  };
-
   constructor() {
     super();
 
-    this.#handleEvents.handlerClickBound = this.#handlerClick.bind(this);
+    this._handleEvents.handlerClickBound = this.#handlerClick.bind(this);
   }
 
   #handlerClick(e) {
@@ -47,7 +43,7 @@ export default class ErrorPage extends Component {
   #addEventListeners() {
     const backHomeBtn = document.getElementById('back-home');
 
-    backHomeBtn.addEventListener('click', this.#handleEvents.handlerClickBound);
+    backHomeBtn.addEventListener('click', this._handleEvents.handlerClickBound);
   }
 
   hydrate() {
@@ -57,7 +53,7 @@ export default class ErrorPage extends Component {
   #removeEventListeners() {
     const backHomeBtn = document.getElementById('back-home');
 
-    backHomeBtn.removeEventListener('click', this.#handleEvents.handlerClickBound);
+    backHomeBtn.removeEventListener('click', this._handleEvents.handlerClickBound);
   }
 
   dehydrate() {

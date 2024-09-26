@@ -5,28 +5,20 @@ import UserStore from '../src/store/userStore.js';
 const TEST_USER_NAME = 'testuser';
 
 export default class LoginPage extends Component {
-  #state = {
-    username: '',
-    password: '',
-    hasError: false
-  };
-
   #userStore = null;
-
-  #handleEvents = {
-    handleSubmitBound: null,
-    handleInputBound: null,
-    handleErrorBound: null
-  };
 
   constructor() {
     super();
 
+    this._state.username = '';
+    this._state.password = '';
+    this._state.hasError = false;
+
     this.#userStore = new UserStore();
 
-    this.#handleEvents.handleSubmitBound = this.#handleSubmit.bind(this);
-    this.#handleEvents.handleInputBound = this.#handleInput.bind(this);
-    this.#handleEvents.handleErrorBound = this.#handleError.bind(this);
+    this._handleEvents.handleSubmitBound = this.#handleSubmit.bind(this);
+    this._handleEvents.handleInputBound = this.#handleInput.bind(this);
+    this._handleEvents.handleErrorBound = this.#handleError.bind(this);
   }
 
   #validate(id) {
@@ -43,7 +35,7 @@ export default class LoginPage extends Component {
       return;
     }
 
-    if (this.#state.username === TEST_USER_NAME) {
+    if (this._state.username === TEST_USER_NAME) {
       const user = { username: `${id}`, email: '', bio: '' };
       localStorage.setItem('user', JSON.stringify(user));
       this.#userStore.updateUser(user, this);
@@ -55,15 +47,15 @@ export default class LoginPage extends Component {
 
   #handleSubmit(event) {
     event.preventDefault();
-    this.#login(this.#state.username);
+    this.#login(this._state.username);
   }
 
   #handleInput(event) {
-    this.#state.username = event.target.value;
+    this._state.username = event.target.value;
   }
 
   #handleError() {
-    this.#state.hasError = true;
+    this._state.hasError = true;
     router.router();
   }
 
@@ -74,7 +66,7 @@ export default class LoginPage extends Component {
           <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">
             항해플러스
           </h1>
-          ${this.#state.hasError ?
+          ${this._state.hasError ?
       '<div class="text-red-500 text-sm mb-4">' +
       '<p>오류 발생!</p>' +
       '<p>의도적인 오류입니다.</p>' +
@@ -120,12 +112,12 @@ export default class LoginPage extends Component {
 
   #addEventListeners() {
     const form = document.getElementById('login-form');
-    form.addEventListener('submit', this.#handleEvents.handleSubmitBound);
+    form.addEventListener('submit', this._handleEvents.handleSubmitBound);
 
-    window.addEventListener('error', this.#handleEvents.handleErrorBound);
+    window.addEventListener('error', this._handleEvents.handleErrorBound);
 
     const input = document.getElementById('username');
-    input.addEventListener('input', this.#handleEvents.handleInputBound);
+    input.addEventListener('input', this._handleEvents.handleInputBound);
   }
 
   hydrate() {
@@ -134,12 +126,12 @@ export default class LoginPage extends Component {
 
   #removeEventListeners() {
     const form = document.getElementById('login-form');
-    form.removeEventListener('submit', this.#handleEvents.handleSubmitBound);
+    form.removeEventListener('submit', this._handleEvents.handleSubmitBound);
 
-    window.removeEventListener('error', this.#handleEvents.handleErrorBound);
+    window.removeEventListener('error', this._handleEvents.handleErrorBound);
 
     const input = document.getElementById('username');
-    input.removeEventListener('input', this.#handleEvents.handleInputBound);
+    input.removeEventListener('input', this._handleEvents.handleInputBound);
   }
 
   dehydrate() {

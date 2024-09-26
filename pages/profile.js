@@ -6,23 +6,17 @@ import router from '../src/router.js';
 import UserStore from '../src/store/userStore.js';
 
 export default class ProfilePage extends Component {
-  #children = {
-    header: new Header(),
-    footer: new Footer()
-  };
-
   #userStore = null;
-
-  #handleEvents = {
-    handleSubmitBound: null
-  };
 
   constructor() {
     super();
 
     this.#userStore = new UserStore();
 
-    this.#handleEvents.handleSubmitBound = this.#handleSubmit.bind(this);
+    this._children.header = new Header();
+    this._children.footer = new Footer();
+
+    this._handleEvents.handleSubmitBound = this.#handleSubmit.bind(this);
   }
 
   #saveProfile() {
@@ -50,7 +44,7 @@ export default class ProfilePage extends Component {
     return html`
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
-          ${this.#children.header.template()}
+          ${this._children.header.template()}
           <main class="p-4">
             <div class="bg-white p-8 rounded-lg shadow-md">
               <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
@@ -107,8 +101,7 @@ export default class ProfilePage extends Component {
               </form>
             </div>
           </main>
-
-          ${this.#children.footer.template()}
+          ${this._children.footer.template()}
         </div>
       </div>`;
   }
@@ -116,26 +109,22 @@ export default class ProfilePage extends Component {
   #addEventListeners() {
     const form = document.querySelector('#profile-form');
 
-    form.addEventListener('submit', this.#handleEvents.handleSubmitBound);
+    form.addEventListener('submit', this._handleEvents.handleSubmitBound);
   }
 
   hydrate() {
-    for (const child of Object.values(this.#children)) {
-      child.hydrate();
-    }
+    super.hydrate();
     this.#addEventListeners();
   }
 
   #removeEventListeners() {
     const form = document.querySelector('#profile-form');
 
-    form.removeEventListener('submit', this.#handleEvents.handleSubmitBound);
+    form.removeEventListener('submit', this._handleEvents.handleSubmitBound);
   }
 
   dehydrate() {
-    for (const child of Object.values(this.#children)) {
-      child.dehydrate();
-    }
+    super.dehydrate();
     this.#removeEventListeners();
   }
 }

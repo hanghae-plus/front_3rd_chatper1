@@ -1,4 +1,8 @@
 export default class Component {
+  _state = {};
+  _children = {};
+  _handleEvents = {};
+
   constructor() {
     if (new.target === Component) {
       throw new Error('Cannot instantiate an abstract class.');
@@ -15,10 +19,14 @@ export default class Component {
   }
 
   hydrate() {
-    throw new Error('Abstract method must be implemented in subclass.');
+    for (const child of Object.values(this._children)) {
+      child.hydrate();
+    }
   }
 
   dehydrate() {
-    throw new Error('Abstract method must be implemented in subclass.');
+    for (const child of Object.values(this._children)) {
+      child.dehydrate();
+    }
   }
 }

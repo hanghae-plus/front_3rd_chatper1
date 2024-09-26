@@ -4,13 +4,6 @@ import { html } from 'code-tag';
 import UserStore from '../store/userStore.js';
 
 export default class Header extends Component {
-  #handleEvents = {
-    handleHomeClickBound: null,
-    handleProfileClickBound: null,
-    handleLoginClickBound: null,
-    handleLogoutClickBound: null
-  };
-
   #userStore = null;
 
   constructor() {
@@ -18,10 +11,10 @@ export default class Header extends Component {
 
     this.#userStore = new UserStore();
 
-    this.#handleEvents.handleHomeClickBound = this.#handleHomeClick.bind(this);
-    this.#handleEvents.handleProfileClickBound = this.#handleProfileClick.bind(this);
-    this.#handleEvents.handleLoginClickBound = this.#handleLoginClick.bind(this);
-    this.#handleEvents.handleLogoutClickBound = this.#handleLogoutClick.bind(this);
+    this._handleEvents.handleHomeClickBound = this.#handleHomeClick.bind(this);
+    this._handleEvents.handleProfileClickBound = this.#handleProfileClick.bind(this);
+    this._handleEvents.handleLoginClickBound = this.#handleLoginClick.bind(this);
+    this._handleEvents.handleLogoutClickBound = this.#handleLogoutClick.bind(this);
   }
 
   #navigate(path) {
@@ -85,10 +78,10 @@ export default class Header extends Component {
     const login = document.getElementById('login');
     const logout = document.getElementById('logout');
 
-    home.addEventListener('click', this.#handleEvents.handleHomeClickBound);
-    profile.addEventListener('click', this.#handleEvents.handleProfileClickBound);
-    login?.addEventListener('click', this.#handleEvents.handleLoginClickBound);
-    logout?.addEventListener('click', this.#handleEvents.handleLogoutClickBound);
+    home.addEventListener('click', this._handleEvents.handleHomeClickBound);
+    profile.addEventListener('click', this._handleEvents.handleProfileClickBound);
+    login?.addEventListener('click', this._handleEvents.handleLoginClickBound);
+    logout?.addEventListener('click', this._handleEvents.handleLogoutClickBound);
   }
 
   hydrate() {
@@ -101,10 +94,10 @@ export default class Header extends Component {
     const login = document.getElementById('login');
     const logout = document.getElementById('logout');
 
-    home.removeEventListener('click', this.#handleEvents.handleHomeClickBound);
-    profile.removeEventListener('click', this.#handleEvents.handleProfileClickBound);
-    login?.removeEventListener('click', this.#handleEvents.handleLogoutClickBound);
-    logout?.removeEventListener('click', this.#handleEvents.handleLogoutClickBound);
+    home.removeEventListener('click', this._handleEvents.handleHomeClickBound);
+    profile.removeEventListener('click', this._handleEvents.handleProfileClickBound);
+    login?.removeEventListener('click', this._handleEvents.handleLogoutClickBound);
+    logout?.removeEventListener('click', this._handleEvents.handleLogoutClickBound);
   }
 
   dehydrate() {

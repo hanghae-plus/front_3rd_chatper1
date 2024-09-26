@@ -1,7 +1,6 @@
 import Layout from "@/components/Layout";
 import { appendChild, createElement } from "@/utils";
-import { getUser } from "@/store/userStore";
-import { setUser } from "../../store/userStore";
+import { setUser } from "@/main";
 
 export default function ProfilePage() {
   const ProfilePage = createElement({
@@ -15,7 +14,7 @@ export default function ProfilePage() {
     textContent: "내 프로필",
   });
 
-  const ProfileForm = createElement({ tagName: "form" });
+  const ProfileForm = createElement({ tagName: "form", id: "profile-form" });
   const {
     username = "",
     bio = "",
@@ -72,11 +71,11 @@ export default function ProfilePage() {
 
   ProfileForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const [username, email, bio] = e.target;
-    const _username = username.value;
-    const _email = email.value;
-    const _bio = bio.value;
-    setUser({ username: _username, email: _email, bio: _bio });
+    const username = e.target.elements["username"].value;
+    const email = e.target.elements["email"].value;
+    const bio = e.target.elements["bio"].value;
+
+    setUser({ username, email, bio });
   });
 
   appendChild({

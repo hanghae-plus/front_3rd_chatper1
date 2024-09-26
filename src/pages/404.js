@@ -1,8 +1,8 @@
 import { appendChild, createElement } from "@/utils";
-import { useNavigate } from "../router";
+import { useNavigate } from "@/main";
 
-export default function NotFound() {
-  const NotFound = createElement({
+export default function NotFoundPage() {
+  const NotFoundPage = createElement({
     tagName: "main",
     className:
       "bg-white p-8 rounded-lg shadow-md w-full text-center max-w-[480px]",
@@ -44,7 +44,7 @@ export default function NotFound() {
   });
 
   appendChild({
-    parent: NotFound,
+    parent: NotFoundPage,
     children: [
       NotFoundTitle,
       NotFoundNum,
@@ -54,5 +54,5 @@ export default function NotFound() {
     ],
   });
 
-  return NotFound;
+  return NotFoundPage;
 }

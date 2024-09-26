@@ -1,4 +1,4 @@
-function createUser() {
+export function userStore() {
   let userInfo = localStorage.getItem("user") || null;
 
   return {
@@ -15,5 +15,3 @@ function createUser() {
     },
   };
 }
-
-export const { getUser, setUser, deleteUser } = createUser();

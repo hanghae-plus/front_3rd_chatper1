@@ -1,6 +1,6 @@
 import { appendChild, createElement } from "@/utils";
-import { deleteUser, getUser } from "@/store/userStore";
-import { useNavigate } from "../router";
+
+import { deleteUser, getUser, useNavigate } from "../main";
 
 export default function Nav() {
   const Nav = createElement({
@@ -24,7 +24,7 @@ export default function Nav() {
 
     const Link = createElement({
       tagName: "a",
-      className: "block w-full h-full text-center",
+      className: "block w-full h-full text-center font-bold",
       textContent: title,
       id: href,
       setAttribute: { href: `/${href}` },
@@ -40,16 +40,13 @@ export default function Nav() {
 
   NavContainer.addEventListener("click", (e) => {
     e.preventDefault();
-
     const href = e.target.getAttribute("href");
-
     if (href === "/logout") {
       deleteUser();
       alert("로그아웃 되었습니다.");
       useNavigate("/login");
       return;
     }
-
     useNavigate(href);
   });
   appendChild({ parent: Nav, children: [NavContainer] });

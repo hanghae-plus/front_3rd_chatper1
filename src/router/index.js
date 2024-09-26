@@ -5,7 +5,7 @@ import ProfilePage from "@/pages/profile/page";
 import LoginPage from "@/pages/login/page";
 import ErrorPage from "@/pages/error";
 
-const RootElement = document.getElementById("root");
+import { RootElement } from "@/main";
 
 function createPage(path) {
   const pages = {
@@ -28,28 +28,31 @@ function createPage(path) {
   return pages[path] || pages["/notFound"];
 }
 
-function Router() {
+export default function Router() {
   function useNavigate(path) {
     window.history.pushState({}, "", path);
     renderPage(path);
   }
 
   function renderPage(path) {
+    const isLogin = !!localStorage.getItem("user");
+    if (path === "/profile" && !isLogin) {
+      return useNavigate("/login");
+    }
+    if (path === "/login" && isLogin) {
+      return useNavigate("/");
+    }
+
     const page = createPage(path);
-    RootElement.innerHTML = "";
-    console.log(RootElement);
-    RootElement.appendChild(RootLayout(page.render()));
+    RootElement.replaceChildren(RootLayout(page.render()));
   }
 
   function init() {
     const path = window.location.pathname;
     renderPage(path);
-
     window.addEventListener("popstate", () => {
       renderPage(window.location.pathname);
     });
   }
   return { useNavigate, init };
 }
-
-export const { useNavigate, init } = Router();

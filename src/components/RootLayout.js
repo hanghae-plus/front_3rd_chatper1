@@ -5,8 +5,6 @@ export default function RootLayout(children) {
     tagName: "div",
     className: "bg-gray-100 h-screen flex justify-center items-center",
   });
-
   appendChild({ parent: RootLayout, children: [children] });
-
   return RootLayout;
 }

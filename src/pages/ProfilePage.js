@@ -42,6 +42,22 @@ export default function ProfilePage() {
      </div>`;
   }
 
+  function submitEvent(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const bio = document.getElementById('bio').value;
+
+    const data = {
+      username,
+      email,
+      bio,
+    };
+
+    localStorageInstace.set({ key: 'user', value: JSON.stringify(data) });
+  }
+
   function bindEvents() {
     HeaderComponent.bindEvents();
 
@@ -61,26 +77,21 @@ export default function ProfilePage() {
     const profileForm = document.getElementById('profile-form');
 
     if (profileForm) {
-      profileForm.addEventListener('submit', (event) => {
-        event.preventDefault();
+      profileForm.addEventListener('submit', submitEvent);
+    }
+  }
 
-        const username = document.getElementById('username').value;
-        const email = document.getElementById('email').value;
-        const bio = document.getElementById('bio').value;
+  function disconnectEvents() {
+    const profileForm = document.getElementById('profile-form');
 
-        const data = {
-          username,
-          email,
-          bio,
-        };
-
-        localStorageInstace.set({ key: 'user', value: JSON.stringify(data) });
-      });
+    if (profileForm) {
+      profileForm.removeEventListener('submit', submitEvent);
     }
   }
 
   return {
     template,
     bindEvents,
+    disconnectEvents,
   };
 }

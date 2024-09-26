@@ -19,20 +19,31 @@ export default function NotFoundPage() {
 		      </main>`;
   }
 
+  function clickEvent(event) {
+    event.preventDefault();
+
+    router.navigate('/');
+  }
+
   function bindEvents() {
     const home = document.getElementById('home');
 
     if (home) {
-      home.addEventListener('click', (event) => {
-        event.preventDefault();
+      home.addEventListener('click', clickEvent);
+    }
+  }
 
-        router.navigate('/');
-      });
+  function disconnectEvents() {
+    const home = document.getElementById('home');
+
+    if (home) {
+      home.removeEventListener('click', clickEvent);
     }
   }
 
   return {
     template,
     bindEvents,
+    disconnectEvents,
   };
 }

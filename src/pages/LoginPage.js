@@ -30,35 +30,46 @@ export default function LoginPage() {
 		</main>`;
   }
 
+  function submitEvent(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('username')?.value || '';
+
+    if (!username.trim()) {
+      alert('로그인에 실패했습니다');
+      return;
+    }
+
+    const data = {
+      username,
+      email: '',
+      bio: '',
+    };
+
+    localStorageInstace.set({ key: 'user', value: JSON.stringify(data) });
+
+    router.navigate('/profile');
+  }
+
   function bindEvents() {
     const loginForm = document.getElementById('login-form');
 
     if (loginForm) {
-      loginForm.addEventListener('submit', (event) => {
-        event.preventDefault();
+      loginForm.addEventListener('submit', submitEvent);
+    }
+  }
 
-        const username = document.getElementById('username')?.value || '';
+  function disconnectEvents() {
+    const loginForm = document.getElementById('login-form');
 
-        if (!username.trim()) {
-          alert('로그인에 실패했습니다');
-          return;
-        }
-
-        const data = {
-          username,
-          email: '',
-          bio: '',
-        };
-
-        localStorageInstace.set({ key: 'user', value: JSON.stringify(data) });
-
-        router.navigate('/profile');
-      });
+    if (loginForm) {
+      loginForm.removeEventListener('submit', submitEvent);
     }
   }
 
   return {
     template,
     bindEvents,
+    disconnectEvents,
   };
 }

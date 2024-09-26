@@ -5,12 +5,13 @@ class Router {
     this.routes = {};
     this.routeGuards = {};
     this.errorBoundary = errorBoundary;
+    this.currentComponent = null;
   }
 
   createRoutes(newRoutes) {
     this.routes = newRoutes;
-    this.route();
 
+    this.route();
     this.bindEvents();
   }
 
@@ -38,6 +39,7 @@ class Router {
       this.errorBoundary.resetError();
 
       window.history.pushState({}, '', pathname);
+
       this.route();
     }
   }
@@ -45,12 +47,18 @@ class Router {
   routeGuardRedirect(redirect) {
     if (redirect) {
       window.history.pushState({}, '', redirect);
+
       this.route();
     }
   }
 
   route() {
     const pathname = window.location.pathname;
+
+    if (this.currentComponent && this.currentComponent?.disconnectEvents) {
+      this.currentComponent.disconnectEvents();
+      document.getElementById('root').innerHTML = '';
+    }
 
     if (this.routeGuards[pathname]) {
       const { guard, redirect } = this.routeGuards[pathname];
@@ -60,10 +68,11 @@ class Router {
         return;
       }
     }
-
     const route = this.routes[pathname] || this.routes['/*'];
 
     if (route) {
+      this.currentComponent = route;
+
       document.getElementById('root').innerHTML = route.template();
 
       route.bindEvents();

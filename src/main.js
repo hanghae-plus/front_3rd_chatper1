@@ -135,13 +135,10 @@ function renderLoginPage() {
     login(username);
   });
 
-  window.addEventListener('error', () => {
+  window.addEventListener('error', (e) => {
     document
       .querySelector('#login-form')
-      .insertAdjacentHTML(
-        'beforeend',
-        `<p>오류 발생! 의도적인 오류입니다.</p>`
-      );
+      .insertAdjacentHTML('beforeend', `<p>오류 발생! ${e.message}.</p>`);
   });
 }
 

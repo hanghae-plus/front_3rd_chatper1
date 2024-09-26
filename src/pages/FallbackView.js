@@ -1,3 +1,4 @@
+import { PATH_INFO } from '../constant';
 import { Router } from '../router';
 import BaseView from './BaseView';
 
@@ -44,6 +45,6 @@ export class FallbackView extends BaseView {
   }
 
   handleRollback() {
-    Router.redirect('/');
+    Router.redirect(PATH_INFO.main);
   }
 }

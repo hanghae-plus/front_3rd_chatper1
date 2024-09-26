@@ -41,8 +41,6 @@ export default class ProfilePage {
     this.header.addEventListeners();
     this.getProfile();
 
-    const updateBtn = document.getElementById("updateBtn");
-
     //프로필 업데이트 폼 제출
     document
       .getElementById("profile-form")
@@ -64,11 +62,6 @@ export default class ProfilePage {
   }
   updateProfile() {
     //프로필 업데이트
-    // const user = {
-    //   username: document.getElementById("username").value,
-    //   email: document.getElementById("email").value,
-    //   bio: document.getElementById("bio").value,
-    // };
     const user = {
       username: "testuser",
       email: "",

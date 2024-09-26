@@ -55,9 +55,7 @@ export default class Header {
   reqLogout() {
     //로그아웃
     //사용자 정보 삭제
-    // window.localStorage.setItem("user", null);
     window.localStorage.removeItem("user");
-    // window.localStorage.removeItem("userProfile");
 
     let url = location.origin + "/login";
     history.pushState({ page_id: "LoginPage" }, null, url); //로그인페이지로

@@ -76,9 +76,13 @@ describe("심화과제 테스트", () => {
 
       const $username = document.querySelector("#username");
 
-      // $username.addEventListener('input', () => {
-      //   throw new Error('의도적인 오류입니다.')
-      // }, { once: true });
+      $username.addEventListener(
+        "input",
+        () => {
+          throw new Error("의도적인 오류입니다.");
+        },
+        { once: true }
+      );
 
       await user.type($username, "1");
 

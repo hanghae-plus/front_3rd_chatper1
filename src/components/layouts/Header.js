@@ -1,6 +1,5 @@
-import { PROJECT_NAME } from '@constants'
+import { PROJECT_NAME, ROUTES } from '@constants'
 import { UserStore } from '@stores'
-import { ROUTES } from '@constants'
 
 const userStore = UserStore()
 const NAVIGATION = {

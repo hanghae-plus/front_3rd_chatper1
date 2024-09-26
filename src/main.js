@@ -2,6 +2,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
+import ErrorPage from './pages/ErrorPage';
 
 const render = (page) => {
   document.querySelector('#root').innerHTML = page();
@@ -84,12 +85,10 @@ const router = () => {
     }
   };
 
-  window.addEventListener('popstate', handlePopState);
-
-  return { routes, addRoute, navigateTo, handleRoute };
+  return { routes, addRoute, navigateTo, handleRoute, handlePopState };
 };
 
-const { addRoute, navigateTo, handleRoute } = router();
+const { addRoute, navigateTo, handlePopState } = router();
 
 for (const key in routes) {
   addRoute(key, routes[key]);
@@ -132,52 +131,55 @@ const loadedUser = () => {
   }
 };
 
+const handleError = (e) => {
+  e.preventDefault();
+
+  render(() => ErrorPage({ message: e.message }));
+};
+
+const handleClick = (e) => {
+  if (e.target.tagName === 'A') {
+    e.preventDefault();
+    if (e.target.id === 'logout') {
+      logOut();
+      return;
+    }
+    const url = new URL(e.target.href);
+    if (url.pathname.startsWith('/')) {
+      navigateTo(url.pathname);
+    }
+  }
+
+  if (e.target.id === 'goback') {
+    navigateTo(window.location.pathname);
+  }
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  if (e.target.id === 'login-form') {
+    const username = document.getElementById('username').value;
+    logIn(username);
+  }
+  if (e.target.id === 'profile-form') {
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const bio = document.getElementById('bio').value;
+    updateUserInfo(username, email, bio);
+  }
+};
+
 const addListeners = () => {
-  document.querySelector('#root')?.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') {
-      e.preventDefault();
-      if (e.target.id === 'logout') {
-        logOut();
-        return;
-      }
-      const url = new URL(e.target.href);
-      if (url.pathname.startsWith('/')) {
-        navigateTo(url.pathname);
-      }
-    }
-
-    if (e.target.id === 'goback') {
-      navigateTo(window.location.pathname);
-    }
-  });
-
-  document.querySelector('#root')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (e.target.id === 'login-form') {
-      const username = document.getElementById('username').value;
-      logIn(username);
-    }
-    if (e.target.id === 'profile-form') {
-      const username = document.getElementById('username').value;
-      const email = document.getElementById('email').value;
-      const bio = document.getElementById('bio').value;
-      updateUserInfo(username, email, bio);
-    }
-  });
-
-  window.addEventListener('error', (e) => {
-    e.preventDefault();
-
-    document.querySelector(
-      '#root'
-    ).innerHTML = `<span>오류 발생!</span><p>${e.message}</p><button id='goback'>돌아가기</button>`;
-  });
+  document.querySelector('#root')?.addEventListener('click', handleClick);
+  document.querySelector('#root')?.addEventListener('submit', handleSubmit);
+  window.addEventListener('popstate', handlePopState);
+  window.addEventListener('error', handleError);
+  window.addEventListener('load', handlePopState);
 };
 
 const init = () => {
   loadedUser();
   addListeners();
-  navigateTo(window.location.pathname);
 };
 
 init();

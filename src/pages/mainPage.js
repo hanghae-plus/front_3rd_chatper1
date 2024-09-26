@@ -4,10 +4,10 @@ import Footer from "../components/Footer";
 const mainPage = (loginStatus) => {
 
   return () => {
-    const isLogin = loginStatus.getIsLogin()
-
+    const isLogin = loginStatus.getIsLogin() // 로그인 상태 가져옴
+    // console.log(`메인페이지 : 로그인 상태 => ${isLogin}`)
     return `
-    ${Header}
+    ${Header(isLogin)}
     <main class="p-4">
         <div class="mb-4 bg-white rounded-lg shadow p-4">
           <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
@@ -98,10 +98,10 @@ const mainPage = (loginStatus) => {
         </div>
       </main>
 
-      ${Footer}
+      ${Footer()}
     `
   }
 
 }
 
-export default mainPage;
+export default mainPage

@@ -4,16 +4,16 @@ import Footer from "../components/Footer";
 const profilePage = (loginStatus) => {
 
   return () => {
-
     const isLogin = loginStatus.getIsLogin()
     const userInfo = loginStatus.getUserInfo()
+    // console.log(`프로필 페이지 : 로그인 상태 => ${isLogin}`)
 
     return `
-    ${Header}
+    ${Header(isLogin)}
     <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-          <form>
+          <form id="profile-form">
             <div class="mb-4">
               <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
               <input id="username" type="text" name="username" value="${
@@ -36,7 +36,7 @@ const profilePage = (loginStatus) => {
           </form>
         </div>
       </main>
-    ${Footer}
+    ${Footer()}
     `
   }
   

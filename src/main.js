@@ -1,46 +1,50 @@
-import { createRouter } from "./router";
-import loginStatus from "./login";
-
 import mainPage from "./pages/mainPage";
+import loginPage from "./pages/loginPage";
 import errorPage from "./pages/errorPage";
 import profilePage from "./pages/profilePage";
-import loginPage from "./pages/loginPage";
-
-
-
-
-//초기화
-localStorage.removeItem("user")
+// 모듈 선택해서 가져오기
+import { createRouter } from "./router";
+import { userStatus } from "./login";
 
 const root = document.querySelector("#root");
 
-// 로그인 객체 생성
-const logininfo = loginStatus()
+// 초기화 용
+// localStorage.removeItem('user');
+
+// 유저 
+const loginState = userStatus()
+
+// Router 
+const router = createRouter(loginState)
 
 
-// 1. 라우팅 구현
-// Router 객체 생성
-const router = createRouter()
+// 유저 정보 받아오기
+const userInfo = () => {
+  const username = document.querySelector("#username")?.value || ""
+  const email = document.querySelector("#email")?.value || ""
+  const bio = document.querySelector("#bio")?.value || ""
+  return { username, email, bio }
+}
 
-// 컴포넌트를 불러오는데 자꾸 함수 실행으로 가져와서 한참 씨름함.
-// console.log("here:" + mainPage);
-router.addRoute('/', mainPage(logininfo))
-router.addRoute('/profile', profilePage(logininfo))
+
+// 컴포넌트를 함수실행이 아닌 함수 자체를 가져와서 오류가 나는데 원인 파악에 시간 너무 소요됨..
+router.addRoute('/', mainPage(loginState))
 router.addRoute('/login', loginPage())
+router.addRoute('/profile', profilePage(loginState))
 router.addRoute('/404', errorPage())
 
-// 초기 렌더링
-router.render()
+
+// 첫화면 렌더링
+window.addEventListener("load", router.render)
 
 // 뒤로가기, 앞으로가기 시 렌더링
 window.addEventListener("popstate", router.render)
 
+// 전역 에러 처리
+window.addEventListener("error", () => router.navigateTo("/404"))
 
-// 2. 로그인
-// 로그인 상태 loginStatus 만들기 
-// 로그인 상태를 main.js에서 설정해주고. 
-// 헤더.js 에서 isLogin 을 인자로 받아서 참 거짓에 따라 삼항연산자로 메뉴 변겨애주기
-// 유저 정보 저장
+
+
 
 // 클릭 이벤트 위임
 root.addEventListener("click", handleClick)
@@ -48,22 +52,12 @@ root.addEventListener("click", handleClick)
 // submit 이벤트 위임
 root.addEventListener("submit", handleSubmit)
 
-// 전역 에러 처리
-window.addEventListener("error", () => router.navigateTo("/404"))
-
-
-const userInfo = () => {
-  const username = document.querySelector("#username")?.value || ""
-  const email = document.querySelector("#email")?.value || ""
-  const bio = document.querySelector("#bio")?.value || ""
-  const islog = true || ""
-  return { username, email, bio, islog }
-}
-
 
 // 클릭 이벤트 핸들러
 function handleClick(e) {
-  const { tagName, id } = e.target
+  const tagName = e.target.tagName
+  const id = e.target.id
+  const href = e.target.getAttribute("href")
 
   // a 태그 클릭 시
   if (tagName === "A") {
@@ -73,34 +67,37 @@ function handleClick(e) {
     // 로그아웃 버튼 클릭 시
     if (id === "logout") {
       // 로그아웃 함수 호출
-      logininfo.logout()
+      loginState.logout()
     }
 
     // 링크 클릭 시 이동 함수 호출
-    router.navigateTo(e.target.getAttribute("href"))
+    router.navigateTo(href)
   }
 }
 
 // submit 이벤트 핸들러
 function handleSubmit(e) {
+  // submit 이벤트 막기
   e.preventDefault()
 
   const id = e.target.id
-  const user = userInfo()
+  const user = userInfo() // userInfo() - 폼에서 받아온 유저정보 객체
 
-  if (id === "loginform") {
-    // 유효성 검사
-    if (!user.username) {
+  // submit 로그인 폼일 때, test에 id 값을 지정해두셨었네..
+  if (id === "login-form") {
+    // 유저아이디가 빈값이면 알림창
+    if (user.username === "") {
       alert("아이디를 입력하세요")
       return
     }
-    logininfo.login(user)
-    
+    // 아이디 입력 값을 전달
+    loginState.login(user)
 
   } else {
-    logininfo.setUserInfo(user)
+    loginState.update(user)
     alert("프로필이 업데이트 되었습니다.")
   }
   // 로그인 함수 호출
   router.navigateTo("/profile")
 }
+

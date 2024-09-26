@@ -12,7 +12,7 @@ export default class Component {
 	mounted() {}
 
 	render() {
-		this.$target.outerHTML = this.template();
+		this.$target.innerHTML = this.template();
 		this.mounted();
 	}
 }

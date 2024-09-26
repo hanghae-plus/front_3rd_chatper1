@@ -16,11 +16,8 @@ let route = routes.home;
 export function router() {
   return {
     push: (path: string) => {
-      if (path === '/profile' && localStorage.getItem('accessToken') === null) {
+      if (['/profile', '/'].includes(path) && localStorage.getItem('user') === null) {
         alert('로그인 해주세요.');
-        path = '/login';
-      } else if (path === '/logout') {
-        localStorage.removeItem('accessToken');
         path = '/login';
       }
 

@@ -1,3 +1,4 @@
+import { router } from '../router.js';
 import { h } from '../virtual-dom.js';
 
 function Login() {
@@ -5,12 +6,12 @@ function Login() {
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form>
+        <form id="login-form">
           <div class="mb-4">
-            <input type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded" />
+            <input type="text" id="username" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded" />
           </div>
           <div class="mb-6">
-            <input type="password" placeholder="비밀번호" class="w-full p-2 border rounded" />
+            <input type="password" id="password" placeholder="비밀번호" class="w-full p-2 border rounded" />
           </div>
           <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">
             로그인
@@ -29,5 +30,37 @@ function Login() {
     </main>
   );
 }
+
+type savedUser = {
+  username: string;
+  email: string;
+  bio: string;
+};
+
+document.addEventListener('submit', e => {
+  e.preventDefault();
+  const $userName = document.getElementById('username') as HTMLInputElement;
+  const $password = document.getElementById('password') as HTMLInputElement;
+
+  // if ($userName.value === '') {
+  //   alert('아이디를 입력해주세요!');
+  //   return;
+  // }
+  // if ($password.value === '') {
+  //   alert('비밀번호를 입력해주세요!');
+  //   return;
+  // }
+  const userInfo = localStorage.getItem('userInfo');
+  if (userInfo === null) {
+    return;
+  }
+  const matchedUser = JSON.parse(userInfo).find((user: savedUser) => $userName.value.trim() === user.username);
+  // if (matchedUser === undefined) {
+  //   alert('일치하는 유저가 없습니다!');
+  //   return;
+  // }
+  localStorage.setItem('user', JSON.stringify(matchedUser));
+  router().push('/');
+});
 
 export default Login;

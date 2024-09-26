@@ -10,8 +10,7 @@ const Storage = (function () {
 
   function load(key) {
     try {
-      const jsonValue = localStorage.getItem(key)
-      return jsonValue ? JSON.parse(jsonValue) : null
+      return localStorage.getItem(key)
     } catch (error) {
       console.error('로컬 스토리지 호출 실패:', error)
       return null

@@ -166,12 +166,13 @@ const handleSubmit = (e) => {
     const email = document.getElementById('email').value;
     const bio = document.getElementById('bio').value;
     updateUserInfo(username, email, bio);
+    alert('수정되었습니다.');
   }
 };
 
 const addListeners = () => {
-  document.querySelector('#root')?.addEventListener('click', handleClick);
-  document.querySelector('#root')?.addEventListener('submit', handleSubmit);
+  document.querySelector('#root').addEventListener('click', handleClick);
+  document.querySelector('#root').addEventListener('submit', handleSubmit);
   window.addEventListener('popstate', handlePopState);
   window.addEventListener('error', handleError);
   window.addEventListener('load', handlePopState);

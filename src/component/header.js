@@ -91,7 +91,7 @@ export default class Header extends Component {
     logout?.addEventListener('click', this.#handleEvents.handleLogoutClickBound);
   }
 
-  mount() {
+  hydrate() {
     this.#addEventListeners();
   }
 
@@ -107,7 +107,7 @@ export default class Header extends Component {
     logout?.removeEventListener('click', this.#handleEvents.handleLogoutClickBound);
   }
 
-  unmount() {
+  dehydrate() {
     this.#removeEventListeners();
   }
 }

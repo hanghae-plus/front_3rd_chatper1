@@ -128,7 +128,7 @@ export default class LoginPage extends Component {
     input.addEventListener('input', this.#handleEvents.handleInputBound);
   }
 
-  mount() {
+  hydrate() {
     this.#addEventListeners();
   }
 
@@ -142,7 +142,7 @@ export default class LoginPage extends Component {
     input.removeEventListener('input', this.#handleEvents.handleInputBound);
   }
 
-  unmount() {
+  dehydrate() {
     this.#removeEventListeners();
   }
 }

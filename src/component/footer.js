@@ -17,14 +17,14 @@ export default class Footer extends Component {
   #addEventListeners() {
   }
 
-  mount() {
+  hydrate() {
     this.#addEventListeners();
   }
 
   #removeEventListeners() {
   }
 
-  unmount() {
+  dehydrate() {
     this.#removeEventListeners();
   }
 }

@@ -140,9 +140,9 @@ export default class HomePage extends Component {
   #addEventListeners() {
   }
 
-  mount() {
+  hydrate() {
     for (const child of Object.values(this.#children)) {
-      child.mount();
+      child.hydrate();
     }
     this.#addEventListeners();
   }
@@ -150,9 +150,9 @@ export default class HomePage extends Component {
   #removeEventListeners() {
   }
 
-  unmount() {
+  dehydrate() {
     for (const child of Object.values(this.#children)) {
-      child.unmount();
+      child.dehydrate();
     }
     this.#removeEventListeners();
   }

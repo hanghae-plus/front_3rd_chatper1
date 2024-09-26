@@ -119,9 +119,9 @@ export default class ProfilePage extends Component {
     form.addEventListener('submit', this.#handleEvents.handleSubmitBound);
   }
 
-  mount() {
+  hydrate() {
     for (const child of Object.values(this.#children)) {
-      child.mount();
+      child.hydrate();
     }
     this.#addEventListeners();
   }
@@ -132,9 +132,9 @@ export default class ProfilePage extends Component {
     form.removeEventListener('submit', this.#handleEvents.handleSubmitBound);
   }
 
-  unmount() {
+  dehydrate() {
     for (const child of Object.values(this.#children)) {
-      child.unmount();
+      child.dehydrate();
     }
     this.#removeEventListeners();
   }

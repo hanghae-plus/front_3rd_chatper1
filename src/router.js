@@ -29,13 +29,13 @@ class Router {
   }
 
   router() {
-    this.#lastPage?.unmount();
+    this.#lastPage?.dehydrate();
     const path = this.path();
 
     if (!this.#routes.hasOwnProperty(path)) {
       const page = this.#routes['notFound'];
       page.render();
-      page.mount();
+      page.hydrate();
       this.#lastPage = page;
       return;
     }

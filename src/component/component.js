@@ -11,14 +11,14 @@ export default class Component {
 
   render() {
     document.getElementById('root').innerHTML = this.template();
-    this.mount();
+    this.hydrate();
   }
 
-  mount() {
+  hydrate() {
     throw new Error('Abstract method must be implemented in subclass.');
   }
 
-  unmount() {
+  dehydrate() {
     throw new Error('Abstract method must be implemented in subclass.');
   }
 }

@@ -50,7 +50,7 @@ export default class ErrorPage extends Component {
     backHomeBtn.addEventListener('click', this.#handleEvents.handlerClickBound);
   }
 
-  mount() {
+  hydrate() {
     this.#addEventListeners();
   }
 
@@ -60,7 +60,7 @@ export default class ErrorPage extends Component {
     backHomeBtn.removeEventListener('click', this.#handleEvents.handlerClickBound);
   }
 
-  unmount() {
+  dehydrate() {
     this.#removeEventListeners();
   }
 }

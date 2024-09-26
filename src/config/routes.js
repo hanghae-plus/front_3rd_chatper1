@@ -1,6 +1,6 @@
 import { HomePage, LoginPage, ProfilePage, NotFoundPage } from '../pages';
 
-const routes = [
+export default [
 	{
 		path: '/login',
 		title: '로그인',
@@ -22,5 +22,3 @@ const routes = [
 		component: NotFoundPage,
 	},
 ];
-
-export default routes;

@@ -127,6 +127,22 @@ function renderHome() {
   document.getElementById("logout").addEventListener("click", logout);
 }
 
+function loginError() {
+  const username = document.getElementById("username");
+
+  username.addEventListener(
+    "input",
+    () => {
+      try {
+        throw new Error("의도적인 오류입니다.");
+      } catch (e) {
+        // ( '오류 발생! 의도적인 오류입니다.')
+      }
+    },
+    { once: true }
+  );
+}
+
 function renderLogin() {
   document.querySelector("#root").innerHTML = `
   <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -157,6 +173,7 @@ function renderLogin() {
   `;
 
   const loginForm = document.getElementById("login-form");
+  loginError();
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const username = document.getElementById("username").value;
@@ -257,6 +274,8 @@ window.addEventListener("popstate", () => {
   const render = routes[route] || routes["/404"];
   render();
 });
+
+window.addEventListener("error", (error) => {});
 
 // 초기 경로 설정
 goTo("/");

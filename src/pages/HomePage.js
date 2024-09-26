@@ -6,22 +6,22 @@ import Router from '../Router';
 import { clearInLocalStorage, LOCAL_STORAGE_KEYS } from '../utils/StorageUtils';
 
 class HomePage {
-	render() {
-		root.innerHTML = this.template();
+  render() {
+    root.innerHTML = this.template();
 
-		const logoutButton = document.querySelector('#logout');
+    const logoutButton = document.querySelector('#logout');
 
-		logoutButton?.addEventListener('click', (event) => {
-			event.preventDefault();
+    logoutButton?.addEventListener('click', (event) => {
+      event.preventDefault();
 
-			clearInLocalStorage(LOCAL_STORAGE_KEYS.USER);
-			loginStore.setState({ isLoggedIn: false });
-			new Router().navigateTo(logoutButton.getAttribute('href'));
-		});
-	}
+      clearInLocalStorage(LOCAL_STORAGE_KEYS.USER);
+      loginStore.setState({ isLoggedIn: false });
+      new Router().navigateTo(logoutButton.getAttribute('href'));
+    });
+  }
 
-	template() {
-		return `
+  template() {
+    return `
       ${new Header().template()}
        <main class="p-4">
         <div class="mb-4 bg-white rounded-lg shadow p-4">
@@ -114,7 +114,7 @@ class HomePage {
       </main>
       ${new Footer().template()}
 `;
-	}
+  }
 }
 
 export default new HomePage();

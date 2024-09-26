@@ -2,33 +2,33 @@ import { loginStore, NAVIGATION_PAGE } from '../main';
 import Store, { Observer } from '../Store';
 
 class NavBar extends Observer {
-	constructor() {
-		super();
-		this.isLoggedIn = loginStore.getState().isLoggedIn;
+  constructor() {
+    super();
+    this.isLoggedIn = loginStore.getState().isLoggedIn;
 
-		this.selectedStore = new Store({ selected: 'home' });
-		loginStore.addObserver(this);
-	}
+    this.selectedStore = new Store({ selected: 'home' });
+    loginStore.addObserver(this);
+  }
 
-	update(data) {
-		this.isLoggedIn = data.isLoggedIn;
-	}
+  update(data) {
+    this.isLoggedIn = data.isLoggedIn;
+  }
 
-	template() {
-		const navItems = Object.values(NAVIGATION_PAGE).map((route) => {
-			if (!route.navTitle) return '';
+  template() {
+    const navItems = Object.values(NAVIGATION_PAGE).map((route) => {
+      if (!route.navTitle) return '';
 
-			const selectClass = window.location.pathname === route.path ? 'text-blue-600 font-bold' : 'text-gray-600';
-			const navEl = `<li><a href="${route.path}" class="${selectClass}">${route.navTitle}</a></li>`;
+      const selectClass = window.location.pathname === route.path ? 'text-blue-600 font-bold' : 'text-gray-600';
+      const navEl = `<li><a href="${route.path}" class="${selectClass}">${route.navTitle}</a></li>`;
 
-			if (!this.isLoggedIn && route.path === NAVIGATION_PAGE.profile.path) {
-				return '';
-			}
+      if (!this.isLoggedIn && route.path === NAVIGATION_PAGE.profile.path) {
+        return '';
+      }
 
-			return navEl;
-		});
+      return navEl;
+    });
 
-		return `
+    return `
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
         ${navItems.join('\n')}
@@ -36,7 +36,7 @@ class NavBar extends Observer {
         </ul>
         </nav>
 `;
-	}
+  }
 }
 
 export default NavBar;

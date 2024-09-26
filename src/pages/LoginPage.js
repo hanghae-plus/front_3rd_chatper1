@@ -4,43 +4,43 @@ import { loginStore } from '../main';
 import Router from '../Router';
 
 class LoginPage {
-	render() {
-		root.innerHTML = this.template();
+  render() {
+    root.innerHTML = this.template();
 
-		this.setEvents();
-	}
+    this.setEvents();
+  }
 
-	setEvents() {
-		if (loginStore.getState().isLoggedIn) {
-			new Router().navigateTo(NAVIGATION_PAGE.home.path);
-			return;
-		}
+  setEvents() {
+    if (loginStore.getState().isLoggedIn) {
+      new Router().navigateTo(NAVIGATION_PAGE.home.path);
+      return;
+    }
 
-		const pwdElement = document.querySelector('input[type="password"]');
-		pwdElement.addEventListener('input', () => {
-			// TODO: 비밀번호 유효성 확인
-		});
+    const pwdElement = document.querySelector('input[type="password"]');
+    pwdElement.addEventListener('input', () => {
+      // TODO: 비밀번호 유효성 확인
+    });
 
-		const loginForm = document.getElementById('login-form');
-		loginForm.addEventListener('submit', () => {
-			// TODO: 로그인 실패시 메세지 표시
+    const loginForm = document.getElementById('login-form');
+    loginForm.addEventListener('submit', () => {
+      // TODO: 로그인 실패시 메세지 표시
 
-			const username = document.getElementById('username');
-			const user = {
-				username: username.value,
-				email: '',
-				bio: '',
-			};
+      const username = document.getElementById('username');
+      const user = {
+        username: username.value,
+        email: '',
+        bio: '',
+      };
 
-			saveInLocalStorage(LOCAL_STORAGE_KEYS.USER, user);
-			loginStore.setState({ isLoggedIn: true, username: user.username, email: user.email, bio: user.bio });
+      saveInLocalStorage(LOCAL_STORAGE_KEYS.USER, user);
+      loginStore.setState({ isLoggedIn: true, username: user.username, email: user.email, bio: user.bio });
 
-			new Router().navigateTo(NAVIGATION_PAGE.home.path);
-		});
-	}
+      new Router().navigateTo(NAVIGATION_PAGE.home.path);
+    });
+  }
 
-	template() {
-		return `
+  template() {
+    return `
       <main class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
@@ -63,7 +63,7 @@ class LoginPage {
         </div>
       </main>
 `;
-	}
+  }
 }
 
 export default new LoginPage();

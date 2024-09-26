@@ -6,60 +6,60 @@ import { Observer } from '../Store';
 import { clearInLocalStorage, LOCAL_STORAGE_KEYS, saveInLocalStorage } from '../utils/StorageUtils';
 
 class ProfilePage extends Observer {
-	update(data) {
-		this.isLoggedIn = data.isLoggedIn;
-	}
+  update(data) {
+    this.isLoggedIn = data.isLoggedIn;
+  }
 
-	render() {
-		root.innerHTML = this.template();
+  render() {
+    root.innerHTML = this.template();
 
-		loginStore.addObserver(this);
+    loginStore.addObserver(this);
 
-		if (!loginStore.getState().isLoggedIn) {
-			new Router().navigateTo(NAVIGATION_PAGE.login.path);
-			return;
-		}
+    if (!loginStore.getState().isLoggedIn) {
+      new Router().navigateTo(NAVIGATION_PAGE.login.path);
+      return;
+    }
 
-		this.setEvents();
-	}
+    this.setEvents();
+  }
 
-	setEvents() {
-		const usernameInputElement = document.querySelector('#username');
-		usernameInputElement.value = loginStore.getState().username;
+  setEvents() {
+    const usernameInputElement = document.querySelector('#username');
+    usernameInputElement.value = loginStore.getState().username;
 
-		const emailInputElement = document.querySelector('#email');
-		emailInputElement.value = loginStore.getState().email;
+    const emailInputElement = document.querySelector('#email');
+    emailInputElement.value = loginStore.getState().email;
 
-		const bioElement = document.querySelector('#bio');
-		bioElement.value = loginStore.getState().bio;
+    const bioElement = document.querySelector('#bio');
+    bioElement.value = loginStore.getState().bio;
 
-		const profileForm = document.getElementById('profile-form');
-		profileForm.addEventListener('submit', (event) => {
-			event.preventDefault();
+    const profileForm = document.getElementById('profile-form');
+    profileForm.addEventListener('submit', (event) => {
+      event.preventDefault();
 
-			const user = {
-				username: usernameInputElement.value,
-				email: emailInputElement.value,
-				bio: bioElement.value,
-			};
+      const user = {
+        username: usernameInputElement.value,
+        email: emailInputElement.value,
+        bio: bioElement.value,
+      };
 
-			saveInLocalStorage(LOCAL_STORAGE_KEYS.USER, user);
-			loginStore.setState({ isLoggedIn: true, user });
-		});
+      saveInLocalStorage(LOCAL_STORAGE_KEYS.USER, user);
+      loginStore.setState({ isLoggedIn: true, user });
+    });
 
-		const logoutButton = document.querySelector('#logout');
-		logoutButton?.addEventListener('click', (event) => {
-			event.preventDefault();
+    const logoutButton = document.querySelector('#logout');
+    logoutButton?.addEventListener('click', (event) => {
+      event.preventDefault();
 
-			clearInLocalStorage(LOCAL_STORAGE_KEYS.USER);
-			loginStore.setState({ isLoggedIn: false });
+      clearInLocalStorage(LOCAL_STORAGE_KEYS.USER);
+      loginStore.setState({ isLoggedIn: false });
 
-			new Router().navigateTo(logoutButton.getAttribute('href'));
-		});
-	}
+      new Router().navigateTo(logoutButton.getAttribute('href'));
+    });
+  }
 
-	template() {
-		return `
+  template() {
+    return `
       ${new Header().template()}
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
@@ -83,7 +83,7 @@ class ProfilePage extends Observer {
       </main>
       ${new Footer().template()}
 `;
-	}
+  }
 }
 
 export default new ProfilePage();

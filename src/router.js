@@ -2,8 +2,10 @@ import HomePage from '../pages/home.js';
 import LoginPage from '../pages/login.js';
 import ProfilePage from '../pages/profile.js';
 import ErrorPage from '../pages/error.js';
+import Authorizer from './authorizer.js';
 
 class Router {
+  static #instance;
   #routes = {
     '/': new HomePage(),
     '/login': new LoginPage(),
@@ -11,13 +13,15 @@ class Router {
     'notFound': new ErrorPage()
   };
 
+  #authorizer = null;
   #lastPage = null;
 
   constructor() {
-    if (Router.instance) {
-      return Router.instance;
+    if (Router.#instance) {
+      return Router.#instance;
     }
-    Router.instance = this;
+    Router.#instance = this;
+    this.#authorizer = new Authorizer();
   }
 
   path() {
@@ -38,11 +42,11 @@ class Router {
 
     let page;
 
-    if (localStorage.getItem('user') === null && path === '/profile') {
+    if (!this.#authorizer.isAuth() && path === '/profile') {
       history.pushState({}, '', '/login');
       page = this.#routes['/login'];
 
-    } else if (localStorage.getItem('user') !== null && path === '/login') {
+    } else if (this.#authorizer.isAuth() && path === '/login') {
       history.pushState({}, '', '/');
       page = this.#routes['/'];
 

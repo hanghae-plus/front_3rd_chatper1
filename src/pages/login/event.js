@@ -22,7 +22,7 @@ export const addLoginFormEvent = (router) => {
                 }
             }))
 
-            localStorage.setItem('user', JSON.stringify({name: email, email: '', bio: '',}));
+            localStorage.setItem('user', JSON.stringify({username: email, email: '', bio: '',}));
             localStorage.setItem('isLogin','true')
             store.setState({isLogin:true, username:email})
             logger.log({

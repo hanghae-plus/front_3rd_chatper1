@@ -17,7 +17,7 @@ export const addUserInfoFormEvent = () => {
         const email = formData.get('email')
         const bio = formData.get('bio')
 
-        localStorage.setItem('user' , JSON.stringify({name:username,email,bio,username}))
+        localStorage.setItem('user' , JSON.stringify({username,email,bio}))
         store.setState({username,email,bio})
         alert('프로필이 업데이트되었습니다.')
         logger.log({

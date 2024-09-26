@@ -1,6 +1,6 @@
 import {Logger} from "../../utils/logger.js";
 
-export const logTpl = () => {
+export const dashboardTpl = () => {
     const logger = new Logger()
     const loggerList = logger.getLogs() || []
 

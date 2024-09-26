@@ -33,15 +33,17 @@ class Login {
   template() {
     return loginForm;
   }
+
+  // TODO removeEventListener 로직 추가
   activeEvents() {
     document.getElementById('login-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
       try {
         const username = e.target.querySelector('input[type="text"]').value;
         const email = e.target.querySelector('input[type="email"]').value;
 
         user.setUser({ username, email, bio: '' });
         router.navigateTo('/');
-        e.preventDefault();
       } catch (error) {
         console.error('프로필 업데이트 에러', error);
       }

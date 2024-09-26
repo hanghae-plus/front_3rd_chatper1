@@ -1,27 +1,93 @@
-const routes = {
-  '/main' : mainRoute,
-  '/profile' : profileRoute,
-  '/login' : loginRoute,
-  '/error' : errorRoute
+//user
+class UserService {
+  constructor() {
+    this.storageKey = 'user';
+  }
+
+  login(username, email = '', bio = '') {
+    const user = { username, email, bio };
+    localStorage.setItem(this.storageKey, JSON.stringify(user));
+  }
+
+  logout() {
+    localStorage.removeItem(this.storageKey);
+  }
+
+  getCurrentUser() {
+    const userJson = localStorage.getItem(this.storageKey);
+    return userJson ? JSON.parse(userJson) : null;
+  }
+
+  isLoggedIn() {
+    return !!this.getCurrentUser();
+  }
+
+  updateUserBio(bio) {
+    const user = this.getCurrentUser();
+    if (user) {
+      user.bio = bio;
+      localStorage.setItem(this.storageKey, JSON.stringify(user));
+    }
+  }
+
+  updateProfile(username, bio) {
+    const user = this.getCurrentUser();
+    if (user) {
+      user.username = username;
+      user.bio = bio;
+      localStorage.setItem(this.storageKey, JSON.stringify(user));
+    }
+  }
 }
 
-function mainRoute(){
-  const template = `
+// 페이지관리
+class Page {
+  constructor() {
+    this.root = document.querySelector('#root');
+  }
+
+  setTitle(title) {
+    document.title = title;
+  }
+
+  render() {
+    throw new Error('render method must be implemented');
+  }
+}
+
+class MainPage extends Page {
+  constructor(userService) {
+    super();
+    this.userService = userService;
+    this.setTitle('홈 - 항해플러스');
+  }
+
+  render() {
+    const user = this.userService.getCurrentUser();
+    const navTemplate = user
+      ? `<nav class="bg-white shadow-md p-2 sticky top-14">
+          <ul class="flex justify-around">
+            <li><a href="/main" class="text-blue-600">홈</a></li>
+            <li><a href="/profile" class="text-gray-600">프로필</a></li>
+            <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
+          </ul>
+        </nav>`
+      : `<nav class="bg-white shadow-md p-2 sticky top-14">
+          <ul class="flex justify-around">
+            <li><a href="/main" class="text-blue-600">홈</a></li>
+            <li><a href="/login" class="text-gray-600">로그인</a></li>
+          </ul>
+        </nav>`;
+
+    const template = `
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
           <header class="bg-blue-600 text-white p-4 sticky top-0">
             <h1 class="text-2xl font-bold">항해플러스</h1>
           </header>
-
-          <nav class="bg-white shadow-md p-2 sticky top-14">
-            <ul class="flex justify-around">
-              <li><a href="./main.html" class="text-blue-600">홈</a></li>
-              <li><a href="./profile.html" class="text-gray-600">프로필</a></li>
-              <li><a href="./login.html" class="text-gray-600">로그아웃</a></li>
-            </ul>
-          </nav> 
-
+          ${navTemplate}
           <main class="p-4">
+            ${user ? `<h2>환영합니다, ${user.username}님!</h2>` : '로그인해주세요.'}
             <div class="mb-4 bg-white rounded-lg shadow p-4">
               <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
               <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
@@ -110,135 +176,218 @@ function mainRoute(){
               </div>
             </div>
           </main>
+        </div>
+      </div>
+    `;
+    this.root.innerHTML = template;
+
+    if (user) {
+      this.addLogoutListener();
+    }
+  }
+
+  addLogoutListener() {
+    const logoutButton = document.querySelector('#logout');
+    logoutButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.userService.logout();
+      this.render(); // 페이지 새로고침
+    });
+  }
+}
+
+// 프로필
+class ProfilePage extends Page {
+  constructor(userService, router) {
+    super();
+    this.userService = userService;
+    this.router = router;
+    this.setTitle('프로필 - 항해플러스');
+  }
+  
+  render() {
+    const user = this.userService.getCurrentUser();
+    
+    if (!user) {
+      this.router.navigate('/login');
+      return;
+    }
+
+    const template = `
+      <div class="bg-gray-100 min-h-screen flex justify-center">
+        <div class="max-w-md w-full">
+          <header class="bg-blue-600 text-white p-4 sticky top-0">
+            <h1 class="text-2xl font-bold">항해플러스</h1>
+          </header>
+
+          <nav class="bg-white shadow-md p-2 sticky top-14">
+            <ul class="flex justify-around">
+              <li><a href="/main" class="text-gray-600">홈</a></li>
+              <li><a href="/profile" class="text-blue-600">프로필</a></li>
+              <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
+            </ul>
+          </nav>
+
+          <main class="p-4">
+            <div class="bg-white p-8 rounded-lg shadow-md">
+              <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
+              <form id="profile-form">
+                <div class="mb-4">
+                  <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
+                  <input type="text" id="username" name="username" value="${user.username}" class="w-full p-2 border rounded">
+                </div>
+                <div class="mb-6">
+                  <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
+                  <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">${user.bio || ''}</textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
+              </form>
+            </div>
+          </main>
 
           <footer class="bg-gray-200 p-4 text-center">
             <p>&copy; 2024 항해플러스. All rights reserved.</p>
           </footer>
         </div>
-    </div>
-  `;
-
-    document.querySelector('#root').innerHTML = template;
-}
-
-function profileRoute(){
-  const template = `
-    <div class="bg-gray-100 min-h-screen flex justify-center">
-      <div class="max-w-md w-full">
-        <header class="bg-blue-600 text-white p-4 sticky top-0">
-          <h1 class="text-2xl font-bold">항해플러스</h1>
-        </header>
-
-        <nav class="bg-white shadow-md p-2 sticky top-14">
-          <ul class="flex justify-around">
-            <li><a href="./main.html" class="text-gray-600">홈</a></li>
-            <li><a href="#" class="text-blue-600">프로필</a></li>
-            <li><a href="#" class="text-gray-600">로그아웃</a></li>
-          </ul>
-        </nav>
-
-        <main class="p-4">
-          <div class="bg-white p-8 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-            <form>
-              <div class="mb-4">
-                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
-                <input type="text" id="username" name="username" value="홍길동" class="w-full p-2 border rounded">
-              </div>
-              <div class="mb-4">
-                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
-                <input type="email" id="email" name="email" value="hong@example.com" class="w-full p-2 border rounded">
-              </div>
-              <div class="mb-6">
-                <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
-                <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">안녕하세요, 항해플러스에서 열심히 공부하고 있는 홍길동입니다.</textarea>
-              </div>
-              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
-            </form>
-          </div>
-        </main>
-
-        <footer class="bg-gray-200 p-4 text-center">
-          <p>&copy; 2024 항해플러스. All rights reserved.</p>
-        </footer>
       </div>
-    </div>
-  `;
+    `;
+    this.root.innerHTML = template;
+    this.addEventListeners();
+  }
+  addEventListeners() {
+    const form = document.querySelector('#profile-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.querySelector('#username').value;
+      const bio = document.querySelector('#bio').value;
+      this.userService.updateProfile(username, bio);
+      alert('프로필이 업데이트되었습니다.');
+    });
 
-  document.querySelector('#root').innerHTML = template;
-
+    const logoutButton = document.querySelector('#logout');
+    logoutButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.userService.logout();
+      this.router.navigate('/main');
+    });
+  }
 }
 
-function loginRoute(){
+// 로그인
+class LoginPage extends Page {
+  constructor(userService, router) {
+    super();
+    this.userService = userService;
+    this.router = router;
+    this.setTitle('로그인 - 항해플러스');
+  }
 
-  const template = `
-    <main class="bg-gray-100 flex items-center justify-center min-h-screen">
-      <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form>
-          <div class="mb-4">
-            <input type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
-          </div>
-          <div class="mb-6">
-            <input type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
-          </div>
-          <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
-        </form>
-        <div class="mt-4 text-center">
-          <a href="#" class="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
+  render() {
+    const template = `
+      <main class="bg-gray-100 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
+          <form id="login-form">
+            <div class="mb-4">
+              <input type="text" id="username" placeholder="사용자 이름" class="w-full p-2 border rounded" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">로그인</button>
+          </form>
         </div>
-        <hr class="my-6">
-        <div class="text-center">
-          <button class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
+      </main>
+    `;
+    this.root.innerHTML = template;
+
+    this.addEventListeners();
+  }
+
+  addEventListeners() {
+    const form = document.querySelector('#login-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.querySelector('#username').value;
+      this.userService.login(username);
+      this.router.navigate('/main');
+    });
+  }
+}
+
+// 에러
+class ErrorPage extends Page {
+  constructor() {
+    super();
+    this.setTitle('404 - 페이지를 찾을 수 없음');
+  }
+
+  render() {
+    const template = `
+      <main class="bg-gray-100 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-md w-full text-center" style="max-width: 480px">
+          <h1 class="text-2xl font-bold text-blue-600 mb-4">항해플러스</h1>
+          <p class="text-4xl font-bold text-gray-800 mb-4">404</p>
+          <p class="text-xl text-gray-600 mb-8">페이지를 찾을 수 없습니다</p>
+          <p class="text-gray-600 mb-8">
+            요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
+          </p>
+          <a href="/main" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
+            홈으로 돌아가기
+          </a>
         </div>
-      </div>
-    </main>
-  `;
-
-  document.querySelector('#root').innerHTML = template;
-
+      </main>
+    `;
+    this.root.innerHTML = template;
+  }
 }
 
-function errorRoute(){
-  const template = `
-    <main class="bg-gray-100 flex items-center justify-center min-h-screen">
-      <div class="bg-white p-8 rounded-lg shadow-md w-full text-center" style="max-width: 480px">
-        <h1 class="text-2xl font-bold text-blue-600 mb-4">항해플러스</h1>
-        <p class="text-4xl font-bold text-gray-800 mb-4">404</p>
-        <p class="text-xl text-gray-600 mb-8">페이지를 찾을 수 없습니다</p>
-        <p class="text-gray-600 mb-8">
-          요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
-        </p>
-        <a href="./main.html" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
-          홈으로 돌아가기
-        </a>
-      </div>
-    </main>
-  `;
-  document.querySelector('#root').innerHTML = template;
+// 라우터
+class Router {
+  constructor(userService) {
+    this.userService = userService;
+    this.routes = {
+      '/main': new MainPage(userService),
+      '/profile': new ProfilePage(userService),
+      '/login': new LoginPage(userService, this),
+      '/error': new ErrorPage()
+    };
+  }
 
+  navigate(path) {
+    history.pushState(null, '', path);
+    this.route();
+  }
+
+  route() {
+    const path = window.location.pathname;
+    const page = this.routes[path] || this.routes['/error'];
+    page.render();
+  }
+
+  initEventListeners() {
+    window.addEventListener('popstate', () => this.route());
+    document.addEventListener('click', (e) => {
+      if (e.target.matches('a')) {
+        e.preventDefault();
+        const href = e.target.getAttribute('href');
+        history.pushState(null, '', href);
+        this.route();
+      }
+    });
+  }
 }
 
-function router(){
-  const path = window.location.pathname;
-  const route = routes[path] || routes['/error'];
+// 애플리케이션 클래스
+class App {
+  constructor() {
+    this.userService = new UserService();
+    this.router = new Router(this.userService);
+  }
 
-  route();
+  init() {
+    this.router.initEventListeners();
+    this.router.route();
+  }
 }
 
-// 페이지로드시 라우터실행
-window.addEventListener('load',router);
-
-// 브라우저 히스토리 변경시 라우터 실행
-window.addEventListener('popstate', router);
-
-//링크 클릭시 history api를 사용한 네비게이션 구현
-document.addEventListener('click', (e) => {
-  e.preventDefault();
-  const href = e.target.getAttribute('href');
-  history.pushState(null, '', href);
-  router();
-});
-
-
-
+// 시작
+const app = new App();
+app.init();

@@ -1,12 +1,15 @@
 export default class Header {
   constructor() {
-    document.title = "Header";
+    // document.title = "Header";
   }
   getStyle(linkPath) {
     const pathName = window.location.pathname;
     return pathName === linkPath ? "text-blue-600 font-bold" : "text-gray-600";
   }
   getHtml() {
+    const isLoggedIn = localStorage.getItem("user") !== null; // 로그인 여부 확인
+    const logoutText = isLoggedIn ? "로그아웃" : "로그인"; // 상태에 따라 텍스트 변경
+
     return `
             <div class="bg-gray-100 min-h-screen flex justify-center">
           <div class="max-w-md w-full">
@@ -22,14 +25,12 @@ export default class Header {
                 )}">프로필</a></li>
                 <li id="logout"><a href="/login" class="${this.getStyle(
                   "/login"
-                )}">로그아웃</a></li>
+                )}">${logoutText}</a></li>
               </ul>
             </nav>
         `;
   }
   addEventListeners() {
-    //이벤트 모음
-
     // 로그인 버튼 클릭 시 이벤트 리스너 추가
     const logoutBtn = document.getElementById("logout");
     logoutBtn.addEventListener("click", (event) => {

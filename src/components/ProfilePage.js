@@ -1,25 +1,39 @@
-import { renderNavBar } from './NavBar.js';
+import { navBar } from './NavBar.js';
+import { header } from './Header.js';
+import { footer } from './Footer.js';
+import { getUserData } from '../services/auth.js';
 
 export function profilePage() {
+  const userData = getUserData();
+
   return `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
-        <header class="bg-blue-600 text-white p-4 sticky top-0">
-          <h1 class="text-2xl font-bold">프로필</h1>
-        </header>
-
-        ${renderNavBar()}
+        ${header()}
+        ${navBar()}
 
         <main class="p-4">
-          <div class="mb-4 bg-white rounded-lg shadow p-4">
-            <h2 class="text-xl font-bold">프로필 페이지</h2>
-            <p>사용자 정보 및 설정이 여기에 표시됩니다.</p>
+          <div class="bg-white p-8 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
+            <form id="profile-form">
+              <div class="mb-4">
+                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
+                <input type="text" id="username" name="username" value="${userData.username || ''}" class="w-full p-2 border rounded">
+              </div>
+              <div class="mb-4">
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
+                <input type="email" id="email" name="email" value="${userData.email || ''}" class="w-full p-2 border rounded">
+              </div>
+              <div class="mb-6">
+                <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
+                <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">${userData.bio || ''}</textarea>
+              </div>
+              <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
+            </form>
           </div>
         </main>
 
-        <footer class="bg-gray-200 p-4 text-center">
-          <p>&copy; 2024 항해플러스. All rights reserved.</p>
-        </footer>
+        ${footer()}
       </div>
     </div>
   `;

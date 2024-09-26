@@ -1,26 +1,37 @@
-// 사용자 데이터를 저장하는 함수
+const state = {
+  user: null,
+  isLoggedIn: false,
+};
+
+export function setState(newState) {
+  Object.assign(state, newState);
+}
+
+export function getState() {
+  return state;
+}
+
 export function saveUserData(user) {
+  setState({ user, isLoggedIn: true });
   localStorage.setItem('user', JSON.stringify(user));
+  localStorage.setItem('isLoggedIn', 'true');
 }
 
-// 사용자 데이터를 불러오는 함수
 export function getUserData() {
-  const userData = localStorage.getItem('user');
-  return userData ? JSON.parse(userData) : null;
+  return state.user || JSON.parse(localStorage.getItem('user'));
 }
 
-// 사용자 데이터를 지우는 함수 (로그아웃 처리)
 export function clearUserData() {
-  localStorage.removeItem('user'); // 사용자 데이터 삭제
-  localStorage.removeItem('isLoggedIn'); // 로그인 상태 삭제
+  setState({ user: null, isLoggedIn: false });
+  localStorage.removeItem('user');
+  localStorage.removeItem('isLoggedIn');
 }
 
-// 로그인 상태를 저장하는 함수
 export function setLoginStatus(isLoggedIn) {
-  localStorage.setItem('isLoggedIn', isLoggedIn);
+  setState({ isLoggedIn });
+  localStorage.setItem('isLoggedIn', isLoggedIn ? 'true' : 'false');
 }
 
-// 로그인 상태를 확인하는 함수
 export function getLoginStatus() {
-  return localStorage.getItem('isLoggedIn') === 'true';
+  return state.isLoggedIn || localStorage.getItem('isLoggedIn') === 'true';
 }

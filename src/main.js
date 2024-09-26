@@ -36,6 +36,12 @@ function render(component) {
 function renderMainPage() {
   if (user.getUser()) {
     render(LoginMain);
+    const logoutButton = document.querySelector('a[id="logout"]');
+    logoutButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      user.deleteUser();
+      router.navigateTo('/login');
+    });
   } else {
     render(Main);
   }
@@ -97,6 +103,10 @@ function renderProfilePage() {
 }
 
 function renderLoginPage() {
+  if (user.getUser()) {
+    router.navigateTo('/');
+    return;
+  }
   console.log('Login Page');
   render(Login);
 

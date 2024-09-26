@@ -30,6 +30,12 @@ class Router {
       this.navigateTo("/login");
       return;
     }
+
+    if (user && path === "/login") {
+      this.navigateTo("/");
+      return;
+    }
+
     const component = this.routes[path];
     if (component) {
       document.querySelector("#root").innerHTML = component;
@@ -47,8 +53,15 @@ class Router {
 }
 
 const router = new Router();
+
 router.addRoute("/", home.component);
 router.addRoute("/login", login.component);
 router.addRoute("/profile", profile.component);
 router.addRoute("/404", notFound.component);
 router.navigateTo(window.location.pathname);
+
+window.addEventListener("error", (error) => {
+  document.querySelector(
+    "#root"
+  ).innerHTML = `<h1>오류 발생!</h1> ${error.message}`;
+});

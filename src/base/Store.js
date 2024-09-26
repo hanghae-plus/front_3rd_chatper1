@@ -2,7 +2,7 @@
 class Store {
 	constructor() {
 		this.state = {}; // 전역 상태
-		this.listeners = []; // 상태 변경을 구독하는 컴포넌트들
+		this.listeners = []; // 상태 변경을 구독하는 리스너들
 	}
 
 	// 전역 상태 설정

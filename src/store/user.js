@@ -47,6 +47,14 @@ class UserStore extends Store {
 	getUserInfo() {
 		return this.state.user;
 	}
+
+	// 사용자 프로필 수정
+	updateUserInfo(userInfo) {
+		const user = { ...this.state.user, ...userInfo };
+
+		this.setState({ ...this.state, user });
+		localStorage.setItem('user', JSON.stringify(user));
+	}
 }
 
 const userStore = new UserStore();

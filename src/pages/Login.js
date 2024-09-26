@@ -34,6 +34,8 @@ function setupPage(onNavigateTo) {
         JSON.stringify({ username, email: "", bio: "" })
       );
       onNavigateTo("/");
+    } else {
+      alert("로그인에 실패하셨습니다.");
     }
   });
 }

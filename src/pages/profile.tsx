@@ -25,7 +25,7 @@ function Profile() {
             <label for="email" class="block text-gray-700 text-sm font-bold mb-2">
               이메일
             </label>
-            <input type="email" id="email" name="email" value="hong@example.com" class="w-full p-2 border rounded" />
+            <input type="email" id="email" name="email" value={userInfo.email} class="w-full p-2 border rounded" />
           </div>
           <div class="mb-6">
             <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">
@@ -51,11 +51,15 @@ document.addEventListener('submit', e => {
     return;
   }
   const $textarea = document.querySelector('textarea') as HTMLTextAreaElement;
-  if ($textarea !== null) {
-    const userInfo = { username: 'testuser', email: '', bio: $textarea.value };
-    console.log($textarea.value);
+  const $username = document.getElementById('username') as HTMLInputElement;
+  const $email = document.getElementById('email') as HTMLInputElement;
+
+  if ($textarea !== null && $username !== null && $email !== null) {
+    console.log($email.value);
+    const userInfo = { username: $username.value, email: $email.value, bio: $textarea.value };
     userInfoState.setUser(userInfo);
     localStorage.setItem('user', JSON.stringify(userInfoState.getUser()));
+    alert('프로필이 업데이트 되었습니다.');
   }
 });
 

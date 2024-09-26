@@ -38,16 +38,22 @@ document.addEventListener('submit', e => {
     return;
   }
   e.preventDefault();
-  localStorage.setItem(
-    'user',
-    JSON.stringify({
-      username: 'testuser',
-      email: '',
-      bio: '',
-    }),
-  );
-  userInfoState.setUser({ username: 'testuser', email: '', bio: '' });
-  router().push('/');
+  const $id = document.getElementById('username') as HTMLInputElement;
+
+  if ($id !== null) {
+    localStorage.setItem(
+      'user',
+      JSON.stringify({
+        username: $id.value,
+        email: '',
+        bio: '',
+      }),
+    );
+    userInfoState.setUser({ username: $id.value, email: '', bio: '' });
+    router().push('/');
+  } else {
+    alert('에러가 발생했습니다!');
+  }
 });
 
 export default Login;

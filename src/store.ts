@@ -5,10 +5,12 @@ type userInfoType = {
 };
 
 export function userInfoStore() {
+  let storage = localStorage.getItem('user') ?? '{}';
+  let userInfoStorage = JSON.parse(storage);
   let userInfo: userInfoType = {
-    username: '',
-    email: '',
-    bio: '',
+    username: userInfoStorage.username ?? '',
+    email: userInfoStorage.email ?? '',
+    bio: userInfoStorage.bio ?? '',
   };
 
   const setUser = (user: userInfoType) => (userInfo = user);

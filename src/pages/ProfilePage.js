@@ -1,6 +1,6 @@
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { loginStore, root } from '../main';
+import { loginStore, NAVIGATION_PAGE, root } from '../main';
 import Router from '../Router';
 import { Observer } from '../Store';
 import { clearInLocalStorage, LOCAL_STORAGE_KEYS, saveInLocalStorage } from '../utils/StorageUtils';
@@ -16,7 +16,7 @@ class ProfilePage extends Observer {
 		loginStore.addObserver(this);
 
 		if (!loginStore.getState().isLoggedIn) {
-			new Router().navigateTo('/login');
+			new Router().navigateTo(NAVIGATION_PAGE.login.path);
 			return;
 		}
 

@@ -22,7 +22,7 @@ class NavBar extends Observer {
 
 			const navEl = `<li><a href="${route.path}" class="${selectClass}">${route.navTitle}</a></li>`;
 
-			if (!this.isLoggedIn && route.path === '/profile') {
+			if (!this.isLoggedIn && route.path === NAVIGATION_PAGE.profile.path) {
 				return '';
 			}
 

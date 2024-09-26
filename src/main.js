@@ -8,11 +8,6 @@ const render = (page) => {
   document.querySelector('#root').innerHTML = page();
 };
 
-const userState = {
-  userInfo: null,
-  isLogged: false,
-};
-
 const posts = [
   {
     name: '홍길동',
@@ -60,6 +55,37 @@ const routes = {
   '/404': () => render(NotFoundPage),
 };
 
+const createUserState = () => {
+  const userState = {
+    userInfo: null,
+    isLogged: false,
+  };
+
+  const updateUserInfo = ({ username, email, bio }) => {
+    localStorage.setItem('user', JSON.stringify({ username, email, bio }));
+    loadedUser();
+  };
+
+  const loadedUser = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      userState.userInfo = user;
+      userState.isLogged = true;
+    } else {
+      userState.userInfo = null;
+      userState.isLogged = false;
+    }
+  };
+
+  const removeUser = () => {
+    localStorage.removeItem('user');
+    loadedUser();
+  };
+
+  loadedUser();
+  return { userState, updateUserInfo, removeUser };
+};
+
 const router = () => {
   const routes = {};
 
@@ -89,6 +115,7 @@ const router = () => {
 };
 
 const { addRoute, navigateTo, handlePopState } = router();
+const { userState, updateUserInfo, removeUser } = createUserState();
 
 for (const key in routes) {
   addRoute(key, routes[key]);
@@ -98,7 +125,7 @@ const logIn = (username) => {
   const isValidUsername = /^[a-zA-Z]+$/.test(username);
 
   if (isValidUsername) {
-    updateUserInfo(username, '', '');
+    updateUserInfo({ username, email: '', bio: '' });
     navigateTo('/');
     return;
   }
@@ -107,28 +134,8 @@ const logIn = (username) => {
 };
 
 const logOut = () => {
-  localStorage.removeItem('user');
-  loadedUser();
+  removeUser();
   navigateTo('/login');
-};
-
-const updateUserInfo = (username, email, bio) => {
-  localStorage.setItem(
-    'user',
-    JSON.stringify({ ...userState.userInfo, username, email, bio })
-  );
-  loadedUser();
-};
-
-const loadedUser = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (user) {
-    userState.userInfo = user;
-    userState.isLogged = true;
-  } else {
-    userState.userInfo = null;
-    userState.isLogged = false;
-  }
 };
 
 const handleError = (e) => {
@@ -165,7 +172,7 @@ const handleSubmit = (e) => {
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
     const bio = document.getElementById('bio').value;
-    updateUserInfo(username, email, bio);
+    updateUserInfo({ username, email, bio });
     alert('수정되었습니다.');
   }
 };
@@ -179,7 +186,6 @@ const addListeners = () => {
 };
 
 const init = () => {
-  loadedUser();
   addListeners();
 };
 

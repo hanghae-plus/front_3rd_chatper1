@@ -4,9 +4,7 @@ import { ROUTES, PROJECT_NAME } from '@constants'
 
 const userStore = UserStore()
 const LOGIN_REQUIRED_FIELD = '이름과 비밀번호를 입력해주세요.'
-const INTENTIONAL_ERROR_MESSAGE = '의도적인 오류입니다.'
 const ERROR_MESSAGE = '오류 발생!'
-const TEST_KEY = '1'
 
 export default function LoginPage() {
   function handleSaveUser(username) {
@@ -23,24 +21,8 @@ export default function LoginPage() {
     Router.navigate(ROUTES.PROFILE)
   }
 
-  function handleOpenHelperText(message) {
-    let errorDiv = document.getElementById('error-message')
-    if (!errorDiv) {
-      errorDiv = document.createElement('div')
-      errorDiv.id = 'error-message'
-      document.getElementById('error-message-wrap').appendChild(errorDiv)
-    }
-    errorDiv.textContent = `${ERROR_MESSAGE} ${message}`
-  }
-
-  function handleErrorCatch(e) {
-    try {
-      if (e.target.value === TEST_KEY) {
-        throw new Error(INTENTIONAL_ERROR_MESSAGE)
-      }
-    } catch (error) {
-      handleOpenHelperText(error.message)
-    }
+  function renderErrorBoundary(event) {
+    document.getElementById('error-message-wrap').innerHTML = `<p>${ERROR_MESSAGE} ${event.message}</p>`
   }
 
   const template = `
@@ -71,12 +53,12 @@ export default function LoginPage() {
   function render() {
     document.getElementById('root').innerHTML = template
     document.getElementById('login-form').addEventListener('submit', handleLogin)
-    document.getElementById('username').addEventListener('input', handleErrorCatch, { once: true })
+    window.addEventListener('error', renderErrorBoundary)
   }
 
   function cleanup() {
     document.getElementById('login-form').removeEventListener('submit', handleLogin)
-    document.getElementById('username').removeEventListener('input', handleErrorCatch)
+    window.removeEventListener('error', renderErrorBoundary)
   }
 
   return { render, cleanup }

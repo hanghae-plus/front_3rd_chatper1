@@ -45,15 +45,16 @@ function createRouter(options = {}) {
   }
 
   function handleLinkClick(e) {
-    const { tagName, href, id } = e.target
-    if (tagName === LINK_TAG && href.startsWith(window.location.origin)) {
+    const target = e.target
+
+    if (target.tagName === LINK_TAG && target.href.startsWith(window.location.origin)) {
       e.preventDefault()
 
-      if (id === LOGOUT) {
+      if (target.id === LOGOUT) {
         handleLogout()
         return
       }
-
+      const href = target.getAttribute('href')
       navigate(href)
     }
   }

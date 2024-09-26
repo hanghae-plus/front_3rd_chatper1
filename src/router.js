@@ -18,6 +18,11 @@ export const router = () => {
     return;
   }
 
+  if (!user && location.pathname === "/profile") {
+    navigateTo("/login");
+    return;
+  }
+
   const routes = [
     {
       path: "/",

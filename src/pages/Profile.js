@@ -1,3 +1,5 @@
+import UserStore from "../UserStore";
+
 const pageTemplate = `
   <main class="p-4">
     <div class="bg-white p-8 rounded-lg shadow-md">
@@ -22,6 +24,7 @@ const pageTemplate = `
 `;
 
 function setupPage() {
+  const store = new UserStore();
   const user = JSON.parse(localStorage.getItem("user"));
   const usernameInput = document.querySelector("#username");
   const emailInput = document.querySelector("#email");
@@ -35,14 +38,11 @@ function setupPage() {
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        username: usernameInput.value,
-        email: emailInput.value,
-        bio: bioTextarea.value,
-      })
-    );
+    store.setState({
+      username: usernameInput.value,
+      email: emailInput.value,
+      bio: bioTextarea.value,
+    });
   });
 }
 

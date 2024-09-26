@@ -1,3 +1,5 @@
+import UserStore from "../UserStore";
+
 const pageTemplate = `
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -22,17 +24,15 @@ const pageTemplate = `
     </main>
 `;
 
-function setupPage(onNavigateTo) {
+function setupPage({ onNavigateTo }) {
+  const store = new UserStore();
   const form = document.querySelector("#login-form");
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     const username = document.querySelector("#username").value;
     if (username) {
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ username, email: "", bio: "" })
-      );
+      store.setState({ username, email: "", bio: "" });
       onNavigateTo("/");
     } else {
       alert("로그인에 실패하셨습니다.");

@@ -18,7 +18,7 @@ export default function MainLayout({ path, page, onNavigateTo }) {
   }
   document.querySelector("#root").innerHTML = template;
   if (page.setupPage) {
-    page.setupPage(onNavigateTo);
+    page.setupPage({ onNavigateTo });
   }
   if (path === "/" || path === "/profile") {
     Nav.setUpComponent({ path, onNavigateTo });

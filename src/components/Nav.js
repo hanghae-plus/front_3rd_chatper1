@@ -1,3 +1,5 @@
+import UserStore from "../UserStore";
+
 const componentTemplate = `
   <nav class="bg-white shadow-md p-2 sticky top-14">
     <ul class="flex justify-around">
@@ -6,8 +8,9 @@ const componentTemplate = `
 `;
 
 function setUpComponent({ path, onNavigateTo }) {
+  const store = new UserStore();
   const nav = document.querySelector("nav");
-  const user = localStorage.getItem("user");
+  const user = store.getState();
   const ul = nav.querySelector("ul");
 
   const homeLi = document.createElement("li");
@@ -36,7 +39,7 @@ function setUpComponent({ path, onNavigateTo }) {
     if (e.target.tagName === "A") {
       e.preventDefault();
       if (e.target.id === "logout") {
-        localStorage.removeItem("user");
+        store.setState(null);
         onNavigateTo("/login");
       } else {
         onNavigateTo(e.target.pathname);

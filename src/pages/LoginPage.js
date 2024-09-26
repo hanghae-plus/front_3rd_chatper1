@@ -1,9 +1,23 @@
 import Component from '../base/Component';
+import Router from '../base/Router';
+import userStore from '../store/user';
 
 class LoginPage extends Component {
 	constructor(element) {
 		super(element);
 	}
+
+	mounted() {
+		const loginBtn = this.$target.querySelector('#login-form');
+		loginBtn.addEventListener('submit', (event) => {
+			event.preventDefault();
+			const username = this.$target.querySelector('#username');
+			userStore.login(username.value);
+			Router.navigateTo('/');
+		});
+	}
+
+	async handleLogin() {}
 
 	template() {
 		return `
@@ -12,9 +26,10 @@ class LoginPage extends Component {
                 <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">
                     항해플러스
                 </h1>
-                <form>
+                <form id="login-form">
                     <div class="mb-4">
                         <input
+                            id="username"
                             type="text"
                             placeholder="이메일 또는 전화번호"
                             class="w-full p-2 border rounded"
@@ -28,6 +43,7 @@ class LoginPage extends Component {
                         />
                     </div>
                     <button
+                        id="login-btn"
                         type="submit"
                         class="w-full bg-blue-600 text-white p-2 rounded font-bold"
                     >

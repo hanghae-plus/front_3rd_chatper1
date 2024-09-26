@@ -13,17 +13,29 @@ class UserStore extends Store {
 	}
 
 	// 로그인 처리
-	login(user) {
+	login(username) {
 		// 사용자 정보를 상태에 저장하고 localStorage에 저장
+
+		let user = this.state.user
+			? {
+					...this.state.user,
+					username: username,
+				}
+			: {
+					username: username,
+					email: '',
+					bio: '',
+				};
+
 		this.setState({ isLoggedIn: true, user });
-		localStorage.setItem('loggedInUser', JSON.stringify(user)); // localStorage에 저장
+		localStorage.setItem('user', JSON.stringify(user)); // localStorage에 저장
 	}
 
 	// 로그아웃 처리
 	logout() {
 		// 상태 초기화 및 localStorage에서 정보 삭제
 		this.setState({ isLoggedIn: false, user: null });
-		localStorage.removeItem('loggedInUser');
+		localStorage.removeItem('user');
 	}
 
 	// 로그인 상태 가져오기

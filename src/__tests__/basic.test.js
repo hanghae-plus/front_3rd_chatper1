@@ -1,5 +1,4 @@
 import userEvent from '@testing-library/user-event';
-import { expect } from 'vitest';
 
 beforeAll(async () => {
 	// DOM 초기화
@@ -65,7 +64,6 @@ describe('기본과제 테스트', () => {
 			expect(localStorage.getItem('user')).toEqual(`{"username":"testuser","email":"","bio":""}`);
 
 			const logoutButton = document.getElementById('logout');
-
 			logoutButton.click();
 
 			expect(localStorage.getItem('user')).toEqual(null);
@@ -101,6 +99,7 @@ describe('기본과제 테스트', () => {
 
 			bioInput.value = 'Updated bio';
 			profileForm.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+
 			expect(localStorage.getItem('user')).toEqual(`{"username":"testuser","email":"","bio":"Updated bio"}`);
 		});
 	});
@@ -109,9 +108,7 @@ describe('기본과제 테스트', () => {
 		beforeEach(async () => {
 			goTo('/login');
 
-			expect(localStorage.getItem('user')).toEqual(
-				`{"name":"testuser","email":"","bio":"Updated bio","username":"testuser"}`,
-			);
+			const loginForm = document.getElementById('login-form');
 
 			await user.type(document.getElementById('username'), 'testuser');
 

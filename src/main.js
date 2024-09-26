@@ -1,13 +1,29 @@
-// History API를 사용하여 SPA 라우터 구현
-// 싱글톤 패턴 적용
+// UserPreferences 관리 (LocalStorage 연동): 지연 초기화하는 방식
+const UserPreferences = (() => {
+  const getPreferences = () => JSON.parse(localStorage.getItem('user')) || {};
+
+  return {
+    get preferences() {
+      return getPreferences(); // getter 호출 시 데이터 로딩
+    },
+    set(data) {
+      localStorage.setItem('user', JSON.stringify(data));
+    },
+    delete() {
+      localStorage.removeItem('user');
+    },
+  };
+})();
+
+// Router 구현 (싱글톤 패턴 적용)
 const Router = (function () {
   let instance;
 
   function createInstance() {
     return {
       routes: {},
-      isLoggedIn: !!localStorage.getItem('user'), // 로그인 상태 초기화
-
+      // 로그인 상태를 확인하기 위해 getter를 호출
+      isLoggedIn: !!UserPreferences.preferences.isLoggedIn, // 여기서 실제 로컬 스토리지에서 데이터가 로드됨
       addRoute(path, handler) {
         this.routes[path] = handler;
       },
@@ -22,28 +38,23 @@ const Router = (function () {
       },
 
       handleRoute(path) {
-        // 비로그인 상태에서 프로필 페이지 접근 시 로그인 페이지로 리다이렉트
-        if (path === '/profile' && !this.isLoggedIn) {
-          alert('비로그인 상태입니다. 로그인 페이지로 이동합니다.');
+        const loginStatusRedirects = {
+          '/profile': '/login', // 비로그인 상태에서는 프로필 접근 시 로그인 페이지로 리다이렉트
+          '/login': '/', // 로그인 상태에서 로그인 페이지 접근 시 메인 페이지로 리다이렉트
+        };
 
-          this.navigateTo('/login');
-          return;
+        if (loginStatusRedirects[path]) {
+          if (
+            (path === '/profile' && !this.isLoggedIn) ||
+            (path === '/login' && this.isLoggedIn)
+          ) {
+            this.navigateTo(loginStatusRedirects[path]);
+            return;
+          }
         }
 
-        // 로그인 상태에서 로그인 페이지 접근 시 메인 페이지로 리다이렉트
-        if (path === '/login' && this.isLoggedIn) {
-          alert('이미 로그인되어 있습니다. 메인 페이지로 이동합니다.');
-
-          this.navigateTo('/');
-          return;
-        }
-
-        const handler = this.routes[path];
-        if (handler) {
-          handler();
-        } else {
-          this.navigateTo('/404');
-        }
+        const handler = this.routes[path] || this.routes['/404'];
+        handler();
       },
 
       setLoginStatus(status) {
@@ -61,51 +72,21 @@ const Router = (function () {
       init() {
         window.addEventListener('popstate', this.handlePopState.bind(this));
       },
-
-      cleanup() {
-        window.removeEventListener('popstate', this.handlePopState.bind(this));
-      },
     };
   }
 
   return {
-    getInstance: function () {
-      if (!instance) {
-        instance = createInstance();
-      }
+    getInstance() {
+      if (!instance) instance = createInstance();
       return instance;
     },
   };
 })();
 
 const router = Router.getInstance();
-router.init(); // 싱글톤 인스턴스 초기화 및 이벤트 리스너 추가
+router.init(); // 라우터 초기화
 
-// UserPreferences를 경량 객체로 상태 관리
-const UserPreferences = {
-  preferences: JSON.parse(localStorage.getItem('user')) || {},
-
-  set(data) {
-    this.preferences = data;
-    this.save();
-  },
-
-  get() {
-    return this.preferences;
-  },
-
-  save() {
-    localStorage.setItem('user', JSON.stringify(this.preferences));
-  },
-
-  delete() {
-    localStorage.removeItem('user');
-  },
-};
-
-const prefs = UserPreferences;
-
-// 컴포넌트 기반 구조 설계
+// 공통 Header 컴포넌트
 const Header = (isLoggedIn) => {
   return `
     <header class="bg-blue-600 text-white p-4 sticky top-0">
@@ -130,6 +111,7 @@ const Header = (isLoggedIn) => {
   `;
 };
 
+// 공통 Footer 컴포넌트
 const Footer = () => {
   return `  
     <footer class="bg-gray-200 p-4 text-center">
@@ -138,103 +120,73 @@ const Footer = () => {
   `;
 };
 
-// 각 라우트에 해당하는 컴포넌트 렌더링 함수 작성
+// 게시물 컴포넌트
+const Post = ({ username, time, content }) => `
+  <div class="bg-white rounded-lg shadow p-4">
+    <div class="flex items-center mb-2">
+      <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+      <div>
+        <p class="font-bold">${username}</p>
+        <p class="text-sm text-gray-500">${time}</p>
+      </div>
+    </div>
+    <p>${content}</p>
+    <div class="mt-2 flex justify-between text-gray-500">
+      <button>좋아요</button>
+      <button>댓글</button>
+      <button>공유</button>
+    </div>
+  </div>
+`;
+
+// 게시물 목록 컴포넌트
+const PostList = () => {
+  const posts = [
+    {
+      username: '홍길동',
+      time: '5분 전',
+      content: '오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!',
+    },
+    {
+      username: '김철수',
+      time: '15분 전',
+      content: '새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!',
+    },
+    {
+      username: '이영희',
+      time: '30분 전',
+      content: '오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?',
+    },
+    {
+      username: '박민수',
+      time: '1시간 전',
+      content: '주말에 등산 가실 분 계신가요? 함께 가요!',
+    },
+    {
+      username: '정수연',
+      time: '2시간 전',
+      content: '새로 나온 영화 재미있대요. 같이 보러 갈 사람?',
+    },
+  ];
+
+  return posts.map((post) => Post(post)).join('');
+};
+
+// 컴포넌트 기반 구조 설계
 const renderHomePage = (isLoggedIn) => {
   document.querySelector('#root').innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
-        ${Header(isLoggedIn)}
-  
+        ${Header(isLoggedIn)}  
         <main class="p-4">
           <div class="mb-4 bg-white rounded-lg shadow p-4">
             <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
             <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
-          </div>
-  
+          </div>  
           <div class="space-y-4">
-  
-            <div class="bg-white rounded-lg shadow p-4">
-              <div class="flex items-center mb-2">
-                <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-                <div>
-                  <p class="font-bold">홍길동</p>
-                  <p class="text-sm text-gray-500">5분 전</p>
-                </div>
-              </div>
-              <p>오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!</p>
-              <div class="mt-2 flex justify-between text-gray-500">
-                <button>좋아요</button>
-                <button>댓글</button>
-                <button>공유</button>
-              </div>
-            </div>
-  
-            <div class="bg-white rounded-lg shadow p-4">
-              <div class="flex items-center mb-2">
-                <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-                <div>
-                  <p class="font-bold">김철수</p>
-                  <p class="text-sm text-gray-500">15분 전</p>
-                </div>
-              </div>
-              <p>새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!</p>
-              <div class="mt-2 flex justify-between text-gray-500">
-                <button>좋아요</button>
-                <button>댓글</button>
-                <button>공유</button>
-              </div>
-            </div>
-  
-            <div class="bg-white rounded-lg shadow p-4">
-              <div class="flex items-center mb-2">
-                <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-                <div>
-                  <p class="font-bold">이영희</p>
-                  <p class="text-sm text-gray-500">30분 전</p>
-                </div>
-              </div>
-              <p>오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?</p>
-              <div class="mt-2 flex justify-between text-gray-500">
-                <button>좋아요</button>
-                <button>댓글</button>
-                <button>공유</button>
-              </div>
-            </div>
-  
-            <div class="bg-white rounded-lg shadow p-4">
-              <div class="flex items-center mb-2">
-                <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-                <div>
-                  <p class="font-bold">박민수</p>
-                  <p class="text-sm text-gray-500">1시간 전</p>
-                </div>
-              </div>
-              <p>주말에 등산 가실 분 계신가요? 함께 가요!</p>
-              <div class="mt-2 flex justify-between text-gray-500">
-                <button>좋아요</button>
-                <button>댓글</button>
-                <button>공유</button>
-              </div>
-            </div>
-  
-            <div class="bg-white rounded-lg shadow p-4">
-              <div class="flex items-center mb-2">
-                <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-                <div>
-                  <p class="font-bold">정수연</p>
-                  <p class="text-sm text-gray-500">2시간 전</p>
-                </div>
-              </div>
-              <p>새로 나온 영화 재미있대요. 같이 보러 갈 사람?</p>
-              <div class="mt-2 flex justify-between text-gray-500">
-                <button>좋아요</button>
-                <button>댓글</button>
-                <button>공유</button>
-              </div>
-            </div>
+            <div class="space-y-4">${PostList()}</div>
           </div>
-        </main>
-  
+        </main>  
         ${Footer()}
       </div>
     </div>
@@ -246,7 +198,7 @@ const renderHomePage = (isLoggedIn) => {
       e.preventDefault();
 
       // LocalStorage에서 데이터 삭제
-      prefs.delete('user');
+      UserPreferences.delete('user');
 
       router.handleLogout();
       router.navigateTo('/');
@@ -256,13 +208,12 @@ const renderHomePage = (isLoggedIn) => {
 
 const renderProfilePage = (isLoggedIn) => {
   // LocalStorage에서 데이터 가져오기 (key: 'user')
-  const user = prefs.get('user');
+  const user = UserPreferences.get('user');
 
   document.querySelector('#root').innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
       ${Header(isLoggedIn)}
-
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
@@ -295,20 +246,18 @@ const renderProfilePage = (isLoggedIn) => {
   </div>
   `;
 
-  document.getElementById('username').value = user.username;
-
   document.getElementById('profile-form').addEventListener('submit', (e) => {
-    e.preventDefault(); // 폼 제출 기본 동작 방지
+    e.preventDefault();
 
     const userInfo = {
       username: document.getElementById('username').value,
+      password: document.getElementById('userPw').value,
       email: document.getElementById('email').value,
       bio: document.getElementById('bio').value,
     };
 
-    // // LocalStorage에 데이터 저장 (key: 'user')
-    prefs.set(userInfo);
-
+    // LocalStorage에 데이터 저장 (key: 'user')
+    UserPreferences.set(userInfo);
     alert('프로필이 업데이트되었습니다.');
   });
 
@@ -318,7 +267,7 @@ const renderProfilePage = (isLoggedIn) => {
       e.preventDefault();
 
       // LocalStorage에서 데이터 삭제 (key: 'user')
-      prefs.delete('user');
+      UserPreferences.delete('user');
 
       router.handleLogout();
       router.navigateTo('/');
@@ -351,9 +300,8 @@ const renderLoginPage = () => {
     </main>
   `;
 
+  // 사용자 이름 입력 이벤트 핸들러 등록
   const $username = document.querySelector('#username');
-
-  // submit 이벤트 핸들러 등록 전에 input 핸들러를 등록
   $username.addEventListener(
     'input',
     (e) => {
@@ -368,21 +316,21 @@ const renderLoginPage = () => {
     { once: true }
   );
 
+  // 로그인 폼 제출 이벤트 핸들러
   document.getElementById('login-form').addEventListener('submit', (e) => {
-    e.preventDefault(); // 폼 제출 기본 동작 방지
+    e.preventDefault();
 
     const userInfo = {
-      username: $username.value,
+      username: document.getElementById('username').value,
+      password: document.getElementById('userPw').value,
       email: '',
       bio: '',
     };
 
     // LocalStorage에 데이터 저장 (key: 'user')
-    prefs.set(userInfo);
-    router.isLoggedIn = true;
+    UserPreferences.set(userInfo);
     router.handleLogin();
     router.navigateTo('/profile');
-    handleMenuActive(window.location.pathname);
   });
 };
 
@@ -404,17 +352,19 @@ const renderNotFoundPage = () => {
   `;
 };
 
-// 라우터에 경로와 해당 컴포넌트 등록
+// 라우팅 설정 : 라우터에 경로와 해당 컴포넌트 등록
 router.addRoute('/', () => renderHomePage(router.isLoggedIn));
 router.addRoute('/profile', () => renderProfilePage(router.isLoggedIn));
-router.addRoute('/login', renderLoginPage);
-router.addRoute('/404', renderNotFoundPage);
+router.addRoute('/login', () => renderLoginPage());
+router.addRoute('/404', () => renderNotFoundPage());
 
+// 초기화
 document.addEventListener('DOMContentLoaded', () => {
   router.handleRoute(window.location.pathname);
   handleMenuActive(window.location.pathname); // 메뉴 활성화 처리
 });
 
+// 에러 바운더리 처리
 function errorBoundary(error) {
   // 에러 메시지를 표시하는 부분
   document.querySelector('#root').innerHTML = `
@@ -450,6 +400,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// 전역 에러 처리
 window.addEventListener('error', (e) => {
   e.preventDefault();
 });

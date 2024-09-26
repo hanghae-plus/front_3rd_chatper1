@@ -8,9 +8,9 @@ const routes = ($target, $contents) => {
     const router = new Router();
     router.addRoute('', () => new HomePage($contents, {router}));
     router.addRoute('/', () => new HomePage($contents, {router}));
-    router.addRoute('/profile', () => new ProfilePage($contents, {router}));
-    router.addRoute('/login', () => new LoginPage($target, {router}));
-    router.addRoute('/error', () => new ErrorPage($target));
+    router.addRoute('/profile', () => new HomePage($contents, {router}));
+    router.addRoute('/login', () => new LoginPage($contents, {router}));
+    router.addRoute('/error', () => new ErrorPage($contents));
     router.navigateTo(window.location.pathname);
     return router
 };

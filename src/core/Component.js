@@ -33,7 +33,7 @@ export default class Component {
     addEvent(eventType, selector, callback) {
         this.$target.addEventListener(eventType, (event) => {
             // closest : event 발생 위치의 가장 가까운 것부터 찾기 위함
-            if (!event.target.closest(selector)) return false;
+            // if (!event.target.closest(selector)) return false;
             callback(event);
         })
     }

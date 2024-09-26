@@ -95,4 +95,5 @@ export default class HomePage extends Component{
       </main>
     `;
     }
+
 }

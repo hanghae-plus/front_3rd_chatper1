@@ -171,5 +171,7 @@ document.addEventListener("submit", async (e) => {
   }
 });
 
+window.addEventListener("error", (error) => {});
+
 setupRoutes();
 router.route();

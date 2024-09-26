@@ -15,15 +15,19 @@ export default class LoginView extends View {
     const $username = document.getElementById("username");
     const errorBoundary = new ErrorBoundary("root");
     if ($username) {
-      $username.addEventListener("input", () => {
-        try {
-          if ($username.value === "1") {
-            throw new Error("의도적인 오류입니다.");
+      $username.addEventListener(
+        "input",
+        () => {
+          try {
+            if ($username.value === "1") {
+              throw new Error("의도적인 오류입니다.");
+            }
+          } catch (error) {
+            errorBoundary.render(error);
           }
-        } catch (error) {
-          errorBoundary.render(error);
-        }
-      });
+        },
+        { once: true }
+      );
     }
   }
 }

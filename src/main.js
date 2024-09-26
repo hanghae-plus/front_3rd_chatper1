@@ -1,21 +1,14 @@
 import Footer from "./components/Footer";
 import Header, { logout } from "./components/Header";
+import ErrorPage from "./page/ErrorPage";
 import { Home } from "./page/HomePage";
-import {
-  Login,
-  loginEvent,
-  userLoginCheck,
-  loginErrorHandler,
-} from "./page/LoginPage";
+import { Login, loginEvent, userLoginCheck } from "./page/LoginPage";
 import NotFound, { routingHome } from "./page/NotFoundPage";
-import {
-  Profile,
-  profileUpdate,
-  profileUserLoginCheck,
-} from "./page/ProfilePage";
+import { Profile, profileUpdate } from "./page/ProfilePage";
 
 export function router() {
   const path = window.location.pathname;
+  console.log("path", path);
 
   switch (path) {
     case "/":
@@ -50,6 +43,10 @@ document.querySelectorAll("nav a").forEach((link) => {
   });
 });
 
+window.addEventListener("error", (error) => {
+  document.getElementById("root").innerHTML = ErrorPage();
+});
+
 function renderHome() {
   const root = document.getElementById("root");
   root.innerHTML = `${Header()}${Home()}${Footer()}`;
@@ -58,7 +55,6 @@ function renderHome() {
 
 function renderLogin() {
   document.getElementById("root").innerHTML = Login();
-  // loginErrorHandler();
   loginEvent();
   userLoginCheck();
 }
@@ -68,7 +64,6 @@ function renderProfile() {
   document.getElementById("root").innerHTML += Profile();
   document.getElementById("root").innerHTML += Footer();
 
-  // profileUserLoginCheck();
   profileUpdate();
   logout();
 }

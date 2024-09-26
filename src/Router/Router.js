@@ -1,4 +1,4 @@
-import { ErrorPage } from '../Page/ErrorPage';
+import { Error } from '../Page/Error';
 
 export class Router {
     constructor() {
@@ -16,29 +16,24 @@ export class Router {
     }
 
     handlePopState() {
-        console.log('handlePopState!');
         this.handleRoute(window.location.pathname);
     }
 
     handleRoute(path) {
-        console.log('path: ', path);
         const handler = this.routes[path];
         if (handler) {
             handler();
         } else {
-            ErrorPage();
+            Error();
         }
     }
 
     init() {
-        console.log('📌 router init');
         window.addEventListener('hashchange', () => {
             const path = window.location.hash.slice(1) || '/';
-            console.log(window.location.pathname)
             this.handleRoute(path);
         });
 
-        // 초기 라우트 처리
         this.handleRoute(window.location.pathname || '/');
     }
 }

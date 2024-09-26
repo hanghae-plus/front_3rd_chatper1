@@ -1,7 +1,6 @@
 import { goTo } from '../Util/util';
 
 export const Login = () => {
-    console.log('Login Components!');
 
     document.querySelector('#root').innerHTML = `
   <body>
@@ -32,48 +31,53 @@ export const Login = () => {
   </body>
   `;
 
-    const isUserLogin = window.localStorage.getItem('user');
+    const checkLoginUserAccessToLoginPage = () => {
+        const isUserLogin = window.localStorage.getItem('user') !== null;
 
-    if (isUserLogin) {
-        goTo('/');
-        console.log('이미 로그인 되어 있어요!!', isUserLogin);
-    }
+        if (isUserLogin) {
+            goTo('/');
+        }
+    };
 
-    const loginForm = document.getElementById('login-form');
+    checkLoginUserAccessToLoginPage();
 
-    // 로그인 폼 제출 처리
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (e) {
-            e.preventDefault(); // 폼의 기본 제출 동작 막기
-            // 유저 정보 저장
-            const user = {
-                username: 'testuser',
-                email: '',
-                bio: '',
-            };
+    const setLoginSubmitButtonTappedEvent = () => {
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const user = {
+                    username: 'testuser',
+                    email: '',
+                    bio: '',
+                };
 
-            try {
-                localStorage.setItem('user', JSON.stringify(user));
-                goTo('/');
-            } catch (error) {
-                if (error instanceof FormValidationError) {
-                    document.getElementById(`${error.field}-error`).textContent = error.message;
-                } else {
-                    console.error('An unexpected error occurred:', error);
+                try {
+                    localStorage.setItem('user', JSON.stringify(user));
+                    goTo('/');
+                } catch (error) {
+                    if (error instanceof FormValidationError) {
+                        document.getElementById(`${error.field}-error`).textContent = error.message;
+                    } else {
+                        console.error('An unexpected error occurred:', error);
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
+    };
 
-    // 전역 오류 처리기 설정
-    function setLoginErrorCatching() {
+    setLoginSubmitButtonTappedEvent();
+
+    const setLoginErrorCatching = () => {
         window.addEventListener('error', (event) => {
             event.preventDefault();
-            handleError(event.error);
+            if (window.location.pathname === '/login') {
+                handleError(event.error);
+            }
         });
-    }
+    };
 
-    function handleError(error) {
+    const handleError = (error) => {
         const errorDiv = document.getElementById('error-message');
         errorDiv.innerHTML = `
         <aside class="w-full p-8">
@@ -81,7 +85,7 @@ export const Login = () => {
           <p class="text-center">${error.message}</p>
         </aside>
       `;
-    }
+    };
 
     setLoginErrorCatching();
 };

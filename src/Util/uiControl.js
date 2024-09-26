@@ -1,3 +1,5 @@
+import { goTo } from './util';
+
 export const changeVisibilityBasedOnLoginStatus = (isUserLogin, loginButton, logoutButton, profileButton) => {
     if (typeof isUserLogin !== 'boolean') return;
 
@@ -12,11 +14,14 @@ export const changeVisibilityBasedOnLoginStatus = (isUserLogin, loginButton, log
     }
 };
 
-export const setLogoutButtonTappedEvent = (loginButton, logoutButton, profileButton) => {
+export const setLogoutButtonTappedEvent = (loginButton, logoutButton, profileButton, isUserLogin = false) => {
     logoutButton.addEventListener('click', function () {
         localStorage.removeItem('user');
         logoutButton.classList.add('hidden');
         loginButton.classList.remove('hidden');
         profileButton.classList.add('hidden');
+        if (window.location.pathname === '/profile' && isUserLogin === true) {
+            goTo('/');
+        }
     });
 };

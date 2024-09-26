@@ -1,8 +1,7 @@
+import { changeVisibilityBasedOnLoginStatus, setLogoutButtonTappedEvent } from '../Util/uiControl';
 import { goTo, setNavElemTapped } from '../Util/util';
 
 export const Profile = () => {
-    console.log('Profile Components!');
-
     document.querySelector('#root').innerHTML = `
 <body>
 <div id="root">
@@ -60,45 +59,38 @@ export const Profile = () => {
     const logoutButton = document.getElementById('logout');
     const profileButton = document.getElementById('profile');
 
-    const profileUpdateForm = document.getElementById('profile-form');
-
     const usernameInput = document.getElementById('username');
     const emailInput = document.getElementById('email');
     const bioInput = document.getElementById('bio');
+    const profileUpdateForm = document.getElementById('profile-form');
+    const isUserLoginInfo = window.localStorage.getItem('user');
 
-    profileUpdateForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+    const setProfileUpdateButtonTappedEvent = () => {
+        profileUpdateForm.addEventListener('submit', (e) => {
+            e.preventDefault();
 
-        const newProfileInfo = {
-            username: usernameInput.value,
-            email: emailInput.value,
-            bio: bioInput.value,
-        };
+            const newProfileInfo = {
+                username: usernameInput.value,
+                email: emailInput.value,
+                bio: bioInput.value,
+            };
 
-        console.log('newProfileInfo: ', newProfileInfo);
+            window.localStorage.setItem('user', JSON.stringify(newProfileInfo));
+        });
+    };
 
-        window.localStorage.setItem('user', JSON.stringify(newProfileInfo));
+    setProfileUpdateButtonTappedEvent();
 
-        alert('⚓️ 프로필 업데이트를 완료했습니다');
-    });
-
-    const isUserLogin = window.localStorage.getItem('user');
-
-    if (isUserLogin) {
+    if (isUserLoginInfo) {
         loginButton.classList.add('hidden');
         profileButton.classList.remove('hidden');
         logoutButton.classList.remove('hidden');
     } else {
         goTo('/');
-        console.log('⚠️ 로그인해야 접근 가능한 페이지입니다 ⚠️ ');
     }
 
-    if (isUserLogin) {
-        console.log(isUserLogin);
-
-        const userInfo = JSON.parse(isUserLogin);
-
-        console.log(userInfo);
+    if (isUserLoginInfo) {
+        const userInfo = JSON.parse(isUserLoginInfo);
 
         usernameInput.value = userInfo.username;
         emailInput.value = userInfo.email;
@@ -106,12 +98,5 @@ export const Profile = () => {
     }
 
     // 로그아웃 버튼 클릭 처리
-    logoutButton.addEventListener('click', function () {
-        localStorage.removeItem('user');
-        logoutButton.classList.add('hidden');
-        loginButton.classList.remove('hidden');
-        profileButton.classList.add('hidden');
-
-        goTo('/');
-    });
+    setLogoutButtonTappedEvent(loginButton, logoutButton, profileButton, isUserLoginInfo !== null);
 };

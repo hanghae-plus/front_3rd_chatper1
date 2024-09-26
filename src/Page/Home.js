@@ -2,7 +2,6 @@ import { changeVisibilityBasedOnLoginStatus, setLogoutButtonTappedEvent } from '
 import { setNavElemTapped } from '../Util/util';
 
 export const Home = () => {
-    console.log('Home Components!');
 
     document.querySelector('#root').innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
@@ -118,6 +117,7 @@ export const Home = () => {
       </div>
     </div>
   `;
+
     const loginButton = document.getElementById('login');
     const logoutButton = document.getElementById('logout');
     const profileButton = document.getElementById('profile');

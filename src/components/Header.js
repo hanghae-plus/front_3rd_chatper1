@@ -1,35 +1,32 @@
-import Store from '../utils/store'
+class HeaderComponent {
+  constructor(isLogin) {
+    this.isLogin = isLogin;
+  }
 
-const userStore = Store();
+  render() {
+    const homeUrl = window.location.pathname === "/";
 
-export default function Header() {
-  const pathname = location.pathname;
-  const isLoggedIn = userStore.getState('isLoggedIn');
-
-  const navList = [
-    { name: '홈', link: '/', id: 'home', show: true },
-    { name: '프로필 수정', link: '/profile', id: 'profile', show: isLoggedIn },
-    { name: '로그인', link: '/login', id: 'login', show: !isLoggedIn },
-    { name: '로그아웃', link: '/login', id: 'logout', show: isLoggedIn },
-  ];
-
-  return `
-    <header class="bg-blue-600 text-white p-4 sticky top-0">
-      <h1 class="text-2xl font-bold">항해플러스</h1>
-    </header>
-    <nav class="bg-white shadow-md p-2 sticky top-14">
-      <ul class="flex justify-around">
-        ${navList
-          .filter(item => item.show)
-          .map(item => `
-            <li>
-              <a id="${item.id}" href="${item.link}" class="${pathname === item.link ? 'text-blue-600 font-bold' : 'text-gray-600'}">
-                ${item.name}
-              </a>
-            </li>
-          `)
-          .join('')}
-      </ul>
-    </nav>
-  `;
+    return `
+      <header class="bg-blue-600 text-white p-4 sticky top-0">
+        <h1 class="text-2xl font-bold">항해플러스</h1>
+      </header>
+      <nav class="bg-white shadow-md p-2 sticky top-14">
+        <ul class="flex justify-around">
+          <li><a href="/" class="${homeUrl ? "text-blue-600 font-bold" : "text-gray-600 font-bold"}">홈</a></li>
+          ${
+            this.isLogin
+              ? `
+            <li><a href="/profile" id="login" class="${!homeUrl ? "text-blue-600 font-bold" : "text-gray-600 font-bold"}">프로필</a></li>
+            <li><a href="/login" id="logout" class="text-gray-600">로그아웃</a></li>
+            `
+              : `
+            <li><a href="/login" class="text-gray-600">로그인</a></li>
+            `
+          }
+        </ul>
+      </nav>
+    `;
+  }
 }
+
+export default HeaderComponent;

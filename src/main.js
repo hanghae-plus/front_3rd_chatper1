@@ -49,6 +49,22 @@ class Page {
   }
 }
 
+class Header {
+  constructor(userService) {
+    this.userService = userService;
+  }
+
+  render() {
+    const user = this.userService.getCurrentUser();
+    return `
+      <header class="bg-blue-600 text-white p-4 sticky top-0">
+        <h1 class="text-2xl font-bold">항해플러스</h1>
+        ${user ? `<span>환영합니다, ${user.username}님!</span>` : ''}
+      </header>
+    `;
+  }
+}
+
 // Navigation 클래스
 class Navigation {
   constructor(userService, router) {
@@ -58,13 +74,24 @@ class Navigation {
 
   render() {
     const user = this.userService.getCurrentUser();
-    if (!user) return '';
+    const currentPath = window.location.pathname;
+
+    if (!user) {
+      return `
+        <nav class="bg-white shadow-md p-2 sticky top-14">
+          <ul class="flex justify-around">
+            <li><a href="/main" class="${currentPath === '/main' ? 'text-blue-600 font-bold' : 'text-gray-600'}">홈</a></li>
+            <li><a href="/login" class="${currentPath === '/login' ? 'text-blue-600 font-bold' : 'text-gray-600'}">로그인</a></li>
+          </ul>
+        </nav>
+      `;
+    }
 
     return `
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
-          <li><a href="/main" class="text-gray-600">홈</a></li>
-          <li><a href="/profile" class="text-gray-600">프로필</a></li>
+          <li><a href="/main" class="${currentPath === '/main' ? 'text-blue-600 font-bold' : 'text-gray-600'}">홈</a></li>
+          <li><a href="/profile" class="${currentPath === '/profile' ? 'text-blue-600 font-bold' : 'text-gray-600'}">프로필</a></li>
           <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
         </ul>
       </nav>
@@ -83,6 +110,16 @@ class Navigation {
   }
 }
 
+class Footer {
+  render() {
+    return `
+      <footer class="bg-gray-200 p-4 text-center">
+        <p>&copy; 2024 항해플러스. All rights reserved.</p>
+      </footer>
+    `;
+  }
+}
+
 // Main 클래스
 class MainPage extends Page {
   constructor(userService, router) {
@@ -90,16 +127,15 @@ class MainPage extends Page {
     this.userService = userService;
     this.router = router;
     this.navigation = new Navigation(userService, router);
+    this.header = new Header(userService);
+    this.footer = new Footer();
   }
 
   render() {
     const user = this.userService.getCurrentUser();
     const template = `
       <div class="bg-gray-100 min-h-screen flex justify-center">
-        <div class="max-w-md w-full">
-          <header class="bg-blue-600 text-white p-4 sticky top-0">
-            <h1 class="text-2xl font-bold">항해플러스</h1>
-          </header>
+          ${this.header.render()}
           ${this.navigation.render()}
           <main class="p-4">
             ${user ? `<h2>환영합니다, ${user.username}님!</h2>` : '로그인해주세요.'}
@@ -118,7 +154,7 @@ class MainPage extends Page {
               <button>공유</button>
             </div>
           </main>
-        </div>
+           ${this.footer.render()}
       </div>
     `;
     this.root.innerHTML = template;
@@ -133,6 +169,8 @@ class ProfilePage extends Page {
     this.userService = userService;
     this.router = router;
     this.navigation = new Navigation(userService, router);
+    this.header = new Header(userService);
+    this.footer = new Footer();
   }
   
   render() {
@@ -145,10 +183,7 @@ class ProfilePage extends Page {
 
     const template = `
       <div class="bg-gray-100 min-h-screen flex justify-center">
-        <div class="max-w-md w-full">
-          <header class="bg-blue-600 text-white p-4 sticky top-0">
-            <h1 class="text-2xl font-bold">항해플러스</h1>
-          </header>
+          ${this.header.render()}
           ${this.navigation.render()}
           <main class="p-4">
             <div class="bg-white p-8 rounded-lg shadow-md">
@@ -174,7 +209,7 @@ class ProfilePage extends Page {
               </form>
             </div>
           </main>
-        </div>
+           ${this.footer.render()}
       </div>
     `;
     this.root.innerHTML = template;
@@ -285,8 +320,9 @@ class Router {
   constructor(userService) {
     this.userService = userService;
     this.routes = {
-      '/main': new MainPage(userService),
-      '/profile': new ProfilePage(userService),
+      '/': new MainPage(userService, this),
+      '/main': new MainPage(userService, this),
+      '/profile': new ProfilePage(userService, this),
       '/login': new LoginPage(userService, this),
       '/error': new ErrorPage()
     };
@@ -309,8 +345,7 @@ class Router {
       if (e.target.matches('a')) {
         e.preventDefault();
         const href = e.target.getAttribute('href');
-        history.pushState(null, '', href);
-        this.route();
+        this.navigate(href);
       }
     });
   }

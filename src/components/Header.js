@@ -13,8 +13,8 @@ export default function Header() {
       
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
-          <li id="main"><a href="/" class="text-blue-600 font-bold">홈</a></li>
-          <li id="login"><a href="/login" class="text-blue-600">로그인</a></li>
+          <li id="main"><a href="/" class="text-gray-600">홈</a></li>
+          <li id="login"><a href="/login" class="text-gray-600">로그인</a></li>
           <li id="profile"><a href="/profile" class="text-gray-600">프로필</a></li>
           <li id="logout"><a href="#" class="text-gray-600">로그아웃</a></li>
         </ul>
@@ -24,6 +24,20 @@ export default function Header() {
 
 	function bindEvents() {
 		const user = localStorageInstace.get('user');
+
+		const pathname = window.location.pathname;
+
+		const navItems = document.querySelectorAll('nav a');
+
+		navItems.forEach((item) => {
+			if (item.getAttribute('href') === pathname) {
+				item.classList.add('text-blue-600');
+				item.classList.add('font-bold');
+			} else {
+				item.classList.remove('text-gray-600');
+				item.classList.remove('font-bold');
+			}
+		});
 
 		if (user !== null) {
 			document.getElementById('login').style.display = 'none';

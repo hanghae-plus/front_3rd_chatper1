@@ -3,7 +3,6 @@ export default function createErrorBoundary() {
 	let error = null;
 
 	window.addEventListener('error', (event) => handleError(event.error));
-	window.addEventListener('unhandledrejection', (event) => handleError(event.reason));
 
 	function handleError(newError) {
 		hasError = true;

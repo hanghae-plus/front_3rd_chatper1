@@ -1,4 +1,4 @@
-export default class NotFoundPage  {
+export default class NotFoundPage {
   constructor() {
     document.title = "NotFoundPage ";
   }

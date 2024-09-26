@@ -17,6 +17,7 @@ function paintNavItems() {
   const GRAY = 'text-gray-600';
 
   return `${
+    // 로그인 여부에 따라 nav 의 ui 변경
     isLogin
       ? `
       <li class="w-1/3">

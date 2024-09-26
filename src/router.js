@@ -42,7 +42,7 @@ const router = {
     document.querySelector('#root').innerHTML = dom;
 
     if (!listeners) return;
-
+    // 각 컴포넌트가 갖고 있는 리스너가 복수일 수 있으므로 반복문으로 등록
     for (const listener of Object.values(listeners)) {
       listener && listener();
     }

@@ -1,7 +1,10 @@
+import Layout from "../layout/Layout";
+
 export default function Main() {
-  const $root = document.querySelector("#root");
-  $root.innerHTML = `
-     <div class="bg-gray-100 min-h-screen flex justify-center">
+  Layout(
+    "홈",
+    ` 
+    <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
       <header class="bg-blue-600 text-white p-4 sticky top-0">
         <h1 class="text-2xl font-bold">항해플러스</h1>
@@ -109,6 +112,6 @@ export default function Main() {
         <p>&copy; 2024 항해플러스. All rights reserved.</p>
       </footer>
     </div>
-  </div>
-   `;
+  </div>`
+  );
 }

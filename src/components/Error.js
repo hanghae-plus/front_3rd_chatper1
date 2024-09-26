@@ -1,3 +1,3 @@
 export default function Error() {
-  alert("Error입니다");
+  alert("404 Error입니다");
 }

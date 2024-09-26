@@ -5,27 +5,42 @@ import Error from '../components/Error';
 import Router from './router';
 import User from '../store/User';
 
-//renderMainPage
 const user = User();
-const renderMainPage = () => {
-  if (user.getUser()) {
-    document.querySelector('#root').innerHTML = LoginMain();
-  } else {
-    document.querySelector('#root').innerHTML = Main();
-  }
-};
 
-const logout = () => {
-  user.deleteUser();
-  router.navigateTo('/login');
-};
-const renderProfilePage = () => {
+const router = Router();
+router.addRoute('/', renderMainPage);
+router.addRoute('/login', renderLoginPage);
+router.addRoute('/profile', renderProfilePage);
+router.addRoute('/404', renderErrorPage);
+
+window.addEventListener('DOMContendLoaded', () => {
+  router.navigateTo(window.location.pathname);
+  document.querySelector('nav').addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      e.preventDefault();
+      router.navigateTo(e.target.pathname);
+    }
+  });
+});
+
+function render(component) {
+  document.querySelector('#root').innerHTML = component;
+}
+
+function renderMainPage() {
+  if (user.getUser()) {
+    render(LoginMain());
+  } else {
+    render(Main());
+  }
+}
+
+function renderProfilePage() {
   if (!user.getUser()) {
-    router.navigateTo('/login');
+    history.replaceState(null, null, '/');
     return;
   }
-
-  document.querySelector('#root').innerHTML = Profile();
+  render(Profile());
   if (user.getUser().username) {
     document.querySelector('input[id="username"]').value =
       user.getUser().username;
@@ -40,7 +55,8 @@ const renderProfilePage = () => {
   const logoutButton = document.querySelector('a[id="logout"]');
   logoutButton.addEventListener('click', (e) => {
     e.preventDefault();
-    logout();
+    user.deleteUser();
+    router.navigateTo('/login');
   });
 
   const profileForm = document.getElementById('profile-form');
@@ -56,7 +72,6 @@ const renderProfilePage = () => {
   };
 
   profileForm.addEventListener('submit', (e) => {
-    // form의 submit 이벤트를 사용합니다.
     e.preventDefault();
     console.log('update!');
     const updatedUser = {
@@ -71,15 +86,11 @@ const renderProfilePage = () => {
 
     update(updatedUser);
   });
-};
+}
 
-const renderLoginPage = () => {
-  if (user.getUser()) {
-    router.navigateTo('/');
-    return;
-  }
+function renderLoginPage() {
   console.log('Login Page');
-  document.querySelector('#root').innerHTML = Login();
+  render(Login());
 
   const loginForm = document.getElementById('login-form');
 
@@ -107,27 +118,9 @@ const renderLoginPage = () => {
 
     login(username);
   });
-};
+}
 
-const renderErrorPage = () => {
+function renderErrorPage() {
   console.log('Error Page');
-  document.querySelector('#root').innerHTML = Error();
-};
-renderMainPage();
-const router = Router();
-router.addRoute('/', renderMainPage);
-router.addRoute('/login', renderLoginPage);
-router.addRoute('/profile', renderProfilePage);
-router.addRoute('/404', renderErrorPage);
-
-document.querySelector('nav').addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (e.target.tagName === 'A') {
-    e.preventDefault();
-    router.navigateTo(e.target.pathname);
-  }
-});
-
-window.addEventListener('load', () => {
-  router.navigateTo(window.location.pathname);
-});
+  render(Error());
+}

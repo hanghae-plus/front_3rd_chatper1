@@ -28,8 +28,12 @@ class Router {
     if (handler) {
       handler();
     } else {
-      router.navigateTo("/error");
+      this.errorPage();
     }
+  }
+
+  errorPage(){
+    document.querySelector("#root").innerHTML = `${Error()}`;
   }
 }
 
@@ -41,6 +45,6 @@ export const router = new Router();
 // { title: "프로필", path: "/profile", component: Profile() },
 // ];
 
-router.addRoute("/", Main());
-router.addRoute("/login", Login());
-router.addRoute("/profile", Profile());
+router.addRoute('/', ()=> Main());
+router.addRoute('/login', ()=> Login());
+router.addRoute('/profile', ()=> Profile());

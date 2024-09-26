@@ -340,3 +340,16 @@ if (typeof document !== 'undefined') {
     init();
   }
 }
+
+window.addEventListener('error', (event) => {
+  let errorContainer = document.getElementById('error-container');
+
+  if (!errorContainer) {
+    errorContainer = document.createElement('div');
+    errorContainer.id = 'error-container';
+    document.body.appendChild(errorContainer);
+  }
+
+  errorContainer.innerHTML = `<div>오류 발생! ${event.message}</div>`;
+});
+

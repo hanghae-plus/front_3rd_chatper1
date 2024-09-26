@@ -48,7 +48,7 @@ export class Header extends BaseComponent<Link[]> {
   }
 
   private bindLogoutEvents() {
-    const $logoutLink = this.$root?.querySelector(`#${LOGOUT_ID}`);
+    const $logoutLink = this.getElement(`#${LOGOUT_ID}`);
     if ($logoutLink) {
       $logoutLink.addEventListener('click', this.handleLogout);
     }

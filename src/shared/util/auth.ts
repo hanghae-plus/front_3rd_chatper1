@@ -9,7 +9,7 @@ export type UserInfo = {
   bio: string;
 };
 
-export const defaultUserInfo: UserInfo = {
+export const DEFAULT_USER_INFO: UserInfo = {
   bio: '',
   email: '',
   username: '',
@@ -29,9 +29,9 @@ export const logout = () => {
   router.navigateTo('/');
 };
 
-export const login = (payload: Pick<UserInfo, 'username'>) => {
+export const login = ({ username }: Pick<UserInfo, 'username'>) => {
   setUserInfo({
-    ...payload,
+    username,
     email: '',
     bio: '',
   });

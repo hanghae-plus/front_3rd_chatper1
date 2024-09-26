@@ -21,24 +21,46 @@ export const Login = () => {
 
 export const loginEvent = () => {
   document.getElementById("login-form").addEventListener("submit", (e) => {
+    loginErrorHandler();
     e.preventDefault();
     const username = document.getElementById("username").value;
 
     if (username === "") return alert("정보를 입력해주세요.");
-    const user = {
-      username,
-      email: "",
-      bio: "",
-    };
-    localStorage.setItem("user", JSON.stringify(user));
-    history.pushState({}, "", "/profile");
-    router();
+    else {
+      const user = {
+        username,
+        email: "",
+        bio: "",
+      };
+      localStorage.setItem("user", JSON.stringify(user));
+      history.pushState({}, "", "/profile");
+      router();
+    }
   });
 };
 
+export const loginErrorHandler = () => {
+  document.getElementById("username").addEventListener(
+    "input",
+    () => {
+      try {
+        throw new Error("의도적인 오류입니다.");
+      } catch (e) {
+        renderErrorMessage("오류 발생! 의도적인 오류입니다.");
+        document.getElementById("root").innerHTML =
+          " <h1>오류 발생! 의도적인 오류입니다.</h1>";
+      }
+    },
+    { once: true }
+  );
+};
+
+//login한 상태의 유저가 오면, 홈으로 이동
 export const userLoginCheck = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
-  if (user) history.pushState({}, "", "/");
-  router();
+  if (user) {
+    history.pushState({}, "", "/");
+    router();
+  }
 };

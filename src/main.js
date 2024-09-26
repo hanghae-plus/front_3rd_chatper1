@@ -1,9 +1,18 @@
 import Footer from "./components/Footer";
 import Header, { logout } from "./components/Header";
 import { Home } from "./page/HomePage";
-import { Login, loginEvent, userLoginCheck } from "./page/LoginPage";
+import {
+  Login,
+  loginEvent,
+  userLoginCheck,
+  loginErrorHandler,
+} from "./page/LoginPage";
 import NotFound, { routingHome } from "./page/NotFoundPage";
-import { Profile, profileUpdate } from "./page/ProfilePage";
+import {
+  Profile,
+  profileUpdate,
+  profileUserLoginCheck,
+} from "./page/ProfilePage";
 
 export function router() {
   const path = window.location.pathname;
@@ -28,22 +37,20 @@ export function router() {
 window.addEventListener("popstate", () => router());
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 초기 로드 시 라우팅 함수 실행
   router();
-  console.log("load");
+});
 
-  // 네비게이션 링크 클릭 시 페이지 전환
-  document.querySelectorAll("nav a").forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      const href = e.target.getAttribute("href");
-      history.pushState({}, "", href);
-      router();
-    });
+// 네비게이션 링크 클릭 시 페이지 전환
+document.querySelectorAll("nav a").forEach((link) => {
+  link.addEventListener("click", (e) => {
+    e.preventDefault(); //새로고침 막기
+    const href = e.target.getAttribute("href");
+    history.pushState({}, "", href);
+    router();
   });
 });
 
-export function renderHome() {
+function renderHome() {
   const root = document.getElementById("root");
   root.innerHTML = `${Header()}${Home()}${Footer()}`;
   logout();
@@ -51,6 +58,7 @@ export function renderHome() {
 
 function renderLogin() {
   document.getElementById("root").innerHTML = Login();
+  // loginErrorHandler();
   loginEvent();
   userLoginCheck();
 }
@@ -60,6 +68,7 @@ function renderProfile() {
   document.getElementById("root").innerHTML += Profile();
   document.getElementById("root").innerHTML += Footer();
 
+  // profileUserLoginCheck();
   profileUpdate();
   logout();
 }

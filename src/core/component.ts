@@ -1,10 +1,14 @@
+import { Router, useRouter } from '../module/route';
+
 export default class Component {
   id: string;
   container: HTMLElement;
   state: {};
+  router: Router;
   constructor(containerId: string, args?: any) {
     this.id = containerId;
     this.state = args ? { ...args } : {};
+    this.router = useRouter();
   }
 
   init() {
@@ -29,17 +33,12 @@ export default class Component {
     return ``;
   }
 
-  attachEventListeners() {
-    // 각 component에서 override
-  }
-
   render() {
     this.container = document.getElementById(this.id)!;
     if (!this.container) return;
     this.init();
     this.container.innerHTML = this.template();
     this.mounted();
-    this.attachEventListeners();
   }
 
   destroy() {

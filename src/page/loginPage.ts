@@ -1,34 +1,17 @@
 import Component from '../core/component';
-import { useRouter } from '../module/route';
-import store from '../module/store';
-
-const router = useRouter();
-
-const loginHandle = () => {
-  const usernameDiv = document.querySelector('#username') as HTMLInputElement;
-  const username = usernameDiv.value;
-  const userData = { username, email: '', bio: '' };
-  store.setState('userData', userData);
-  router.push('/profile');
-};
 
 export default class LoginPage extends Component {
-  attachEventListeners() {
-    const loginForm = this.container.querySelector('#login-form')!;
-    loginForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      loginHandle();
-    });
+  mounted(): void {
+    this.container.className =
+      'bg-gray-100 flex items-center justify-center min-h-screen';
   }
-
   template() {
     return `
-          <main class="bg-gray-100 flex items-center justify-center min-h-screen">
             <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
               <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">
                 <button data-path='/' > 항해플러스 </button>
               </h1>
-              <form id="login-form">
+              <form id="login-form" data-form="login">
                 <div class="mb-4">
                   <input id="username" type="text" placeholder="사용자 이름" class="w-full p-2 border rounded">
                 </div>
@@ -45,7 +28,6 @@ export default class LoginPage extends Component {
                 <button data-path='/' class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
               </div>
             </div>
-          </main>
         `;
   }
 }

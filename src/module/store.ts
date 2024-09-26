@@ -1,64 +1,64 @@
-import Component from '../core/component';
-import Observer from '../core/observer';
-import { UserDataType } from '../type';
-import { isEqual } from './util';
+import ObserverStore from '../core/observer';
 
-class Store extends Observer {
-  private _state: { [key: string]: any };
-  private initialState: { [key: string]: any };
-  constructor() {
-    super();
-    this._state = {};
-    this.initialState = {};
+function store() {
+  const storeList = {
+    userData: new ObserverStore('userData', {
+      username: '',
+      email: '',
+      bio: '',
+    }),
+  };
+
+  function subscribe(key: string, fn: () => void) {
+    storeList[key]?.subscribe(fn);
   }
 
-  add(key: string, data: any) {
-    this._state[key] = { ...data };
-    this.initialState[key] = Object.freeze({ ...data });
+  function unsubscribe(key: string, fn: () => void) {
+    storeList[key]?.unsubscribe(fn);
   }
 
-  reset(key: string) {
-    if (key == 'userData') {
-      localStorage.removeItem('user');
-    }
-    this._state[key] = this.initialState[key];
-    this.notify(key, this.initialState[key]);
+  function getStoreState(key: string) {
+    return storeList[key]?.getState();
   }
 
-  getState(key: string) {
-    return this._state[key] ? this._state[key] : {};
+  function setStoreState(key: string, newValue: any, prevFn?: () => void) {
+    if (prevFn) prevFn();
+    storeList[key]?.setState(newValue);
   }
 
-  // 상태 업데이트 및 옵저버들에게 알림
-  setState(key: string, newState: any) {
-    const oldValue = { ...this._state[key] };
-    const newValue = { ...newState };
-    if (!this._state[key] || isEqual(oldValue, newValue)) return;
-
-    if (key == 'userData') {
-      localStorage.setItem('user', JSON.stringify(newValue));
-    }
-
-    this._state[key] = newValue;
-    this.notify(key, newValue);
+  function resetStoreState(key: string) {
+    storeList[key]?.reset();
   }
 
-  destroy(key: string) {
-    if (key == 'userData') localStorage.removeItem('user');
-    delete this._state[key];
-    delete this.initialState[key];
+  function removeStoreState(key: string) {
+    storeList[key]?.destroy();
+    delete storeList[key];
   }
+
+  return {
+    subscribe,
+    unsubscribe,
+    getStoreState,
+    setStoreState,
+    resetStoreState,
+    removeStoreState,
+  };
 }
 
-const store = new Store();
+const {
+  subscribe,
+  unsubscribe,
+  getStoreState,
+  setStoreState,
+  resetStoreState,
+  removeStoreState,
+} = store();
 
-const useStore = (key: string, component: any) => {
-  store.subscribe(key, component);
+export {
+  subscribe,
+  unsubscribe,
+  getStoreState,
+  setStoreState,
+  resetStoreState,
+  removeStoreState,
 };
-
-const destroyStore = (key: string, component: any) => {
-  store.unsubscribe(key, component);
-};
-
-export { useStore, destroyStore };
-export default store;

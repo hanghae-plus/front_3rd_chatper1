@@ -8,6 +8,7 @@ export interface UserDataType {
 
 export interface RouteType {
   path: string;
-  element: Component;
+  instance: typeof Component;
+  element: null | Component;
   layout: boolean;
 }

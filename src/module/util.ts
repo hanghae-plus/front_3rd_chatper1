@@ -30,22 +30,19 @@ export function debounce(func: (args: any) => void, delay: number) {
   };
 }
 
-export function isEqual(
-  obj1: { [key: string]: any },
-  obj2: { [key: string]: any }
-) {
+interface objType {
+  [key: string]: any;
+}
+
+export function isEqual(obj1: objType, obj2: objType) {
   if (obj1 === obj2) return true;
   if (!obj1 || !obj2) return false;
 
   for (const key in obj1) {
-    if (obj1[key] !== obj2[key]) {
-      return false;
-    }
+    if (obj1[key] !== obj2[key]) return false;
   }
   for (const key in obj2) {
-    if (obj1[key] !== obj2[key]) {
-      return false;
-    }
+    if (obj1[key] !== obj2[key]) return false;
   }
 
   return true;

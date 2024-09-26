@@ -1,77 +1,94 @@
-import App from '../page/app';
 import { RouteType } from '../type';
-import store from './store';
+import HomePage from '../page/homePage';
+import LoginPage from '../page/loginPage';
+import ProfilePage from '../page/profilePage';
+import NotFoundPage from '../page/notFoundPage';
+import { getStoreState, setStoreState } from './store';
+import App from '../page/app';
+
+const routeList = {
+  '/': {
+    path: '/',
+    instance: HomePage,
+    element: null,
+    layout: true,
+  },
+  '/login': {
+    path: '/login',
+    instance: LoginPage,
+    element: null,
+    layout: false,
+  },
+  '/profile': {
+    path: '/profile',
+    instance: ProfilePage,
+    element: null,
+    layout: true,
+  },
+  '/404': {
+    path: '/404',
+    instance: NotFoundPage,
+    element: null,
+    layout: false,
+  },
+};
 
 class Router {
-  private static instance: Router;
+  private static _instance: Router;
+  public static instance(): Router {
+    if (!Router._instance) Router._instance = new Router();
+    return Router._instance;
+  }
   private routes: { [key: string]: RouteType };
-  private app;
+
   constructor() {
-    if (Router.instance) return Router.instance;
-    Router.instance = this;
-    this.routes = {};
-    this.app = new App(this);
+    Router._instance = this;
+    this.routes = routeList;
     window.addEventListener('popstate', this.handlePopState.bind(this));
   }
 
-  init(routes: { [key: string]: RouteType }) {
-    this.app.init();
-    this.routes = routes;
+  applyRouteGuards(path: string): string {
+    const keys = Object.keys(this.routes);
+    if (!keys.includes(path)) return '/404';
+
+    const isLoggedIn = getStoreState('userData').username;
+    switch (path) {
+      case '/profile':
+        return isLoggedIn ? '/profile' : '/login';
+
+      case '/login':
+        return isLoggedIn ? '/' : '/login';
+
+      default:
+        return path;
+    }
   }
 
-  addRoute(routes: { [key: string]: RouteType }) {
-    this.routes = routes;
-  }
-
-  getRoute(routename: string) {
-    return this.routes[routename]
-      ? this.routes[routename]
-      : this.routes['/404'];
+  checkStorage() {
+    const storedData = localStorage.getItem('user');
+    const initialData = { username: '', email: '', bio: '' };
+    const userData = storedData ? JSON.parse(storedData) : initialData;
+    setStoreState('userData', userData);
   }
 
   push(path: string) {
-    let nextPath = path;
-    const userInfo = localStorage.getItem('user');
-    if (userInfo) {
-      const { username, email, bio } = JSON.parse(userInfo!);
-      store.setState('userData', { username, email, bio });
-    } else {
-      store.reset('userData');
-    }
+    const nextPath = this.applyRouteGuards(path);
+    this.checkStorage();
 
-    const { username } = store.getState('userData');
-    switch (path) {
-      case '/profile':
-        if (!username) nextPath = '/login';
-        break;
+    // route element가 없다면 instance로 생성 후, 라우터 이동.
+    const { element, instance } = this.routes[nextPath];
+    if (!element) this.routes[nextPath].element = new instance('main');
 
-      case '/login':
-        if (username) nextPath = '/';
-        break;
-
-      case '/logout':
-        store.reset('userData');
-        nextPath = '/login';
-        break;
-
-      default:
-        break;
-    }
     history.pushState(null, '', nextPath);
-    this.handleRoute(nextPath);
+    App.render(this.routes[nextPath]);
   }
 
   handlePopState() {
     this.push(window.location.pathname);
   }
-
-  handleRoute(path: string) {
-    this.app.render(this.getRoute(path));
-    store.setState('pathname', { pathname: path });
-  }
 }
 
-const useRouter = () => new Router();
+const useRouter = () => Router.instance();
 
 export type { Router };
 export { useRouter };

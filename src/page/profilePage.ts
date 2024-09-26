@@ -1,48 +1,31 @@
 import Component from '../core/component';
-import store from '../module/store';
-import { isEqual } from '../module/util';
 import { useRouter } from '../module/route';
+import { getStoreState, subscribe } from '../module/store';
 import { UserDataType } from '../type';
-
-const router = useRouter();
-
-const updateProfileHandle = () => {
-  const usernameDiv = document.querySelector('#username') as HTMLInputElement;
-  const username = usernameDiv.value;
-  const email = (document.querySelector('#email') as HTMLInputElement).value;
-  const bio = (document.querySelector('#bio') as HTMLTextAreaElement).value;
-  const userData = { username, email, bio };
-
-  if (isEqual(userData, { ...store.getState('userData') })) return;
-  store.setState('userData', userData);
-  alert('프로필이 업데이트 되었습니다.');
-};
 
 export default class ProfilePage extends Component {
   state: UserDataType;
+
   init() {
-    const { username, email, bio } = store.getState('userData');
+    const { username, email, bio } = getStoreState('userData');
+    this.state = { username, email, bio };
+  }
+
+  update(data: { [key: string]: string }) {
+    const { username, email, bio } = data;
     this.state = { username, email, bio };
   }
 
   mounted() {
     if (this.state['username']) this.container.className = 'p-4';
-    else router.push('/login');
-  }
-
-  attachEventListeners() {
-    const profileForm = this.container.querySelector('#profile-form');
-    profileForm?.addEventListener('submit', (event) => {
-      event.preventDefault();
-      updateProfileHandle();
-    });
+    else this.router.push('/login');
   }
 
   template() {
     return `
               <div class="bg-white p-8 rounded-lg shadow-md">
                 <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-                <form id="profile-form">
+                <form id="profile-form" data-form="profile">
                   <div class="mb-4">
                     <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
                     <input type="text" id="username" name="username" value="${this.state.username}" class="w-full p-2 border rounded">

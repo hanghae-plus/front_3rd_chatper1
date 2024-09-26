@@ -1,46 +1,16 @@
-import { useRouter } from './module/route';
-import HomePage from './page/homePage';
-import LoginPage from './page/loginPage';
-import ProfilePage from './page/profilePage';
-import NotFoundPage from './page/notFoundPage';
-import store from './module/store';
-import { isEqual } from './module/util';
 import errorBoundary from './module/errorBoundary';
+import { setStoreState } from './module/store';
+import { useRouter } from './module/route';
+import App from './page/app';
 
-store.add('pathname', { pathname: location.pathname });
-store.add('userData', { username: '', email: '', bio: '' });
+const storedData = localStorage.getItem('user');
+const initialData = { username: '', email: '', bio: '' };
+const userData = storedData ? JSON.parse(storedData) : initialData;
+setStoreState('userData', userData);
 
-const userInfo = localStorage.getItem('user');
-const isUpdate = !isEqual(JSON.parse(userInfo), store.getState('userData'));
-if (userInfo && isUpdate) {
-  store.setState('userData', JSON.parse(userInfo));
-}
-if (!userInfo) store.reset('userData');
+App.init();
 
 const router = useRouter();
-const routeList = {
-  '/': {
-    path: '/',
-    element: new HomePage('main'),
-    layout: true,
-  },
-  '/login': {
-    path: '/login',
-    element: new LoginPage('main'),
-    layout: false,
-  },
-  '/profile': {
-    path: '/profile',
-    element: new ProfilePage('main'),
-    layout: true,
-  },
-  '/404': {
-    path: '/404',
-    element: new NotFoundPage('main'),
-    layout: false,
-  },
-};
-router.init(routeList);
 router.push(location.pathname);
 
 errorBoundary();

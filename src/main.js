@@ -9,7 +9,9 @@ import { userStatus } from "./login";
 const root = document.querySelector("#root");
 
 // 유저정보 삭제용
-// localStorage.removeItem('user');
+localStorage.removeItem('user');
+
+
 
 // 유저 
 const loginState = userStatus()
@@ -30,7 +32,7 @@ let isError = true
 
 // 컴포넌트를 함수실행이 아닌 함수 자체를 가져와서 오류가 나는데 원인 파악에 시간 너무 소요됨..
 router.addRoute('/', mainPage(loginState))
-router.addRoute('/login', loginPage(isError))
+router.addRoute('/login', loginPage())
 router.addRoute('/profile', profilePage(loginState))
 router.addRoute('/404', errorPage())
 
@@ -44,10 +46,10 @@ window.addEventListener("popstate", router.render)
 
 // 전역 에러 처리
 window.addEventListener("error", () => {
+
   router.navigateTo("/404")
-} )
-
-
+  
+})
 
 
 
@@ -79,6 +81,10 @@ function handleClick(event) {
   }
 }
 
+//테스트용 
+// function error () {
+//   throw new Error('의도적인 오류입니다.')
+// }
 
 // submit 이벤트 위임
 root.addEventListener("submit", handleSubmit)
@@ -102,13 +108,12 @@ function handleSubmit(event) {
     // 아이디 입력 값을 전달
     loginState.login(user)
 
-
     
-
-
-
-  window.addEventListener("error", () => {
-      //여기다 오류메세지 추가하는 거 시도하기
+    window.addEventListener("error", () => {
+      const errorMasage = `<div>오류 발생!</div><div>의도적인 오류입니다.</div>`
+      root.innerHTML = errorMasage
+        // router.addRoute('/login', loginPage(isError))
+        // alert("오류 발생! >의도적인 오류입니다.")
     } )
     
 

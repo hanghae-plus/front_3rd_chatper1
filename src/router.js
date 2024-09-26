@@ -13,18 +13,18 @@ export const createRouter = () => {
         const path = window.location.pathname
 
         // 유저 정보 체크 이 아래부터 심화
-        
-
+    
         // 문제는 이렇게 할 경우 컴포넌트에 사용했던 isLogin 값이 바뀌지 않음..헤더에 영향
-        const newLogin = JSON.parse(localStorage.getItem("user"))
+        // 로컬스토리지에서 데이터 가져오기
+        const newisLogin = JSON.parse(localStorage.getItem("user"))
     
         // 로그인 상태에서 로그인 페이지로 이동시
-        if (newLogin && path === "/login") {
+        if (newisLogin && path === "/login") {
             return navigateTo("/")
         }
 
         // 비로그인 상태에서 프로필 페이지로 이동시
-        if (!newLogin === null && path === "/profile") {
+        if (!newisLogin === null && path === "/profile") {
             return navigateTo("/login")
 
         }

@@ -8,7 +8,7 @@ import { userStatus } from "./login";
 
 const root = document.querySelector("#root");
 
-// 초기화 용
+// 유저정보 삭제용
 // localStorage.removeItem('user');
 
 // 유저 
@@ -26,12 +26,14 @@ const userInfo = () => {
   return { username, email, bio }
 }
 
+let isError = true
 
 // 컴포넌트를 함수실행이 아닌 함수 자체를 가져와서 오류가 나는데 원인 파악에 시간 너무 소요됨..
 router.addRoute('/', mainPage(loginState))
-router.addRoute('/login', loginPage())
+router.addRoute('/login', loginPage(isError))
 router.addRoute('/profile', profilePage(loginState))
 router.addRoute('/404', errorPage())
+
 
 
 // 첫화면 렌더링
@@ -41,7 +43,13 @@ window.addEventListener("load", router.render)
 window.addEventListener("popstate", router.render)
 
 // 전역 에러 처리
-window.addEventListener("error", () => router.navigateTo("/404"))
+window.addEventListener("error", () => {
+  router.navigateTo("/404")
+} )
+
+
+
+
 
 
 
@@ -49,42 +57,43 @@ window.addEventListener("error", () => router.navigateTo("/404"))
 // 클릭 이벤트 위임
 root.addEventListener("click", handleClick)
 
-// submit 이벤트 위임
-root.addEventListener("submit", handleSubmit)
-
-
-// 클릭 이벤트 핸들러
-function handleClick(e) {
-  const tagName = e.target.tagName
-  const id = e.target.id
-  const href = e.target.getAttribute("href")
+// 클릭 이벤트 
+function handleClick(event) {
+  const tagName = event.target.tagName
 
   // a 태그 클릭 시
   if (tagName === "A") {
     // 기본 동작 방지
-    e.preventDefault()
+    event.preventDefault()
 
+    const id = event.target.id
     // 로그아웃 버튼 클릭 시
     if (id === "logout") {
       // 로그아웃 함수 호출
       loginState.logout()
     }
 
+    const href = event.target.getAttribute("href")
     // 링크 클릭 시 이동 함수 호출
     router.navigateTo(href)
   }
 }
 
-// submit 이벤트 핸들러
-function handleSubmit(e) {
-  // submit 이벤트 막기
-  e.preventDefault()
 
-  const id = e.target.id
+// submit 이벤트 위임
+root.addEventListener("submit", handleSubmit)
+
+// submit 이벤트 
+function handleSubmit(event) {
+  // submit 이벤트 막기
+  event.preventDefault()
+
+  const id = event.target.id
   const user = userInfo() // userInfo() - 폼에서 받아온 유저정보 객체
 
-  // submit 로그인 폼일 때, test에 id 값을 지정해두셨었네..
+  // submit 로그인 폼일 때, test에 id 값을 지정해두셨음. 테스트코드 꼭 미리 볼 것..
   if (id === "login-form") {
+
     // 유저아이디가 빈값이면 알림창
     if (user.username === "") {
       alert("아이디를 입력하세요")
@@ -92,6 +101,17 @@ function handleSubmit(e) {
     }
     // 아이디 입력 값을 전달
     loginState.login(user)
+
+
+    
+
+
+
+  window.addEventListener("error", () => {
+      //여기다 오류메세지 추가하는 거 시도하기
+    } )
+    
+
 
   } else {
     loginState.update(user)

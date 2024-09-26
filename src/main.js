@@ -58,7 +58,11 @@ router.addRoute('/profile', () => {
             event.preventDefault();
             const user = JSON.parse(localStorage.getItem('user')) || {};
             user.bio = document.getElementById('bio').value;
+            user.username = document.getElementById('username').value;
+            user.email = document.getElementById('email').value;
             localStorage.setItem('user', JSON.stringify(user));
+
+            router.navigateTo('/profile');
         });
     }
 
@@ -70,7 +74,6 @@ router.addRoute('/profile', () => {
         });
     }
 });
-
 
 router.addRoute('/', () => {
     document.querySelector('#root').innerHTML = Main();
@@ -96,9 +99,6 @@ router.addRoute('/login', () => {
             router.navigateTo('/');
         });
     }
-});
-router.addRoute('/profile', () => {
-    document.querySelector('#root').innerHTML = Profile();
 });
 
 router.addRoute('/404', () => {

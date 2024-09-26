@@ -4,7 +4,7 @@ export default class Header {
   }
   getStyle(linkPath) {
     const pathName = window.location.pathname;
-    return pathName === linkPath ? "text-blue-600" : "text-gray-600";
+    return pathName === linkPath ? "text-blue-600 font-bold" : "text-gray-600";
   }
   getHtml() {
     return `
@@ -16,15 +16,13 @@ export default class Header {
   
             <nav class="bg-white shadow-md p-2 sticky top-14">
               <ul class="flex justify-around">
-                <li><a href="./" class="${this.getStyle("/")}">홈</a></li>
-                <li><button id="profileBtn" class="${this.getStyle(
+                <li><a href="/" class="${this.getStyle("/")}">홈</a></li>
+                <li id="profileBtn"><a href="/profile" class="${this.getStyle(
                   "/profile"
-                )}">프로필</button>
-                <li>
-                  <button id="logout" class="${this.getStyle(
-                    "/login"
-                  )}">로그아웃</button>
-                </li>
+                )}">프로필</a></li>
+                <li id="logout"><a href="/login" class="${this.getStyle(
+                  "/login"
+                )}">로그아웃</a></li>
               </ul>
             </nav>
         `;
@@ -49,7 +47,7 @@ export default class Header {
         history.pushState({ page_id: "LoginPage" }, null, url); //로그인페이지로
       } else {
         let url = location.origin + "/profile";
-        history.pushState({ page_id: "ProfilePage" }, null, url); //로그인페이지로
+        history.pushState({ page_id: "ProfilePage" }, null, url);
       }
       window.dispatchEvent(new Event("popstate"));
     });

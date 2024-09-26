@@ -38,6 +38,27 @@ export default class LoginPage {
         event.preventDefault();
         this.reqLogin();
       });
+
+    // 오류 메시지를 표시할 요소 생성
+    const $errorMessage = document.createElement("p");
+    $errorMessage.style.color = "red"; // 오류 메시지 색상 설정
+    $errorMessage.style.display = "none"; // 숨김 처리
+
+    document.querySelector("#login-form").appendChild($errorMessage); // 로그인 폼 아래에 추가
+
+    const $username = document.querySelector("#username");
+    $username.addEventListener("input", (event) => {
+      // 입력 중 발생하는 오류 처리
+      const value = event.target.value;
+
+      if (value.length < 3) {
+        $errorMessage.textContent = "오류 발생! 의도적인 오류입니다."; // 오류 메시지 설정
+        $errorMessage.style.display = "block";
+      } else {
+        $errorMessage.textContent = "";
+        $errorMessage.style.display = "none";
+      }
+    });
   }
   reqLogin() {
     const username = document.getElementById("username").value;

@@ -24,9 +24,17 @@ window.addEventListener("popstate", function (event) {
   if (currentRoute && pathName == currentRoute.path) {
     //로그인이 되지 않은 상태 & 프로필 페이지 진입시 -> 로그인 페이지로 이동
     if (!localStorage.getItem("user") && currentRoute.path == "/profile") {
+      let url = location.origin + "/login";
+      history.pushState({ page_id: "LoginPage" }, null, url); //메인
       const page = new LoginPage();
       document.getElementById("root").innerHTML = page.getHtml();
-      page.addEventListeners(); //페이지별 이벤트 리스너
+      page.addEventListeners();
+    } else if (localStorage.getItem("user") && currentRoute.path == "/login") {
+      let url = location.origin + "/";
+      history.pushState({ page_id: "HomePage" }, null, url); //메인
+      const page = new HomePage();
+      document.getElementById("root").innerHTML = page.getHtml();
+      page.addEventListeners();
     } else {
       //원하는 페이지로 이동
       const page = new (currentRoute.view())();

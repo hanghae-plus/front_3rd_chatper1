@@ -6,3 +6,7 @@ export const { useNavigate, init } = Router();
 export const { getUser, setUser, deleteUser } = userStore();
 
 init();
+
+window.addEventListener("error", (e) => {
+  useNavigate("/error");
+});

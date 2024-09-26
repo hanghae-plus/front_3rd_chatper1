@@ -46,11 +46,6 @@ export default function LoginPage() {
         id: LoginFormLabelFor,
         setAttribute: { name: LoginFormLabelFor, type: LoginFormInputType },
       });
-      if (LoginFormLabelFor === "username") {
-        LoginFormInput.addEventListener("input", (e) => {
-          useNavigate("/error");
-        });
-      }
 
       appendChild({
         parent: LoginFormBox,

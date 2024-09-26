@@ -12,7 +12,6 @@ import {
 
 export const router = new Router();
 
-// 각 경로에 맞는 페이지 연결
 router.addRoute('/', homePage);
 router.addRoute('/login', () => {
   return getLoginStatus() ? (router.navigateTo('/'), homePage()) : loginPage();
@@ -40,33 +39,50 @@ function initializeRouter() {
   });
 }
 
+// 전역 에러 핸들러 추가
+window.addEventListener('error', (event) => {
+  let errorContainer = document.getElementById('error-container');
+
+  if (!errorContainer) {
+    errorContainer = document.createElement('div');
+    errorContainer.id = 'error-container';
+    document.body.appendChild(errorContainer);
+  }
+
+  errorContainer.innerHTML = `<div>오류 발생! ${event.message}</div>`;
+});
+
 // 이벤트 위임을 통한 폼 제출 처리
 document.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  switch (e.target.id) {
-    case 'login-form': {
-      const username = document.getElementById('username').value;
+  try {
+    switch (e.target.id) {
+      case 'login-form': {
+        const username = document.getElementById('username').value;
 
-      if (username) {
-        saveUserData({ username, email: '', bio: '' });
-        setLoginStatus(true);
-        router.navigateTo('/profile'); // 프로필 페이지로 이동
-      } else {
-        alert('로그인 정보를 입력해주세요.');
+        if (username) {
+          saveUserData({ username, email: '', bio: '' });
+          setLoginStatus(true);
+          router.navigateTo('/profile');
+        } else {
+          alert('로그인 정보를 입력해주세요.');
+        }
+        break;
       }
-      break;
-    }
 
-    case 'profile-form': {
-      const username = document.getElementById('username').value;
-      const email = document.getElementById('email').value;
-      const bio = document.getElementById('bio').value;
+      case 'profile-form': {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const bio = document.getElementById('bio').value;
 
-      saveUserData({ username, email, bio });
-      alert('프로필이 업데이트되었습니다.');
-      break;
+        saveUserData({ username, email, bio });
+        alert('프로필이 업데이트되었습니다.');
+        break;
+      }
     }
+  } catch (error) {
+    window.dispatchEvent(new ErrorEvent('error', { message: error.message }));
   }
 });
 

@@ -31,16 +31,10 @@ class App {
     this.errorOverlay = new ErrorOverlay(this.$target.querySelector('#error-overlay'));
 
     window.addEventListener('error', (e) => {
-      // preventDefault()를 실행하지 않을 경우 Uncaught 에러 메시지가 출력됨
-      // e.preventDefault();
+      // preventDefault()를 실행하지 않을 경우 Uncaught 에러 메시지가 출력
+      e.preventDefault();
 
-      this.errorOverlay.setState({
-        errorData: {
-          name: e.error.name,
-          message: e.error.message,
-          stack: e.error.stack,
-        },
-      });
+      this.errorOverlay.sendError(e.error);
     });
   }
 

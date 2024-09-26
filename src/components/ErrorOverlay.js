@@ -4,13 +4,19 @@ class ErrorOverlay extends Component {
   setup() {
     this.state = {
       errorData: null,
-      // errorData: {
-      //     name: ex.name, // e.g. ReferenceError
-      //     message: ex.line, // e.g. x is undefined
-      //     url: document.location.href,
-      //     stack: ex.stack, // stacktrace string; remember, different per-browser!
-      // },
     };
+  }
+
+  sendError(error) {
+    if (error instanceof Error) {
+      this.setState({
+        errorData: {
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+        },
+      });
+    }
   }
 
   template() {

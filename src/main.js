@@ -84,7 +84,6 @@ const createUserState = () => {
 
 const router = () => {
   const routes = {};
-
   const addRoute = (path, handler) => {
     routes[path] = handler;
   };
@@ -99,11 +98,11 @@ const router = () => {
   };
 
   const handleRoute = (path) => {
-    const handler = routes[path];
+    const handler = routes[path] ?? routes['/404'];
     if (handler) {
       handler();
     } else {
-      render(NotFoundPage);
+      throw new Error('페이지가 없어요.');
     }
   };
 

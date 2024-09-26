@@ -81,12 +81,10 @@ class Router {
     });
   }
 
-  loginGuard() {
+  checkLogin() {
     const isLogin = !isNullorUndefined(localStorage.getItem("user"));
-    if (!isLogin) {
-      this.navigateTo("/login");
+    return isLogin;
   }
-    return !isLogin;
   }
 }
 
@@ -99,13 +97,21 @@ router.addRoute("/", () => {
 });
 
 router.addRoute("/profile", () => {
-  if (router.loginGuard()) return;
+  if (!router.checkLogin()) {
+    router.navigateTo("/login");
+    return;
+  }
   Header("PROFILE");
   Profile();
   Footer();
 });
 
 router.addRoute("/login", () => {
+  if (router.checkLogin()) {
+    router.navigateTo("/");
+    return;
+  }
+
   Login();
 });
 

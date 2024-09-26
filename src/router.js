@@ -1,5 +1,5 @@
 import { HOME_PAGE, LOGIN_PAGE, PROFILE_PAGE, USERNAME } from "./constants";
-import UserInfo from "./UserInfo";
+import userStore from "./store/userStore";
 
 class Router {
   constructor() {
@@ -37,12 +37,10 @@ class Router {
   }
 
   routerGuard(path) {
-    const userInfo = new UserInfo();
-
-    if (path === LOGIN_PAGE && !!userInfo.get(USERNAME)) {
+    if (path === LOGIN_PAGE && !!userStore.getState()[USERNAME]) {
       return HOME_PAGE;
     }
-    if (path === PROFILE_PAGE && !userInfo.get(USERNAME)) {
+    if (path === PROFILE_PAGE && !userStore.getState()[USERNAME]) {
       return LOGIN_PAGE;
     }
 

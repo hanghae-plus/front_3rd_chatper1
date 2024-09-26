@@ -25,13 +25,26 @@ function renderPage() {
 }
 
 function navigateTo(path) {
-  history.pushState(null, null, path);
+  const targetPath = guardPrivateRoute(path);
+  history.pushState(null, null, targetPath);
   renderPage();
 }
 
 function handlePopState() {
   const path = window.location.pathname;
   navigateTo(path);
+}
+
+function guardPrivateRoute(path) {
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+  if (path === ROUTES.PROFILE && !isLoggedIn) {
+    return ROUTES.LOGIN;
+  } else if (path === ROUTES.LOGIN && isLoggedIn) {
+    return ROUTES.HOME;
+  } else {
+    return path;
+  }
 }
 
 function handleClick(event) {

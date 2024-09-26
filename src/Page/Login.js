@@ -65,22 +65,12 @@ export const Login = () => {
         });
     }
 
-    // throw new Error('의도적인 오류입니다.');
-
-    function setUsernameInputError() {
-        const usernameInput = document.getElementById('username');
-        if (usernameInput) {
-            usernameInput.addEventListener('input', (e) => {
-                e.preventDefault();
-
-                try {
-                    throw new Error('의도적인 오류입니다.');
-                } catch (error) {
-                    // Handle the error by calling the handleError function
-                    handleError(error);
-                }
-            });
-        }
+    // 전역 오류 처리기 설정
+    function setLoginErrorCatching() {
+        window.addEventListener('error', (event) => {
+            event.preventDefault();
+            handleError(event.error);
+        });
     }
 
     function handleError(error) {
@@ -93,5 +83,5 @@ export const Login = () => {
       `;
     }
 
-    setUsernameInputError();
+    setLoginErrorCatching();
 };

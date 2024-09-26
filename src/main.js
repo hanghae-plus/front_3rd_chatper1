@@ -1,9 +1,3 @@
-function render() {
-  document.querySelector('#root').innerHTML = App();
-}
-
-render();
-
 const router = {
   push: newPath => {
     const currentPath = history.state?.path || window.location.pathname;
@@ -18,25 +12,67 @@ const router = {
   },
 };
 
+function render() {
+  document.querySelector('#root').innerHTML = App();
+}
+
+render();
+
+window.addEventListener('popstate', render);
+
 document.addEventListener('click', e => {
   const anchor = e.target.closest('a');
+  const button = e.target.closest('button');
+
   if (anchor && anchor.tagName === 'A') {
     e.preventDefault();
     const newPath = anchor.getAttribute('href');
     router.push(newPath);
   }
+  if (button && button.id === 'logout') {
+    e.preventDefault();
+    localStorage.removeItem('user');
+    router.push('/login');
+  }
 });
+document.addEventListener('submit', e => {
+  const form = e.target.closest('form');
 
-window.addEventListener('popstate', render);
+  if (!form) return;
+
+  e.preventDefault();
+
+  if (form.id === 'login-form') {
+    const username = document.getElementById('username')?.value;
+    if (!username) return;
+
+    localStorage.setItem('user', JSON.stringify({ username, email: '', bio: '' }));
+    router.push('/');
+  }
+
+  if (form.id === 'profile-form') {
+    const updatedUsername = document.getElementById('username').value || '';
+    const updatedEmail = document.getElementById('email').value || '';
+    const updatedBio = document.getElementById('bio').value || '';
+
+    const updatedUser = {
+      username: updatedUsername,
+      email: updatedEmail,
+      bio: updatedBio,
+    };
+
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  }
+});
 
 function App() {
   const path = window.location.pathname;
+  const isLogin = !!localStorage.getItem('user');
 
   switch (path) {
     case '/':
       return HomePage();
     case '/profile': {
-      const isLogin = !!localStorage.getItem('user') || false;
       if (!isLogin) {
         router.replace('/login');
         return LoginPage();
@@ -52,6 +88,7 @@ function App() {
 
 function Header() {
   const currentPath = window.location.pathname;
+  const isLogin = !!localStorage.getItem('user');
 
   return `<header class="bg-blue-600 text-white p-4 sticky top-0">
         <h1 class="text-2xl font-bold">항해플러스</h1>
@@ -63,7 +100,7 @@ function Header() {
           <li><a href="/profile" class="${
             currentPath === '/profile' ? 'text-blue-600' : 'text-gray-600'
           }">프로필</a></li>
-          <li><a href="/login" class="${currentPath === '/login' ? 'text-blue-600' : 'text-gray-600'}">로그아웃</a></li>
+          <li><button type="button" id="logout" class="text-gray-600">${isLogin ? '로그아웃' : '로그인'}</button></li>
         </ul>
       </nav>`;
 }
@@ -177,6 +214,8 @@ function HomePage() {
 }
 
 function ProfilePage() {
+  const { username, email, bio } = JSON.parse(localStorage.getItem('user'));
+
   return `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
@@ -185,18 +224,18 @@ function ProfilePage() {
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">
           <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-          <form>
+          <form id="profile-form">
             <div class="mb-4">
               <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
-              <input type="text" id="username" name="username" value="홍길동" class="w-full p-2 border rounded">
+              <input type="text" id="username" name="username" value="${username}" class="w-full p-2 border rounded">
             </div>
             <div class="mb-4">
               <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
-              <input type="email" id="email" name="email" value="hong@example.com" class="w-full p-2 border rounded">
+              <input type="text" id="email" name="email" value="${email}" class="w-full p-2 border rounded">
             </div>
             <div class="mb-6">
               <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
-              <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">안녕하세요, 항해플러스에서 열심히 공부하고 있는 홍길동입니다.</textarea>
+              <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">${bio}</textarea>
             </div>
             <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
           </form>
@@ -242,7 +281,7 @@ function ErrorPage() {
         <p class="text-gray-600 mb-8">
           요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
         </p>
-        <a href="./" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
+        <a href="/" class="bg-blue-600 text-white px-4 py-2 rounded font-bold">
           홈으로 돌아가기
         </a>
       </div>

@@ -59,11 +59,13 @@ const createUserState = () => {
 
   const updateUserInfo = ({ username, email, bio }) => {
     localStorage.setItem('user', JSON.stringify({ username, email, bio }));
+
     loadedUser();
   };
 
   const loadedUser = () => {
     const user = JSON.parse(localStorage.getItem('user'));
+
     if (user) {
       userState.userInfo = user;
       userState.isLogged = true;
@@ -79,11 +81,13 @@ const createUserState = () => {
   };
 
   loadedUser();
+
   return { userState, updateUserInfo, removeUser };
 };
 
 const router = () => {
   const routes = {};
+
   const addRoute = (path, handler) => {
     routes[path] = handler;
   };
@@ -99,6 +103,7 @@ const router = () => {
 
   const handleRoute = (path) => {
     const handler = routes[path] ?? routes['/404'];
+
     if (handler) {
       handler();
     } else {
@@ -128,6 +133,7 @@ const logIn = (username) => {
     navigateTo('/');
     return;
   }
+
   document.getElementById('error-msg').innerHTML =
     '오류 발생! 영어로만 입력해주세요.';
 };
@@ -139,34 +145,41 @@ const logOut = () => {
 
 const handleError = (e) => {
   e.preventDefault();
-
   render(() => ErrorPage({ message: e.message }));
 };
 
 const handleClick = (e) => {
-  if (e.target.tagName === 'A') {
-    e.preventDefault();
-    if (e.target.id === 'logout') {
-      logOut();
-      return;
-    }
-    const url = new URL(e.target.href);
-    if (url.pathname.startsWith('/')) {
-      navigateTo(url.pathname);
-    }
-  }
-
   if (e.target.id === 'goback') {
     navigateTo(window.location.pathname);
+    return;
+  }
+
+  if (!(e.target.tagName === 'A')) {
+    return;
+  }
+
+  e.preventDefault();
+
+  if (e.target.id === 'logout') {
+    logOut();
+    return;
+  }
+
+  const url = new URL(e.target.href);
+
+  if (url.pathname.startsWith('/')) {
+    navigateTo(url.pathname);
   }
 };
 
 const handleSubmit = (e) => {
   e.preventDefault();
+
   if (e.target.id === 'login-form') {
     const username = document.getElementById('username').value;
     logIn(username);
   }
+
   if (e.target.id === 'profile-form') {
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;

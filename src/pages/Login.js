@@ -1,33 +1,41 @@
-import authStore from '../store/authStore.js';
-import UserStorage from '../utils/UserStorage.js';
+import authStore from "../store/authStore.js";
+import UserStorage from "../utils/UserStorage.js";
 
 export default class Login {
   constructor({ $element, router }) {
     this.userStorage = new UserStorage();
 
     // 로그연 상태라면 홈으로 이동
-    const isLoggedIn = this.userStorage.get('name');
+    const isLoggedIn = this.userStorage.get("name");
 
     if (isLoggedIn) {
-      router.navigateTo('/');
+      router.navigateTo("/");
       return;
     }
 
     this.$element = $element;
-    this.$element.innerHTML = '';
+    this.$element.innerHTML = "";
     this.router = router;
-    this.errorMessage = '';
+    this.errorMessage = "";
     this.render();
     this.submitLoginForm();
+    this.errorBoundary();
+  }
+
+  //에러바운더리: 에러 캐치 후 에러메세지를 렌더링
+  errorBoundary() {
+    window.addEventListener("error", (event) => {
+      this.handleError(event.error.message);
+    });
   }
 
   render() {
-    let loginContainer = this.$element.querySelector('#login-container');
+    let loginContainer = this.$element.querySelector("#login-container");
 
     if (!loginContainer) {
-      loginContainer = document.createElement('div');
-      loginContainer.classList.add('h-screen', 'flex', 'items-center');
-      loginContainer.id = 'login-container';
+      loginContainer = document.createElement("div");
+      loginContainer.classList.add("h-screen", "flex", "items-center");
+      loginContainer.id = "login-container";
       this.$element.append(loginContainer);
     }
     loginContainer.innerHTML = `
@@ -40,7 +48,7 @@ export default class Login {
               ${
                 this.errorMessage
                   ? `<p class="text-red-500 text-sm">${this.errorMessage}</p>`
-                  : ''
+                  : ""
               }
               
             </div>
@@ -64,38 +72,26 @@ export default class Login {
   }
 
   submitLoginForm() {
-    const form = this.$element.querySelector('#login-form');
+    const form = this.$element.querySelector("#login-form");
     if (!form) return;
-    try {
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const username = this.$element.querySelector('#username').value;
 
-        authStore.setState({
-          isLoggedIn: !!username,
-        });
-        this.userStorage.set('name', username);
-        this.userStorage.set('email', '');
-        this.userStorage.set('bio', '');
-        this.router.navigateTo('/');
-        this.render();
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const username = this.$element.querySelector("#username").value;
+
+      authStore.setState({
+        isLoggedIn: !!username,
       });
-    } catch (error) {
-      handleError();
-    }
-
-    // const $username = this.$element.querySelector('#username');
-    // $username.addEventListener(
-    //   'input',
-    //   () => {
-    //     this.handleError();
-    //   },
-    //   { once: true }
-    // );
+      this.userStorage.set("name", username);
+      this.userStorage.set("email", "");
+      this.userStorage.set("bio", "");
+      this.router.navigateTo("/");
+      this.render();
+    });
   }
 
-  handleError() {
-    this.errorMessage = `오류 발생! 의도적인 오류입니다.`;
+  handleError(errorMessage) {
+    this.errorMessage = `오류 발생! ${errorMessage}`;
     this.render();
   }
 }

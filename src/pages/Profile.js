@@ -33,7 +33,7 @@ export default class Profile {
 
     const username = this.userStorage.get("name");
     const email = this.userStorage.get("email") || "";
-    const bio = this.userStorage.get("bio") || "";
+    const bio = this.userStorage.get("bio") || "안녕하세요. 반가워요!";
 
     const main = document.createElement("main");
     main.classList.add("p-4");

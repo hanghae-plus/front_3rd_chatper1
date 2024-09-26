@@ -15,9 +15,8 @@ export default class UserStore {
     UserStore.#instance = this;
   }
 
-  clear() {
+  clearState() {
     this.#user = {};
-    localStorage.removeItem('user');
   }
 
   #notice(page) {

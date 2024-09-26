@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 const mainPage = (loginStatus) => {
 
   return () => {
-    const isLogin = loginStatus.getIsLogin() // 로그인 상태 가져옴
+    const isLogin = loginStatus.getIsLlogin() // 로그인 상태 가져옴
     // console.log(`메인페이지 : 로그인 상태 => ${isLogin}`)
     return `
     ${Header(isLogin)}

@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 const profilePage = (loginStatus) => {
 
   return () => {
-    const isLogin = loginStatus.getIsLogin()
+    const isLogin = loginStatus.getIsLlogin()
     const userInfo = loginStatus.getUserInfo()
     // console.log(`프로필 페이지 : 로그인 상태 => ${isLogin}`)
 

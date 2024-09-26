@@ -4,7 +4,7 @@ import errorPage from "./pages/errorPage";
 import profilePage from "./pages/profilePage";
 // 모듈 선택해서 가져오기
 import { createRouter } from "./router";
-import { userStatus } from "./login";
+import { useUserInfo } from "./login";
 
 const root = document.querySelector("#root");
 
@@ -14,21 +14,11 @@ localStorage.removeItem('user');
 
 
 // 유저 
-const loginState = userStatus()
+const loginState = useUserInfo()
 
-// Router 
+// 1. 라우팅 처리
 const router = createRouter(loginState)
 
-
-// 유저 정보 받아오기
-const userInfo = () => {
-  const username = document.querySelector("#username")?.value || ""
-  const email = document.querySelector("#email")?.value || ""
-  const bio = document.querySelector("#bio")?.value || ""
-  return { username, email, bio }
-}
-
-let isError = true
 
 // 컴포넌트를 함수실행이 아닌 함수 자체를 가져와서 오류가 나는데 원인 파악에 시간 너무 소요됨..
 router.addRoute('/', mainPage(loginState))
@@ -53,6 +43,27 @@ window.addEventListener("error", () => {
 
 
 
+// 유저 정보 받아오기
+const userInfo = () => {
+  const username = document.querySelector("#username")?.value || ""
+  const email = document.querySelector("#email")?.value || ""
+  const bio = document.querySelector("#bio")?.value || ""
+  return { username, email, bio }
+}
+
+
+
+// 로그인 함수
+
+function login (userInfo) {
+  loginState.createUserInfo(userInfo); // 유저 정보 저장
+}
+function logout () {
+  loginState.clearUserInfo(); // 유저 정보 삭제
+}
+function update (userInfo) {
+  loginState.updateUserInfo(userInfo); // 유저 정보 저장
+}
 
 
 
@@ -72,7 +83,7 @@ function handleClick(event) {
     // 로그아웃 버튼 클릭 시
     if (id === "logout") {
       // 로그아웃 함수 호출
-      loginState.logout()
+      logout()
     }
 
     const href = event.target.getAttribute("href")
@@ -105,8 +116,9 @@ function handleSubmit(event) {
       alert("아이디를 입력하세요")
       return
     }
+
     // 아이디 입력 값을 전달
-    loginState.login(user)
+    login(user)
 
     
     window.addEventListener("error", () => {
@@ -116,10 +128,8 @@ function handleSubmit(event) {
         // alert("오류 발생! >의도적인 오류입니다.")
     } )
     
-
-
   } else {
-    loginState.update(user)
+    update(user)
     alert("프로필이 업데이트 되었습니다.")
   }
   // 로그인 함수 호출

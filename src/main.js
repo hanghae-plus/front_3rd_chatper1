@@ -23,9 +23,7 @@ document.querySelector('nav').addEventListener('click', (e) => {
   }
 });
 
-// 오타 수정: DOMContendLoaded -> DOMContentLoaded
 window.addEventListener('DOMContentLoaded', () => {
-  // 초기 경로로 라우팅
   router.navigateTo(window.location.pathname);
 });
 
@@ -135,6 +133,15 @@ function renderLoginPage() {
     }
 
     login(username);
+  });
+
+  window.addEventListener('error', () => {
+    document
+      .querySelector('#login-form')
+      .insertAdjacentHTML(
+        'beforeend',
+        `<p>오류 발생! 의도적인 오류입니다.</p>`
+      );
   });
 }
 

@@ -7,14 +7,14 @@ export default [
 		component: LoginPage,
 	},
 	{
-		path: '/',
-		title: '홈',
-		component: HomePage,
-	},
-	{
 		path: '/profile',
 		title: '프로필',
 		component: ProfilePage,
+	},
+	{
+		path: '/',
+		title: '홈',
+		component: HomePage,
 	},
 	{
 		path: '*',

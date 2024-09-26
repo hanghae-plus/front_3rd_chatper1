@@ -5,6 +5,15 @@ class NotFoundPage extends Component {
 		super(element);
 	}
 
+	mounted() {
+		const homeLink = this.$target.querySelector('a.home-link');
+		homeLink.addEventListener('click', (event) => {
+			event.preventDefault(); // 기본 링크 동작(페이지 리로드)을 막음
+			const url = homeLink.getAttribute('href');
+			Router.navigateTo(url); // Router의 navigateTo로 경로 이동 처리
+		});
+	}
+
 	template() {
 		return `
         <main class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -19,8 +28,8 @@ class NotFoundPage extends Component {
                     요청하신 페이지가 존재하지 않거나 이동되었을 수 있습니다.
                 </p>
                 <a
-                    href="./main.html"
-                    class="bg-blue-600 text-white px-4 py-2 rounded font-bold"
+                    href="/"
+                    class="home-link bg-blue-600 text-white px-4 py-2 rounded font-bold"
                 >
                     홈으로 돌아가기
                 </a>

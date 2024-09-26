@@ -19,7 +19,6 @@ class NavBar extends Observer {
 			if (!route.navTitle) return '';
 
 			const selectClass = window.location.pathname === route.path ? 'text-blue-600 font-bold' : 'text-gray-600';
-
 			const navEl = `<li><a href="${route.path}" class="${selectClass}">${route.navTitle}</a></li>`;
 
 			if (!this.isLoggedIn && route.path === NAVIGATION_PAGE.profile.path) {

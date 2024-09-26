@@ -16,8 +16,6 @@ class LoginPage {
 			return;
 		}
 
-		const username = document.getElementById('username');
-
 		const pwdElement = document.querySelector('input[type="password"]');
 		pwdElement.addEventListener('input', () => {
 			// TODO: 비밀번호 유효성 확인
@@ -27,6 +25,7 @@ class LoginPage {
 		loginForm.addEventListener('submit', () => {
 			// TODO: 로그인 실패시 메세지 표시
 
+			const username = document.getElementById('username');
 			const user = {
 				username: username.value,
 				email: '',

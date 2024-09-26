@@ -42,9 +42,9 @@ class ProfilePage extends Observer {
 				email: emailInputElement.value,
 				bio: bioElement.value,
 			};
-			loginStore.setState({ isLoggedIn: true, user });
 
 			saveInLocalStorage(LOCAL_STORAGE_KEYS.USER, user);
+			loginStore.setState({ isLoggedIn: true, user });
 		});
 
 		const logoutButton = document.querySelector('#logout');
@@ -53,6 +53,7 @@ class ProfilePage extends Observer {
 
 			clearInLocalStorage(LOCAL_STORAGE_KEYS.USER);
 			loginStore.setState({ isLoggedIn: false });
+
 			new Router().navigateTo(logoutButton.getAttribute('href'));
 		});
 	}

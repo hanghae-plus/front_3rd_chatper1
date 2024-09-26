@@ -1,4 +1,5 @@
 import { PROJECT_NAME } from '@constants'
+
 export default function notFoundPage({ title, buttonMessage, replacePath }) {
   const template = `<main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full text-center" style="max-width: 480px">

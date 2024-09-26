@@ -20,7 +20,9 @@ export default class LoginPage extends BaseComponent {
   }
 
   private bindLoginEvent() {
-    const $loginForm = this.getElement<HTMLFormElement>(`#${ID.LOGIN_FORM}`);
+    const $loginForm = this.$root?.querySelector<HTMLFormElement>(
+      `#${ID.LOGIN_FORM}`
+    );
     if (!$loginForm) return;
 
     $loginForm.addEventListener('submit', this.handleLogin.bind(this));

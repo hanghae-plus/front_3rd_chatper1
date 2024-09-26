@@ -36,7 +36,7 @@ export class Header extends BaseComponent<Link[]> {
         const activeClass = this.isActiveLink(link)
           ? 'text-blue-600 font-bold'
           : 'text-gray-600';
-        const linkId = id ? `id=${id}` : '';
+        const linkId = id ? `id="${id}"` : '';
 
         return `<li>
                   <a href="${link}" class="${activeClass}" ${linkId}>
@@ -48,7 +48,7 @@ export class Header extends BaseComponent<Link[]> {
   }
 
   private bindLogoutEvents() {
-    const $logoutLink = this.getElement(`#${LOGOUT_ID}`);
+    const $logoutLink = this.$root?.querySelector(`#${LOGOUT_ID}`);
     if ($logoutLink) {
       $logoutLink.addEventListener('click', this.handleLogout);
     }

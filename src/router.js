@@ -33,7 +33,7 @@ const routes = [
 ];
 
 class Router {
-  constructor({ $target, routes }) {
+  constructor({ routes }) {
     this.routes = routes;
 
     /**
@@ -41,14 +41,16 @@ class Router {
      */
     this.currentRoute = null;
 
+    this.$target = null;
+  }
+
+  init($target) {
     this.$target = $target;
 
     window.addEventListener('popstate', () => {
       this.handleRoute(window.location.pathname);
     });
-  }
 
-  init() {
     this.handleRoute(window.location.pathname);
   }
 
@@ -101,7 +103,6 @@ class Router {
 }
 
 const router = new Router({
-  $target: document.getElementById('root'),
   routes,
 });
 

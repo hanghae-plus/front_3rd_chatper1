@@ -5,7 +5,7 @@ export default class Component {
 
   events = [];
 
-  constructor($target) {
+  constructor($target, props = {}) {
     this.$target = $target;
     this.setup();
     this.initEvent();

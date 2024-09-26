@@ -21,10 +21,7 @@ export default function Login() {
 
   const hydratePage = () => {
     // form 활성화
-    const loginForm = document.getElementById("login-form");
-    loginForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-
+    document.querySelector("#login-form").addEventListener("submit", () => {
       // validation : TC 통과를 위해 주석 처리
       // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const usernameInput = document.getElementById("username");
@@ -45,10 +42,13 @@ export default function Login() {
       //   document.getElementById("pw-error").innerText = null;
       // }
 
-      // Login(submit)
       localStorage.setItem(
         "user",
-        JSON.stringify({ username: usernameInput.value, email: "", bio: "" })
+        JSON.stringify({
+          username: usernameInput.value,
+          email: "",
+          bio: "",
+        })
       );
       router.navigateTo("/");
     });

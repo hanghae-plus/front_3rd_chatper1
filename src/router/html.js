@@ -202,6 +202,7 @@ export const login = `
           <div id="pw-error" class="mt-2 text-red-400 font-bold text-xs"></div>
         </div>
         <button
+          id="login"
           type="submit"
           class="w-full bg-blue-600 text-white p-2 rounded font-bold"
         >

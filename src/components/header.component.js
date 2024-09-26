@@ -1,4 +1,3 @@
-import { bodyLayout } from "../router/html";
 import { router } from "../router/router";
 
 export default function Header(curPage) {
@@ -24,7 +23,7 @@ export default function Header(curPage) {
     // 링크 활성화
     router.activateLink("home", "/");
     router.activateLink("profile", "/profile");
-    router.activateLink("logout", "/login");
+    router.activateLogout();
   };
 
   initHTML();

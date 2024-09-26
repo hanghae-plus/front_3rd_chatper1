@@ -1,5 +1,5 @@
 import { DELAY_TIME } from '@constants'
-import { debounce } from '@utils'
+import { debounce, memoize } from '@utils'
 import { FeedItem } from '@components/main'
 import { MainLayout } from '@components/layouts'
 import { UserStore } from '@stores'
@@ -9,29 +9,40 @@ const DATA_URL = '/data.json'
 const FEEDS_LIMIT = 10
 const USER_PROFILE_URL = 'https://via.placeholder.com/41'
 const LOGIN_REQUIRED_MESSAGE = '로그인이 필요합니다.'
+const USER = 'user'
+const CURRENT_TIME = '지금'
+const FIRST_INDEX = 0
 
 export default function mainPage() {
   let page = 1
   let totalCount = 0
   const userStore = new UserStore()
 
-  async function fetchFeeds(page) {
+  const memoizedFetchFeeds = memoize(async () => {
     try {
       const response = await fetch(DATA_URL)
-      const data = await response.json()
-      totalCount = data.length
-      feeds = [...feeds, ...data].slice(0, page * FEEDS_LIMIT)
-      document.getElementById('feeds').innerHTML = feeds.map((feed) => FeedItem(feed)).join('')
-    } catch (error) {
-      console.error(error)
+      return await response.json()
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+  })
+
+  async function fetchFeeds(page) {
+    const newFeeds = await memoizedFetchFeeds()
+    totalCount = newFeeds.length
+    feeds = newFeeds.slice(FIRST_INDEX, page * FEEDS_LIMIT)
+    const feedsElement = document.getElementById('feeds')
+    if (feedsElement) {
+      feedsElement.innerHTML = feeds.map((feed) => FeedItem(feed)).join('')
     }
   }
 
   function handlePostMessage() {
     const message = document.getElementById('message').value
-    const user = userStore.getState('user')
+    const user = userStore.getState(USER)
 
-    if (!user || !user.username) {
+    if (!user) {
       alert(LOGIN_REQUIRED_MESSAGE)
       return
     }
@@ -42,7 +53,7 @@ export default function mainPage() {
       name: user.username,
       profile: USER_PROFILE_URL,
       content: message,
-      time: '지금',
+      time: CURRENT_TIME,
     }
 
     feeds = [newMessage, ...feeds]
@@ -71,9 +82,9 @@ export default function mainPage() {
 
   function render() {
     document.getElementById('root').innerHTML = template
-    fetchFeeds(page)
     window.addEventListener('scroll', debounceScroll)
     document.getElementById('message-button').addEventListener('click', handlePostMessage)
+    fetchFeeds(page)
   }
 
   function cleanup() {

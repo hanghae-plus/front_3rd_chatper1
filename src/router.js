@@ -19,30 +19,30 @@ export default class Router {
     const lastSegment = pathSegments.pop();
     const newPath = "/" + lastSegment;
 
-    if (newPath === "/profile" && !user) {
-      window.history.pushState(null, "", "/login");
-      this.handleRoute("/login");
-      return;
-    }
-
-    if (newPath === "/login" && user) {
-      window.history.pushState(null, "", "/");
-      this.handleRoute("/");
-      return;
-    }
-
     window.history.pushState(null, "", newPath);
     this.handleRoute(newPath);
   }
 
   handlePopState() {
-    this.handleRoute(window.location.pathname);
+    const path = window.location.pathname;
+    const user = this.store.getState("user");
+
+    if (path === "/login" && user) {
+      window.history.replaceState(null, "", "/");
+      this.handleRoute("/");
+    } else if (path === "/profile" && !user) {
+      window.history.replaceState(null, "", "/login");
+      this.handleRoute("/login");
+    } else {
+      this.handleRoute(path);
+    }
   }
 
   handleRoute(path) {
     const component = this.routes[path];
     if (component) {
       component().render();
+      console.log(document.body.innerHTML);
     } else {
       this.routes["/404"]().render();
     }

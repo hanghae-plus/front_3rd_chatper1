@@ -4,11 +4,16 @@ beforeAll(async () => {
   // DOM 초기화
   window.alert = vi.fn();
   document.body.innerHTML = '<div id="root"></div>';
+  console.log(
+    "🚀 ~ beforeAll ~ document.body.innerHTML:",
+    document.body.innerHTML
+  );
   await import("../main.js");
 });
 
 afterAll(() => {
   // 각 테스트 전에 root 엘리먼트 초기화
+  console.log("afterAll ~ root", document.body.innerHTML);
   document.getElementById("root").innerHTML = "";
   localStorage.removeItem("user");
 });
@@ -49,7 +54,6 @@ describe("심화과제 테스트", () => {
       );
 
       goTo("/login");
-
       expect(
         document.querySelector("nav .text-blue-600.font-bold").innerHTML
       ).toContain("홈");

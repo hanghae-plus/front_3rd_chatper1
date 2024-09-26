@@ -27,13 +27,15 @@ export default class LoginPage extends Component {
           <button class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
         </div>
       </div>
+      <div id='error'/>
     </main>
 `;
   }
 
   addEvent() {
     window.addEventListener("error", (e) => {
-      document.body.innerHTML = `<div><div>오류 발생!</div><div>의도적인 오류입니다.</div></div>`;
+      const $error = document.getElementById("error");
+      $error.innerHTML = `<div><div>오류 발생!</div><div>의도적인 오류입니다.</div></div>`;
     });
 
     const router = new Router();

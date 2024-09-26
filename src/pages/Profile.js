@@ -4,6 +4,11 @@ import UserData from '../stores/UserData.js';
 import Router from '../Router.js';
 
 export default class ProfilePage {
+  constructor() {
+    this.header = new Header();
+    this.footer = new Footer();
+  }
+
   init() {
     const isLogin = UserData.getUserData().isLogin;
 
@@ -12,7 +17,7 @@ export default class ProfilePage {
       return;
     }
 
-    Header.init();
+    this.header.init();
     this.settingInputValue();
     this.settingSubmitEvent();
   }
@@ -49,13 +54,10 @@ export default class ProfilePage {
   }
 
   render() {
-    const header = new Header();
-    const footer = new Footer();
-
     return `
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
-          ${header.render()}
+          ${this.header.render()}
           <main class="p-4">
             <div class="bg-white p-8 rounded-lg shadow-md">
               <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
@@ -76,7 +78,7 @@ export default class ProfilePage {
               </form>
             </div>
           </main>
-          ${footer.render()}
+          ${this.footer.render()}
         </div>
       </div>
     `;

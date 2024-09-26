@@ -2,11 +2,11 @@ import UserData from '../stores/UserData.js';
 import Router from '../Router.js';
 
 export default class Header {
-  static init() {
+  init() {
     this.updateLoginUI();
   }
 
-  static updateLoginUI() {
+  updateLoginUI() {
     const isLogin = UserData.getUserData().isLogin;
     const currentPath = window.location.pathname;
     const $navList = document.getElementById('nav-list');
@@ -31,7 +31,7 @@ export default class Header {
     }
   }
 
-  static logout() {
+  logout() {
     UserData.setUserData({
       isLogin: false,
       user: null,

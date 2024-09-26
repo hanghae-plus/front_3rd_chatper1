@@ -20,9 +20,7 @@ export class Subject {
 }
 
 export class Observer {
-	update(data) {
-		console.log('Received update:', data);
-	}
+	update(data) {}
 }
 
 class Store extends Subject {

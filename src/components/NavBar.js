@@ -22,9 +22,6 @@ class NavBar extends Observer {
 
 			const navEl = `<li><a href="${route.path}" class="${selectClass}">${route.navTitle}</a></li>`;
 
-			console.log('route.path', route.path);
-			console.log('this.isLoggedIn', this.isLoggedIn);
-
 			if (!this.isLoggedIn && route.path === '/profile') {
 				return '';
 			}
@@ -39,7 +36,7 @@ class NavBar extends Observer {
         ${this.isLoggedIn ? '<li><a id="logout" href="/login" class="text-gray-600}">로그아웃</a></li>' : ''}
         </ul>
         </nav>
-        `;
+`;
 	}
 }
 

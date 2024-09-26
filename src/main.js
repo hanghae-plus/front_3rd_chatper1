@@ -1,4 +1,4 @@
-//user
+// User클래스
 class UserService {
   constructor() {
     this.storageKey = 'user';
@@ -22,21 +22,15 @@ class UserService {
     return !!this.getCurrentUser();
   }
 
-  updateUserBio(bio) {
-    const user = this.getCurrentUser();
-    if (user) {
-      user.bio = bio;
-      localStorage.setItem(this.storageKey, JSON.stringify(user));
-    }
-  }
-
   updateProfile(username, bio) {
     const user = this.getCurrentUser();
     if (user) {
       user.username = username;
       user.bio = bio;
       localStorage.setItem(this.storageKey, JSON.stringify(user));
+      return true;
     }
+    return false;
   }
 }
 
@@ -55,154 +49,90 @@ class Page {
   }
 }
 
-class MainPage extends Page {
-  constructor(userService) {
-    super();
+// Navigation 클래스
+class Navigation {
+  constructor(userService, router) {
     this.userService = userService;
-    this.setTitle('홈 - 항해플러스');
+    this.router = router;
   }
 
   render() {
     const user = this.userService.getCurrentUser();
-    const navTemplate = user
-      ? `<nav class="bg-white shadow-md p-2 sticky top-14">
-          <ul class="flex justify-around">
-            <li><a href="/main" class="text-blue-600">홈</a></li>
-            <li><a href="/profile" class="text-gray-600">프로필</a></li>
-            <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
-          </ul>
-        </nav>`
-      : `<nav class="bg-white shadow-md p-2 sticky top-14">
-          <ul class="flex justify-around">
-            <li><a href="/main" class="text-blue-600">홈</a></li>
-            <li><a href="/login" class="text-gray-600">로그인</a></li>
-          </ul>
-        </nav>`;
+    if (!user) return '';
 
+    return `
+      <nav class="bg-white shadow-md p-2 sticky top-14">
+        <ul class="flex justify-around">
+          <li><a href="/main" class="text-gray-600">홈</a></li>
+          <li><a href="/profile" class="text-gray-600">프로필</a></li>
+          <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
+        </ul>
+      </nav>
+    `;
+  }
+
+  addEventListeners() {
+    const logoutButton = document.querySelector('#logout');
+    if (logoutButton) {
+      logoutButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.userService.logout();
+        this.router.navigate('/login');
+      });
+    }
+  }
+}
+
+// Main 클래스
+class MainPage extends Page {
+  constructor(userService, router) {
+    super();
+    this.userService = userService;
+    this.router = router;
+    this.navigation = new Navigation(userService, router);
+  }
+
+  render() {
+    const user = this.userService.getCurrentUser();
     const template = `
       <div class="bg-gray-100 min-h-screen flex justify-center">
         <div class="max-w-md w-full">
           <header class="bg-blue-600 text-white p-4 sticky top-0">
             <h1 class="text-2xl font-bold">항해플러스</h1>
           </header>
-          ${navTemplate}
+          ${this.navigation.render()}
           <main class="p-4">
             ${user ? `<h2>환영합니다, ${user.username}님!</h2>` : '로그인해주세요.'}
-            <div class="mb-4 bg-white rounded-lg shadow p-4">
-              <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
-              <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
+            <div class="bg-white rounded-lg shadow p-4">
+            <div class="flex items-center mb-2">
+              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
+              <div>
+                <p class="font-bold">이영희</p>
+                <p class="text-sm text-gray-500">30분 전</p>
+              </div>
             </div>
-
-            <div class="space-y-4">
-
-              <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center mb-2">
-                  <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-                  <div>
-                    <p class="font-bold">홍길동</p>
-                    <p class="text-sm text-gray-500">5분 전</p>
-                  </div>
-                </div>
-                <p>오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!</p>
-                <div class="mt-2 flex justify-between text-gray-500">
-                  <button>좋아요</button>
-                  <button>댓글</button>
-                  <button>공유</button>
-                </div>
-              </div>
-
-              <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center mb-2">
-                  <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-                  <div>
-                    <p class="font-bold">김철수</p>
-                    <p class="text-sm text-gray-500">15분 전</p>
-                  </div>
-                </div>
-                <p>새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!</p>
-                <div class="mt-2 flex justify-between text-gray-500">
-                  <button>좋아요</button>
-                  <button>댓글</button>
-                  <button>공유</button>
-                </div>
-              </div>
-
-              <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center mb-2">
-                  <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-                  <div>
-                    <p class="font-bold">이영희</p>
-                    <p class="text-sm text-gray-500">30분 전</p>
-                  </div>
-                </div>
-                <p>오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?</p>
-                <div class="mt-2 flex justify-between text-gray-500">
-                  <button>좋아요</button>
-                  <button>댓글</button>
-                  <button>공유</button>
-                </div>
-              </div>
-
-              <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center mb-2">
-                  <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-                  <div>
-                    <p class="font-bold">박민수</p>
-                    <p class="text-sm text-gray-500">1시간 전</p>
-                  </div>
-                </div>
-                <p>주말에 등산 가실 분 계신가요? 함께 가요!</p>
-                <div class="mt-2 flex justify-between text-gray-500">
-                  <button>좋아요</button>
-                  <button>댓글</button>
-                  <button>공유</button>
-                </div>
-              </div>
-
-              <div class="bg-white rounded-lg shadow p-4">
-                <div class="flex items-center mb-2">
-                  <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-                  <div>
-                    <p class="font-bold">정수연</p>
-                    <p class="text-sm text-gray-500">2시간 전</p>
-                  </div>
-                </div>
-                <p>새로 나온 영화 재미있대요. 같이 보러 갈 사람?</p>
-                <div class="mt-2 flex justify-between text-gray-500">
-                  <button>좋아요</button>
-                  <button>댓글</button>
-                  <button>공유</button>
-                </div>
-              </div>
+            <p>오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?</p>
+            <div class="mt-2 flex justify-between text-gray-500">
+              <button>좋아요</button>
+              <button>댓글</button>
+              <button>공유</button>
             </div>
           </main>
         </div>
       </div>
     `;
     this.root.innerHTML = template;
-
-    if (user) {
-      this.addLogoutListener();
-    }
-  }
-
-  addLogoutListener() {
-    const logoutButton = document.querySelector('#logout');
-    logoutButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.userService.logout();
-      this.render(); // 페이지 새로고침
-    });
+    this.navigation.addEventListeners();
   }
 }
 
-// 프로필
+// Profile클래스
 class ProfilePage extends Page {
   constructor(userService, router) {
     super();
     this.userService = userService;
     this.router = router;
-    this.setTitle('프로필 - 항해플러스');
+    this.navigation = new Navigation(userService, router);
   }
   
   render() {
@@ -219,67 +149,80 @@ class ProfilePage extends Page {
           <header class="bg-blue-600 text-white p-4 sticky top-0">
             <h1 class="text-2xl font-bold">항해플러스</h1>
           </header>
-
-          <nav class="bg-white shadow-md p-2 sticky top-14">
-            <ul class="flex justify-around">
-              <li><a href="/main" class="text-gray-600">홈</a></li>
-              <li><a href="/profile" class="text-blue-600">프로필</a></li>
-              <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
-            </ul>
-          </nav>
-
+          ${this.navigation.render()}
           <main class="p-4">
             <div class="bg-white p-8 rounded-lg shadow-md">
               <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
+              <div id="message" class="mb-4 hidden"></div>
               <form id="profile-form">
                 <div class="mb-4">
                   <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
                   <input type="text" id="username" name="username" value="${user.username}" class="w-full p-2 border rounded">
                 </div>
+                <div class="mb-4">
+                  <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
+                  <input type="email" id="email" name="email" value="${user.email}" class="w-full p-2 border rounded" readonly>
+                </div>
                 <div class="mb-6">
                   <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
-                  <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">${user.bio || ''}</textarea>
+                  <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">${user.bio}</textarea>
                 </div>
-                <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
+                <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">
+                  <span class="submit-text">프로필 업데이트</span>
+                  <span class="loading-text hidden">업데이트 중...</span>
+                </button>
               </form>
             </div>
           </main>
-
-          <footer class="bg-gray-200 p-4 text-center">
-            <p>&copy; 2024 항해플러스. All rights reserved.</p>
-          </footer>
         </div>
       </div>
     `;
     this.root.innerHTML = template;
     this.addEventListeners();
   }
+
   addEventListeners() {
     const form = document.querySelector('#profile-form');
-    form.addEventListener('submit', (e) => {
+    const submitButton = form.querySelector('button[type="submit"]');
+    const submitText = submitButton.querySelector('.submit-text');
+    const loadingText = submitButton.querySelector('.loading-text');
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.querySelector('#username').value;
       const bio = document.querySelector('#bio').value;
-      this.userService.updateProfile(username, bio);
-      alert('프로필이 업데이트되었습니다.');
+
+      submitText.classList.add('hidden');
+      loadingText.classList.remove('hidden');
+      submitButton.disabled = true;
+
+      try {
+        if (await this.userService.updateProfile(username, bio)) {
+          alert('프로필이 성공적으로 업데이트되었습니다.', 'success');
+          this.render();
+        } else {
+          throw new Error('프로필 업데이트에 실패했습니다.');
+        }
+      } catch (error) {
+        alert(error.message, 'error');
+      } finally {
+        submitText.classList.remove('hidden');
+        loadingText.classList.add('hidden');
+        submitButton.disabled = false;
+      }
     });
 
-    const logoutButton = document.querySelector('#logout');
-    logoutButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.userService.logout();
-      this.router.navigate('/main');
-    });
+    this.navigation.addEventListeners();
   }
+
 }
 
-// 로그인
+// Login 클래스
 class LoginPage extends Page {
   constructor(userService, router) {
     super();
     this.userService = userService;
     this.router = router;
-    this.setTitle('로그인 - 항해플러스');
   }
 
   render() {
@@ -297,7 +240,6 @@ class LoginPage extends Page {
       </main>
     `;
     this.root.innerHTML = template;
-
     this.addEventListeners();
   }
 
@@ -316,7 +258,6 @@ class LoginPage extends Page {
 class ErrorPage extends Page {
   constructor() {
     super();
-    this.setTitle('404 - 페이지를 찾을 수 없음');
   }
 
   render() {
@@ -375,7 +316,7 @@ class Router {
   }
 }
 
-// 애플리케이션 클래스
+// 애플리케이션
 class App {
   constructor() {
     this.userService = new UserService();
@@ -388,6 +329,6 @@ class App {
   }
 }
 
-// 시작
+
 const app = new App();
 app.init();

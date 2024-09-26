@@ -37,6 +37,7 @@ document.getElementById("root").addEventListener("click", (e) => {
 document.getElementById("root").addEventListener("submit", (e) => {
   if (e.target.id === "login-form") {
     e.preventDefault();
+
     const username = document.getElementById("username").value;
     setUser({ username });
     movePage("/profile", e);
@@ -49,4 +50,12 @@ document.getElementById("root").addEventListener("submit", (e) => {
     const bio = document.getElementById("bio").value;
     setUser({ username, email, bio });
   }
+});
+
+window.addEventListener("error", (e) => {
+  document.getElementById("root").innerHTML = `<div>
+        <div>오류 발생!</div>
+        <div>${e.message}</div>
+        </div>
+      `;
 });

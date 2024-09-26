@@ -23,6 +23,7 @@ window.addEventListener('popstate', render);
 document.addEventListener('click', e => {
   const anchor = e.target.closest('a');
   const button = e.target.closest('button');
+  const link = document.querySelector('nav a[href="/login"]');
 
   if (anchor && anchor.tagName === 'A') {
     e.preventDefault();
@@ -32,7 +33,11 @@ document.addEventListener('click', e => {
   if (button && button.id === 'logout') {
     e.preventDefault();
     localStorage.removeItem('user');
-    router.push('/login');
+  }
+  if (link) {
+    e.preventDefault();
+    const newPath = link.getAttribute('href');
+    router.push(newPath);
   }
 });
 
@@ -105,7 +110,10 @@ function Header() {
           <li><a href="/profile" class="${
             currentPath === '/profile' ? 'text-blue-600' : 'text-gray-600'
           }">프로필</a></li>
-          <li><button type="button" id="logout" class="text-gray-600">${isLogin ? '로그아웃' : '로그인'}</button></li>
+          <li>
+          <a href='/login'><button type="button" id="logout" class="text-gray-600">${
+            isLogin ? '로그아웃' : '로그인'
+          }</button></a></li>
         </ul>
       </nav>`;
 }

@@ -15,4 +15,4 @@ const routes = [
   { path: "*", view: NotFoundPage },
 ];
 
-export const router = new Router(routes);
+new Router(routes);

@@ -5,7 +5,7 @@ export const getUser = () => {
   return user ? JSON.parse(user) : null;
 };
 
-export const login = (username) => {
+export const authLogin = (username) => {
   if (!username) {
     alert("아이디를 입력하세요");
     return;
@@ -17,7 +17,7 @@ export const login = (username) => {
   );
 };
 
-export const logout = () => {
+export const authLogout = () => {
   localStorage.removeItem("user");
 };
 

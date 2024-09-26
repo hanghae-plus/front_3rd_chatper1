@@ -1,6 +1,6 @@
 import Header from '../components/Header';
 
-const Profile = ({ username, email, bio }) => {
+const ProfilePage = ({ username, email, bio }) => {
   return `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
@@ -33,4 +33,4 @@ const Profile = ({ username, email, bio }) => {
   </div>`;
 };
 
-export default Profile;
+export default ProfilePage;

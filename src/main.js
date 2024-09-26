@@ -1,7 +1,7 @@
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Profile from './pages/Profile';
-import NotFound from './pages/NotFound';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import ProfilePage from './pages/ProfilePage';
+import NotFoundPage from './pages/NotFoundPage';
 
 const render = (page) => {
   document.querySelector('#root').innerHTML = page();
@@ -12,23 +12,51 @@ const userState = {
   isLogged: false,
 };
 
+const posts = [
+  {
+    name: '홍길동',
+    content: '오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!',
+    date: '5분 전',
+  },
+  {
+    name: '김철수',
+    content: '새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!',
+    date: '15분 전',
+  },
+  {
+    name: '이영희',
+    content: '오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?',
+    date: '30분 전',
+  },
+  {
+    name: '박민수',
+    content: '주말에 등산 가실 분 계신가요? 함께 가요!',
+    date: '1시간 전',
+  },
+  {
+    name: '정수연',
+    content: '새로 나온 영화 재미있대요. 같이 보러 갈 사람?',
+    date: '2시간 전',
+  },
+];
+
 const routes = {
-  '/': () => render(() => Home({ isLogged: userState.isLogged })),
+  '/': () => render(() => HomePage({ isLogged: userState.isLogged, posts })),
   '/login': () => {
     if (!userState.isLogged) {
-      render(Login);
+      render(LoginPage);
       return;
     }
     navigateTo('/');
   },
   '/profile': () => {
     if (userState.isLogged) {
-      render(() => Profile(userState.userInfo));
+      render(() => ProfilePage(userState.userInfo));
       return;
     }
     navigateTo('/login');
   },
-  '/404': () => render(NotFound),
+  '/404': () => render(NotFoundPage),
 };
 
 const router = () => {
@@ -40,7 +68,7 @@ const router = () => {
 
   const navigateTo = (path) => {
     history.pushState({}, '', path);
-    handleRoute(path);
+    window.dispatchEvent(new Event('popstate'));
   };
 
   const handlePopState = () => {
@@ -52,7 +80,7 @@ const router = () => {
     if (handler) {
       handler();
     } else {
-      render(NotFound);
+      render(NotFoundPage);
     }
   };
 
@@ -119,7 +147,7 @@ const addListeners = () => {
     }
 
     if (e.target.id === 'goback') {
-      handleRoute(window.location.pathname);
+      navigateTo(window.location.pathname);
     }
   });
 
@@ -149,7 +177,7 @@ const addListeners = () => {
 const init = () => {
   loadedUser();
   addListeners();
-  handleRoute(window.location.pathname);
+  navigateTo(window.location.pathname);
 };
 
 init();

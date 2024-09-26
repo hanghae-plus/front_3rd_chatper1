@@ -1,4 +1,4 @@
-import Storage from './Storage';
+import Storage from "./Storage.js";
 
 const Store = (function () {
   let instance;

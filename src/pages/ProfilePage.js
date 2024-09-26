@@ -1,6 +1,6 @@
 import Component from '../components/common/component';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
+import Footer from '../components/footer';
+import Header from '../components/header';
 import { store } from '../main';
 import { updateStorage } from '../utils/storage';
 

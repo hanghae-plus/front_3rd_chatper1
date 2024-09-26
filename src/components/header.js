@@ -1,6 +1,6 @@
 import { store } from '../main';
 import { navigate } from '../utils/routes';
-import { deleteStorage, getStorage } from '../utils/storage';
+import { deleteStorage } from '../utils/storage';
 import Component from './common/component';
 
 export default class Header extends Component {

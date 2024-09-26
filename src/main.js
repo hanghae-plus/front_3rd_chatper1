@@ -5,33 +5,36 @@ import Error from '../components/Error';
 import Router from './router';
 import User from '../store/User';
 
+//renderMainPage
 const user = User();
-
 const router = Router();
 router.addRoute('/', renderMainPage);
 router.addRoute('/login', renderLoginPage);
 router.addRoute('/profile', renderProfilePage);
 router.addRoute('/404', renderErrorPage);
 
+renderMainPage();
+
+document.querySelector('nav').addEventListener('click', (e) => {
+  if (e.target.tagName === 'A') {
+    e.preventDefault();
+    router.navigateTo(e.target.pathname);
+  }
+});
+
 window.addEventListener('DOMContendLoaded', () => {
   router.navigateTo(window.location.pathname);
-  document.querySelector('nav').addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') {
-      e.preventDefault();
-      router.navigateTo(e.target.pathname);
-    }
-  });
 });
 
 function render(component) {
-  document.querySelector('#root').innerHTML = component;
+  document.querySelector('#root').innerHTML = component();
 }
 
 function renderMainPage() {
   if (user.getUser()) {
-    render(LoginMain());
+    render(LoginMain);
   } else {
-    render(Main());
+    render(Main);
   }
 }
 
@@ -40,7 +43,9 @@ function renderProfilePage() {
     history.replaceState(null, null, '/');
     return;
   }
-  render(Profile());
+
+  render(Profile);
+
   if (user.getUser().username) {
     document.querySelector('input[id="username"]').value =
       user.getUser().username;
@@ -72,6 +77,7 @@ function renderProfilePage() {
   };
 
   profileForm.addEventListener('submit', (e) => {
+    // form의 submit 이벤트를 사용합니다.
     e.preventDefault();
     console.log('update!');
     const updatedUser = {
@@ -90,7 +96,7 @@ function renderProfilePage() {
 
 function renderLoginPage() {
   console.log('Login Page');
-  render(Login());
+  render(Login);
 
   const loginForm = document.getElementById('login-form');
 
@@ -122,5 +128,5 @@ function renderLoginPage() {
 
 function renderErrorPage() {
   console.log('Error Page');
-  render(Error());
+  render(Error);
 }

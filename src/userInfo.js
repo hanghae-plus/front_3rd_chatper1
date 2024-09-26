@@ -1,20 +1,22 @@
+import { StorageManager } from './util/storageManager';
+
 const STORAGE_KEYS = ['username', 'email', 'bio'];
 
 const UserInfo = (() => {
-  let user = JSON.parse(localStorage.getItem('user')) || {
+  let user = StorageManager.getItem('user') || {
     username: '',
     email: '',
     bio: '',
   };
 
   const save = () => {
-    localStorage.setItem('user', JSON.stringify(user));
+    StorageManager.setItem('user', user);
   };
 
   return {
     get(key) {
       if (!STORAGE_KEYS.includes(key)) {
-        return;
+        return undefined;
       }
       return user[key];
     },
@@ -27,7 +29,7 @@ const UserInfo = (() => {
     },
     clear() {
       user = { username: '', email: '', bio: '' };
-      localStorage.removeItem('user');
+      StorageManager.removeItem('user');
     },
   };
 })();

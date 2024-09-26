@@ -40,7 +40,7 @@ class Router {
 export const router = new Router();
 
 // const pathInfo = [
-// { title: "홈", path: "/", component: Main() },
+//   { title: "홈", path: "/", component: Main() },
 // { title: "로그인", path: "/login", component: Login() },
 // { title: "프로필", path: "/profile", component: Profile() },
 // ];
@@ -49,4 +49,4 @@ router.addRoute('/', ()=> Main());
 router.addRoute('/main', ()=> Main());
 router.addRoute('/login', ()=> Login());
 router.addRoute('/profile', ()=> Profile());
-router.addRoute('/error', ()=> Error());
+router.addRoute('/¥Y¨', ()=> Profile());

@@ -2,11 +2,11 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 export default function HomePage() {
-	const HeaderComponent = Header();
-	const FooterComponent = Footer();
+  const HeaderComponent = Header();
+  const FooterComponent = Footer();
 
-	function template() {
-		return `<div class="bg-gray-100 min-h-screen flex justify-center">
+  function template() {
+    return `<div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
     ${HeaderComponent.template()}
     
@@ -55,7 +55,7 @@ export default function HomePage() {
               <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
               <div>
                 <p class="font-bold">이영희</p>
-                <p class="text-sm text-gray-500">30분 전</p>
+                <p class="text-sm text-gray-500">30분 전</p> 
               </div>
             </div>
             <p>오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?</p>
@@ -104,14 +104,14 @@ export default function HomePage() {
     </div>
   </div>
 `;
-	}
+  }
 
-	function bindEvents() {
-		HeaderComponent.bindEvents();
-	}
+  function bindEvents() {
+    HeaderComponent.bindEvents();
+  }
 
-	return {
-		template,
-		bindEvents,
-	};
+  return {
+    template,
+    bindEvents,
+  };
 }

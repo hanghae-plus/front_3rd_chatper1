@@ -3,10 +3,10 @@ import localStorageInstace from '@/store/storage';
 import getRouterInstance from '@/router';
 
 export default function LoginPage() {
-	const router = getRouterInstance();
+  const router = getRouterInstance();
 
-	function template() {
-		return `
+  function template() {
+    return `
 		<main class="bg-gray-100 flex items-center justify-center min-h-screen">
 			<div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
 				<h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
@@ -28,37 +28,37 @@ export default function LoginPage() {
 				</div>
 			</div>
 		</main>`;
-	}
+  }
 
-	function bindEvents() {
-		const loginForm = document.getElementById('login-form');
+  function bindEvents() {
+    const loginForm = document.getElementById('login-form');
 
-		if (loginForm) {
-			loginForm.addEventListener('submit', (event) => {
-				event.preventDefault();
+    if (loginForm) {
+      loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
 
-				const username = document.getElementById('username')?.value || '';
+        const username = document.getElementById('username')?.value || '';
 
-				if (!username.trim()) {
-					alert('로그인에 실패했습니다');
-					return;
-				}
+        if (!username.trim()) {
+          alert('로그인에 실패했습니다');
+          return;
+        }
 
-				const data = {
-					username,
-					email: '',
-					bio: '',
-				};
+        const data = {
+          username,
+          email: '',
+          bio: '',
+        };
 
-				localStorageInstace.set({ key: 'user', value: JSON.stringify(data) });
+        localStorageInstace.set({ key: 'user', value: JSON.stringify(data) });
 
-				router.navigate('/profile');
-			});
-		}
-	}
+        router.navigate('/profile');
+      });
+    }
+  }
 
-	return {
-		template,
-		bindEvents,
-	};
+  return {
+    template,
+    bindEvents,
+  };
 }

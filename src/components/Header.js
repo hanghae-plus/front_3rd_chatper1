@@ -3,10 +3,10 @@ import localStorageInstace from '@/store/storage';
 import getRouterInstance from '@/router';
 
 export default function Header() {
-	const router = getRouterInstance();
+  const router = getRouterInstance();
 
-	function template() {
-		return `
+  function template() {
+    return `
       <header class="bg-blue-600 text-white p-4 sticky top-0">
         <h1 class="text-2xl font-bold">항해플러스</h1>
       </header>
@@ -20,52 +20,52 @@ export default function Header() {
         </ul>
       </nav>
     `;
-	}
+  }
 
-	function bindEvents() {
-		const user = localStorageInstace.get('user');
+  function bindEvents() {
+    const user = localStorageInstace.get('user');
 
-		const pathname = window.location.pathname;
+    const pathname = window.location.pathname;
 
-		const navItems = document.querySelectorAll('nav a');
+    const navItems = document.querySelectorAll('nav a');
 
-		navItems.forEach((item) => {
-			if (item.getAttribute('href') === pathname) {
-				item.classList.add('text-blue-600');
-				item.classList.add('font-bold');
-			} else {
-				item.classList.remove('text-gray-600');
-				item.classList.remove('font-bold');
-			}
-		});
+    navItems.forEach((item) => {
+      if (item.getAttribute('href') === pathname) {
+        item.classList.add('text-blue-600');
+        item.classList.add('font-bold');
+      } else {
+        item.classList.remove('text-gray-600');
+        item.classList.remove('font-bold');
+      }
+    });
 
-		if (user !== null) {
-			document.getElementById('login').style.display = 'none';
-		} else {
-			document.getElementById('profile').style.display = 'none';
-			document.getElementById('logout').style.display = 'none';
-		}
+    if (user !== null) {
+      document.getElementById('login').style.display = 'none';
+    } else {
+      document.getElementById('profile').style.display = 'none';
+      document.getElementById('logout').style.display = 'none';
+    }
 
-		const logout = document.getElementById('logout');
+    const logout = document.getElementById('logout');
 
-		if (logout) {
-			logout.addEventListener(
-				'click',
-				(event) => {
-					event.preventDefault();
-					event.stopPropagation();
+    if (logout) {
+      logout.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
+          event.stopPropagation();
 
-					localStorageInstace.clear();
+          localStorageInstace.clear();
 
-					router.navigate('/login');
-				},
-				{ once: true },
-			);
-		}
-	}
+          router.navigate('/login');
+        },
+        { once: true },
+      );
+    }
+  }
 
-	return {
-		template,
-		bindEvents,
-	};
+  return {
+    template,
+    bindEvents,
+  };
 }

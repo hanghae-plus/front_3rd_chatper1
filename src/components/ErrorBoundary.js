@@ -1,41 +1,41 @@
 export default function createErrorBoundary() {
-	let hasError = false;
-	let error = null;
+  let hasError = false;
+  let error = null;
 
-	window.addEventListener('error', (event) => handleError(event.error));
+  window.addEventListener('error', (event) => handleError(event.error));
 
-	function handleError(newError) {
-		hasError = true;
-		error = newError;
+  function handleError(newError) {
+    hasError = true;
+    error = newError;
 
-		render();
-	}
+    render();
+  }
 
-	function resetError() {
-		hasError = false;
-		error = null;
+  function resetError() {
+    hasError = false;
+    error = null;
 
-		render();
-	}
+    render();
+  }
 
-	function render() {
-		if (hasError) {
-			document.querySelector('#root').innerHTML = `
+  function render() {
+    if (hasError) {
+      document.querySelector('#root').innerHTML = `
         <div class="text-red"">
           <h2>오류 발생!</h2>
           <p>${error.message}</p>
           <button id="resetButton">다시 시도</button>
         </div>
       `;
-			document.getElementById('resetButton').addEventListener('click', () => resetError());
-		} else {
-			document.querySelector('#root').innerHTML = '';
-		}
-	}
+      document.getElementById('resetButton').addEventListener('click', () => resetError());
+    } else {
+      document.querySelector('#root').innerHTML = '';
+    }
+  }
 
-	return {
-		resetError,
-		handleError,
-		render,
-	};
+  return {
+    resetError,
+    handleError,
+    render,
+  };
 }

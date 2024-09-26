@@ -18,8 +18,8 @@ router.setRouteGuard('/profile', () => !!localStorageInstace.get('user'), '/logi
 router.setRouteGuard('/login', () => !localStorageInstace.get('user'), '/');
 
 router.createRoutes({
-	'/': home,
-	'/login': login,
-	'/profile': profile,
-	'/*': notFound,
+  '/': home,
+  '/login': login,
+  '/profile': profile,
+  '/*': notFound,
 });

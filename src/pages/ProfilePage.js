@@ -5,12 +5,12 @@ import localStorageInstace from '@/store/storage';
 import getRouterInstance from '@/router';
 
 export default function ProfilePage() {
-	const router = getRouterInstance();
+  const router = getRouterInstance();
 
-	const HeaderComponent = Header();
+  const HeaderComponent = Header();
 
-	function template() {
-		return `<div class="bg-gray-100 min-h-screen flex justify-center">
+  function template() {
+    return `<div class="bg-gray-100 min-h-screen flex justify-center">
        <div class="max-w-md w-full">
 			 ${HeaderComponent.template()}
 		
@@ -40,47 +40,47 @@ export default function ProfilePage() {
          </footer>
        </div>
      </div>`;
-	}
+  }
 
-	function bindEvents() {
-		HeaderComponent.bindEvents();
+  function bindEvents() {
+    HeaderComponent.bindEvents();
 
-		const user = localStorageInstace.get('user');
+    const user = localStorageInstace.get('user');
 
-		if (user === null) {
-			router.navigate('/');
-			return;
-		} else {
-			const { username, email, bio } = user;
+    if (user === null) {
+      router.navigate('/');
+      return;
+    } else {
+      const { username, email, bio } = user;
 
-			document.getElementById('username').value = username;
-			document.getElementById('email').value = email ?? '';
-			document.getElementById('bio').value = bio ?? '';
-		}
+      document.getElementById('username').value = username;
+      document.getElementById('email').value = email ?? '';
+      document.getElementById('bio').value = bio ?? '';
+    }
 
-		const profileForm = document.getElementById('profile-form');
+    const profileForm = document.getElementById('profile-form');
 
-		if (profileForm) {
-			profileForm.addEventListener('submit', (event) => {
-				event.preventDefault();
+    if (profileForm) {
+      profileForm.addEventListener('submit', (event) => {
+        event.preventDefault();
 
-				const username = document.getElementById('username').value;
-				const email = document.getElementById('email').value;
-				const bio = document.getElementById('bio').value;
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const bio = document.getElementById('bio').value;
 
-				const data = {
-					username,
-					email,
-					bio,
-				};
+        const data = {
+          username,
+          email,
+          bio,
+        };
 
-				localStorageInstace.set({ key: 'user', value: JSON.stringify(data) });
-			});
-		}
-	}
+        localStorageInstace.set({ key: 'user', value: JSON.stringify(data) });
+      });
+    }
+  }
 
-	return {
-		template,
-		bindEvents,
-	};
+  return {
+    template,
+    bindEvents,
+  };
 }

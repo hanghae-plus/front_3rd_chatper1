@@ -1,6 +1,6 @@
 import Router from '@routers'
 import { UserStore } from '@stores'
-import { ROUTES, PAGE_TITLE } from '@constants'
+import { ROUTES, PROJECT_NAME } from '@constants'
 
 const userStore = UserStore()
 const LOGIN_REQUIRED_FIELD = '이름과 비밀번호를 입력해주세요.'
@@ -10,23 +10,20 @@ const TEST_KEY = '1'
 
 export default function LoginPage() {
   function handleSaveUser(username) {
-    const payload = { username, email: '', bio: '' }
-    userStore.setState('user', payload)
+    const userPayload = { username, email: '', bio: '' }
+    userStore.setState('user', userPayload)
     userStore.setState('isLogin', true)
   }
 
   function handleLogin(e) {
     e.preventDefault()
-    const username = e.target.querySelector('#username').value
-    if (!username) {
-      alert(LOGIN_REQUIRED_FIELD)
-      return
-    }
-    handleSaveUser(username)
+    const { username } = e.target.elements
+    if (!username.value) return alert(LOGIN_REQUIRED_FIELD)
+    handleSaveUser(username.value)
     Router.navigate(ROUTES.PROFILE)
   }
 
-  function displayError(message) {
+  function handleOpenHelperText(message) {
     let errorDiv = document.getElementById('error-message')
     if (!errorDiv) {
       errorDiv = document.createElement('div')
@@ -42,14 +39,14 @@ export default function LoginPage() {
         throw new Error(INTENTIONAL_ERROR_MESSAGE)
       }
     } catch (error) {
-      displayError(error.message)
+      handleOpenHelperText(error.message)
     }
   }
 
   const template = `
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">${PAGE_TITLE}</h1>
+        <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">${PROJECT_NAME}</h1>
         <form id="login-form">
           <div class="mb-4">
             <input type="text" id="username" placeholder="사용자 이름" class="w-full p-2 border rounded">
@@ -73,17 +70,13 @@ export default function LoginPage() {
 
   function render() {
     document.getElementById('root').innerHTML = template
-    const loginForm = document.getElementById('login-form')
-    const username = document.getElementById('username')
-    loginForm.addEventListener('submit', handleLogin)
-    username.addEventListener('input', handleErrorCatch, { once: true })
+    document.getElementById('login-form').addEventListener('submit', handleLogin)
+    document.getElementById('username').addEventListener('input', handleErrorCatch, { once: true })
   }
 
   function cleanup() {
-    const loginForm = document.getElementById('login-form')
-    const username = document.getElementById('username')
-    loginForm.removeEventListener('submit', handleLogin)
-    username.removeEventListener('input', handleErrorCatch)
+    document.getElementById('login-form').removeEventListener('submit', handleLogin)
+    document.getElementById('username').removeEventListener('input', handleErrorCatch)
   }
 
   return { render, cleanup }

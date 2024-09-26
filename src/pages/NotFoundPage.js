@@ -1,5 +1,7 @@
 import getRouterInstance from '@/router';
 
+import { ROUTE } from '@/constants';
+
 export default function NotFoundPage() {
   const router = getRouterInstance();
 
@@ -22,7 +24,7 @@ export default function NotFoundPage() {
   function clickEvent(event) {
     event.preventDefault();
 
-    router.navigate('/');
+    router.navigate(ROUTE.HOME);
   }
 
   function bindEvents() {

@@ -2,6 +2,8 @@ import localStorageInstace from '@/store/storage';
 
 import getRouterInstance from '@/router';
 
+import { ROUTE } from '@/constants';
+
 export default function LoginPage() {
   const router = getRouterInstance();
 
@@ -46,9 +48,9 @@ export default function LoginPage() {
       bio: '',
     };
 
-    localStorageInstace.set({ key: 'user', value: JSON.stringify(data) });
+    localStorageInstace.set({ key: 'user', value: data });
 
-    router.navigate('/profile');
+    router.navigate(ROUTE.PROFILE);
   }
 
   function bindEvents() {

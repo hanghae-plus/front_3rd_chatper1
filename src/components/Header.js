@@ -2,6 +2,8 @@ import localStorageInstace from '@/store/storage';
 
 import getRouterInstance from '@/router';
 
+import { ROUTE } from '@/constants';
+
 export default function Header() {
   const router = getRouterInstance();
 
@@ -28,7 +30,7 @@ export default function Header() {
 
     localStorageInstace.clear();
 
-    router.navigate('/login');
+    router.navigate(ROUTE.LOGIN);
   }
 
   function bindEvents() {

@@ -1,5 +1,7 @@
 import createErrorBoundary from '@/components/ErrorBoundary';
 
+import { ROUTE } from '@/constants';
+
 class Router {
   constructor(errorBoundary) {
     this.routes = {};
@@ -68,7 +70,7 @@ class Router {
         return;
       }
     }
-    const route = this.routes[pathname] || this.routes['/*'];
+    const route = this.routes[pathname] || this.routes[ROUTE.NOT_FOUND];
 
     if (route) {
       this.currentComponent = route;

@@ -7,8 +7,7 @@ import { createStore } from "./store";
 
 const $root = document.querySelector("#root");
 const store = createStore();
-console.log(store.getState("user"));
-const router = new Router();
+const router = new Router(store);
 router.addRoute("/", () => new Home($root, store));
 router.addRoute("/login", () => new Login($root, store));
 router.addRoute("/profile", () => new ProfilePage($root, store));

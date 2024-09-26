@@ -29,7 +29,7 @@ export default class Header extends Component {
 
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
-          <li><a href="/" class="text-blue-600">홈</a></li>
+          <li><a href="/" class="text-blue-600 font-bold">홈</a></li>
           <li id='profile'></li>
           <li id='login'></li>
         </ul>

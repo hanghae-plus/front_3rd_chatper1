@@ -32,7 +32,12 @@ export default class LoginPage extends Component {
   }
 
   addEvent() {
+    window.addEventListener("error", (e) => {
+      document.body.innerHTML = `<div><div>오류 발생!</div><div>의도적인 오류입니다.</div></div>`;
+    });
+
     const router = new Router();
+
     const $form = this.target.querySelector("form");
     const $username = this.target.querySelector("input[type='text']");
 

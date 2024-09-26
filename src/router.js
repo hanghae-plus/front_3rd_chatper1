@@ -1,10 +1,11 @@
 export default class Router {
-  constructor() {
+  constructor(store) {
     if (Router.instance) {
       return Router.instance;
     }
     this.routes = [];
     window.addEventListener("popstate", this.handlePopState.bind(this));
+    this.store = store;
     Router.instance = this;
   }
 
@@ -13,9 +14,23 @@ export default class Router {
   }
 
   push(path) {
+    const user = this.store.getState("user");
     const pathSegments = path.split("/");
     const lastSegment = pathSegments.pop();
     const newPath = "/" + lastSegment;
+
+    if (newPath === "/profile" && !user) {
+      window.history.pushState(null, "", "/login");
+      this.handleRoute("/login");
+      return;
+    }
+
+    if (newPath === "/login" && user) {
+      window.history.pushState(null, "", "/");
+      this.handleRoute("/");
+      return;
+    }
+
     window.history.pushState(null, "", newPath);
     this.handleRoute(newPath);
   }

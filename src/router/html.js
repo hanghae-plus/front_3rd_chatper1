@@ -144,7 +144,6 @@ export const profile = `
             >이메일</label
           >
           <input
-            type="email"
             id="email"
             name="email"
             value="hong@example.com"

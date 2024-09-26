@@ -65,7 +65,7 @@ class Router {
 
   activateLink(targetId, path) {
     document.getElementById("root").addEventListener("click", (event) => {
-      if (event.target.id === "login") return;
+      if (event.target.type === "submit") return;
       event.preventDefault();
       if (event.target.id === targetId) {
         this.navigateTo(path);

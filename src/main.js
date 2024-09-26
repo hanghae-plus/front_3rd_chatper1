@@ -4,10 +4,6 @@ import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import ErrorPage from './pages/ErrorPage';
 
-const render = (page) => {
-  document.querySelector('#root').innerHTML = page();
-};
-
 const posts = [
   {
     name: '홍길동',
@@ -120,6 +116,10 @@ const { userState, updateUserInfo, removeUser } = createUserState();
 for (const key in routes) {
   addRoute(key, routes[key]);
 }
+
+const render = (page) => {
+  document.querySelector('#root').innerHTML = page();
+};
 
 const logIn = (username) => {
   const isValidUsername = /^[a-zA-Z]+$/.test(username);

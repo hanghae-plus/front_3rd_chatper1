@@ -13,6 +13,7 @@ router.addRoute('/login', renderLoginPage);
 router.addRoute('/profile', renderProfilePage);
 router.addRoute('/404', renderErrorPage);
 
+// 페이지가 로드될 때 초기 페이지 렌더링
 renderMainPage();
 
 document.querySelector('nav').addEventListener('click', (e) => {
@@ -22,7 +23,9 @@ document.querySelector('nav').addEventListener('click', (e) => {
   }
 });
 
-window.addEventListener('DOMContendLoaded', () => {
+// 오타 수정: DOMContendLoaded -> DOMContentLoaded
+window.addEventListener('DOMContentLoaded', () => {
+  // 초기 경로로 라우팅
   router.navigateTo(window.location.pathname);
 });
 
@@ -40,7 +43,7 @@ function renderMainPage() {
 
 function renderProfilePage() {
   if (!user.getUser()) {
-    history.replaceState(null, null, '/');
+    router.navigateTo('/login');
     return;
   }
 
@@ -77,7 +80,6 @@ function renderProfilePage() {
   };
 
   profileForm.addEventListener('submit', (e) => {
-    // form의 submit 이벤트를 사용합니다.
     e.preventDefault();
     console.log('update!');
     const updatedUser = {

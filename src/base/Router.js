@@ -8,6 +8,8 @@ class RouterClass {
 	}
 
 	init() {
+		this.loadRoute(window.location.pathname);
+
 		window.addEventListener('popstate', () => {
 			this.loadRoute(window.location.pathname);
 		});

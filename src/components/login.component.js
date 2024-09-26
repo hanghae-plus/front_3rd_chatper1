@@ -52,6 +52,19 @@ export default function Login() {
       );
       router.navigateTo("/");
     });
+
+    // 에러 바운더리 활성화
+    router.activateErrorBoundary("root");
+
+    // 에러 바운더리 테스트
+    // const $username = document.querySelector("#username");
+    // $username.addEventListener(
+    //   "input",
+    //   () => {
+    //     throw new Error("의도적인 오류입니다.");
+    //   },
+    //   { once: true }
+    // );
   };
 
   initUserInfo();

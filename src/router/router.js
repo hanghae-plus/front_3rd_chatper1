@@ -1,3 +1,4 @@
+import ErrorBoundary from "../components/error-boundary.component";
 import Error from "../components/error.component";
 import Footer from "../components/footer.component";
 import Header from "../components/header.component";
@@ -14,6 +15,7 @@ import {
   footer,
   header,
   bodyLayout,
+  errorBoundary,
 } from "./html";
 
 class Router {
@@ -26,6 +28,7 @@ class Router {
       ERROR: error,
       FOOTER: footer,
       HEADER: header,
+      ERROR_BOUNDARY: errorBoundary,
     };
     window.addEventListener("popstate", this.handlePopState.bind(this));
   }
@@ -65,7 +68,7 @@ class Router {
       if (event.target.id === "login") return;
       event.preventDefault();
       if (event.target.id === targetId) {
-      this.navigateTo(path);
+        this.navigateTo(path);
       }
     });
   }
@@ -85,6 +88,11 @@ class Router {
     const isLogin = !isNullorUndefined(localStorage.getItem("user"));
     return isLogin;
   }
+
+  activateErrorBoundary(targetId) {
+    window.addEventListener("error", (event) => {
+      ErrorBoundary(targetId, event.error);
+    });
   }
 }
 

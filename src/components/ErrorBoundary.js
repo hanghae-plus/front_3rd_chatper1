@@ -1,25 +1,22 @@
 export default function createErrorBoundary() {
-  let hasError = false;
   let error = null;
 
   window.addEventListener('error', (event) => handleError(event.error));
 
   function handleError(newError) {
-    hasError = true;
     error = newError;
 
     render();
   }
 
   function resetError() {
-    hasError = false;
     error = null;
 
     render();
   }
 
   function render() {
-    if (hasError) {
+    if (error) {
       document.querySelector('#root').innerHTML = `
         <div class="text-red"">
           <h2>오류 발생!</h2>

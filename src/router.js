@@ -1,4 +1,4 @@
-import Storage from './utils/Storage.js';
+import Storage from './utils/storage.js';
 
 export const createRouter = () => {
   const routes = {};

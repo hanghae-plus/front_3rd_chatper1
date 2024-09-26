@@ -2,13 +2,13 @@ import HomePage from "./pages/HomePage.js";
 import LoginPage from "./pages/LoginPage.js";
 import ProfilePage from "./pages/ProfilePage.js";
 import NotFoundPage from "./pages/NotFoundPage.js";
-import SessionManager from "./utils/SessionManager.js";
+import session from "./utils/session.js";
 import { createRouter } from './router.js';
-import Storage from "./utils/Storage.js";
+import Storage from "./utils/storage.js";
 
 Storage.removeData("user");
 const root = document.querySelector("#root");
-const loginInfo = SessionManager();
+const loginInfo = session();
 const router = createRouter();
 
 const routes = {

@@ -19,7 +19,7 @@ export default class ErrorBoundary {
       errorDiv.appendChild(errorMessage);
       this.container.appendChild(errorDiv);
     } else {
-      console.error("Container not found: " + this.containerId);
+      console.error("ContainerId 없음!: " + this.containerId);
     }
   }
 }

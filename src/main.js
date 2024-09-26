@@ -20,13 +20,13 @@ function isLoginBefore() {
 
 function isLoginAfter() {
   return `
-    <nav class="bg-white shadow-md p-2 sticky top-14">
-      <ul class="flex justify-around">
-        <li><a href="./" class="text-blue-600">홈</a></li>
-        <li><a href="./profile" class="text-gray-600">프로필</a></li>
-        <li><a href="#" class="text-gray-600">로그아웃</a></li>
-      </ul>
-    </nav>
+      <nav class="bg-white shadow-md p-2 sticky top-14">
+        <ul class="flex justify-around">
+          <li><a href="/" class="text-gray-600">홈</a></li>
+          <li><a href="/profile" class="text-blue-600">프로필</a></li>
+          <li><a href="/login" id="logout" class="text-gray-600">로그아웃</a></li>
+        </ul>
+      </nav>
   `;
 }
 
@@ -167,7 +167,7 @@ function isLogin() {
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
         <form id="login-form">
           <div class="mb-4">
-            <input type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+            <input type="text" id="username" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
           </div>
           <div class="mb-6">
             <input type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
@@ -189,8 +189,8 @@ function isLogin() {
 // 프로필
 function isProfile() {
   return `
-  ${isLoginAfter()}
-    <main id="content" class="p-4">
+    ${isLoginAfter()}
+    <main class="p-4">
       <div class="bg-white p-8 rounded-lg shadow-md">
       <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
       <form id="profile-form" class="space-y-4">
@@ -438,17 +438,20 @@ ROUTER.addRoute("/login", () => {
     })
   );
   const user = controlUserData.getUser();
+  console.log(user);
   // ROUTER.redirectTo("/", user);
   const loginForm = document.getElementById("login-form");
   if (!loginForm) {
     return ROUTER.redirectTo("/", user);
   }
-  submitForm(loginForm, (formData) => {
+  console.log(loginForm);
+  submitForm(loginForm, () => {
     const user = {
-      name: "",
+      name: document.getElementById("username") ?.value || "",
       email: "",
       bio: ""
     };
+    // localStorage.setItem("user", JSON.stringify(loginForm));
     controlUserData.login(user, () => {
       ROUTER.navigateTo("/profile");
     });
@@ -463,6 +466,7 @@ ROUTER.addRoute("/profile", () => {
     })
   );
   const user = controlUserData.getUser();
+  console.log(user)
   ROUTER.redirectTo("/login", !user);
 
   const profileForm = document.getElementById("profile-form");
@@ -478,13 +482,18 @@ ROUTER.addRoute("/profile", () => {
     }
     input.defaultValue = user[key];
   });
+  
   submitForm(profileForm, (formData) => {
+    
     const updatedData = {
-      name: formData.username,
-      email: formData.email,
-      bio: formData.bio,
+      name: formData?.username || "", // 이메일 또는 전화번호(사용자 이름)
+      email: formData?.email || "", // 이메일
+      bio: formData?.bio || "", // 자기소개
       username: formData.username,
     };
+
+    console.log(updatedData);
+    
     controlUserData.update(updatedData, () => {
       alert("프로필이 수정되었습니다.");
     });
@@ -498,13 +507,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.body.addEventListener("click", (e) => {
-  if (e.target.tagName === "A") {
-    e.preventDefault();
-    ROUTER.navigateTo(e.target.pathname);
-  }
-  if (e.target.innerHTML === "로그아웃") {
+  if (e.target.id === "logout") {
     controlUserData.logout(() => {
       ROUTER.navigateTo("/login");
     });
   }
+  if (e.target.tagName === "A") {
+    e.preventDefault();
+    ROUTER.navigateTo(e.target.pathname);
+  }
+
 });

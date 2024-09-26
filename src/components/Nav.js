@@ -29,7 +29,7 @@ export default function Nav() {
         <ul class="flex justify-around">
         ${menus.map(
           ({ name, href }) =>
-            `<li><a href="${href}" id="${name === MENU.LOGOUT ? 'logout' : ''}" className="${location.pathname === href ? 'text-blue-600' : 'text-gray-600'}">${name}</a></li>`
+            `<li><a href="${href}" id="${name === MENU.LOGOUT ? 'logout' : ''}" class="${location.pathname === href ? 'text-blue-600 font-bold' : 'text-gray-600'}">${name}</a></li>`
         )}
         </ul>
       </nav>`;

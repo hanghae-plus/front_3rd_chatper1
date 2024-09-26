@@ -9,11 +9,18 @@ const PROFILE_UPDATED_MESSAGE = '프로필이 업데이트 되었습니다.'
 export default function profilePage() {
   const user = userStore.getState('user')
 
-  function getProfileFormData() {
-    const username = document.getElementById('username').value
-    const email = document.getElementById('email').value
-    const bio = document.getElementById('bio').value
-    return { username, email, bio }
+  if (!user) return
+
+  const throttledUpdate = throttle((userPayload) => {
+    userStore.setState('user', userPayload)
+    alert(PROFILE_UPDATED_MESSAGE)
+  }, DELAY_TIME.LONG)
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const { username, email, bio } = e.target.elements
+    const userPayload = { username: username.value, email: email.value, bio: bio.value }
+    throttledUpdate(userPayload)
   }
 
   const template = MainLayout(`
@@ -23,9 +30,7 @@ export default function profilePage() {
         <form id="profile-form">
           <div class="mb-4">
             <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
-            <input type="text" id="username" name="username" value="${
-              user.username ?? user?.name
-            }" class="w-full p-2 border rounded">
+            <input type="text" id="username" name="username" value="${user?.username}" class="w-full p-2 border rounded">
           </div>
           <div class="mb-4">
             <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
@@ -41,25 +46,13 @@ export default function profilePage() {
     </main>
   `)
 
-  let throttledUpdate = throttle(() => {
-    const userInfo = getProfileFormData()
-    userStore.setState('user', userInfo)
-    alert(PROFILE_UPDATED_MESSAGE)
-  }, DELAY_TIME.LONG)
-
   function render() {
     document.getElementById('root').innerHTML = template
-    const profileForm = document.getElementById('profile-form')
-
-    profileForm?.addEventListener('submit', (e) => {
-      e.preventDefault()
-      throttledUpdate()
-    })
+    document.getElementById('profile-form')?.addEventListener('submit', handleSubmit)
   }
 
   function cleanup() {
-    const profileForm = document.getElementById('profile-form')
-    profileForm?.removeEventListener('submit', throttledUpdate)
+    document.getElementById('profile-form')?.removeEventListener('submit', throttledUpdate)
   }
 
   return {

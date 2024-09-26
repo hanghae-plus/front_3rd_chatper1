@@ -48,7 +48,7 @@ function Header({isLoggedIn}){
           ${isLoggedIn 
             ? `<li><a href="./profile" class="text-gray-600">프로필</a></li>
                <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>`
-            : `<li><a href="./login" class="text-gray-600">로그인</a></li>`
+            : `<li><a href="/login" class="text-gray-600">로그인</a></li>`
           }
         </ul>
       </nav>`
@@ -61,12 +61,13 @@ function Footer(){
 }
 
 function HomePage() {
+  const user = getUser();
   const loggedIn = isLoggedIn();
   const root = document.querySelector('#root');
   root.innerHTML = `
   <div class="bg-gray-100 min-h-screen flex justify-center">
     <div class="max-w-md w-full">
-      ${Header({ isLoggedIn: loggedIn })}
+      ${Header({ isLoggedIn: user?true:false })}
       <main class="p-4">
       <div class="mb-4 bg-white rounded-lg shadow p-4">
           <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
@@ -272,6 +273,7 @@ function router() {
 function handleNavigation(e) {
   e.preventDefault();
   const href = e.target.getAttribute('href');
+  console.log("href",href)
   history.pushState(null, '', href);
   router();
 }

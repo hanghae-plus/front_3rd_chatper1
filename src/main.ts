@@ -1,8 +1,9 @@
 import LayoutApp from './components/layout-app.component.js';
-import './router.js';
 
-const rootElement = document.getElementById('root');
-
-if (rootElement !== null) {
-  rootElement.append(LayoutApp());
+export function renderApp() {
+  const root = document.getElementById('root') as HTMLElement;
+  root.innerHTML = '';
+  root.appendChild(LayoutApp());
 }
+
+renderApp();

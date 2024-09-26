@@ -2,27 +2,51 @@ import Home from './pages/home.js';
 import Profile from './pages/profile.js';
 import Login from './pages/login.js';
 import PageNotFound from './pages/404.js';
+import { renderApp } from './main.js';
 
-const routes = {
-  Home,
-  Profile,
-  Login,
-  PageNotFound,
+const routes: { [key: string]: () => JSX.IntrinsicElements } = {
+  home: Home,
+  profile: Profile,
+  login: Login,
+  pageNotFound: PageNotFound,
 };
 
-function capitalizeURL(path: string) {
-  return path.charAt(0).toUpperCase() + path.slice(1).toLowerCase();
+let route = routes.home;
+
+export function router() {
+  return {
+    push: (path: string) => {
+      if (path === '/profile' && localStorage.getItem('accessToken') === null) {
+        alert('로그인 해주세요.');
+        path = '/login';
+      } else if (path === '/logout') {
+        localStorage.removeItem('accessToken');
+        path = '/login';
+      }
+
+      history.pushState({}, '', path.toLowerCase());
+
+      route = path === '/' ? routes.home : routes[path.toLocaleLowerCase().replace('/', '')] || PageNotFound;
+      renderApp();
+    },
+    getRoute: () => route(),
+  };
 }
 
-export const router = {
-  push: (pathname: string) => {
-    const path = capitalizeURL(pathname);
-    history.pushState({}, '', '/' + capitalizeURL(path));
-  },
-};
+window.addEventListener('popstate', e => {
+  router().push(location.pathname);
+});
 
-export function updateContent() {
-  console.log(123);
-}
-
-window.addEventListener('popstate', updateContent);
+document.addEventListener('DOMContentLoaded', () => {
+  router().push(location.pathname);
+  document.addEventListener('click', e => {
+    const target = e.target;
+    if (target instanceof HTMLElement && target.tagName === 'A') {
+      e.preventDefault();
+      const path = target.getAttribute('href');
+      if (path !== null) {
+        router().push(path.toLocaleLowerCase());
+      }
+    }
+  });
+});

@@ -15,6 +15,8 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/plugin-transform-react-jsx": "^7.25.2",
+    "@babel/plugin-transform-react-jsx-development": "^7.24.7",
+    "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/user-event": "^14.5.2",
     "@vitest/ui": "^2.1.1",

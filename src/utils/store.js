@@ -1,4 +1,4 @@
-import Storage from './storage';
+import Storage from './Storage';
 
 const Store = (function () {
   let instance;
@@ -22,7 +22,7 @@ const Store = (function () {
         isLoggedIn: true,
         user: { ...state.user, ...userInfo },
       };
-        Storage.saveData('user', state.user);
+      Storage.saveData('user', state.user);
     }
 
     function clearUserInfo() {
@@ -30,10 +30,10 @@ const Store = (function () {
         isLoggedIn: false,
         user: null,
       };
-      Storage.clearData('user')
+      Storage.clearData('user');
     }
 
-    function subscribe(listener) {
+    function subscribeUser(listener) {
       listeners.push(listener);
     }
 
@@ -41,7 +41,7 @@ const Store = (function () {
       getState,
       updateUser,
       clearUserInfo,
-      subscribe,
+      subscribeUser,
     };
   }
 

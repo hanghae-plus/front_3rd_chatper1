@@ -75,8 +75,8 @@ class Router {
 
   activateLogout() {
     document.getElementById("root").addEventListener("click", (event) => {
-      event.preventDefault();
       if (event.target.id !== "logout") return;
+      event.preventDefault();
       if (!isNullorUndefined(localStorage.getItem("user"))) {
         localStorage.clear();
       }

@@ -1,5 +1,6 @@
 import { navigateTo } from '../utils/router.js';
 import { ROUTES } from '../constants/routes.js';
+import Alert from '../components/Alert.js';
 
 export default function LoginPage() {
   function getHtml() {
@@ -23,8 +24,15 @@ export default function LoginPage() {
           <button class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
         </div>
       </div>
+      <div id="alert"></div> 
     </main>`;
   }
+
+  window.addEventListener('error', (e) => {
+    e.preventDefault();
+
+    showAlert();
+  });
 
   function setEventListener() {
     const loginForm = document.getElementById('login-form');
@@ -38,6 +46,8 @@ export default function LoginPage() {
 
     const username = e.target.querySelector('#username').value;
 
+    if (!username) throw new Error('username을 입력해주세요.');
+
     localStorage.setItem(
       'user',
       JSON.stringify({
@@ -49,6 +59,11 @@ export default function LoginPage() {
     localStorage.setItem('isLoggedIn', JSON.stringify(true));
 
     navigateTo(ROUTES.PROFILE);
+  }
+
+  function showAlert() {
+    const alert = document.getElementById('alert');
+    alert.innerHTML = Alert('의도적인 오류입니다.');
   }
 
   return {

@@ -21,10 +21,14 @@ function renderPage() {
   const path = window.location.pathname;
   const content = routes[path] || routes[ROUTES.NOT_FOUND];
 
-  document.getElementById('root').innerHTML = content();
+  document.getElementById('root').innerHTML = content().getHtml();
+
+  if (content().setEventListener) {
+    content().setEventListener();
+  }
 }
 
-function navigateTo(path) {
+export function navigateTo(path) {
   const targetPath = guardPrivateRoute(path);
   history.pushState(null, null, targetPath);
   renderPage();
@@ -48,9 +52,16 @@ function guardPrivateRoute(path) {
 }
 
 function handleClick(event) {
+  if (event.target.tagName !== 'A') return;
+
   event.preventDefault();
 
-  if (event.target.tagName !== 'A') return;
+  if (event.target.id === 'logout') {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('user');
+    navigateTo(ROUTES.LOGIN);
+    return;
+  }
 
   const href = event.target.getAttribute('href');
 

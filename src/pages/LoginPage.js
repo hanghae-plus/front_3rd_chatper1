@@ -1,10 +1,14 @@
+import { navigateTo } from '../utils/router.js';
+import { ROUTES } from '../constants/routes.js';
+
 export default function LoginPage() {
-  return `<main class="bg-gray-100 flex items-center justify-center min-h-screen">
+  function getHtml() {
+    return `<main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form>
+        <form id="login-form">
           <div class="mb-4">
-            <input type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
+            <input id="username" type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
           </div>
           <div class="mb-6">
             <input type="password" placeholder="비밀번호" class="w-full p-2 border rounded">
@@ -20,4 +24,35 @@ export default function LoginPage() {
         </div>
       </div>
     </main>`;
+  }
+
+  function setEventListener() {
+    const loginForm = document.getElementById('login-form');
+    loginForm.addEventListener('submit', (event) =>
+      handleSubmitLoginForm(event)
+    );
+  }
+
+  function handleSubmitLoginForm(e) {
+    e.preventDefault();
+
+    const username = e.target.querySelector('#username').value;
+
+    localStorage.setItem(
+      'user',
+      JSON.stringify({
+        username,
+        email: '',
+        bio: ''
+      })
+    );
+    localStorage.setItem('isLoggedIn', JSON.stringify(true));
+
+    navigateTo(ROUTES.PROFILE);
+  }
+
+  return {
+    getHtml,
+    setEventListener
+  };
 }

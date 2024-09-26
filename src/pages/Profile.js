@@ -49,7 +49,6 @@ class Profile {
         bio: document.getElementById('bio').value,
       };
 
-      // 프로필 업데이트
       localStorage.setItem('user', JSON.stringify(updatedProfile));
       alert('프로필이 업데이트 되었습니다.');
     });

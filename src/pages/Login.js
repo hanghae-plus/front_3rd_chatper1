@@ -1,3 +1,5 @@
+import UserManager from '../store/UserManager';
+
 class Login {
   render(path) {
     return this.template(path);
@@ -37,21 +39,11 @@ class Login {
       const username = document.getElementById('username').value;
 
       try {
-        if (!username) {
-          throw new Error('error : 아이디,패스워드 정확히 입력하세요.');
-        }
-
-        const user = {
-          username: username,
-          email: '',
-          bio: '',
-        };
-
-        localStorage.setItem('user', JSON.stringify(user));
+        UserManager.login(username);
         renderPage('/profile');
         history.pushState(null, '', '/profile');
       } catch (error) {
-        throw new Error('error: ', `${error.message}`);
+        alert(error.message);
       }
     });
   }

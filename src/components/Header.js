@@ -1,10 +1,11 @@
+import UserManager from '../store/UserManager';
+
 class Header {
   render(path) {
     return this.template(path);
   }
 
   template(path) {
-    const user = !!localStorage.getItem('user');
     const homeClass =
       path === '/' ? 'text-blue-600 font-bold' : 'text-gray-600';
     const profileClass =
@@ -23,12 +24,12 @@ class Header {
                   <ul class="flex justify-around">
                       <li><a href="/" class="navItem ${homeClass}">홈</a></li>
                       ${
-                        user
+                        UserManager.isLoggedIn()
                           ? `<li><a href="/profile" class="navItem ${profileClass}" id="profile">프로필</a></li>`
                           : ''
                       }
                       ${
-                        user
+                        UserManager.isLoggedIn()
                           ? `<li><a href="/login" class="navItem ${loginClass}" id="logout">로그아웃</a></li>`
                           : `<li><a href="/login" class="${loginClass}" id="login">로그인</a></li>`
                       }
@@ -41,13 +42,12 @@ class Header {
 
   registerEvents(renderPage) {
     const logoutBtn = document.getElementById('logout');
-    const loginBtn = document.getElementById('login');
 
-    // 화면에 로그아웃 버튼이 있는 경우(로그인 상태)
     if (logoutBtn) {
       logoutBtn.addEventListener('click', (event) => {
         event.preventDefault();
-        localStorage.removeItem('user');
+
+        UserManager.logout();
         renderPage('/login');
       });
     }

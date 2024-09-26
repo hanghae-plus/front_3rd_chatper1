@@ -1,3 +1,4 @@
+import { userInfoState } from '../main.js';
 import { router } from '../router.js';
 import { h } from '../virtual-dom.js';
 
@@ -31,35 +32,21 @@ function Login() {
   );
 }
 
-type savedUser = {
-  username: string;
-  email: string;
-  bio: string;
-};
-
 document.addEventListener('submit', e => {
-  e.preventDefault();
-  const $userName = document.getElementById('username') as HTMLInputElement;
-  const $password = document.getElementById('password') as HTMLInputElement;
-
-  // if ($userName.value === '') {
-  //   alert('아이디를 입력해주세요!');
-  //   return;
-  // }
-  // if ($password.value === '') {
-  //   alert('비밀번호를 입력해주세요!');
-  //   return;
-  // }
-  const userInfo = localStorage.getItem('userInfo');
-  if (userInfo === null) {
+  const { pathname } = location;
+  if (pathname !== '/login') {
     return;
   }
-  const matchedUser = JSON.parse(userInfo).find((user: savedUser) => $userName.value.trim() === user.username);
-  // if (matchedUser === undefined) {
-  //   alert('일치하는 유저가 없습니다!');
-  //   return;
-  // }
-  localStorage.setItem('user', JSON.stringify(matchedUser));
+  e.preventDefault();
+  localStorage.setItem(
+    'user',
+    JSON.stringify({
+      username: 'testuser',
+      email: '',
+      bio: '',
+    }),
+  );
+  userInfoState.setUser({ username: 'testuser', email: '', bio: '' });
   router().push('/');
 });
 

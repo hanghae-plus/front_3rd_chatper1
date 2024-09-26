@@ -2,7 +2,7 @@ import Home from './pages/home.js';
 import Profile from './pages/profile.js';
 import Login from './pages/login.js';
 import PageNotFound from './pages/404.js';
-import { renderApp } from './main.js';
+import { render } from './main.js';
 
 const routes: { [key: string]: () => JSX.IntrinsicElements } = {
   home: Home,
@@ -24,7 +24,7 @@ export function router() {
       history.pushState({}, '', path.toLowerCase());
 
       route = path === '/' ? routes.home : routes[path.toLocaleLowerCase().replace('/', '')] || PageNotFound;
-      renderApp();
+      render();
     },
     getRoute: () => route(),
   };

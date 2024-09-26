@@ -3,7 +3,7 @@ import HomePage from "./pages/Home.js";
 import ProfilePage from "./pages/Profile.js";
 import NotFoundPage from "./pages/NotFound.js";
 import Layout from "./layout/Layout.js";
-import { user as userStore } from "./store/user.js";
+import { userStore } from "./store/userStore.js";
 
 const updateActiveTabFromURL = () => {
   const tabs = document.querySelectorAll("a.tab");

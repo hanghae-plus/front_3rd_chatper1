@@ -1,4 +1,4 @@
-export const user = () => {
+export const userStore = () => {
   const getUser = () => JSON.parse(localStorage.getItem("user")) || null;
 
   const setUser = (user) => {

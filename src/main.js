@@ -1,6 +1,6 @@
 import { renderPage } from "./router.js";
 import { navigate } from "./router.js";
-import { user as userStore } from "./store/user.js";
+import { userStore } from "./store/userStore.js";
 
 const handleLinkClick = (event) => {
   if (event.target.tagName === "A" && event.target.href) {

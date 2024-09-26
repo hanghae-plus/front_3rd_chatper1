@@ -1,4 +1,4 @@
-import { user as userStore } from "../store/user.js";
+import { userStore } from "../store/userStore.js";
 
 const Header = () => {
   const { isLoggedIn } = userStore();

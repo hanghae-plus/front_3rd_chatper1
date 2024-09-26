@@ -165,7 +165,7 @@ describe('기본과제 테스트', () => {
 
 	describe('6. 기본적인 에러 처리', () => {
 		it('잘못된 라우트 접근 시 404 페이지로 리다이렉션된다', () => {
-			window.history.pushState({}, '', '/nonexistent');
+			window.history.pushState({}, '', '/nonexistent1');
 			window.dispatchEvent(new Event('popstate'));
 			expect(document.body.innerHTML).toContain('404');
 			expect(document.body.innerHTML).toContain('페이지를 찾을 수 없습니다');

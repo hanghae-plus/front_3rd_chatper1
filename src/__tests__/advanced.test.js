@@ -2,6 +2,7 @@ import userEvent from '@testing-library/user-event';
 
 beforeAll(async () => {
 	// DOM 초기화
+
 	window.alert = vi.fn();
 	document.body.innerHTML = '<div id="root"></div>';
 	await import('../main.js');

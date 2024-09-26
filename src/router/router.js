@@ -60,10 +60,24 @@ class Router {
     document.body.innerHTML = bodyLayout;
   }
 
-  activateLink(elementId, path) {
-    document.getElementById(elementId).addEventListener("click", (event) => {
+  activateLink(targetId, path) {
+    document.getElementById("root").addEventListener("click", (event) => {
+      if (event.target.id === "login") return;
       event.preventDefault();
+      if (event.target.id === targetId) {
       this.navigateTo(path);
+      }
+    });
+  }
+
+  activateLogout() {
+    document.getElementById("root").addEventListener("click", (event) => {
+      event.preventDefault();
+      if (event.target.id !== "logout") return;
+      if (!isNullorUndefined(localStorage.getItem("user"))) {
+        localStorage.clear();
+      }
+      this.navigateTo("/login");
     });
   }
 
@@ -71,7 +85,7 @@ class Router {
     const isLogin = !isNullorUndefined(localStorage.getItem("user"));
     if (!isLogin) {
       this.navigateTo("/login");
-    }
+  }
     return !isLogin;
   }
 }

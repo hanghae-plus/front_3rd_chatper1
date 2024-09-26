@@ -1,3 +1,5 @@
+import Nav from '../components/Nav.js';
+
 export default function NotFoundPage() {
   function getHtml() {
     return `<div class="bg-gray-100 min-h-screen flex justify-center">
@@ -5,14 +7,8 @@ export default function NotFoundPage() {
       <header class="bg-blue-600 text-white p-4 sticky top-0">
         <h1 class="text-2xl font-bold">항해플러스</h1>
       </header>
-
-      <nav class="bg-white shadow-md p-2 sticky top-14">
-        <ul class="flex justify-around">
-          <li><a href="./main.html" class="text-gray-600">홈</a></li>
-          <li><a href="#" class="text-blue-600">프로필</a></li>
-          <li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>
-        </ul>
-      </nav>
+      
+      ${Nav()}
 
       <main class="p-4">
         <div class="bg-white p-8 rounded-lg shadow-md">

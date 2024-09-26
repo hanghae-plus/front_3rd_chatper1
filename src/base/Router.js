@@ -1,3 +1,4 @@
+import ROUTES from '../config/routes';
 class RouterClass {
 	constructor() {
 		this.routes = {};
@@ -7,11 +8,28 @@ class RouterClass {
 		this.routes[path] = route;
 	}
 
-	init() {
+	init($app) {
+		this.routesInit($app);
+
+		// 현재 페이지 로드
 		this.loadRoute(window.location.pathname);
 
+		// popstate 이벤트 등록
 		window.addEventListener('popstate', () => {
 			this.loadRoute(window.location.pathname);
+		});
+	}
+
+	routesInit($element) {
+		ROUTES.forEach((route) => {
+			const { path, title } = route;
+
+			this.addRoute(path, {
+				render: () => {
+					new route.component($element);
+				},
+				title: title,
+			});
 		});
 	}
 

@@ -1,17 +1,15 @@
-import ErrorPage from './pages/error';
-import HomePage from './pages/home';
-import LoginPage from './pages/login';
-import ProfilePage from './pages/profile';
-import Router from './router';
+import ErrorPage from "./pages/error";
+import HomePage from "./pages/home";
+import ProfilePage from "./pages/profile";
+import Router from "./router";
+import LoginMannager from "./loginManager";
+import LoginPage from "./pages/login";
 
-const root = document.querySelector('#root');
+const root = document.querySelector("#root");
 const ROUTES = {
-	'/': HomePage,
-	'/main': HomePage,
-	'/login': LoginPage,
-	'/profile': ProfilePage,
-	'/error': ErrorPage,
-	'/404': ErrorPage,
+	"/profile": ProfilePage,
+	"/error": ErrorPage,
+	"/404": ErrorPage,
 };
 // const router = () => {
 // 	const path = window.location.pathname;
@@ -33,11 +31,19 @@ const ROUTES = {
 // 	}
 // };
 
-const router = new Router();
+const loginManager = new LoginMannager();
+const router = new Router(loginManager);
 
-Object.entries(ROUTES).reduce((acc, cur) => {
-	router.add(cur[0], cur[1]);
-}, []);
+const loginPage = new LoginPage(loginManager);
+const homePage = new HomePage(loginManager);
+
+// add router
+// Object.entries(ROUTES).reduce((acc, cur) => {
+// 	router.add(cur[0], cur[1]);
+// }, []);
+router.add("/", homePage);
+router.add("/main", homePage);
+router.add("/login", loginPage);
 
 console.log(router.routes);
 

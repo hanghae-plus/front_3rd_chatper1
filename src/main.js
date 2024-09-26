@@ -43,17 +43,19 @@ document.addEventListener('click', e => {
 
 document.addEventListener('submit', e => {
   const form = e.target.closest('form');
-
   if (!form) return;
 
   e.preventDefault();
 
   if (form.id === 'login-form') {
     const username = document.getElementById('username')?.value;
-    if (!username) return;
 
-    localStorage.setItem('user', JSON.stringify({ username, email: '', bio: '' }));
-    router.push('/');
+    try {
+      localStorage.setItem('user', JSON.stringify({ username, email: '', bio: '' }));
+      router.push('/');
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   if (form.id === 'profile-form') {
@@ -262,9 +264,29 @@ function ProfilePage() {
 }
 
 function LoginPage() {
-  return `<main class="bg-gray-100 flex items-center justify-center min-h-screen">
+  let errorMessage = '';
+
+  try {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      throw new Error('누가 봐도 의도적인 오류입니다.');
+    }
+  } catch (error) {
+    console.error('LoginPage Error -> ', error);
+
+    errorMessage = `
+      <div class="error-message text-red-500 text-center mb-4">
+        <p>오류 발생!</p>
+        <p>${error.message}</p>
+      </div>
+    `;
+  }
+
+  return `
+    <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
+        ${errorMessage}
         <form id="login-form">
           <div class="mb-4">
             <input id="username" name="username" type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
@@ -282,7 +304,8 @@ function LoginPage() {
           <button class="bg-green-500 text-white px-4 py-2 rounded font-bold">새 계정 만들기</button>
         </div>
       </div>
-    </main>`;
+    </main>
+  `;
 }
 
 function ErrorPage() {

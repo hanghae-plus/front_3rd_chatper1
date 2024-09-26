@@ -55,7 +55,6 @@ document.addEventListener('submit', e => {
   const $email = document.getElementById('email') as HTMLInputElement;
 
   if ($textarea !== null && $username !== null && $email !== null) {
-    console.log($email.value);
     const userInfo = { username: $username.value, email: $email.value, bio: $textarea.value };
     userInfoState.setUser(userInfo);
     localStorage.setItem('user', JSON.stringify(userInfoState.getUser()));

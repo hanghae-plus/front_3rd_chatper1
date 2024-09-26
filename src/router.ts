@@ -3,12 +3,14 @@ import Profile from './pages/profile.js';
 import Login from './pages/login.js';
 import PageNotFound from './pages/404.js';
 import { render } from './main.js';
+import Error from './pages/error.jsx';
 
 const routes: { [key: string]: () => JSX.IntrinsicElements } = {
   home: Home,
   profile: Profile,
   login: Login,
   pageNotFound: PageNotFound,
+  error: Error,
 };
 
 let route = routes.home;
@@ -16,9 +18,15 @@ let route = routes.home;
 export function router() {
   return {
     push: (path: string) => {
-      if (['/profile', '/'].includes(path) && localStorage.getItem('user') === null) {
+      if (path === '/profile' && localStorage.getItem('user') === null) {
         alert('로그인 해주세요.');
         path = '/login';
+      }
+      if (path === '/login' && localStorage.getItem('user') !== null) {
+        path = '/';
+      }
+      if (path.toLocaleLowerCase() === '/home') {
+        path = '/';
       }
 
       history.pushState({}, '', path.toLowerCase());

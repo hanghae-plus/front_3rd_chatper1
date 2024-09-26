@@ -1,7 +1,9 @@
+import { userInfoState } from '../main.js';
 import { router } from '../router.js';
 import { h } from '../virtual-dom.js';
 
 function Header() {
+  const userInfo = userInfoState.getUser();
   return (
     <div>
       <header class="bg-blue-600 text-white p-4 sticky top-0">
@@ -10,7 +12,7 @@ function Header() {
       <nav class="bg-white shadow-md p-2 sticky top-14">
         <ul class="flex justify-around">
           <li>
-            <a href="/" class="text-blue-600">
+            <a href="/" class="text-blue-600 font-bold">
               홈
             </a>
           </li>
@@ -20,9 +22,9 @@ function Header() {
             </a>
           </li>
           <li>
-            <button id="logout" class="text-gray-600">
-              로그아웃
-            </button>
+            <a href="/login" id="logout" class="text-gray-600">
+              {userInfo.username === '' ? '로그인' : '로그아웃'}
+            </a>
           </li>
         </ul>
       </nav>
@@ -31,8 +33,9 @@ function Header() {
 }
 
 document.addEventListener('click', e => {
+  e.stopPropagation();
   const $logout = document.getElementById('logout');
-  if (e.target === $logout && $logout !== null) {
+  if (e.target === $logout && $logout !== null && userInfoState.getUser().username !== '') {
     localStorage.removeItem('user');
     router().push('/login');
   }

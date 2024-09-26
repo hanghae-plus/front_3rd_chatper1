@@ -1,4 +1,5 @@
 import LayoutApp from './components/layout-app.component.js';
+import { router } from './router.js';
 import { userInfoStore } from './store.js';
 
 export function render() {
@@ -8,5 +9,9 @@ export function render() {
 }
 
 export const userInfoState = userInfoStore();
+
+window.addEventListener('error', () => {
+  router().push('/error');
+});
 
 render();

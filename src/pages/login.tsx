@@ -19,9 +19,7 @@ function Login() {
           </button>
         </form>
         <div class="mt-4 text-center">
-          <a href="#" class="text-blue-600 text-sm">
-            비밀번호를 잊으셨나요?
-          </a>
+          <a class="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
         </div>
         <hr class="my-6" />
         <div class="text-center">
@@ -39,7 +37,6 @@ document.addEventListener('submit', e => {
   }
   e.preventDefault();
   const $id = document.getElementById('username') as HTMLInputElement;
-
   if ($id !== null) {
     localStorage.setItem(
       'user',

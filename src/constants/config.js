@@ -3,4 +3,4 @@ export const DELAY_TIME = {
   MEDIUM: 500,
   LONG: 1000,
 }
-export const PAGE_TITLE = '항해플러스'
+export const PROJECT_NAME = '항해플러스'

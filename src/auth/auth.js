@@ -1,6 +1,6 @@
 // 로컬 스토리지에서 사용자 정보를 가져와 로그인 여부 확인
 export const isAuthenticated = () => {
-  return localStorage.getItem("isLoggedIn");
+  return !!localStorage.getItem("isLoggedIn");
 };
 
 export const login = () => {

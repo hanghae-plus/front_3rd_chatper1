@@ -27,6 +27,7 @@ class Router {
 	handleClickEvent(event) {
 		if (event.target.tagName === 'A' && event.target.getAttribute('href').startsWith('/')) {
 			event.preventDefault();
+			event.stopPropagation();
 
 			this.navigate(event.target.getAttribute('href'));
 		}

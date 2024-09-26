@@ -1,5 +1,6 @@
 import { Footer } from "./\bfooter";
 import { Error } from "./error";
+import { ErrorBoundary } from "./errorBoundary";
 import { Header, LoginHeader } from "./header";
 import { Home } from "./home";
 import { Login } from "./login";
@@ -64,40 +65,48 @@ export const router = () => {
     };
   }
 
-  const { getHTML } = match.view();
-  const page = getHTML();
-  const { getHeader } = Header();
-  const { getLoginHeader } = LoginHeader();
-  const headerComponent = getHeader();
-  const loginHeaderComponent = getLoginHeader();
-  const { getFooter } = Footer();
-  const footerComponent = getFooter();
-
   const root = document.querySelector("#root");
+
+  const errorBoundary = ErrorBoundary(root);
+
   // 다른 페이지를 route 하기전에 이전 페이지 요소들을 삭제해서 root 리셋.
   while (root.firstChild) {
     root.removeChild(root.firstChild);
   }
 
-  const layout = document.createElement("div");
-  layout.setAttribute("class", "bg-gray-100 min-h-screen flex justify-center");
-  const pageContainer = document.createElement("div");
-  pageContainer.setAttribute("class", "max-w-md w-full");
+  //errorBoundary로 page render 로직 최상단에 감싸준다.
+  errorBoundary.safeRender(() => {
+    const { getHTML } = match.view();
+    const page = getHTML();
+    const { getHeader } = Header();
+    const { getLoginHeader } = LoginHeader();
+    const headerComponent = getHeader();
+    const loginHeaderComponent = getLoginHeader();
+    const { getFooter } = Footer();
+    const footerComponent = getFooter();
+    const layout = document.createElement("div");
+    layout.setAttribute(
+      "class",
+      "bg-gray-100 min-h-screen flex justify-center"
+    );
+    const pageContainer = document.createElement("div");
+    pageContainer.setAttribute("class", "max-w-md w-full");
 
-  // 메인과 프로필 페이지만 헤더 컴포넌트 생성
-  if (match.isHeader) {
-    user
-      ? pageContainer.appendChild(loginHeaderComponent)
-      : pageContainer.appendChild(headerComponent);
+    // 메인과 프로필 페이지만 헤더 컴포넌트 생성
+    if (match.isHeader) {
+      user
+        ? pageContainer.appendChild(loginHeaderComponent)
+        : pageContainer.appendChild(headerComponent);
+      pageContainer.appendChild(page);
+      pageContainer.appendChild(footerComponent);
+      layout.appendChild(pageContainer);
+      root.appendChild(layout);
+      return;
+    }
+
+    //match에 맞는 page dom을 root에 새로 붙여준다.
     pageContainer.appendChild(page);
-    pageContainer.appendChild(footerComponent);
     layout.appendChild(pageContainer);
     root.appendChild(layout);
-    return;
-  }
-
-  //match에 맞는 page dom을 root에 새로 붙여준다.
-  pageContainer.appendChild(page);
-  layout.appendChild(pageContainer);
-  root.appendChild(layout);
+  });
 };

@@ -1,111 +1,100 @@
-document.querySelector('#root').innerHTML = `
-<div class="bg-gray-100 min-h-screen flex justify-center">
-    <div class="max-w-md w-full">
-      <header class="bg-blue-600 text-white p-4 sticky top-0">
-        <h1 class="text-2xl font-bold">항해플러스</h1>
-      </header>
+import { Error } from "./pages/Error";
+import { Home } from "./pages/Home";
+import { Login } from "./pages/Login";
+import { Profile } from "./pages/Profile";
+import RouterManager from "./routes/router-manager";
+import state from "./state/state-manager";
+import ErrorHandler from "./handlers/error-handler";
+import EventHandler from "./handlers/event-handler";
 
-      <nav class="bg-white shadow-md p-2 sticky top-14">
-        <ul class="flex justify-around">
-          <li><a href="./main.html" class="text-blue-600">홈</a></li>
-          <li><a href="./profile.html" class="text-gray-600">프로필</a></li>
-          <li><a href="#" class="text-gray-600">로그아웃</a></li>
-        </ul>
-      </nav>
+/**
+ * @class HangHaeApp
+ * 애플리케이션의 초기화 및 전역 상태, 이벤트, 에러 관리를 담당하는 클래스.
+ */
+class HangHaeApp {
+  constructor() {
+    this.router = new RouterManager();
+    this.state = state;
+    this.eventHandler = new EventHandler(this.router, this.state);
+    this.errorHandler = new ErrorHandler();
 
-      <main class="p-4">
-        <div class="mb-4 bg-white rounded-lg shadow p-4">
-          <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
-          <button class="mt-2 bg-blue-600 text-white px-4 py-2 rounded">게시</button>
-        </div>
+    // 애플리케이션 초기화
+    this.initialize();
+  }
 
-        <div class="space-y-4">
+  /**
+   * 애플리케이션 초기화 메서드.
+   * 상태 로드, 라우터, 이벤트 및 에러 핸들러 설정을 담당.
+   */
+  initialize() {
+    this.state.loadFromStorage();
+    this.setupRouter();
+    this.eventHandler.setupEventListeners();
+    this.setupErrorHandling();
+    this.renderInitialRoute();
+  }
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">홍길동</p>
-                <p class="text-sm text-gray-500">5분 전</p>
-              </div>
-            </div>
-            <p>오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+  /**
+   * 라우터 설정 메서드
+   * 각 경로에 대한 처리기 등록 및 미들웨어 설정.
+   */
+  setupRouter() {
+    // 홈, 로그인, 프로필, 에러 페이지 등록
+    this.router.registerPath('/', () => this.renderComponent(Home));
+    this.router.registerPath('/login', () => {
+      if (this.state.isLoggedIn()) {
+        this.router.navigateTo('/');
+      } else {
+        this.renderComponent(Login);
+      }
+    });
+    this.router.registerPath('/profile', () => {
+      this.renderComponent(Profile);
+    }, [
+      (path) => {
+        if (!this.state.isLoggedIn()) {
+          this.router.navigateTo('/login');
+          return false; // 경로 처리를 중단
+        }
+        return true; // 계속 처리
+      }
+    ]);
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">김철수</p>
-                <p class="text-sm text-gray-500">15분 전</p>
-              </div>
-            </div>
-            <p>새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+    this.router.defineFallback(() => this.renderComponent(Error));
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">이영희</p>
-                <p class="text-sm text-gray-500">30분 전</p>
-              </div>
-            </div>
-            <p>오늘 점심 메뉴 추천 받습니다. 뭐가 좋을까요?</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+    // 전역 미들웨어 설정: 모든 경로 접근 시 로그 남기기
+    this.router.addGlobalMiddleware((path) => {
+      console.log(`Navigated to: ${path}`);
+    });
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">박민수</p>
-                <p class="text-sm text-gray-500">1시간 전</p>
-              </div>
-            </div>
-            <p>주말에 등산 가실 분 계신가요? 함께 가요!</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
+    // popstate 이벤트 처리
+    window.addEventListener('popstate', () => {
+      this.router.handleRouteChange(window.location.pathname);
+    });
+  }
 
-          <div class="bg-white rounded-lg shadow p-4">
-            <div class="flex items-center mb-2">
-              <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2">
-              <div>
-                <p class="font-bold">정수연</p>
-                <p class="text-sm text-gray-500">2시간 전</p>
-              </div>
-            </div>
-            <p>새로 나온 영화 재미있대요. 같이 보러 갈 사람?</p>
-            <div class="mt-2 flex justify-between text-gray-500">
-              <button>좋아요</button>
-              <button>댓글</button>
-              <button>공유</button>
-            </div>
-          </div>
-        </div>
-      </main>
+  /**
+   * 전역 에러 처리 설정 메서드
+   */
+  setupErrorHandling() {
+    window.addEventListener('error', (error) => this.errorHandler.handleError(error));
+  }
 
-      <footer class="bg-gray-200 p-4 text-center">
-        <p>&copy; 2024 항해플러스. All rights reserved.</p>
-      </footer>
-    </div>
-  </div>
-`;
+  /**
+   * 컴포넌트를 렌더링하는 메서드
+   * @param {Function} component - 렌더링할 컴포넌트 함수
+   */
+  renderComponent(component) {
+    document.getElementById('root').innerHTML = component();
+  }
+
+  /**
+   * 애플리케이션 시작 시 현재 경로를 렌더링.
+   */
+  renderInitialRoute() {
+    this.router.handleRouteChange(window.location.pathname);
+  }
+}
+
+// 애플리케이션 실행
+new HangHaeApp();

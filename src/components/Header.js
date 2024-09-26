@@ -20,7 +20,7 @@ class Header {
                 <h1 class="text-2xl font-bold">항해플러스</h1>
               </header>
 
-              <nav class="bg-white shadow-md p-2 sticky top-14">
+              <nav class="navbar bg-white shadow-md p-2 sticky top-14">
                   <ul class="flex justify-around">
                       <li><a href="/" class="navItem ${homeClass}">홈</a></li>
                       ${
@@ -41,16 +41,17 @@ class Header {
   }
 
   registerEvents(renderPage) {
-    const logoutBtn = document.getElementById('logout');
+    const navBar = document.querySelector('.navbar');
 
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', (event) => {
+    navBar.addEventListener('click', (event) => {
+      const target = event.target;
+
+      if (target.id === 'logout') {
         event.preventDefault();
-
         UserManager.logout();
         renderPage('/login');
-      });
-    }
+      }
+    });
   }
 }
 

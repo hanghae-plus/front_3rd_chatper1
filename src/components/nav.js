@@ -1,5 +1,5 @@
 import { html } from "lit-html";
-import { getUserInfo } from "../localStorage/user";
+import { userStore } from "../store/userStore";
 
 const NavLink = (href, text, isActive, id = "") => html`
   <li>
@@ -14,7 +14,7 @@ const NavLink = (href, text, isActive, id = "") => html`
 `;
 
 const Nav = () => {
-  const isLogin = !!getUserInfo();
+  const isLoggedIn = userStore.getState();
   const path = window.location.pathname;
 
   return html`
@@ -22,7 +22,7 @@ const Nav = () => {
       <ul class="flex justify-around">
         ${NavLink("/", "홈", path === "/")}
         ${NavLink("/profile", "프로필", path === "/profile")}
-        ${isLogin
+        ${isLoggedIn
           ? NavLink("#", "로그아웃", false, "logout")
           : NavLink("/login", "로그인", false)}
       </ul>

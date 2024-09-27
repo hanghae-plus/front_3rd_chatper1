@@ -1,4 +1,4 @@
-import { logout } from "../localStorage/user";
+import { logout } from "../store/userStore";
 import { navigate } from "../utils/navigate";
 
 export const attachNavEvent = () => {

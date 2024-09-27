@@ -1,4 +1,4 @@
-import { login } from "../localStorage/user";
+import { login } from "../store/userStore";
 import { navigate } from "../utils/navigate";
 
 export const attachLoginEvent = () => {
@@ -8,7 +8,7 @@ export const attachLoginEvent = () => {
   if (form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      login(usernameInput.value);
+      login({ username: usernameInput.value, email: "", bio: "" });
       navigate("/profile");
     });
   }

@@ -1,7 +1,7 @@
 import { render } from "lit-html";
 import { routes } from "./routes";
 import { attachEventHandler } from "./event/eventHandler";
-import { getUserInfo } from "./localStorage/user";
+import { userStore } from "./store/userStore";
 import { setUpPage } from "./setup/setupHandler";
 
 const root = document.querySelector("#root");
@@ -11,10 +11,10 @@ const getFinalPath = (path) => {
   if (!isValidPath) return "/404";
 
   const { requiresAuth, redirectIfAuth } = routes[path];
-  const isLogin = !!getUserInfo();
+  const isLoggedIn = userStore.getState();
 
-  if (requiresAuth && !isLogin) return "/login";
-  if (redirectIfAuth && isLogin) return "/";
+  if (requiresAuth && !isLoggedIn) return "/login";
+  if (redirectIfAuth && isLoggedIn) return "/";
 
   return path;
 };

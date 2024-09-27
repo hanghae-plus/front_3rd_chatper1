@@ -1,8 +1,7 @@
-import { getUserInfo } from "../localStorage/user";
+import { userStore } from "../store/userStore";
 
 export const setUpProfilePage = () => {
-  const userInfo = getUserInfo();
-  const { username, email, bio } = userInfo;
+  const { username, email, bio } = userStore.getState();
 
   const usernameInput = document.getElementById("username");
   const emailInput = document.getElementById("email");

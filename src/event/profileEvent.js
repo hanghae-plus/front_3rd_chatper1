@@ -1,4 +1,4 @@
-import { updateUserInfo } from "../localStorage/user";
+import { updateUser } from "../store/userStore";
 
 export const attachProfileEvent = () => {
   const form = document.getElementById("profile-form");
@@ -9,6 +9,6 @@ export const attachProfileEvent = () => {
     const email = document.getElementById("email").value;
     const bio = document.getElementById("bio").value;
 
-    updateUserInfo({ username, email, bio });
+    updateUser({ username, email, bio });
   });
 };

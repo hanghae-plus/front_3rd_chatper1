@@ -1,6 +1,10 @@
 export default class UserStore {
   static #instance;
-  #user = {};
+  #user = {
+    username: '',
+    email: '',
+    bio: ''
+  };
 
   constructor(initialState = {}) {
     if (UserStore.#instance) {

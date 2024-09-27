@@ -12,7 +12,6 @@ export default class Component {
     this.render();
   }
 
-  // state를 설정하는 생명주기
   setup() {}
 
   mounted() {}

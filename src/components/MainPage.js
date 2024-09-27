@@ -7,9 +7,6 @@ import router from '../router';
 
 class MainPage extends Component {
   template() {
-    // TODO: ProfilePage처럼 state에서 getUser()로 데이터를 주입받고, 프로필, 로그아웃
-    // 엘리먼트를 전환하는 것은 간단
-    // 이때, 전역 상태를 이용해야 하나?
     return `
 			<div class="bg-gray-100 min-h-screen flex justify-center">
 				<div class="max-w-md w-full">

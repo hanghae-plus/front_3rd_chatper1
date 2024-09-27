@@ -34,7 +34,6 @@ class Nav extends Component {
     }
   }
 
-  // TODO: 로그인 상태 관리 구현
   template() {
     const { menus, isLogin } = this.state;
 

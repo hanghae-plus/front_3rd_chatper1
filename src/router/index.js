@@ -36,9 +36,11 @@ export default function Router() {
 
   function renderPage(path) {
     const isLogin = !!localStorage.getItem("user");
+
     if (path === "/profile" && !isLogin) {
       return useNavigate("/login");
     }
+
     if (path === "/login" && isLogin) {
       return useNavigate("/");
     }

@@ -14,11 +14,11 @@ export default function Nav() {
   });
   const isLogin = !!getUser();
   NavList.forEach(({ title, href }) => {
-    if (isLogin) {
-      if (href === "login") return;
-    } else {
-      if (href === "profile" || href === "logout") return;
-    }
+    if (
+      (isLogin && href === "login") ||
+      (!isLogin && (href === "profile" || href === "logout"))
+    )
+      return;
 
     const NavItem = createElement({ tagName: "li", className: "flex-center" });
 

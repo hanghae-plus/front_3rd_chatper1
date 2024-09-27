@@ -25,6 +25,7 @@ export default class ProfilePage extends Component {
     const bio = document.getElementById('bio').value;
 
     const user = { username, email, bio };
+    localStorage.setItem('user', JSON.stringify(user));
     this.#userStore.updateUser(user, this);
 
     alert('프로필이 업데이트 되었습니다.');

@@ -36,7 +36,6 @@ export default class UserStore {
   }
 
   updateUser(user, page) {
-    localStorage.setItem('user', JSON.stringify(user));
     this.#setUser(user);
     this.#notice(page);
   }

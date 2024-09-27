@@ -63,9 +63,7 @@ describe("기본과제 테스트", () => {
         new SubmitEvent("submit", { bubbles: true, cancelable: true })
       );
 
-      expect(localStorage.getItem("user")).toEqual(
-        `{"username":"testuser","email":"","bio":""}`
-      );
+      expect(localStorage.getItem('user')).toEqual(`{"username":"testuser","email":"","bio":""}`);
 
       const logoutButton = document.getElementById("logout");
       logoutButton.click();
@@ -108,9 +106,7 @@ describe("기본과제 테스트", () => {
         new SubmitEvent("submit", { bubbles: true, cancelable: true })
       );
 
-      expect(localStorage.getItem("user")).toEqual(
-        `{"username":"testuser","email":"","bio":"Updated bio"}`
-      );
+      expect(localStorage.getItem('user')).toEqual(`{"username":"testuser","email":"","bio":"Updated bio"}`);
     });
   });
 

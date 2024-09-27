@@ -22,11 +22,10 @@ const getFinalPath = (path) => {
 export const renderPage = (path) => {
   const newPath = getFinalPath(path);
   if (path !== newPath) window.history.replaceState({}, "", newPath);
-  path = newPath;
-  const route = routes[path];
+  const route = routes[newPath];
 
   render(route.content(), root);
 
-  attachEventHandler(path);
-  setUpPage(path);
+  setUpPage(newPath);
+  attachEventHandler(newPath);
 };

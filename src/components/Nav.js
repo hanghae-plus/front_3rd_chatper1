@@ -1,5 +1,5 @@
 import Component from '../../core/Component';
-import { getUser } from '../helpers';
+import userStore from '../stores/userStore';
 
 const isActiveRoute = (path) => {
   return window.location.pathname === path;
@@ -9,35 +9,40 @@ class Nav extends Component {
   setup() {
     this.$target.className = 'bg-white shadow-md p-2 sticky top-14';
 
-    const isLogin = !!getUser();
-
     this.state = {
-      isLogin,
       menus: [
         {
           title: '홈',
           path: '/',
         },
+        {
+          title: '프로필',
+          path: '/profile',
+        },
+        {
+          title: '로그인',
+          path: '/login',
+        },
       ],
     };
-
-    if (isLogin) {
-      this.state.menus.push({
-        title: '프로필',
-        path: '/profile',
-      });
-    } else {
-      this.state.menus.push({
-        title: '로그인',
-        path: '/login',
-      });
-    }
   }
 
   template() {
-    const { menus, isLogin } = this.state;
+    const isLogin = userStore.isLogin;
+    const { menus } = this.state;
+    const filteredMenus = menus.filter((menu) => {
+      if (isLogin && menu.path === '/login') {
+        return false;
+      }
 
-    const menuListHtml = menus
+      if (!isLogin && menu.path === '/profile') {
+        return false;
+      }
+
+      return true;
+    });
+
+    const menuListHtml = filteredMenus
       .map(({ title, path }) => {
         const classNames = isActiveRoute(path) ? 'link text-blue-600 font-bold' : 'link text-gray-600';
 

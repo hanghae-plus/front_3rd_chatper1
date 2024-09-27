@@ -2,9 +2,9 @@ import ErrorPage from './components/ErrorPage';
 import LoginPage from './components/LoginPage';
 import MainPage from './components/MainPage';
 import ProfilePage from './components/ProfilePage';
-import { getUser } from './helpers';
+import userStore from './stores/userStore';
 
-const isLogin = () => getUser();
+const isLogin = () => userStore.isLogin;
 
 const needLoginPages = ['/profile'];
 const loginUserInaccessiblePages = ['/login'];

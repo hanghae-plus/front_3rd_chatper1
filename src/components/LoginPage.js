@@ -1,6 +1,6 @@
 import Component from '../../core/Component';
-import { login } from '../helpers';
 import router from '../router';
+import userStore from '../stores/userStore';
 
 class LoginPage extends Component {
   template() {
@@ -48,7 +48,7 @@ class LoginPage extends Component {
     }
 
     // 로그인
-    login({
+    userStore.login({
       username,
       email: '',
       bio: '',

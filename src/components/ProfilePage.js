@@ -2,20 +2,19 @@ import Component from '../../core/Component';
 import Header from './Header';
 import Nav from './Nav';
 import Footer from './Footer';
-import { getUser, logout, updateUser } from '../helpers';
 import router from '../router';
+import userStore from '../stores/userStore';
 
 class ProfilePage extends Component {
-  setup() {
-    this.state = getUser() ?? {
-      username: '',
-      email: '',
-      bio: '',
-    };
-  }
-
   template() {
-    const { username, email, bio } = this.state;
+    // const { username, email, bio } = this.state;
+    const { user } = userStore.getState();
+
+    if (!user) {
+      throw new Error('잘못된 접근');
+    }
+
+    const { username, email, bio } = user;
 
     return `
 			<div class="bg-gray-100 min-h-screen flex justify-center">
@@ -73,7 +72,7 @@ class ProfilePage extends Component {
 
     if (!username) return;
 
-    updateUser({
+    userStore.updateUser({
       username,
       email,
       bio,
@@ -85,7 +84,7 @@ class ProfilePage extends Component {
   handleLogout(e) {
     e.preventDefault();
 
-    logout();
+    userStore.logout();
 
     router.push('/login');
   }

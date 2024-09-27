@@ -2,8 +2,8 @@ import Component from '../../core/Component';
 import Header from './Header';
 import Footer from './Footer';
 import Nav from './Nav';
-import { logout } from '../helpers';
 import router from '../router';
+import userStore from '../stores/userStore';
 
 class MainPage extends Component {
   template() {
@@ -123,7 +123,7 @@ class MainPage extends Component {
   handleLogout(e) {
     e.preventDefault();
 
-    logout();
+    userStore.logout();
 
     router.push('/login');
   }

@@ -8,8 +8,7 @@ export const attachLoginEvent = () => {
   if (form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const username = document.getElementById("username").value;
-      login(username);
+      login(usernameInput.value);
       navigate("/profile");
     });
   }

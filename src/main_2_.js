@@ -1,14 +1,12 @@
-const Header = (login) => `
+const Header = (path,login) => `
   <header class="bg-blue-600 text-white p-4 sticky top-0">
           <h1 class="text-2xl font-bold">항해플러스</h1>
         </header>
-  
         <nav class="bg-white shadow-md p-2 sticky top-14">
           <ul class="flex justify-around">
-            <li><a href="/" class="text-blue-600">홈</a></li>
-            <li><a href="/profile" class="text-gray-600">프로필</a></li>
-             <li><a href="" id="logout" class="logout text-gray-600">${login === 'T' ?`로그아웃` : '로그인'}</a></li>
-            
+            <li><a href="/" class="${path === '/' ? 'text-blue-600' : 'text-gray-600'}">홈</a></li>
+            ${login === 'T' ? `<li><a href="/profile" class="${path === '/profile' ? 'text-blue-600' : 'text-gray-600'}">프로필</a></li>` : ''}
+             <li><a href=${login === 'F' ?`/login` : '/'} id="logout" class="logout ${path === '/login' ? ' text-blue-600' : ' text-gray-600'}">${login === 'T' ?`로그아웃` : '로그인'}</a></li>
           </ul>
         </nav>
 `;
@@ -21,12 +19,12 @@ const footer =  `
 
 
 const getHtml = (path, login) =>{
-  console.log(JSON.parse(localStorage.getItem("user")))
+  let user  = JSON.parse(localStorage.getItem("user"))
   const mainPage = {
     title : '항해플러스 - 홈',
     content : `<div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
-       ${Header(login)}
+       ${Header(path,login)}
         <main class="p-4">
           <div class="mb-4 bg-white rounded-lg shadow p-4">
             <textarea class="w-full p-2 border rounded" placeholder="무슨 생각을 하고 계신가요?"></textarea>
@@ -60,27 +58,27 @@ const getHtml = (path, login) =>{
     title : '항해플러스 - 프로필',
     content : `  <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
-       ${Header(login)}
+       ${Header(path,login)}
         <main class="p-4">
           <div class="bg-white p-8 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-             <form id="profile-form">
+             <form id="profileForm">
             <div class="mb-4">
               <label for="username" class="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
               <input type="text" id="username" name="username" value="${
-                JSON.parse(localStorage.getItem("user"))?.username || ""
+                user?.username || ""
               }" class="w-full p-2 border rounded">
             </div>
             <div class="mb-4">
               <label for="email" class="block text-gray-700 text-sm font-bold mb-2">이메일</label>
               <input type="email" id="email" name="email" value="${
-                JSON.parse(localStorage.getItem("user"))?.email || ""
+                user?.email || ""
               }" class="w-full p-2 border rounded">
             </div>
             <div class="mb-6">
               <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">자기소개</label>
               <textarea id="bio" name="bio" rows="4" class="w-full p-2 border rounded">${
-                JSON.parse(localStorage.getItem("user"))?.bio || ""
+                user?.bio || ""
               }</textarea>
             </div>
             <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>
@@ -100,7 +98,7 @@ const getHtml = (path, login) =>{
     content : ` <main class="bg-gray-100 flex items-center justify-center min-h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
           <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-          <form>
+          <form id="loginForm">
             <div class="mb-4">
               <input type="text" placeholder="이메일 또는 전화번호" class="w-full p-2 border rounded">
             </div>
@@ -139,15 +137,14 @@ const getHtml = (path, login) =>{
 
   if(path === '/'){
     return mainPage
+
   }else if(path === '/login'){
     return loginPage
+
   }else if (path === '/profile'){
-    // 로그인이 되지 않은 상태에서 "/profile" 경로로 접근하면, 로그인 페이지로 리다이렉션 된다.
-    if(localStorage.getItem('login') === 'F'){
-      return loginPage
-    }else{
-      return profilePage
-    }
+    let storedLogin = localStorage.getItem('login')
+    return storedLogin && storedLogin === 'T' ? profilePage : loginPage
+
   }else{
     return errorPage
   }
@@ -156,8 +153,6 @@ const getHtml = (path, login) =>{
 
 // 페이지 렌더링 함수
 const renderPage = async (pathUrl) => {
-
-  // const page = routes[path] || 'error';
 
   let path = pathUrl || window.location.pathname
   const {title, content} = getHtml(path, localStorage.getItem('login'))
@@ -169,42 +164,19 @@ const renderPage = async (pathUrl) => {
 
 };
 
-  // popstate 이벤트 처리
-  window.addEventListener('popstate', () => {
-    renderPage(window.location.pathname);
-  });
-
-  // 네비게이션 이벤트 처리
-  document.body.addEventListener('click', (e) => {
-    if (e.target.matches('a[data-link]')) {
-      console.log('네비게이션 이벤트 처리', e.target)
-      e.preventDefault();
-      const url = e.target.getAttribute('href');
-      navigateTo(url);
-    }
-  });
+  
 
   // 로그아웃 버튼 기능 구현
   window.addEventListener('click', (e)=>{
 
     const { tagName, id } = e.target
-    console.log('id', id)
-    console.log('tagName', tagName)
     if (tagName === "A") {
-      console.log('로그아웃 버튼 기능 구현', e.target)
-
-      // 기본 동작 방지
       e.preventDefault()
-  
-      // 로그아웃 버튼 클릭 시
       if (id === "logout") {
-        ///localStorage 유저정보 삭제
         localStorage.removeItem("user")
         localStorage.setItem("login", 'F')
-        goTo('/')
-
       }
-    goTo(e.target.getAttribute("href"))
+      goTo(e.target.getAttribute("href"))
       
     }
 
@@ -214,29 +186,28 @@ const renderPage = async (pathUrl) => {
 
   //submit : 로그인 버튼 기능 구현
   window.addEventListener('submit', (e)=>{
-    if(document.title.includes('로그인')){
+    if(e.target.id === 'loginForm'){
       e.preventDefault()
-      console.log('login submit', e.target)
       const username = e.target.querySelector("input")?.value
       console.log(username)
       if(!username){
       }else{
-        localStorage.setItem('user', JSON.stringify({ username : username  }))
+        let user = JSON.stringify({ username })
+        localStorage.setItem('user', user)
         localStorage.setItem('login', 'T')
 
         renderPage('/profile')
       }
     }
 
-    if(document.title.includes('프로필')){
+    if(e.target.id === 'profileForm'){
       e.preventDefault()
-      console.log('프로필 submit', e.target)
-
-      e.stopPropagation(); // click 이벤트가 실행되지 않도록 전파 방지
+      e.stopPropagation(); 
       const username = e.target.querySelector("#username")?.value
       const email = e.target.querySelector("#email")?.value
       const bio = e.target.querySelector("#bio")?.value
       localStorage.setItem('user', JSON.stringify({ username, email, bio }))
+      alert('프로필 업데이트 성공 !')
     }
   })
 
@@ -252,8 +223,21 @@ const renderPage = async (pathUrl) => {
       renderPage(path)
     }
 
+    // popstate 이벤트 처리
+  window.addEventListener('popstate', () => {
+    renderPage(window.location.pathname);
+  });
+
+  // 네비게이션 이벤트 처리
+  document.body.addEventListener('click', (e) => {
+    if (e.target.matches('a[data-link]')) {
+      e.preventDefault();
+      const url = e.target.getAttribute('href');
+      navigateTo(url);
+    }
+  });
+
   // 초기 페이지 렌더링
-  localStorage.setItem('login', 'F')
   renderPage();
 
 

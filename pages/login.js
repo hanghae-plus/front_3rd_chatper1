@@ -1,11 +1,13 @@
 import Component from '../src/component/component.js';
 import router from '../src/router.js';
 import UserStore from '../src/store/userStore.js';
+import Authorizer from '../src/authorizer.js';
 
 const TEST_USER_NAME = 'testuser';
 
 export default class LoginPage extends Component {
   #userStore = null;
+  #authorizer = null;
 
   constructor() {
     super();
@@ -15,6 +17,7 @@ export default class LoginPage extends Component {
     this._state.hasError = false;
 
     this.#userStore = new UserStore();
+    this.#authorizer = new Authorizer();
 
     this._handleEvents.handleSubmitBound = this.#handleSubmit.bind(this);
     this._handleEvents.handleInputBound = this.#handleInput.bind(this);
@@ -39,6 +42,9 @@ export default class LoginPage extends Component {
       const user = { username: `${id}`, email: '', bio: '' };
       localStorage.setItem('user', JSON.stringify(user));
       this.#userStore.updateUser(user, this);
+
+      this.#authorizer.login();
+      
       router.navigateTo('/');
     } else {
       alert('아이디 또는 비밀번호가 일치하지 않습니다');

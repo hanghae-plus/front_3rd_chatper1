@@ -1,5 +1,19 @@
 export default class Authorizer {
-  isAuth() {
-    return localStorage.getItem('user') !== null;
+  static #instance = null;
+  isLogin = false;
+
+  constructor() {
+    if (Authorizer.#instance) {
+      return Authorizer.#instance;
+    }
+    Authorizer.#instance = this;
+  }
+
+  login() {
+    this.isLogin = true;
+  }
+
+  logout() {
+    this.isLogin = false;
   }
 }

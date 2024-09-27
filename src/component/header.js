@@ -2,14 +2,17 @@ import Component from './component.js';
 import router from '../router.js';
 import { html } from 'code-tag';
 import UserStore from '../store/userStore.js';
+import Authorizer from "../authorizer.js";
 
 export default class Header extends Component {
   #userStore = null;
+  #authorizer = null;
 
   constructor() {
     super();
 
     this.#userStore = new UserStore();
+    this.#authorizer = new Authorizer();
 
     this._handleEvents.handleHomeClickBound = this.#handleHomeClick.bind(this);
     this._handleEvents.handleProfileClickBound = this.#handleProfileClick.bind(this);
@@ -23,8 +26,9 @@ export default class Header extends Component {
   }
 
   #logout() {
-    this.#userStore.clearState();
     localStorage.removeItem('user');
+    this.#userStore.clearState();
+    this.#authorizer.logout()
     router.router();
   }
 

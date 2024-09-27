@@ -42,11 +42,11 @@ class Router {
 
     let page;
 
-    if (!this.#authorizer.isAuth() && path === '/profile') {
+    if (!this.#authorizer.isLogin && path === '/profile') {
       history.pushState({}, '', '/login');
       page = this.#routes['/login'];
 
-    } else if (this.#authorizer.isAuth() && path === '/login') {
+    } else if (this.#authorizer.isLogin && path === '/login') {
       history.pushState({}, '', '/');
       page = this.#routes['/'];
 

@@ -1,4 +1,5 @@
-import {Error} from '../templates/error.js';
+// import {Error} from '../templates/error.js';
+import {error} from '../templates/error.js';
 import {Login} from "../templates/login.js";
 import {Profile} from "../templates/profile.js";
 import {Main} from "../templates/main.js";
@@ -102,7 +103,7 @@ router.addRoute('/login', () => {
 });
 
 router.addRoute('/404', () => {
-    document.querySelector('#root').innerHTML = Error();
+    document.querySelector('#root').innerHTML = error();
 });
 document.querySelectorAll('a').forEach(anchor => {
     anchor.addEventListener('click', (event) => {

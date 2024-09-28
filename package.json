@@ -8,8 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "test:basic": "vitest basic.test.jsx",
-    "test:advanced": "vitest advanced.test.jsx",
+    "test:basic": "vitest basic",
+    "test:advanced": "vitest advanced",
     "test:ui": "vitest --ui"
   },
   "devDependencies": {

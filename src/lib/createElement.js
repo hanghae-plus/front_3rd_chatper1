@@ -13,6 +13,10 @@ export function createElement(vNode) {
     return document.createTextNode(vNode);
   }
 
+  if(typeof vNode === 'number'){
+    return document.createTextNode(vNode);
+  }
+
 
   return {}
 }

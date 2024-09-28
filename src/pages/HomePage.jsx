@@ -1,24 +1,25 @@
 /** @jsx createVNode */
-import { Header, Navigation, Post, Footer } from "../components";
+import { Header, Navigation, Post, Footer, PostForm } from "../components";
 import { createVNode } from "../lib";
 import { globalStore } from "../stores";
-import { NotFoundPage } from "./";
 
 export const HomePage = () => {
 	const { loggedIn, posts } = globalStore.getState();
 
 	return (
-		<div class="max-w-md w-full">
-			<div class="max-w-md w-full">
-				{Header()}
-				{Navigation({ loggedIn })}
-				<main class="p-4">
-					{loggedIn ? NotFoundPage() : ""}
-					<div id="posts-container" class="space-y-4">
-						{posts.map(Post)}
+		<div className="bg-gray-100 min-h-screen flex justify-center">
+			<div className="max-w-md w-full">
+				<Header />
+				<Navigation loggedIn={loggedIn} />
+				<main className="p-4">
+					{loggedIn && <PostForm />}
+					<div id="posts-container" className="space-y-4">
+						{posts.map((post) => (
+							<Post key={post.id} post={post} />
+						))}
 					</div>
 				</main>
-				{Footer()}
+				<Footer />
 			</div>
 		</div>
 	);

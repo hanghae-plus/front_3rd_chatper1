@@ -1,3 +1,7 @@
+// 1. createVNode
+// 2. createElement
+// 3. 각각의 컴포넌트와 페이지를 채워넣기
+
 // TODO: createVNode 함수 구현
 // 1. type, props, ...children을 매개변수로 받는 함수를 작성하세요.
 // 2. 반환값은 { type, props, children } 형태의 객체여야 합니다.
@@ -6,5 +10,5 @@
 
 export function createVNode(type, props, ...children) {
   // 여기에 구현하세요
-  return {}
+  return { type, props, children: children.flat(Infinity).filter(Boolean) };
 }

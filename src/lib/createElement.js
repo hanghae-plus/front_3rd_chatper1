@@ -9,6 +9,46 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
 export function createElement(vNode) {
+  if (!vNode) return document.createTextNode('');
+  if (typeof vNode === 'string' || typeof vNode === 'number') return document.createTextNode(vNode);
+  if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+
+    vNode.forEach((child) => {
+      fragment.appendChild(createElement(child));
+    });
+
+    return fragment;
+  }
+  if (typeof vNode.type === 'function') return createElement(vNode.type(vNode.props || {}));
+
+  const $el = document.createElement(vNode.type);
+
+  Object.entries(vNode.props || {})
+    .filter(([attr, value]) => value)
+    .forEach(([attr, value]) => {
+      // @TODO 나중에 빌더 패턴 적용?
+      if (attr.startsWith('on')) {
+        $el.addEventListener('click', value);
+      }
+
+      console.log(attr, 'attr');
+
+      if (attr === 'className') {
+        attr = 'class';
+      }
+
+      if (attr === 'id') {
+        attr = 'id';
+      }
+
+      return $el.setAttribute(attr, value);
+    });
+
+  (vNode.children || []).map(createElement).forEach((child) => $el.appendChild(child));
+
+  console.log($el, '$el');
+
   // 여기에 구현하세요
-  return {}
+  return $el;
 }

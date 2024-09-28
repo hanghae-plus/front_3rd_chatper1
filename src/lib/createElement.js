@@ -13,5 +13,9 @@ export function createElement(vNode) {
     return document.createTextNode(vNode);
   }
 
+  if(!vNode){
+    return document.createTextNode('');
+  }
+
   return {}
 }

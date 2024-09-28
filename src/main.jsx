@@ -1,9 +1,11 @@
-import { createRouter } from "./lib";
-import { HomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
+/** @jsx createVNode */
+import { createRouter, createVNode, renderElement } from "./lib";
+import { HomePage, LoginPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
 import { addEvent, registerGlobalEvents } from "./utils";
+import { App } from "./App";
 
 const router = createRouter({
   "/": HomePage,
@@ -12,14 +14,14 @@ const router = createRouter({
     if (loggedIn) {
       throw new ForbiddenError();
     }
-    return LoginPage();
+    return <LoginPage/>;
   },
   "/profile": () => {
     const { loggedIn } = globalStore.getState();
     if (!loggedIn) {
       throw new UnauthorizedError();
     }
-    return ProfilePage();
+    return <ProfilePage/>;
   },
 });
 
@@ -38,25 +40,7 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const Page = router.getTarget() ?? NotFoundPage;
-    const error = globalStore.getState().error;
-
-    $root.innerHTML = `
-      ${Page()}
-      ${error ? `
-        <div id="error-boundary" class="fixed bottom-4 left-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 hover:opacity-75" role="alert">
-          <div class="flex justify-between items-center">
-            <div>
-              <strong class="font-bold">오류 발생!</strong>
-              <span class="block sm:inline ml-1">${error.message || '알 수 없는 오류가 발생했습니다.'}</span>
-            </div>
-            <button class="text-red-700 hover:text-red-900 font-semibold">
-              &times;
-            </button>
-          </div>
-        </div>
-      `  : ''}
-    `;
+    renderElement(<App targetPage={router.getTarget()}/>, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");
@@ -67,7 +51,9 @@ function render() {
       return;
     }
 
-    globalStore.setState({ error });
+    console.error(error);
+
+    // globalStore.setState({ error });
   }
   registerGlobalEvents();
 }

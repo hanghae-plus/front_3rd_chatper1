@@ -1,2 +1,2 @@
-export * from "./Post";
-export * from "./PostForm";
+export * from "./Post.jsx";
+export * from "./PostForm.jsx";

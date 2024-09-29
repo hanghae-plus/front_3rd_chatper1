@@ -17,5 +17,25 @@ export function createElement(vNode) {
     return document.createTextNode('');
   }
 
+  if(Array.isArray(vNode)){
+    const fragment = document.createDocumentFragment();
+    vNode.forEach(child => fragment.appendChild(createElement(child)));
+    return fragment;
+  }
+
+  if (typeof vNode === 'object' && vNode.type) {
+    const element = document.createElement(vNode.type); 
+
+    if (vNode.props && Array.isArray(vNode.props.children)) {
+      vNode.props.children.forEach(child => {
+        element.appendChild(createElement(child)); 
+      });
+    } else if (vNode.props && vNode.props.children) {
+      element.appendChild(createElement(vNode.props.children));
+    }
+
+    return element;
+  }
+
   return {}
 }

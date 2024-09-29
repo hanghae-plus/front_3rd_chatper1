@@ -48,25 +48,9 @@ const Navigation = ({ loggedIn }) => `
   <nav class="bg-white shadow-md p-2 sticky top-14">
     <ul class="flex justify-around">
       <li><a href="/" class="${getNavItemClass("/")}" data-link>홈</a></li>
-      ${
-        !loggedIn
-          ? `<li><a href="/login" class="${getNavItemClass(
-              "/login"
-            )}" data-link>로그인</a></li>`
-          : ""
-      }
-      ${
-        loggedIn
-          ? `<li><a href="/profile" class="${getNavItemClass(
-              "/profile"
-            )}" data-link>프로필</a></li>`
-          : ""
-      }
-      ${
-        loggedIn
-          ? `<li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>`
-          : ""
-      }
+      ${!loggedIn ? `<li><a href="/login" class="${getNavItemClass("/login")}" data-link>로그인</a></li>` : ""}
+      ${loggedIn ? `<li><a href="/profile" class="${getNavItemClass("/profile")}" data-link>프로필</a></li>` : ""}
+      ${loggedIn ? `<li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>` : ""}
     </ul>
   </nav>
 `;
@@ -190,9 +174,7 @@ function App({ targetPage }) {
           <div class="flex justify-between items-center">
             <div>
               <strong class="font-bold">오류 발생!</strong>
-              <span class="block sm:inline ml-1">${
-                error.message || "알 수 없는 오류가 발생했습니다."
-              }</span>
+              <span class="block sm:inline ml-1">${error.message || "알 수 없는 오류가 발생했습니다."}</span>
             </div>
             <button class="text-red-700 hover:text-red-900 font-semibold">
               &times;

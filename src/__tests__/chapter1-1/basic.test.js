@@ -59,13 +59,9 @@ describe("기본과제 테스트", () => {
 
       await user.type(document.getElementById("username"), "testuser");
 
-      loginForm.dispatchEvent(
-        new SubmitEvent("submit", { bubbles: true, cancelable: true })
-      );
+      loginForm.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true }));
 
-      expect(localStorage.getItem("user")).toEqual(
-        `{"username":"testuser","email":"","bio":""}`
-      );
+      expect(localStorage.getItem("user")).toEqual(`{"username":"testuser","email":"","bio":""}`);
 
       const logoutButton = document.getElementById("logout");
       logoutButton.click();
@@ -82,9 +78,7 @@ describe("기본과제 테스트", () => {
 
       await user.type(document.getElementById("username"), "testuser");
 
-      loginForm.dispatchEvent(
-        new SubmitEvent("submit", { bubbles: true, cancelable: true })
-      );
+      loginForm.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true }));
 
       goTo("/profile");
     });
@@ -104,9 +98,7 @@ describe("기본과제 테스트", () => {
       const bioInput = document.getElementById("bio");
 
       bioInput.value = "Updated bio";
-      profileForm.dispatchEvent(
-        new SubmitEvent("submit", { bubbles: true, cancelable: true })
-      );
+      profileForm.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true }));
 
       expect(localStorage.getItem("user")).toEqual(
         `{"username":"testuser","email":"","bio":"Updated bio"}`
@@ -122,9 +114,7 @@ describe("기본과제 테스트", () => {
 
       await user.type(document.getElementById("username"), "testuser");
 
-      loginForm.dispatchEvent(
-        new SubmitEvent("submit", { bubbles: true, cancelable: true })
-      );
+      loginForm.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true }));
 
       window.history.pushState({}, "", "/profile");
       window.dispatchEvent(new Event("popstate"));
@@ -168,9 +158,7 @@ describe("기본과제 테스트", () => {
 
       await user.type(document.getElementById("username"), "testuser");
 
-      loginForm.dispatchEvent(
-        new SubmitEvent("submit", { bubbles: true, cancelable: true })
-      );
+      loginForm.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true }));
 
       // 로그인 상태
       expect(document.body.innerHTML).toContain("로그아웃");

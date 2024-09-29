@@ -9,7 +9,6 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
 export function createElement(vNode) {
-
   /**
     * @terms vNode가 falsy면 빈 텍스트 노드를 반환하는 기능 조건
     * @desc vNode가 null, undefined 또는 false와 같은 falsy 값인 경우, 빈 텍스트 노드를 반환
@@ -28,5 +27,24 @@ export function createElement(vNode) {
     return document.createTextNode(String(vNode));
   }
 
+  /**
+    * @desc createElement 함수 내에서 vNode가 배열인지 처리
+  */
+
+  if (Array.isArray(vNode)) {
+    return createFragment(vNode);
+  }
+
   return createDOMElement(vNode);
+}
+
+  /**
+    * @terms vNode가 배열이면 DocumentFragment를 생성하고 각 자식에 대해 createElement를 재귀 호출하여 추가
+    * @desc 배열 처리를 위해 DocumentFragment를 사용하여 배열 요소에 대해 createElement를 재귀적으로 호출하고, 생성된 모든 노드를 DocumentFragment에 추가
+  */
+
+function createFragment(nodes) {
+  const fragment = document.createDocumentFragment();
+  nodes.forEach(node => fragment.appendChild(createElement(node)));
+  return fragment;
 }

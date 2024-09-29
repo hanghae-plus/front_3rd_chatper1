@@ -19,7 +19,7 @@ export function createElement(vNode) {
   }
 
   if (typeof vNode.type === 'function') {
-    return createElement(vNode.type(vNode.props));
+    return createElement(vNode.type(vNode.props, vNode.children));
   }
 
   const element = document.createElement(vNode.type);
@@ -27,14 +27,11 @@ export function createElement(vNode) {
   for (const key in vNode.props) {
     const value = vNode.props[key];
 
-    if (key.startsWith('data-')) {
-      element.dataset[key.slice(5)] = value;
-    } else if (key === 'className') {
-      element.className = value;
-    } else if (key.startsWith('on') && typeof value === 'function') {
-      element.addEventListener(key.slice(2), value());
+    if (key.startsWith('on') && typeof value === 'function') {
+      element.addEventListener(key.slice(2).toLowerCase(), value);
     } else {
-      element[key] = value;
+      const _key = key === 'className' ? 'class' : key;
+      element.setAttribute(_key, value);
     }
   }
 

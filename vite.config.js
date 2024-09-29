@@ -10,14 +10,14 @@ export default mergeConfig(
       esbuildOptions: {
         jsx: 'transform',
         jsxFactory: 'createVNode',
-      }
-    }
+      },
+    },
   }),
   defineTestConfig({
     test: {
       globals: true,
       environment: 'jsdom',
-      setupFiles: './src/setupTests.js'
+      setupFiles: './src/setupTests.js',
     },
   })
 );

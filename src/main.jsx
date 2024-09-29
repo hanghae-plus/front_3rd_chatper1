@@ -8,83 +8,78 @@ import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
 
 const router = createRouter({
-  "/": HomePage,
-  "/login": () => {
-    const { loggedIn } = globalStore.getState();
-    if (loggedIn) {
-      throw new ForbiddenError();
-    }
-    return <LoginPage/>;
-  },
-  "/profile": () => {
-    const { loggedIn } = globalStore.getState();
-    if (!loggedIn) {
-      throw new UnauthorizedError();
-    }
-    return <ProfilePage/>;
-  },
+	"/": HomePage,
+	"/login": () => {
+		const { loggedIn } = globalStore.getState();
+		if (loggedIn) {
+			throw new ForbiddenError();
+		}
+		return <LoginPage />;
+	},
+	"/profile": () => {
+		const { loggedIn } = globalStore.getState();
+		if (!loggedIn) {
+			throw new UnauthorizedError();
+		}
+		return <ProfilePage />;
+	},
 });
 
 function logout() {
-  globalStore.setState({ currentUser: null, loggedIn: false });
-  router.push('/login');
-  userStorage.reset();
+	globalStore.setState({ currentUser: null, loggedIn: false });
+	router.push("/login");
+	userStorage.reset();
 }
 
 function handleError(error) {
-  globalStore.setState({ error });
+	globalStore.setState({ error });
 }
 
 // 초기화 함수
 function render() {
-  const $root = document.querySelector('#root');
+	const $root = document.querySelector("#root");
 
-  try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else{
-      $root.appendChild($app);
-    }
-  } catch (error) {
-    if (error instanceof ForbiddenError) {
-      router.push("/");
-      return;
-    }
-    if (error instanceof UnauthorizedError) {
-      router.push("/login");
-      return;
-    }
+	try {
+		renderElement(<App targetPage={router.getTarget()} />, $root);
+	} catch (error) {
+		if (error instanceof ForbiddenError) {
+			router.push("/");
+			return;
+		}
+		if (error instanceof UnauthorizedError) {
+			router.push("/login");
+			return;
+		}
 
-    console.error(error);
+		console.error(error);
 
-    // globalStore.setState({ error });
-  }
-  registerGlobalEvents();
+		// globalStore.setState({ error });
+	}
+	registerGlobalEvents();
 }
 
 function main() {
-  router.subscribe(render);
-  globalStore.subscribe(render);
-  window.addEventListener('error', handleError);
-  window.addEventListener('unhandledrejection', handleError);
+	router.subscribe(render);
+	globalStore.subscribe(render);
+	window.addEventListener("error", handleError);
+	window.addEventListener("unhandledrejection", handleError);
 
-  addEvent('click', '[data-link]', (e) => {
-    e.preventDefault();
-    router.push(e.target.href.replace(window.location.origin, ''));
-  });
+	addEvent("click", "[data-link]", (e) => {
+		e.preventDefault();
+		router.push(e.target.href.replace(window.location.origin, ""));
+	});
 
-  addEvent('click', '#logout', (e) => {
-    e.preventDefault();
-    logout();
-  });
+	addEvent("click", "#logout", (e) => {
+		e.preventDefault();
+		logout();
+	});
 
-  addEvent('click', '#error-boundary', (e) => {
-    e.preventDefault();
-    globalStore.setState({ error: null });
-  });
+	addEvent("click", "#error-boundary", (e) => {
+		e.preventDefault();
+		globalStore.setState({ error: null });
+	});
 
-  render();
+	render();
 }
 
 main();

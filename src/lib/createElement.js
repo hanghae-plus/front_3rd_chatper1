@@ -7,13 +7,16 @@
 //    - vNode.type에 해당하는 요소를 생성
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
+
+import { createVNode } from './createVNode';
+
 export function createElement(vNode) {
 
-  if (typeof vNode === 'string' || typeof vNode === 'number') {
+  if(typeof vNode === 'string' || typeof vNode === 'number'){
     return document.createTextNode(vNode);
   }
 
-  if (!vNode) {
+  if(!vNode){
     return document.createTextNode('');
   }
 
@@ -22,36 +25,34 @@ export function createElement(vNode) {
     vNode.forEach(child => fragment.appendChild(createElement(child)));
     return fragment;
   }
-
-    // 함수 컴포넌트를 처리해야 한다 테스트에 대한 코드 추가할 부분
-
-  if (typeof vNode === 'object' && vNode.type) {
-    const element = document.createElement(vNode.type);
-
-    if (vNode.props) {
-      Object.keys(vNode.props).forEach(prop => {
-        if (prop === 'children') {
-
-          if (Array.isArray(vNode.props.children)) {
-            vNode.props.children.forEach(child => {
-              element.appendChild(createElement(child));
-            });
-          } else {
-            element.appendChild(createElement(vNode.props.children));
-          }
-        } else if (prop === 'onClick') {
-          element.addEventListener('click', vNode.props[prop]);
-        }
-        else {
-          element[prop] = vNode.props[prop];
-        }
-      });
-    }
-
-    return element;
+  
+  if (typeof vNode.type === 'function') {
+    return createElement(vNode.type(vNode.props || {}))
   }
 
-  return {};
+  const element = document.createElement(vNode.type);
+
+  if (vNode.props) {
+    Object.entries(vNode.props).forEach(([key, value]) => {
+      if(key.startsWith('on') && typeof value === 'function') {
+        element.addEventListener(key.slice(2).toLowerCase(), value);
+      }else if (key === 'className') {
+        element.className = value;
+      }else if (key === 'style' && typeof value === 'object') {
+        Object.assign(element.style, value);
+      }else {
+        element.setAttribute(key, value);
+      }
+    });
+  }
+
+  if (vNode.children) {
+    const fragment = document.createDocumentFragment();
+    vNode.children.forEach(child => {
+      fragment.appendChild(createElement(child));
+    })
+    element.appendChild(fragment);
+  }
+
+  return element
 }
-
-

@@ -27,28 +27,28 @@ export function createElement(vNode) {
   }
 
   if (typeof vNode.type === "function") {
-    return createElement(vNode.type(vNode.prop || {}));
+    return createElement(vNode.type(vNode.props || {}));
   }
 
   const domElement = document.createElement(vNode.type);
 
   if (vNode.props) {
-    for (let [key, value] of Object.entries(vNode.props)) {
+    Object.keys(vNode.props).forEach((key) => {
+      const value = vNode.props[key];
       if (key.startsWith("on") && typeof value === "function") {
-        document.addEventListener(key.slice(2).toLowerCase(), value);
+        const event = key.slice(2).toLowerCase();
+        domElement.addEventListener(event, value);
       } else if (key === "className") {
-        document.className = value;
+        domElement.className = value;
       } else {
         domElement.setAttribute(key, value);
       }
-    }
-  }
-
-  if (vNode.children) {
-    vNode.children.forEach((child) => {
-      domElement.appendChild(createElement(child));
     });
   }
+
+  vNode.children.forEach((child) =>
+    domElement.appendChild(createElement(child))
+  );
 
   return domElement;
 }

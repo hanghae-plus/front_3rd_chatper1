@@ -9,33 +9,46 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 export function createElement(vNode) {
 
-  if(typeof vNode === 'string' || typeof vNode === 'number'){
+  if (typeof vNode === 'string' || typeof vNode === 'number') {
     return document.createTextNode(vNode);
   }
 
-  if(!vNode){
+  if (!vNode) {
     return document.createTextNode('');
   }
 
-  if(Array.isArray(vNode)){
+  if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment();
     vNode.forEach(child => fragment.appendChild(createElement(child)));
     return fragment;
   }
 
-  if (typeof vNode === 'object' && vNode.type) {
-    const element = document.createElement(vNode.type); 
+    // 함수 컴포넌트를 처리해야 한다 테스트에 대한 코드 추가할 부분
 
-    if (vNode.props && Array.isArray(vNode.props.children)) {
-      vNode.props.children.forEach(child => {
-        element.appendChild(createElement(child)); 
+  if (typeof vNode === 'object' && vNode.type) {
+    const element = document.createElement(vNode.type);
+
+    if (vNode.props) {
+      Object.keys(vNode.props).forEach(prop => {
+        if (prop === 'children') {
+
+          if (Array.isArray(vNode.props.children)) {
+            vNode.props.children.forEach(child => {
+              element.appendChild(createElement(child));
+            });
+          } else {
+            element.appendChild(createElement(vNode.props.children));
+          }
+        } else {
+          element[prop] = vNode.props[prop];
+        }
       });
-    } else if (vNode.props && vNode.props.children) {
-      element.appendChild(createElement(vNode.props.children));
     }
 
     return element;
   }
 
-  return {}
+  return {};
 }
+
+

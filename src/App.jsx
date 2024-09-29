@@ -4,7 +4,7 @@ import { globalStore } from './stores/index.js';
 import { NotFoundPage } from './pages/index.js';
 
 export const App = ({ targetPage }) => {
-  const PageComponent = targetPage ?? <NotFoundPage />;
+  const PageComponent = targetPage ?? NotFoundPage;
   const error = globalStore.getState().error;
 
   return (

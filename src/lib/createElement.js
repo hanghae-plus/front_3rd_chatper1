@@ -32,8 +32,6 @@ export function createElement(vNode) {
         $el.addEventListener('click', value);
       }
 
-      console.log(attr, 'attr');
-
       if (attr === 'className') {
         attr = 'class';
       }
@@ -46,8 +44,6 @@ export function createElement(vNode) {
     });
 
   (vNode.children || []).map(createElement).forEach((child) => $el.appendChild(child));
-
-  console.log($el, '$el');
 
   // 여기에 구현하세요
   return $el;

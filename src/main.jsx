@@ -1,5 +1,5 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from './lib';
+import { createElement, createRouter, createStorage, createVNode, renderElement } from './lib';
 import { HomePage, LoginPage, NotFoundPage, ProfilePage } from './pages';
 import { globalStore } from './stores';
 import { ForbiddenError, UnauthorizedError } from './errors';
@@ -35,6 +35,32 @@ function handleError(error) {
   globalStore.setState({ error });
 }
 
+function login() {
+  const form = document.getElementById('login-form');
+  const formData = new FormData(form);
+  const username = formData.get('username');
+
+  if (!username) return alert('이메일을 입력해 주세요.');
+
+  userStorage.set({ username, email: '', bio: '' });
+  globalStore.setState({ loggedIn: true, currentUser: { username, email: '', bio: '' } });
+  router.push('/profile');
+}
+
+function profileUpdate() {
+  const form = document.getElementById('profile-form');
+  const formData = new FormData(form);
+  const username = formData.get('username');
+  const email = formData.get('email');
+  const bio = formData.get('bio');
+
+  console.log(username, email, bio);
+
+  userStorage.set({ username, email, bio });
+  globalStore.setState({ currentUser: { username, email, bio } });
+  alert('프로필이 업데이트되었습니다.');
+}
+
 // 초기화 함수
 function render() {
   const $root = document.querySelector('#root');
@@ -57,8 +83,6 @@ function render() {
     }
 
     console.error(error);
-    // $root.firstChild.replaceWith($app);
-    $root.appendChild(<NotFoundPage />);
 
     // globalStore.setState({ error });
   }
@@ -79,6 +103,16 @@ function main() {
   addEvent('click', '#logout', (e) => {
     e.preventDefault();
     logout();
+  });
+
+  addEvent('submit', '#login-form', (e) => {
+    e.preventDefault();
+    login();
+  });
+
+  addEvent('submit', '#profile-form', (e) => {
+    e.preventDefault();
+    profileUpdate();
   });
 
   addEvent('click', '#error-boundary', (e) => {

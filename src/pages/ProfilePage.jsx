@@ -1,8 +1,7 @@
 /** @jsx createVNode */
 import { createVNode } from '../lib';
 import { globalStore } from '../stores/index.js';
-import { NotFoundPage } from './NotFoundPage.jsx';
-import { HomePage } from './HomePage.jsx';
+import { Footer, Header, Navigation } from '../components/index.js';
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
@@ -11,6 +10,8 @@ export const ProfilePage = () => {
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">
       <div className="max-w-md w-full">
+        <Header />
+        <Navigation loggedIn={loggedIn} />
         <main className="p-4">
           <div className="bg-white p-8 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
@@ -46,7 +47,7 @@ export const ProfilePage = () => {
                   자기소개
                 </label>
                 <textarea id="bio" name="bio" rows="4" className="w-full p-2 border rounded">
-                  ${bio}
+                  {bio}
                 </textarea>
               </div>
               <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded font-bold">
@@ -55,6 +56,7 @@ export const ProfilePage = () => {
             </form>
           </div>
         </main>
+        <Footer />
       </div>
     </div>
   );

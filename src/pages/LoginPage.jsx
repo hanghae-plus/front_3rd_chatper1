@@ -2,6 +2,10 @@
 import { createVNode } from '../lib';
 
 export const LoginPage = () => {
+  const handleLogin = () => {
+    const form = document.getElementById('login-form');
+  };
+
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -10,6 +14,7 @@ export const LoginPage = () => {
           <input
             type="text"
             id="username"
+            name="username"
             placeholder="사용자 이름"
             className="w-full p-2 mb-4 border rounded"
             required

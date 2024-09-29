@@ -9,6 +9,23 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
 export function createElement(vNode) {
-  // 여기에 구현하세요
-  return {};
+  if (!vNode) return document.createTextNode("");
+
+  if (typeof vNode === "string" || typeof vNode === "number")
+    return document.createTextNode(vNode);
+
+  const { type, props, children = [] } = vNode;
+
+  const element = document.createElement(type);
+
+  props &&
+    Object.keys(props).forEach((key) => {
+      element.setAttribute(key, props[key]);
+    });
+
+  children.forEach((child) => {
+    element.appendChild(createElement(child));
+  });
+
+  return element;
 }

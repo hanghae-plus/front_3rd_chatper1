@@ -13,7 +13,6 @@ function processVNode() {
 
 // TODO: updateAttributes 함수 구현
 function updateAttributes(newNode, oldNode) {
-	console.log("확인", newNode, oldNode);
 	// DOM 요소의 속성을 업데이트합니다.
 	// - 이벤트 리스너, className, style 등 특별한 경우 처리
 	//   <이벤트 리스너 처리>
@@ -64,15 +63,14 @@ function updateAttributes(newNode, oldNode) {
 }
 
 // TODO: updateElement 함수 구현
-function updateElement(newNode, parent) {
-	const oldNode = parent._vNode;
+function updateElement(newNode, oldNode, $parent, index = 0) {
 	// 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
 	// TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
-	if (!newNode) return parent.removeChild;
+	if (!newNode) return $parent.removeChild($parent.childNodes[index]);
 	// 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
 	// TODO: newNode만 존재하는 경우, 새 노드를 생성하여 DOM에 추가
 	if (!oldNode) {
-		return parent.appendChild(createElement__v2(newNode));
+		return $parent.appendChild(createElement__v2(newNode));
 	}
 	// 3. 텍스트 노드 업데이트
 	// TODO: newNode와 oldNode가 둘 다 문자열 또는 숫자인 경우
@@ -82,14 +80,14 @@ function updateElement(newNode, parent) {
 		(typeof oldNode === "number" || typeof oldNode === "string")
 	) {
 		if (newNode !== oldNode) {
-			return parent.replaceChild(createElement__v2(newNode), oldNode);
+			return $parent.replaceChild(createElement__v2(newNode), $parent.childNodes[index]);
 		}
 	}
 	// 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
 	// TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
 	if (typeof newNode !== typeof oldNode) {
-		parent.removeChild(oldNode);
-		return parent.appendChild(createElement__v2(newNode));
+		$parent.removeChild(oldNode);
+		return $parent.appendChild(createElement__v2(newNode));
 	}
 	// 5. 같은 타입의 노드 업데이트
 	// 5-1. 속성 업데이트
@@ -99,7 +97,11 @@ function updateElement(newNode, parent) {
 	// 5-2. 자식 노드 재귀적 업데이트
 	// TODO: newNode와 oldNode의 자식 노드들을 비교하며 재귀적으로 updateElement 호출
 	// HINT: 최대 자식 수를 기준으로 루프를 돌며 업데이트
-
+	const newLength = newNode.children.length;
+	const oldLength = oldNode.children.length;
+	for (let i = 0; i < Math.max(newLength, oldLength); i++) {
+		updateElement(newNode.children[i], oldNode.children[i], $parent.childNodes[index], i);
+	}
 	// 5-3. 불필요한 자식 노드 제거
 	// TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
 }
@@ -109,10 +111,8 @@ export function renderElement(vNode, container) {
 	// 최상위 수준의 렌더링 함수입니다.
 	// - 이전 vNode와 새로운 vNode를 비교하여 업데이트
 	// - 최초 렌더링과 업데이트 렌더링 처리
-	// updateElement(vNode, container);
-	// 이전 vNode와 새로운 vNode를 비교하여 업데이트
 
-	updateElement(vNode, container);
+	updateElement(vNode, container._vNode, container);
 	container._vNode = vNode;
 
 	// 이벤트 위임 설정

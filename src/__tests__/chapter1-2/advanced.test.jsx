@@ -86,6 +86,12 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
       expect(container.innerHTML).toBe('<div id="test" class="new">Hello</div>');
       expect(container.querySelector('div')).toBe(originalDiv); // 같은 요소 참조 확인
     });
+    it('요소의 inline style 속성이 객체일 경우 string으로 처리하여 반영한다.', () => {
+      const initialVNode = <div style={{color: 'red', fontSize: 10, padding: '10px'}}>Hello</div>;
+      renderElement(initialVNode, container);
+      expect(container.innerHTML).toBe('<div style="color: red; font-size: 10px; padding: 10px;">Hello</div>');
+    });
+
 
     it('요소의 타입이 변경되었을 때 새로운 요소를 생성해야 한다', () => {
       const initialVNode = <div>Hello</div>;

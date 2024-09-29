@@ -30,8 +30,19 @@ export function createElement(vNode) {
     if (key.startsWith('on') && typeof value === 'function') {
       element.addEventListener(key.slice(2).toLowerCase(), value);
     } else {
-      const _key = key === 'className' ? 'class' : key;
-      element.setAttribute(_key, value);
+      if (key === 'style') {
+        const ObjStyleToStringStyle = Object.entries(value)
+          .reduce((acc, [key, value]) => {
+            const _key = key.replaceAll(/([A-Z])/g, '-$1').toLowerCase();
+            const _value = typeof value === 'string' ? value : `${value}px`;
+            return acc + `${_key}: ${_value}; `;
+          }, '')
+          .trim();
+        element.setAttribute(key, ObjStyleToStringStyle);
+      } else {
+        const _key = key === 'className' ? 'class' : key;
+        element.setAttribute(_key, value);
+      }
     }
   }
 

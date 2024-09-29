@@ -28,6 +28,7 @@ function handleEvent(event) {
 // TODO: addEvent 함수 구현
 export function addEvent(element, eventType, handler) {
   // 1. eventMap에 이벤트 타입과 요소, 핸들러 정보 저장
+  eventMap.push({element, eventType, handler});
   // 2. 필요한 경우 루트 요소에 새 이벤트 리스너 추가
   // 이 함수를 통해 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
 }

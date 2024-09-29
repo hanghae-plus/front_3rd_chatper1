@@ -3,18 +3,37 @@ import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { createElement__v2 } from "./createElement__v2.js";
 
 // TODO: processVNode 함수 구현
-function processVNode() {
+function processVNode(vNode) {
   // vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
   // - null, undefined, boolean 값 처리
+  if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
+    return ''; // 빈 문자열 반환
+  }
+
   // - 문자열과 숫자를 문자열로 변환
-  // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
+  if(typeof vNode === 'string' || typeof vNode === 'number'){
+    return vNode.toString();
+  }
+
+  const {type, props, children = []} = vNode;
+  // - 함수형 컴포넌트 처리
+  if(typeof type === 'function') {
+    const childVNode = type(props);
+    return processVNode(childVNode);
+  }
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
+  return {
+    ...vNode,
+    children: children.map(child => processVNode(child)).filter(Boolean)
+  }
 }
 
 // TODO: updateAttributes 함수 구현
-function updateAttributes() {
+function updateAttributes(target, newProps, oldProps) {
   // DOM 요소의 속성을 업데이트합니다.
   // - 이전 props에서 제거된 속성 처리
+
+
   // - 새로운 props의 속성 추가 또는 업데이트
   // - 이벤트 리스너, className, style 등 특별한 경우 처리
   //   <이벤트 리스너 처리>
@@ -24,23 +43,42 @@ function updateAttributes() {
 }
 
 // TODO: updateElement 함수 구현
-function updateElement() {
+function updateElement(parent, newNode, oldNode, index = 0) {
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
+  if(!newNode && oldNode) {
+    parent.removeChild(parent.childNodes[index]);
+    return;
+  }
 
   // 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
   // TODO: newNode만 존재하는 경우, 새 노드를 생성하여 DOM에 추가
+  if(newNode && !oldNode) {
+    parent.appendChild(createElement__v2(newNode));
+    return;
+  }
 
   // 3. 텍스트 노드 업데이트
   // TODO: newNode와 oldNode가 둘 다 문자열 또는 숫자인 경우
-  // TODO: 내용이 다르면 텍스트 노드 업데이트
+  const isTextNode = (node) => typeof node === 'string' || typeof node === 'number';
+  if(isTextNode(newNode) && isTextNode(oldNode)) {
+    // TODO: 내용이 다르면 텍스트 노드 업데이트
+    if(newNode !== oldNode){
+      parent.childNodes[index].nodeValue = newNode;
+    }
+    return;
+  }
 
   // 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
   // TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
+  if(newNode.type !== oldNode.type) {
+    parent.replaceChild(createElement__v2(newNode), parent.childNodes[index]);
+  }
 
   // 5. 같은 타입의 노드 업데이트
   // 5-1. 속성 업데이트
   // TODO: updateAttributes 함수를 호출하여 속성 업데이트
+  // updateAttributes()
 
   // 5-2. 자식 노드 재귀적 업데이트
   // TODO: newNode와 oldNode의 자식 노드들을 비교하며 재귀적으로 updateElement 호출

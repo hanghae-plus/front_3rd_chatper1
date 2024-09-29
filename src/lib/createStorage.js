@@ -4,4 +4,4 @@ export const createStorage = (key, storage = window.localStorage) => {
   const reset = () => storage.removeItem(key);
 
   return { get, set, reset };
-}
+};

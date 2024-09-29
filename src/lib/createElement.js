@@ -7,6 +7,7 @@
 //    - vNode.type에 해당하는 요소를 생성
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
+import { createVNode } from './createVNode';
 
 export function createElement(vNode) {
 
@@ -79,7 +80,7 @@ function handleFunctionalComponent(vNode) {
 function createDOMElement(vNode) {
   const element = document.createElement(vNode.type);
   applyProps(element, vNode.props);
-
+  appendChildren(element, vNode.children);
   return element;
 }
 
@@ -105,6 +106,20 @@ function applyProps(element, props) {
       } else {
         element.setAttribute(key, value);
       }
+    });
+  }
+}
+
+/**
+  * @function appendChildren
+  * @terms vNode.children을 부모 DOM 요소에 추가
+  * @desc 각 자식 vNode에 대해 createElement를 호출하여 반환된 DOM 노드를 부모 요소에 appendChild 메소드를 사용하여 추가
+*/
+
+function appendChildren(element, children) {
+  if (children) {
+    children.forEach(child => {
+      element.appendChild(createElement(child));
     });
   }
 }

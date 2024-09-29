@@ -12,7 +12,7 @@ function processVNode() {
 }
 
 // TODO: updateAttributes 함수 구현
-function updateAttributes(newNode, oldNode) {
+function updateAttributes($element, newNode, oldNode) {
 	// DOM 요소의 속성을 업데이트합니다.
 	// - 이벤트 리스너, className, style 등 특별한 경우 처리
 	//   <이벤트 리스너 처리>
@@ -22,41 +22,42 @@ function updateAttributes(newNode, oldNode) {
 
 	// - 이전 props에서 제거된 속성 처리
 	Object.entries(oldNode.props || {}).forEach(([key, value]) => {
-		if (!key in newNode.props) {
+		if (!(key in newNode.props)) {
 			if (key.startsWith("on")) {
 				const eventType = key.toLowerCase().substring(2);
-				removeEvent(oldNode, eventType, value);
+				removeEvent($element, eventType, value);
 			} else if (key === "className") {
-				removeEvent(oldNode, "class", value);
+				removeEvent($element, "class", value);
 			} else {
-				removeEvent(oldNode, key, value);
+				removeEvent($element, key, value);
 			}
 		}
 	});
 	// - 새로운 props의 속성 추가 또는 업데이트
 	Object.entries(newNode.props || {}).forEach(([key, value]) => {
 		// 추가
-		if (!key in oldNode.props) {
+		if (!(key in oldNode.props)) {
 			if (key.startsWith("on")) {
 				const eventType = key.toLowerCase().substring(2);
-				addEvent(oldNode, eventType, value);
+				addEvent($element, eventType, value);
 			} else if (key === "className") {
-				addEvent(oldNode, "class", value);
+				addEvent($element, "class", value);
 			} else {
-				addEvent(oldNode, key, value);
+				addEvent($element, key, value);
 			}
 		} else {
 			// 업데이트
 			if (key.startsWith("on")) {
 				const eventType = key.toLowerCase().substring(2);
-				removeEvent(oldNode, eventType, oldNode.props[key]);
-				addEvent(oldNode, eventType, value);
+				removeEvent($element, eventType, oldNode.props[key]);
+				addEvent($element, eventType, value);
 			} else if (key === "className") {
-				removeEvent(oldNode, "class", oldNode.props[key]);
-				addEvent(oldNode, "class", value);
+				console.log("업데이트", $element, key, value);
+				removeEvent($element, "class", oldNode.props[key]);
+				addEvent($element, "class", value);
 			} else {
-				removeEvent(oldNode, key, oldNode.props[key]);
-				addEvent(oldNode, key, value);
+				removeEvent($element, key, oldNode.props[key]);
+				addEvent($element, key, value);
 			}
 		}
 	});
@@ -82,6 +83,7 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 		if (newNode !== oldNode) {
 			return $parent.replaceChild(createElement__v2(newNode), $parent.childNodes[index]);
 		}
+		return;
 	}
 	// 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
 	// TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
@@ -89,10 +91,11 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 		$parent.removeChild(oldNode);
 		return $parent.appendChild(createElement__v2(newNode));
 	}
+
 	// 5. 같은 타입의 노드 업데이트
 	// 5-1. 속성 업데이트
 	// TODO: updateAttributes 함수를 호출하여 속성 업데이트
-	updateAttributes(newNode, oldNode);
+	updateAttributes($parent.childNodes[index], newNode, oldNode);
 
 	// 5-2. 자식 노드 재귀적 업데이트
 	// TODO: newNode와 oldNode의 자식 노드들을 비교하며 재귀적으로 updateElement 호출

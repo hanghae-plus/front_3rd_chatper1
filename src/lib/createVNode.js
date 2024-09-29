@@ -1,8 +1,10 @@
-// TODO: createVNode 함수 구현
-// 1. type, props, ...children을 매개변수로 받는 함수를 작성하세요.
-// 2. 반환값은 { type, props, children } 형태의 객체여야 합니다.
-// 3. children은 평탄화(flat)되어야 하며, falsy 값은 필터링되어야 합니다.
-// 4. Infinity를 사용하여 모든 깊이의 배열을 평탄화하세요.
+/**
+  * @function createVNode
+  * @terms 가상 DOM 노드(VNode) 생성
+  * @desc 타입(type), 속성(props), 그리고 자식 요소들(...children)을 받아서 가상 DOM 노드를 생성
+  * 반환되는 객체는 'type', 'props', 그리고 'children' 속성을 포함
+  * 'children'은 모든 중첩된 배열을 평탄화(flat)하고 falsy 값(null, undefined, false, 0, '')을 제거하여 구성
+*/
 
 export function createVNode(type, props = {}, ...children) {
   return { type, props, children: children.flat(Infinity).filter(Boolean) };

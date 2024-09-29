@@ -38,6 +38,7 @@ export function createElement(vNode) {
         element.addEventListener(key.slice(2).toLowerCase(), value);
       }else if (key === 'className') {
         element.className = value;
+      //className이 아닌 style로 들어갈 때 객체로 들어가서 해당 부분 추가
       }else if (key === 'style' && typeof value === 'object') {
         Object.assign(element.style, value);
       }else {

@@ -5,7 +5,7 @@ import { globalStore } from './stores';
 import { ForbiddenError, UnauthorizedError } from './errors';
 import { userStorage } from './storages';
 import { addEvent, registerGlobalEvents } from './utils';
-import { App } from './App';
+import App from './App';
 
 const router = createRouter({
   '/': HomePage,
@@ -40,9 +40,13 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
-    console.log($root.hasChildNodes());
+    const newVNode = createVNode(App, { targetPage: router.getTarget() });
+
+    // 가상 DOM을 실제 DOM으로 변환
+    const $app = createElement(newVNode);
+
     console.log('app', $app);
+
     if ($root.hasChildNodes()) {
       $root.firstChild.replaceWith($app);
     } else {

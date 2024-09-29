@@ -10,7 +10,8 @@
     "test": "vitest",
     "test:basic": "vitest basic",
     "test:advanced": "vitest advanced",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "prettier": "prettier --write ."
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -20,6 +21,7 @@
     "@vitejs/plugin-react": "^4.3.1",
     "@vitest/ui": "^2.1.1",
     "jsdom": "^25.0.0",
+    "prettier": "^3.3.3",
     "vite": "^5.1.0",
     "vitest": "^2.1.1"
   }

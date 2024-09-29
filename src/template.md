@@ -41,16 +41,32 @@ const Footer = () => `
 ```javascript
 const getNavItemClass = (path) => {
   const currentPath = window.location.pathname;
-  return currentPath === path ? 'text-blue-600 font-bold' : 'text-gray-600';
-}
+  return currentPath === path ? "text-blue-600 font-bold" : "text-gray-600";
+};
 
 const Navigation = ({ loggedIn }) => `
   <nav class="bg-white shadow-md p-2 sticky top-14">
     <ul class="flex justify-around">
-      <li><a href="/" class="${getNavItemClass('/')}" data-link>홈</a></li>
-      ${!loggedIn ? `<li><a href="/login" class="${getNavItemClass('/login')}" data-link>로그인</a></li>` : ''}
-      ${loggedIn ? `<li><a href="/profile" class="${getNavItemClass('/profile')}" data-link>프로필</a></li>` : ''}
-      ${loggedIn ? `<li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>` : ''}
+      <li><a href="/" class="${getNavItemClass("/")}" data-link>홈</a></li>
+      ${
+        !loggedIn
+          ? `<li><a href="/login" class="${getNavItemClass(
+              "/login"
+            )}" data-link>로그인</a></li>`
+          : ""
+      }
+      ${
+        loggedIn
+          ? `<li><a href="/profile" class="${getNavItemClass(
+              "/profile"
+            )}" data-link>프로필</a></li>`
+          : ""
+      }
+      ${
+        loggedIn
+          ? `<li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>`
+          : ""
+      }
     </ul>
   </nav>
 `;
@@ -74,9 +90,9 @@ const HomePage = () => {
         ${NotFoundPage({ loggedIn })}
         
         <main class="p-4">
-          ${loggedIn ? NotFoundPage() : ''}
+          ${loggedIn ? NotFoundPage() : ""}
           <div id="posts-container" class="space-y-4">
-            ${posts.map(ProfilePage).join('')}
+            ${posts.map(ProfilePage).join("")}
           </div>
         </main>
         
@@ -84,7 +100,7 @@ const HomePage = () => {
       </div>
     </div>
   `;
-}
+};
 ```
 
 ```javascript
@@ -121,13 +137,12 @@ const NotFoundPage = () => `
     </div>
   </main>
 `;
-
 ```
 
 ```javascript
 const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
-  const { username = '', email = '', bio = '' } = currentUser ?? {}
+  const { username = "", email = "", bio = "" } = currentUser ?? {};
   return `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
@@ -157,30 +172,37 @@ const ProfilePage = () => {
       </div>
     </div>
   `;
-}
+};
 ```
 
 ```javascript
 function App({ targetPage }) {
   const PageComponent = targetPage ?? NotFoundPage;
   const error = globalStore.getState().error;
-  
+
   return `
     <div>
       ${PageComponent()}
-      ${error ? `
+      ${
+        error
+          ? `
         <div id="error-boundary" class="fixed bottom-4 left-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 hover:opacity-75" role="alert">
           <div class="flex justify-between items-center">
             <div>
               <strong class="font-bold">오류 발생!</strong>
-              <span class="block sm:inline ml-1">${error.message || '알 수 없는 오류가 발생했습니다.'}</span>
+              <span class="block sm:inline ml-1">${
+                error.message || "알 수 없는 오류가 발생했습니다."
+              }</span>
             </div>
             <button class="text-red-700 hover:text-red-900 font-semibold">
               &times;
             </button>
           </div>
         </div>
-      `  : ''}
+      `
+          : ""
+      }
     </div>
   `;
 }
+```

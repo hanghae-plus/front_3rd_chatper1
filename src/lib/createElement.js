@@ -10,5 +10,45 @@
 
 export function createElement(vNode) {
   // 여기에 구현하세요
-  return {}
+  if (!vNode) {
+    return document.createTextNode("");
+  }
+
+  if (typeof vNode === "string" || typeof vNode === "number") {
+    return document.createTextNode(vNode);
+  }
+
+  if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((child) => {
+      fragment.appendChild(createElement(child));
+    });
+    return fragment;
+  }
+
+  if (typeof vNode.type === "function") {
+    return createElement(vNode.type(vNode.prop || {}));
+  }
+
+  const domElement = document.createElement(vNode.type);
+
+  if (vNode.props) {
+    for (let [key, value] of Object.entries(vNode.props)) {
+      if (key.startsWith("on") && typeof value === "function") {
+        document.addEventListener(key.slice(2).toLowerCase(), value);
+      } else if (key === "className") {
+        document.className = value;
+      } else {
+        domElement.setAttribute(key, value);
+      }
+    }
+  }
+
+  if (vNode.children) {
+    vNode.children.forEach((child) => {
+      domElement.appendChild(createElement(child));
+    });
+  }
+
+  return domElement;
 }

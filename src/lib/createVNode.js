@@ -6,5 +6,12 @@
 
 export function createVNode(type, props, ...children) {
   // 여기에 구현하세요
-  return {}
+  const filteredChildren = children
+    .flat(Infinity)
+    .filter((child) => child != null && child !== false);
+  return {
+    type,
+    props: props || {},
+    children: filteredChildren,
+  };
 }

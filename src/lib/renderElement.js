@@ -19,27 +19,29 @@ function updateAttributes($element, newNode, oldNode) {
 	//     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
 	//     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
 	//     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
+	oldNode.props = oldNode.props || {};
+	newNode.props = newNode.props || {};
 
 	// - 이전 props에서 제거된 속성 처리
-	Object.entries(oldNode.props || {}).forEach(([key, value]) => {
+	Object.entries(oldNode.props).forEach(([key, value]) => {
 		if (!(key in newNode.props)) {
 			if (key.startsWith("on")) {
 				const eventType = key.toLowerCase().substring(2);
-				removeEvent($element, eventType, value);
+				$element.removeEventListener(eventType, value);
 			} else if (key === "className") {
-				removeEvent($element, "class", value);
+				removeEvent($element, "class");
 			} else {
-				removeEvent($element, key, value);
+				removeEvent($element, key);
 			}
 		}
 	});
 	// - 새로운 props의 속성 추가 또는 업데이트
-	Object.entries(newNode.props || {}).forEach(([key, value]) => {
+	Object.entries(newNode.props).forEach(([key, value]) => {
 		// 추가
 		if (!(key in oldNode.props)) {
 			if (key.startsWith("on")) {
 				const eventType = key.toLowerCase().substring(2);
-				addEvent($element, eventType, value);
+				$element.addEventListener(eventType, value);
 			} else if (key === "className") {
 				addEvent($element, "class", value);
 			} else {
@@ -49,13 +51,13 @@ function updateAttributes($element, newNode, oldNode) {
 			// 업데이트
 			if (key.startsWith("on")) {
 				const eventType = key.toLowerCase().substring(2);
-				removeEvent($element, eventType, oldNode.props[key]);
-				addEvent($element, eventType, value);
+				$element.removeEventListener(eventType, value);
+				$element.addEventListener(eventType, value);
 			} else if (key === "className") {
-				removeEvent($element, "class", oldNode.props[key]);
+				removeEvent($element, "class");
 				addEvent($element, "class", value);
 			} else {
-				removeEvent($element, key, oldNode.props[key]);
+				removeEvent($element, key);
 				addEvent($element, key, value);
 			}
 		}
@@ -106,6 +108,11 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 	}
 	// 5-3. 불필요한 자식 노드 제거
 	// TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
+	if (newLength < oldLength) {
+		for (let i = newLength; i < oldLength; i++) {
+			$parent.childNodes[index].removeChild($parent.childNodes[index].lastChild);
+		}
+	}
 }
 
 // TODO: renderElement 함수 구현
@@ -113,6 +120,8 @@ export function renderElement(vNode, container) {
 	// 최상위 수준의 렌더링 함수입니다.
 	// - 이전 vNode와 새로운 vNode를 비교하여 업데이트
 	// - 최초 렌더링과 업데이트 렌더링 처리
+	// console.log("vNode", vNode);
+	// console.log("_vNode", container._vNode);
 
 	updateElement(vNode, container._vNode, container);
 	container._vNode = vNode;

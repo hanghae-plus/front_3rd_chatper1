@@ -39,7 +39,10 @@ export function createElement(vNode) {
           } else {
             element.appendChild(createElement(vNode.props.children));
           }
-        } else {
+        } else if (prop === 'onClick') {
+          element.addEventListener('click', vNode.props[prop]);
+        }
+        else {
           element[prop] = vNode.props[prop];
         }
       });

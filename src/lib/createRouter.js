@@ -4,7 +4,6 @@ export const createRouter = (routes) => {
   const { subscribe, notify } = createObserver();
 
   const getTarget = () => {
-    console.log(routes[window.location.pathname])
     return routes[window.location.pathname]
   }
 

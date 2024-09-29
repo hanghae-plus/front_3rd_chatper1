@@ -35,17 +35,13 @@ function handleError(error) {
   globalStore.setState({ error });
 }
 
-// 초기화 함수
+// // 초기화 함수
 function render() {
   const $root = document.querySelector('#root');
-
+  
   try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else{
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()}/>,$root);
+    
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");
@@ -57,10 +53,8 @@ function render() {
     }
 
     console.error(error);
-
-    // globalStore.setState({ error });
   }
-  registerGlobalEvents();
+//   registerGlobalEvents();
 }
 
 function main() {
@@ -69,20 +63,20 @@ function main() {
   window.addEventListener('error', handleError);
   window.addEventListener('unhandledrejection', handleError);
 
-  addEvent('click', '[data-link]', (e) => {
-    e.preventDefault();
-    router.push(e.target.href.replace(window.location.origin, ''));
-  });
+  // addEvent('click', '[data-link]', (e) => {
+  //   e.preventDefault();
+  //   router.push(e.target.href.replace(window.location.origin, ''));
+  // });
 
-  addEvent('click', '#logout', (e) => {
-    e.preventDefault();
-    logout();
-  });
+  // addEvent('click', '#logout', (e) => {
+  //   e.preventDefault();
+  //   logout();
+  // });
 
-  addEvent('click', '#error-boundary', (e) => {
-    e.preventDefault();
-    globalStore.setState({ error: null });
-  });
+  // addEvent('click', '#error-boundary', (e) => {
+  //   e.preventDefault();
+  //   globalStore.setState({ error: null });
+  // });
 
   render();
 }

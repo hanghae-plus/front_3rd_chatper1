@@ -13,6 +13,7 @@ const updateProfile = (profile) => {
 
 
 const onSubmit = (e) => {
+  e.preventDefault(); 
   const target = e.target;
   const formData = new FormData(target);
   const updatedProfile = Object.fromEntries(formData);

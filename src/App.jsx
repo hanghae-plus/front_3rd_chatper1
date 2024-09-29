@@ -1,5 +1,5 @@
 /** @jsx createVNode */
-import{ createElement, createVNode } from "./lib";
+import{ renderElement, createVNode } from "./lib";
 import {NotFoundPage} from "./pages/NotFoundPage"
 import { globalStore } from "./stores";
 

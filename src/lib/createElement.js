@@ -14,6 +14,8 @@ export function createElement(vNode) {
   if (typeof vNode === "string" || typeof vNode === "number")
     return document.createTextNode(vNode);
 
+  if (typeof vNode.type === "function") return createElement(vNode.type());
+
   const { type, props, children = [] } = vNode;
 
   const element = document.createElement(type);

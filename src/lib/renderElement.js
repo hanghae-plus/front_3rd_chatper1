@@ -52,7 +52,6 @@ function updateAttributes($element, newNode, oldNode) {
 				removeEvent($element, eventType, oldNode.props[key]);
 				addEvent($element, eventType, value);
 			} else if (key === "className") {
-				console.log("업데이트", $element, key, value);
 				removeEvent($element, "class", oldNode.props[key]);
 				addEvent($element, "class", value);
 			} else {
@@ -87,8 +86,8 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 	}
 	// 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
 	// TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
-	if (typeof newNode !== typeof oldNode) {
-		$parent.removeChild(oldNode);
+	if (newNode.type !== oldNode.type) {
+		$parent.removeChild($parent.childNodes[index]);
 		return $parent.appendChild(createElement__v2(newNode));
 	}
 

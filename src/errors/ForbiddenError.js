@@ -1,8 +1,7 @@
 export class ForbiddenError extends Error {
-  static MESSAGE = 'ForbiddenError';
+  static MESSAGE = "ForbiddenError";
 
   constructor() {
     super(ForbiddenError.MESSAGE);
   }
-
 }

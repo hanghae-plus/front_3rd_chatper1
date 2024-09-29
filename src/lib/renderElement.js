@@ -27,11 +27,11 @@ function updateAttributes($element, newNode, oldNode) {
 		if (!(key in newNode.props)) {
 			if (key.startsWith("on")) {
 				const eventType = key.toLowerCase().substring(2);
-				$element.removeEventListener(eventType, value);
+				removeEvent($element, eventType, value);
 			} else if (key === "className") {
-				removeEvent($element, "class");
+				$element.removeAttribute("class");
 			} else {
-				removeEvent($element, key);
+				$element.removeAttribute(key);
 			}
 		}
 	});
@@ -41,24 +41,24 @@ function updateAttributes($element, newNode, oldNode) {
 		if (!(key in oldNode.props)) {
 			if (key.startsWith("on")) {
 				const eventType = key.toLowerCase().substring(2);
-				$element.addEventListener(eventType, value);
+				addEvent($element, eventType, value);
 			} else if (key === "className") {
-				addEvent($element, "class", value);
+				$element.setAttribute("class", value);
 			} else {
-				addEvent($element, key, value);
+				$element.setAttribute(key, value);
 			}
 		} else {
 			// 업데이트
 			if (key.startsWith("on")) {
 				const eventType = key.toLowerCase().substring(2);
-				$element.removeEventListener(eventType, value);
-				$element.addEventListener(eventType, value);
+				removeEvent($element, eventType, value);
+				addEvent($element, eventType, value);
 			} else if (key === "className") {
-				removeEvent($element, "class");
-				addEvent($element, "class", value);
+				$element.removeAttribute("class");
+				$element.setAttribute("class", value);
 			} else {
-				removeEvent($element, key);
-				addEvent($element, key, value);
+				$element.removeAttribute(key);
+				$element.setAttribute(key, value);
 			}
 		}
 	});
@@ -129,4 +129,5 @@ export function renderElement(vNode, container) {
 	// 이벤트 위임 설정
 	// TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
 	// 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
+	setupEventListeners(container);
 }

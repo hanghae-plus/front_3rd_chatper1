@@ -27,7 +27,17 @@ export function createElement(vNode) {
 
   props &&
     Object.keys(props).forEach((key) => {
-      element.setAttribute(key, props[key]);
+      let _key = key;
+      switch (key) {
+        case "onClick":
+          element.addEventListener("click", props[key]);
+          break;
+        case "className":
+          _key = "class";
+          break;
+        default:
+      }
+      element.setAttribute(_key, props[key]);
     });
 
   children.forEach((child) => {

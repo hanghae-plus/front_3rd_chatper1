@@ -1,17 +1,13 @@
 // TODO: createElement 함수 구현
 
 export function createElement(vNode) {
-  // console.log('vNode',vNode)
-  if (vNode === null || vNode === undefined) {
-    return document.createDocumentFragment();
-  }
   // 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
   if(!vNode) {
     return document.createTextNode('');
 
   }
   // 2. vNode가 문자열이나 숫자면 텍스트 노드를 생성하여 반환합니다.
-  if (typeof vNode === 'string') {
+  if (typeof vNode === 'string' || typeof vNode === 'number') {
     return document.createTextNode(vNode);
   }
   
@@ -41,21 +37,23 @@ export function createElement(vNode) {
   Object.entries(vNode.props || {})
   .filter(([attr, value]) => value)
   .forEach(([attr, value]) => {
-    // 1. 이벤트 리스너 처리 (onClick, onChange 등)
+    // 5-1. 이벤트 리스너 처리 (onClick, onChange 등)
     if (attr.startsWith('on')) {
       const eventType = attr.slice(2).toLowerCase(); // 'onClick' -> 'click'
-      $el.addEventListener(eventType, value);
+      // $el.addEventListener(eventType, value);
+      $el.addEventListener(eventType, (e) => {
+        e.preventDefault(); // 기본 동작을 막음
+        value(e); // 원래의 이벤트 핸들러 실행
+      });
     } 
-    // 2. className 처리 (class 속성 설정)
+    // 5-2. className 처리 (class 속성 설정)
     else if (attr === 'className') {
       $el.className = value; // className을 class 속성으로 적용
     } 
-    // 3. 일반 속성 처리 (id, href, title 등)
+    // 5-3. 일반 속성 처리 (id, href, title 등)
     else {
       $el.setAttribute(attr, value);
     }
-    // console.log('attr, value',attr, value)
-    // return $el.setAttribute(attr, value)
   });
   
   //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가

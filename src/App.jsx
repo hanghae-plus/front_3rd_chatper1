@@ -1,5 +1,7 @@
 /** @jsx createVNode */
 import{ createVNode } from "./lib";
+import { globalStore } from './stores';
+import { NotFoundPage } from './pages';
 
 export function App({ targetPage }) {
     const PageComponent = targetPage ?? NotFoundPage;

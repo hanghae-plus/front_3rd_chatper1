@@ -5,6 +5,8 @@ import { Header } from '../components';
 import { Navigation } from '../components';
 import { Footer } from '../components';
 import { Post } from '../components';
+import { PostForm } from '../components';
+
 export const HomePage = () => {
     const { loggedIn, posts } = globalStore.getState();
     return (
@@ -14,7 +16,7 @@ export const HomePage = () => {
                 <Navigation loggedIn={loggedIn} />
                 
                 <main className="p-4">
-                    {loggedIn && <NotFoundPage />}
+                    {loggedIn ? <PostForm />:''}
                     <div id="posts-container" className="space-y-4">
                         {posts.map(Post)}
                     </div>

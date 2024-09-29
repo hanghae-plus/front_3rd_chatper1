@@ -9,8 +9,11 @@ if(typeof vNode === 'string'|| typeof vNode === 'number'){
 }
 // 3. vNode가 배열이면 DocumentFragment를 생성하고 각 자식에 대해 createElement를 재귀 호출하여 추가합니다.
 if(Array.isArray(vNode)){
+
   const fragment = document.createDocumentFragment();
+  vNode.forEach(child=>console.log("child",child))
   vNode.forEach(child => fragment.appendChild(createElement(child)));
+
   return fragment;
 }
 // 4. vNode.type이 함수면 해당 함수를 호출하고 그 결과로 createElement를 재귀 호출합니다.

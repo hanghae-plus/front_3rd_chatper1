@@ -9,12 +9,17 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
 export function createElement(vNode) {
-  if (!vNode) return document.createTextNode("");
+  if (!vNode || (typeof vNode === "object" && Object.keys(vNode).length === 0))
+    return document.createTextNode("");
 
   if (typeof vNode === "string" || typeof vNode === "number")
     return document.createTextNode(vNode);
 
-  if (typeof vNode.type === "function") return createElement(vNode.type());
+  if (typeof vNode.type === "function") {
+    const props = vNode.props || {};
+
+    return createElement(vNode.type(props));
+  }
 
   const { type, props, children = [] } = vNode;
 

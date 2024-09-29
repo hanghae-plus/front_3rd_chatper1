@@ -1,0 +1,4 @@
+__tests__
+*.md
+.babelrc
+vite.config.js

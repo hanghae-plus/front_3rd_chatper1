@@ -28,6 +28,9 @@ export function createElement(vNode) {
   }
 
   const node = document.createElement(vNode.type);
+  if (vNode.props) {
+    Object.keys(vNode.props).forEach((key) => node.setAttribute(key, vNode.props[key]));
+  }
   if (vNode.children) {
     const child = createElement(vNode.children);
     node.appendChild(child);

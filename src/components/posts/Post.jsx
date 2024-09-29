@@ -1,4 +1,6 @@
 /** @jsx createVNode */
 import { createVNode } from "../../lib";
 
-export const Post = () => ({});
+export function Post() {
+  return {};
+}

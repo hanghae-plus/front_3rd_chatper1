@@ -86,5 +86,4 @@ function main() {
 
   render();
 }
-
 main();

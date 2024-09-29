@@ -1,4 +1,6 @@
 /** @jsx createVNode */
 import { createVNode } from "../../lib";
 
-export const Footer = () => ({});
+export function Footer() {
+  return {};
+}

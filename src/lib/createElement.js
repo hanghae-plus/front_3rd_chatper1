@@ -43,23 +43,20 @@ export function createElement(vNode) {
   }
 
   const element = document.createElement(type);
-
-  props &&
+  if (!!props) {
     Object.keys(props).forEach((key) => {
-      let _key = key;
-      switch (key) {
-        case "onClick":
-          element.addEventListener("click", props[key]);
-          break;
-        case "className":
-          _key = "class";
-          break;
-        case "htmlFor":
-          _key = "for";
-          break;
+      if (key.startsWith("on")) {
+        const eventName = key.toLowerCase().substring(2);
+        element.addEventListener(eventName, props[key]);
+      } else if (key === "className") {
+        element.setAttribute("class", props[key]);
+      } else if (key === "style") {
+        Object.assign(element.style, props[key]);
+      } else {
+        element.setAttribute(key, props[key]);
       }
-      element.setAttribute(_key, props[key]);
     });
+  }
 
   children.forEach((child) => {
     element.appendChild(createElement(child));

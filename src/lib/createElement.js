@@ -34,17 +34,23 @@ export function createElement(vNode) {
       } else if (key.startsWith('on') && typeof value === 'function') {
         element.addEventListener(key.toLowerCase().substr(2), value);
       } else if (vNode.type === 'textarea' && key === 'value') {
-        // textarea의 경우 value를 textContent로 설정
         element.textContent = value;
       } else if (key === 'defaultValue') {
-        // defaultValue 처리
         if (vNode.type === 'textarea') {
           element.textContent = value;
         } else {
           element.value = value;
         }
-      } else {
+      } else if (key.startsWith('data-')) {
+        // 데이터 속성 처리
         element.setAttribute(key, value);
+      } else {
+        // 불리언 속성 처리
+        if (typeof value === 'boolean' && value) {
+          element.setAttribute(key, '');
+        } else {
+          element.setAttribute(key, value);
+        }
       }
     });
   }

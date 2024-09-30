@@ -3,11 +3,27 @@ import { Footer } from "../components/templates/Footer";
 import { Header } from "../components/templates/Header";
 import { Navigation } from "../components/templates/Navigation";
 import { createVNode } from "../lib";
+import { userStorage } from "../storages";
 import { globalStore } from "../stores";
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = "", email = "", bio = "" } = currentUser ?? {};
+
+  function updateProfile(profile) {
+    const user = { ...globalStore.getState().currentUser, ...profile };
+    globalStore.setState({ currentUser: user });
+    userStorage.set(user);
+    alert("프로필이 업데이트되었습니다.");
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const updatedProfile = Object.fromEntries(formData);
+    updateProfile(updatedProfile);
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">
       <div className="max-w-md w-full">
@@ -18,7 +34,7 @@ export const ProfilePage = () => {
             <h2 className="text-2xl font-bold text-center text-blue-600 mb-8">
               내 프로필
             </h2>
-            <form id="profile-form">
+            <form id="profile-form" onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label
                   for="username"

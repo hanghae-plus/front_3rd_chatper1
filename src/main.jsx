@@ -3,11 +3,10 @@ import { createElement, createRouter, createVNode, renderElement } from './lib';
 import { HomePage, LoginPage, ProfilePage } from './pages';
 import { globalStore } from './stores';
 import { ForbiddenError, UnauthorizedError } from './errors';
-import { userStorage } from './storages';
-import { addEvent, registerGlobalEvents } from './utils';
+import { registerGlobalEvents } from './utils';
 import { App } from './App';
 
-const router = createRouter({
+export const router = createRouter({
   '/': HomePage,
   '/login': () => {
     const { loggedIn } = globalStore.getState();
@@ -24,29 +23,6 @@ const router = createRouter({
     return <ProfilePage />;
   },
 });
-
-function login(username) {
-  const user = { username, email: '', bio: '' };
-  globalStore.setState({
-    currentUser: user,
-    loggedIn: true,
-  });
-  router.push('/');
-  userStorage.set(user);
-}
-
-function logout() {
-  globalStore.setState({ currentUser: null, loggedIn: false });
-  router.push('/login');
-  userStorage.reset();
-}
-
-function updateProfile(profile) {
-  const user = { ...globalStore.getState().currentUser, ...profile };
-  globalStore.setState({ currentUser: user });
-  userStorage.set(user);
-  alert('프로필이 업데이트되었습니다.');
-}
 
 function handleError(error) {
   globalStore.setState({ error });
@@ -85,34 +61,6 @@ function main() {
   globalStore.subscribe(render);
   window.addEventListener('error', handleError);
   window.addEventListener('unhandledrejection', handleError);
-
-  addEvent('click', '[data-link]', (e) => {
-    e.preventDefault();
-    router.push(e.target.href.replace(window.location.origin, ''));
-  });
-
-  addEvent('click', '#logout', (e) => {
-    e.preventDefault();
-    logout();
-  });
-
-  addEvent('click', '#error-boundary', (e) => {
-    e.preventDefault();
-    globalStore.setState({ error: null });
-  });
-
-  addEvent('submit', '#login-form', (e) => {
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    login(username);
-  });
-
-  addEvent('submit', '#profile-form', (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const updatedProfile = Object.fromEntries(formData);
-    updateProfile(updatedProfile);
-  });
 
   render();
 }

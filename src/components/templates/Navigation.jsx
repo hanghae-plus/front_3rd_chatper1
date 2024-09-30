@@ -1,14 +1,14 @@
 /** @jsx createVNode */
 import { createVNode } from '../../lib';
 
-export const Navigation = ({ loggedIn }) => {
+export const Navigation = ({ loggedIn, logout, navigate }) => {
   const getNavItemClass = (path) => {
     const currentPath = window.location.pathname;
     return currentPath === path ? 'text-blue-600 font-bold' : 'text-gray-600';
   };
 
   return (
-    <nav className="bg-white shadow-md p-2 sticky top-14">
+    <nav className="bg-white shadow-md p-2 sticky top-14" onClick={navigate}>
       <ul className="flex justify-around">
         <li>
           <a href="/" className={getNavItemClass('/')} data-link>
@@ -35,7 +35,7 @@ export const Navigation = ({ loggedIn }) => {
         )}
         {loggedIn ? (
           <li>
-            <a href="#" id="logout" className="text-gray-600">
+            <a href="#" id="logout" className="text-gray-600" onClick={logout}>
               로그아웃
             </a>
           </li>

@@ -1,12 +1,28 @@
 /** @jsx createVNode */
 import { createVNode } from '../lib';
+import { globalStore } from '../stores/index.js';
+import { router } from '../main.jsx';
+import { userStorage } from '../storages/index.js';
 
 export const LoginPage = () => {
+  const login = (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const currentUser = { username, email: '', bio: '' };
+    globalStore.setState({
+      currentUser,
+      loggedIn: true,
+    });
+    router.push('/');
+    userStorage.set(currentUser);
+  };
+
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form id="login-form" data-submit="login-submit">
+        <form id="login-form" data-submit="login-submit" onSubmit={login}>
           <input
             type="text"
             id="username"

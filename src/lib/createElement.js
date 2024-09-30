@@ -41,7 +41,10 @@ export function createElement(vNode) {
       //className이 아닌 style로 들어갈 때 객체로 들어가서 해당 부분 추가
       }else if (key === 'style' && typeof value === 'object') {
         Object.assign(element.style, value);
-      }else {
+      //textArea defaultValue처리 
+      }else if (vNode.props.defaultValue) {
+        element.defaultValue = vNode.props.defaultValue;
+      } else {
         element.setAttribute(key, value);
       }
     });

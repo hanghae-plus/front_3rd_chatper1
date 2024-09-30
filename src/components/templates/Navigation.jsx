@@ -24,17 +24,18 @@ export function Navigation() {
               break;
           }
           return (
-            <a
-              className={[
-                "block w-full h-full text-center font-bold",
-                isActive(href) ? "text-blue-600" : "",
-              ].join(" ")}
-              href={`/${href}`}
-              data-link={href}
-              id={href}
-            >
-              {title}
-            </a>
+            <li>
+              <a
+                href={`/${href}`}
+                className={
+                  isActive(href) ? "text-blue-600 font-bold" : "text-gray-600"
+                }
+                data-link={true}
+                {...(href === "logout" && { id: "logout" })}
+              >
+                {title}
+              </a>
+            </li>
           );
         })}
       </ul>

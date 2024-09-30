@@ -3,12 +3,17 @@ import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
 import { createElement__v2 } from "./createElement__v2.js";
 
 // TODO: processVNode 함수 구현
-function processVNode() {
+function processVNode(vNode) {
 	// vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
 	// - null, undefined, boolean 값 처리
 	// - 문자열과 숫자를 문자열로 변환
 	// - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
 	// - 자식 요소들에 대해 재귀적으로 processVNode 호출
+	if (vNode === null || vNode === undefined || typeof vNode === "boolean") return "";
+	if (typeof vNode === "string" || typeof vNode === "number") return String(vNode);
+	if (typeof vNode.type === "function") return processVNode(vNode.type(vNode.props));
+	vNode.children.map(processVNode);
+	return vNode;
 }
 
 // TODO: updateAttributes 함수 구현
@@ -54,6 +59,7 @@ function updateAttributes($element, newNode, oldNode) {
 				removeEvent($element, eventType, value);
 				addEvent($element, eventType, value);
 			} else if (key === "className") {
+				// TODO: setAttribute만 사용해도 되는 지 확인
 				$element.removeAttribute("class");
 				$element.setAttribute("class", value);
 			} else {
@@ -74,6 +80,7 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 	if (!oldNode) {
 		return $parent.appendChild(createElement__v2(newNode));
 	}
+
 	// 3. 텍스트 노드 업데이트
 	// TODO: newNode와 oldNode가 둘 다 문자열 또는 숫자인 경우
 	// TODO: 내용이 다르면 텍스트 노드 업데이트
@@ -86,6 +93,7 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 		}
 		return;
 	}
+
 	// 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
 	// TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
 	if (newNode.type !== oldNode.type) {
@@ -103,6 +111,7 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 	// HINT: 최대 자식 수를 기준으로 루프를 돌며 업데이트
 	const newLength = newNode.children.length;
 	const oldLength = oldNode.children.length;
+
 	for (let i = 0; i < Math.max(newLength, oldLength); i++) {
 		updateElement(newNode.children[i], oldNode.children[i], $parent.childNodes[index], i);
 	}
@@ -122,10 +131,15 @@ export function renderElement(vNode, container) {
 	// - 최초 렌더링과 업데이트 렌더링 처리
 	// console.log("vNode", vNode);
 	// console.log("_vNode", container._vNode);
+	if (!container) return;
+	vNode = processVNode(vNode);
 
-	updateElement(vNode, container._vNode, container);
+	if (!container._vNode) {
+		container.appendChild(createElement__v2(vNode));
+	} else {
+		updateElement(vNode, container._vNode, container);
+	}
 	container._vNode = vNode;
-
 	// 이벤트 위임 설정
 	// TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
 	// 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.

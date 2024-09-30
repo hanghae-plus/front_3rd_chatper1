@@ -13,6 +13,7 @@ const login = (username) => {
 }
 
 const onSubmit = ()=>{
+  console.log(document.getElementById('username'))
   const username = document.getElementById('username').value;
   login(username);
 }
@@ -21,7 +22,7 @@ export const LoginPage = () => (
   <div className="bg-gray-100 flex items-center justify-center min-h-screen">
     <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
       <h1 className="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-      <form id="login-form" onSubmit={()=>onSubmit()}>
+      <form id="login-form" onSubmit={onSubmit}>
         <input type="text" id="username" placeholder="사용자 이름" className="w-full p-2 mb-4 border rounded" required />
         <input type="password" placeholder="비밀번호" className="w-full p-2 mb-6 border rounded" required />
         <button type="submit"  className="w-full bg-blue-600 text-white p-2 rounded">로그인</button>

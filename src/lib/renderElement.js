@@ -98,7 +98,7 @@ function updateElement(container, newVNode,oldNode,index = 0) {
   // TODO: newVNode와 oldNode의 자식 노드들을 비교하며 재귀적으로 updateElement 호출
   // HINT: 최대 자식 수를 기준으로 루프를 돌며 업데이트
   for(let idx=0;idx< maxLengthChild;idx++){
-    updateElement(container.firstChild,oldNodeChild[idx],newVNodeChild[idx],idx);
+    updateElement(container.firstChild,newVNodeChild[idx],oldNodeChild[idx],idx);
   }
   // 5-3. 불필요한 자식 노드 제거
   // TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
@@ -122,12 +122,12 @@ export function renderElement(vNode, container) {
   console.log(newVNode===oldNode)
   
   // - 최초 렌더링과 업데이트 렌더링 처리
-  if(!oldNode){
-    console.log(createElement__v2(vNode))
-    container.appendChild(createElement__v2(newVNode));
-  } else{
-    updateElement(container, oldNode, newVNode); // 업데이트 또는 추가
-  }
+  // if(!oldNode){
+  //   console.log(createElement__v2(vNode))
+  //   container.appendChild(createElement__v2(newVNode));
+  // } else{
+    updateElement(container, newVNode ,oldNode); // 업데이트 또는 추가
+  // }
   container.__vNode = newVNode; // 새 vNode 저장
   // 이벤트 위임 설정
   // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.

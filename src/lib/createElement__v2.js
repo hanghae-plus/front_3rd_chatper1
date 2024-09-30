@@ -1,4 +1,4 @@
-import { addEvent } from './eventManager';
+import { addEvent,removeEvent } from './eventManager';
 
 export function createElement__v2(vNode) {
   // 이 함수는 createElement의 개선된 버전입니다.
@@ -37,6 +37,7 @@ export function createElement__v2(vNode) {
     .forEach(([attr, value]) => {
     // 5-1. 이벤트 리스너 처리 (onClick, onChange 등)
     if (attr.startsWith('on')) {
+      console.log(attr, value)
       const eventType = attr.slice(2).toLowerCase();
       addEvent($el, eventType, value); // 새로운 이벤트 리스너 추가
     } 

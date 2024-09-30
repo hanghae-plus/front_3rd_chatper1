@@ -4,6 +4,20 @@
 // 이벤트 타입별로 요소와 해당 요소의 이벤트 핸들러를 저장합니다.
 const eventMap = new Map();
 
+// eventMap = {
+//   submit: {
+//     loginForm: [()=>{
+//         console.log(document.getElementById('username'))
+//         const username = document.getElementById('username').value;
+//         const user = { username, email: '', bio: '' };
+//         globalStore.setState({
+//           currentUser: user,
+//           loggedIn: true,
+//         })
+//         userStorage.set(user);
+//     }]  // loginForm에 등록된 submit 핸들러
+//   }
+// };
 // 이벤트 위임이 설정될 루트 요소
 let rootElement = null;
 
@@ -28,7 +42,7 @@ function handleEvent(event) {
 
   // 1. 이벤트 타겟에서 시작하여 루트 요소까지 버블링
   let currentElement = target;
-
+  console.log('handleEvent',event)
   while (currentElement && currentElement !== rootElement) {
     // 2. 각 요소에 대해 해당 이벤트 타입의 핸들러가 있는지 확인
     const handlers = eventMap.get(type);
@@ -53,7 +67,9 @@ export function addEvent(element, eventType, handler) {
   if (!eventMap.has(eventType)) {
     eventMap.set(eventType, new Map());
   }
-
+  console.log('addEvent element',element)
+  console.log('addEvent eventType', eventType, )
+  console.log('addEvent handler',handler)
   const eventHandlers = eventMap.get(eventType);
 
   if (!eventHandlers.has(element)) {
@@ -61,11 +77,11 @@ export function addEvent(element, eventType, handler) {
   }
 
   eventHandlers.get(element).push(handler);
-
   // 2. 필요한 경우 루트 요소에 새 이벤트 리스너 추가
   if (!rootElement) {
     console.warn('Root element is not set. Call setupEventListeners first.');
-  } else if (!eventMap.has(eventType)) {
+  } 
+  else if (!eventMap.has(eventType)) {
     rootElement.addEventListener(eventType, handleEvent, true);
   }
 }

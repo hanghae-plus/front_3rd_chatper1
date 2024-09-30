@@ -92,7 +92,7 @@ function main() {
     logout();
   });
 
-  addEvent("submit", "#login", (e) => {
+  addEvent("submit", "#login-form", (e) => {
     e.preventDefault();
     const username = e.target.elements["username"].value;
     if (username === "") {

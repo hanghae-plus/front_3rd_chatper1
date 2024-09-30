@@ -7,7 +7,7 @@ export function LoginPage() {
       <h1 className="text-2xl font-bold text-center text-blue-600 mb-8">
         로그인
       </h1>
-      <form id="login">
+      <form id="login-form">
         {["username", "password"].map((key) => {
           const className = key === "password" ? "mb-6" : "mb-4";
           const labelFor = key;

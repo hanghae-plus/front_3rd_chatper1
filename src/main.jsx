@@ -85,6 +85,11 @@ function main() {
 
   addEvent("click", "[data-link]", (e) => {
     e.preventDefault();
+    const { id } = e.target;
+    if (id === "logout") {
+      logout();
+      return;
+    }
     router.push(e.target.href.replace(window.location.origin, ""));
   });
 

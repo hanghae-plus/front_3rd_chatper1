@@ -6,11 +6,18 @@ export const createStore = (initialStore) => {
   let state = { ...initialStore };
 
   const setState = (newState) => {
-    state = { ...state, ...newState }
-    notify()
-  }
+    state = { ...state, ...newState };
+    notify();
+
+    if (!!newState["error"]) {
+      setTimeout(() => {
+        setState({ error: null });
+        notify();
+      }, 3000);
+    }
+  };
 
   const getState = () => ({ ...state });
 
-  return { getState, setState, subscribe }
-}
+  return { getState, setState, subscribe };
+};

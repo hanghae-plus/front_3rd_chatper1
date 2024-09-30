@@ -41,6 +41,13 @@ function logout() {
   userStorage.reset();
 }
 
+function updateProfile(profile) {
+  const user = { ...globalStore.getState().currentUser, ...profile };
+  globalStore.setState({ currentUser: user });
+  userStorage.set(user);
+  alert('프로필이 업데이트되었습니다.');
+}
+
 function handleError(error) {
   globalStore.setState({ error });
 }
@@ -98,6 +105,13 @@ function main() {
     e.preventDefault();
     const username = document.getElementById('username').value;
     login(username);
+  });
+
+  addEvent('submit', '#profile-form', (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const updatedProfile = Object.fromEntries(formData);
+    updateProfile(updatedProfile);
   });
 
   render();

@@ -46,12 +46,12 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app);
-    } else {
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()}/>, $root);
+    // if ($root.hasChildNodes()) {
+    //   $root.firstChild.replaceWith($app);
+    // } else {
+    //   $root.appendChild($app);
+    // }
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push('/');
@@ -63,7 +63,7 @@ function render() {
     }
     console.error(error);
 
-    // globalStore.setState({ error });
+    globalStore.setState({ error });
   }
   registerGlobalEvents();
 }

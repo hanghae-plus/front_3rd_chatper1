@@ -12,7 +12,7 @@ export const HomePage = () => {
         <Header loggedIn={loggedIn} />
         <Navigation />
         <main className="p-4">
-          {loggedIn && <PostForm onSubmit={addPost} />}
+          {loggedIn && <PostForm />}
           <div id="posts-container" className="space-y-4">
             {posts.map((props) => (
               <Post {...props} />

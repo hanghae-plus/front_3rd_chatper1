@@ -2,7 +2,7 @@
 import{ createVNode } from "./lib";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { globalStore } from "./stores";
-import { Footer, Header } from "./components";
+
 import { HomePage, ProfilePage } from "./pages";
 
 export const App = ({ targetPage }) => {
@@ -12,10 +12,8 @@ export const App = ({ targetPage }) => {
     const isComponentShow = targetPage === HomePage || targetPage === ProfilePage;
 
     return (
-        <div>
-            {isComponentShow ? <Header /> : null}
-            {!error ? <PageComponent /> : <NotFoundPage />}
-            {isComponentShow ? <Footer /> : null}
+        <div class="bg-gray-100 min-h-screen flex justify-center">
+            {!error ? <PageComponent isComponentShow={isComponentShow}/> : <NotFoundPage />}
         </div>
     );
 };

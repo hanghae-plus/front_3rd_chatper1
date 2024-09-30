@@ -1,11 +1,27 @@
 /** @jsx createVNode */
 import { createVNode } from '@/lib';
 import { NotFoundPage } from '@/pages';
+import { ErrorBoundary } from './components/templates/ErrorBoundary';
+import { globalStore } from './stores';
 
 export const App = ({ targetPage }) => {
-  if (!targetPage) {
-    return createVNode('div', null, <NotFoundPage />);
+  const error = globalStore.getState().error;
+
+  if (error) {
+    return (
+      <div>
+        <ErrorBoundary error={error} />
+      </div>
+    );
   }
 
-  return createVNode('div', null, [targetPage()]);
+  if (!targetPage) {
+    return (
+      <div>
+        <NotFoundPage />
+      </div>
+    );
+  }
+
+  return <div>{targetPage()}</div>;
 };

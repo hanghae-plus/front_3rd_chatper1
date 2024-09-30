@@ -1,5 +1,5 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from '@/lib';
+import { createElement, createRouter, createVNode } from '@/lib';
 import { HomePage, LoginPage, ProfilePage } from '@/pages';
 import { globalStore } from '@/stores';
 import { ForbiddenError, UnauthorizedError } from '@/errors';
@@ -44,6 +44,7 @@ export function logout(e) {
 
   globalStore.setState({ currentUser: null, loggedIn: false });
   userStorage.reset();
+
   router.push('/login');
 }
 

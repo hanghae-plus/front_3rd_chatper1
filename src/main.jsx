@@ -91,6 +91,18 @@ function main() {
     logout();
   });
 
+  addEvent("submit", "#login", (e) => {
+    e.preventDefault();
+    const username = e.target.elements["username"].value;
+    if (username === "") {
+      alert("사용자 이름을 입력해 주세요.");
+    }
+    globalStore.setState({
+      currentUser: { username },
+    });
+    router.push("/profile");
+  });
+
   addEvent("click", "#error-boundary", (e) => {
     e.preventDefault();
     globalStore.setState({ error: null });

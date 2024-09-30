@@ -8,14 +8,14 @@ import { Post } from "../components";
 
 export const HomePage = () => { 
   const { loggedIn, posts } = globalStore.getState(); 
-  return (            
+  return (          
+    <div>
         <div className="max-w-md w-full"> 
-
             {<Header/>} 
             {<Navigation loggedIn={loggedIn}/>} 
 
             <main className="p-4"> 
-                {<PostForm loggedIn={loggedIn}/>} 
+                {loggedIn && <PostForm/>}
                 <div id="posts-container" className="space-y-4"> 
                     {posts.map(post => (
                         <Post 
@@ -30,5 +30,6 @@ export const HomePage = () => {
           </main> 
           {<Footer/>} 
         </div> 
+    </div>  
   ); 
 };

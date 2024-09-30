@@ -6,16 +6,16 @@ import { Footer, Header, PostForm } from "../components";
 import { Post } from "../components";
 
 
-export const HomePage = ({isComponentShow}) => { 
+export const HomePage = () => { 
   const { loggedIn, posts } = globalStore.getState(); 
   return (            
         <div className="max-w-md w-full"> 
 
-            {isComponentShow ? <Header />: ''} 
+            {<Header/>} 
             {<Navigation loggedIn={loggedIn}/>} 
 
             <main className="p-4"> 
-                {loggedIn ? <PostForm loggedIn={loggedIn}/>:''} 
+                {<PostForm loggedIn={loggedIn}/>} 
                 <div id="posts-container" className="space-y-4"> 
                     {posts.map(post => (
                         <Post 
@@ -28,8 +28,7 @@ export const HomePage = ({isComponentShow}) => {
                     ))}
                 </div> 
           </main> 
-
-          {isComponentShow ? <Footer/>: ''} 
+          {<Footer/>} 
         </div> 
   ); 
 };

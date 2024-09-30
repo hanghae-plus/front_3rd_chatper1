@@ -6,6 +6,7 @@ import { PostForm, Post } from "../components/posts";
 
 export const HomePage = () => {
   const { loggedIn, posts } = globalStore.getState();
+
   return (
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">

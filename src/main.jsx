@@ -1,6 +1,6 @@
 /** @jsx createVNode */
 import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
+import { HomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
@@ -23,6 +23,12 @@ const router = createRouter({
     }
     return <ProfilePage/>;
   },
+  "/error": () => {
+    return <NotFoundPage />;
+  },
+  '*': () => {
+    return <NotFoundPage />;
+  }
 });
 
 function logout() {
@@ -83,6 +89,11 @@ function main() {
     e.preventDefault();
     globalStore.setState({ error: null });
   });
+
+  addEvent('submit', '#login-form', (e) => {
+    e.preventDefault();
+    router.push('/profile')
+  })
 
   render();
 }

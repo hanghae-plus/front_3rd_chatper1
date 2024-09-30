@@ -1,7 +1,5 @@
 // TODO: createElement 함수 구현
 export function createElement(vNode) {
-  console.log(vNode);
-
   if (!vNode) {
     return document.createTextNode("");
   }

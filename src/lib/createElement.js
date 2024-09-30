@@ -54,7 +54,9 @@ export function createElement(vNode) {
         case "className":
           _key = "class";
           break;
-        default:
+        case "htmlFor":
+          _key = "for";
+          break;
       }
       element.setAttribute(_key, props[key]);
     });

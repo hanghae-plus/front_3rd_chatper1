@@ -110,9 +110,7 @@ function main() {
       bio : ''
     }
     setStore(userInfo)
-    alert(1)
     router.push('/profile');
-    alert(2)
   });
 
 
@@ -132,7 +130,6 @@ function main() {
     };
     alert("프로필이 성공적으로 업데이트되었습니다.");
     setStore(userInfo);
-
     }
   })
   render();
@@ -142,6 +139,7 @@ const setStore = (userInfo)=>{
   userStorage.set(userInfo)
   globalStore.setState({
     currentUser: userInfo,
+    loggedIn : true
   });
 }
 

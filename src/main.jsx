@@ -39,9 +39,9 @@ function handleError(error) {
 // // 초기화 함수
 function render() {
   const $root = document.querySelector('#root');
-  
+  const $app = <App targetPage={router.getTarget()}/>;
+    console.log('renderxs')
   try {
-    const $app = <App targetPage={router.getTarget()}/>;
     renderElement($app,$root)
     
   } catch (error) {

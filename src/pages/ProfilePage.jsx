@@ -13,9 +13,7 @@ const updateProfile = (profile) => {
 
 
 const onSubmit = (e) => {
-  e.preventDefault(); 
-  const target = e.target;
-  const formData = new FormData(target);
+  const formData = new FormData(e.target);
   const updatedProfile = Object.fromEntries(formData);
   updateProfile(updatedProfile);
 };
@@ -27,11 +25,11 @@ export const ProfilePage = () => {
     <div className="bg-gray-100 min-h-screen flex justify-center">
       <div className="max-w-md w-full">
         <Header/>
-        <Navigation  loggedIn={ loggedIn } />
+        <Navigation loggedIn={ loggedIn } />
         <main className="p-4">
           <div className="bg-white p-8 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-            <form id="profile-form" onSubmit={($event)=>onSubmit($event)}>
+            <form id="profile-form" onSubmit={onSubmit}>
               <div className="mb-4">
                 <label for="username" className="block text-gray-700 text-sm font-bold mb-2">사용자 이름</label>
                 <input type="text" id="username" name="username" className="w-full p-2 border rounded" value={username} required />

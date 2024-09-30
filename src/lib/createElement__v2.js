@@ -37,9 +37,9 @@ export function createElement__v2(vNode) {
     .forEach(([attr, value]) => {
     // 5-1. 이벤트 리스너 처리 (onClick, onChange 등)
     if (attr.startsWith('on')) {
-      console.log(attr, value)
       const eventType = attr.slice(2).toLowerCase();
       addEvent($el, eventType, value); // 새로운 이벤트 리스너 추가
+      return;
     } 
     // 5-2. className 처리 (class 속성 설정)
     if (attr === 'className') {

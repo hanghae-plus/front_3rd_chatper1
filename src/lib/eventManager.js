@@ -22,24 +22,32 @@ export function setupEventListeners(root) {
 }
 
 // TODO: handleEvent 함수 구현
+
 function handleEvent(event) {
   const { type, target } = event; // 이벤트 타입과 타겟 요소
 
   // 1. 이벤트 타겟에서 시작하여 루트 요소까지 버블링
   let currentElement = target;
-  console.log('handleEvent',event)
+  console.log('handleEvent',target,event)
+  // 2. 각 요소에 대해 해당 이벤트 타입의 핸들러가 있는지 확인
   while (currentElement && currentElement !== rootElement) {
-    // 2. 각 요소에 대해 해당 이벤트 타입의 핸들러가 있는지 확인
     const handlers = eventMap.get(type);
-  console.log('handlers',handlers.get(currentElement))
+  console.log('handlers',handlers)
 
     if (handlers) {
+  console.log('handlerInfo',handlers.get(currentElement))
+
       const handlerInfo = handlers.get(currentElement);
       if (handlerInfo) {
         handlerInfo.forEach(handler => {
+          console.log(handler)
           // 3. 핸들러가 있으면 실행
+          // event.preventDefault();
           handler(event);
+          // createSyntheticEvent(event);
+          // handler(createSyntheticEvent(event));
         });
+        break; // 이벤트 버블링 중단
       }
     }
 
@@ -69,7 +77,7 @@ export function addEvent(element, eventType, handler) {
     console.warn('Root element is not set. Call setupEventListeners first.');
   } 
   else if (!eventMap.has(eventType)) {
-    element.addEventListener(eventType, (e)=>handler(e), true);
+    element.addEventListener(eventType, handler, true);
   }
 }
 

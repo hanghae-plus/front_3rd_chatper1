@@ -40,10 +40,11 @@ function handleEvent(event) {
 	while (target && target !== rootElement) {
 		const handlers = eventMap.get(eventType);
 		if (handlers) {
-			const handler = handlers.find((h) => h.$element === target);
-			if (handler) {
-				handler.handler.call(target, event);
-			}
+			handlers.forEach((h) => {
+				if (h.$element === target) {
+					h.handler.call(target, event);
+				}
+			});
 		}
 		target = target.parentElement;
 	}
@@ -56,14 +57,9 @@ export function addEvent($element, eventType, handler) {
 	// 이 함수를 통해 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
 	if (!eventMap.has(eventType)) {
 		eventMap.set(eventType, []);
+		if (rootElement) rootElement.addEventListener(eventType, handleEvent, true);
 	}
 	eventMap.get(eventType).push({ $element, handler });
-
-	if (!rootElement.hasEventListener(eventType)) {
-		rootElement.addEventListener(eventType, handleEvent, true);
-	}
-
-	// $element.addEventListener(eventType, handler);
 }
 
 // TODO: removeEvent 함수 구현
@@ -76,8 +72,10 @@ export function removeEvent($element, eventType, handler) {
 	let handlers = eventMap.get(eventType);
 	handlers = handlers.filter((h) => h.$element !== $element || h.handler !== handler);
 
-	if (handlers.length === 0) rootElement.removeEventListener(eventType, handleEvent, true);
-	else eventMap.set(eventType, handlers);
+	if (handlers.length === 0) {
+		eventMap.delete(eventType);
+		if (rootElement) rootElement.removeEventListener(eventType, handleEvent, true);
+	} else eventMap.set(eventType, handlers);
 
 	// $element.removeEventListener(eventType, handler);
 }

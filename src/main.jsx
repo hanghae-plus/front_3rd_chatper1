@@ -6,6 +6,7 @@ import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
 import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
+import { createElement__v2 } from "./lib/createElement__v2";
 
 const router = createRouter({
   "/": HomePage,
@@ -40,7 +41,14 @@ function render() {
   const $root = document.querySelector('#root');
   
   try {
-    renderElement(<App targetPage={router.getTarget()}/>,$root);
+    const $app = (<App targetPage={router.getTarget()}/>);
+    // renderElement(<App targetPage={router.getTarget()}/>,$root);
+    renderElement($app,$root)
+    // if ($root.hasChildNodes()) {
+    //   $root.firstChild.replaceWith($app)
+    // } else{
+    //   $root.firstChild.replaceWith($app);
+    // }
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");
@@ -62,20 +70,20 @@ function main() {
   window.addEventListener('error', handleError);
   window.addEventListener('unhandledrejection', handleError);
 
-  // addEvent('click', '[data-link]', (e) => {
-  //   e.preventDefault();
-  //   router.push(e.target.href.replace(window.location.origin, ''));
-  // });
+  addEvent('click', '[data-link]', (e) => {
+    e.preventDefault();
+    router.push(e.target.href.replace(window.location.origin, ''));
+  });
 
-  // addEvent('click', '#logout', (e) => {
-  //   e.preventDefault();
-  //   logout();
-  // });
+  addEvent('click', '#logout', (e) => {
+    e.preventDefault();
+    logout();
+  });
 
-  // addEvent('click', '#error-boundary', (e) => {
-  //   e.preventDefault();
-  //   globalStore.setState({ error: null });
-  // });
+  addEvent('click', '#error-boundary', (e) => {
+    e.preventDefault();
+    globalStore.setState({ error: null });
+  });
 
   render();
 }

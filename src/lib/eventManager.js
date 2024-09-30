@@ -4,20 +4,6 @@
 // 이벤트 타입별로 요소와 해당 요소의 이벤트 핸들러를 저장합니다.
 const eventMap = new Map();
 
-// eventMap = {
-//   submit: {
-//     loginForm: [()=>{
-//         console.log(document.getElementById('username'))
-//         const username = document.getElementById('username').value;
-//         const user = { username, email: '', bio: '' };
-//         globalStore.setState({
-//           currentUser: user,
-//           loggedIn: true,
-//         })
-//         userStorage.set(user);
-//     }]  // loginForm에 등록된 submit 핸들러
-//   }
-// };
 // 이벤트 위임이 설정될 루트 요소
 let rootElement = null;
 
@@ -29,7 +15,6 @@ export function setupEventListeners(root) {
   // 2. 기존에 설정된 이벤트 리스너 제거 (있다면)
   rootElement.removeEventListener('click', handleEvent, true); // 예: 클릭 이벤트
   rootElement.removeEventListener('mouseover', handleEvent, true); // 예: 마우스오버 이벤트
-  console.log(root,eventMap)
   // 3. eventMap에 등록된 모든 이벤트 타입에 대해 루트 요소에 이벤트 리스너 추가
   for (let [eventType] of eventMap) {
     rootElement.addEventListener(eventType, handleEvent, true); // 이벤트 캡처링 단계에서 처리
@@ -46,6 +31,8 @@ function handleEvent(event) {
   while (currentElement && currentElement !== rootElement) {
     // 2. 각 요소에 대해 해당 이벤트 타입의 핸들러가 있는지 확인
     const handlers = eventMap.get(type);
+  console.log('handlers',handlers.get(currentElement))
+
     if (handlers) {
       const handlerInfo = handlers.get(currentElement);
       if (handlerInfo) {
@@ -82,7 +69,7 @@ export function addEvent(element, eventType, handler) {
     console.warn('Root element is not set. Call setupEventListeners first.');
   } 
   else if (!eventMap.has(eventType)) {
-    rootElement.addEventListener(eventType, handleEvent, true);
+    element.addEventListener(eventType, (e)=>handler(e), true);
   }
 }
 
@@ -93,6 +80,7 @@ export function removeEvent(element, eventType, handler) {
   if (eventHandlers) {
     const handlersForElement = eventHandlers.get(element);
 
+    console.log('remove',handlersForElement)
     if (handlersForElement) {
       const handlerIndex = handlersForElement.indexOf(handler);
       if (handlerIndex !== -1) {

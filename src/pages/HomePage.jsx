@@ -13,9 +13,7 @@ export const HomePage = () => {
         <main className="p-4">
           {loggedIn ? <PostForm /> : null}
           <div id="posts-container" className="space-y-4">
-            {posts.map((post) => (
-              <Post {...post} />
-            ))}
+            {posts.map(Post)}
           </div>
         </main>
         <Footer />

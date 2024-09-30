@@ -2,9 +2,12 @@
 import { Footer, Header, Navigation } from '../components';
 import { createVNode } from '../lib';
 
+import { globalStore } from '../stores';
+
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = '', email = '', bio = '' } = currentUser ?? {};
+
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">
       <div className="max-w-md w-full">

@@ -8,9 +8,12 @@
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
+import { addEvent } from './eventManager';
+
 export function createElement(vNode) {
   if (!vNode) return document.createTextNode('');
 
+  //TODO: type이 number이면서 Number.isNaN()일 경우 체크
   if (typeof vNode === 'string' || typeof vNode === 'number') return document.createTextNode(vNode);
   if (Array.isArray(vNode)) {
     const fragment = new DocumentFragment();
@@ -22,13 +25,17 @@ export function createElement(vNode) {
     return createElement(vNode.type(vNode.props, vNode.children));
   }
 
+  // Good
+  // if (Boolean(vNode) || Number.isNaN(vNode)) return document.createTextNode('');
+
   const element = document.createElement(vNode.type);
 
   for (const key in vNode.props) {
     const value = vNode.props[key];
 
     if (key.startsWith('on') && typeof value === 'function') {
-      element.addEventListener(key.slice(2).toLowerCase(), value);
+      addEvent(element, key.slice(2).toLowerCase(), value);
+      element._vNode = vNode;
     } else {
       if (key === 'style') {
         const ObjStyleToStringStyle = Object.entries(value)

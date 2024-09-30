@@ -10,11 +10,19 @@ export const LoginPage = () => {
           <input
             type="text"
             id="username"
+            name="username"
             placeholder="사용자 이름"
             className="w-full p-2 mb-4 border rounded"
             required
           />
-          <input type="password" placeholder="비밀번호" className="w-full p-2 mb-6 border rounded" required />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="비밀번호"
+            className="w-full p-2 mb-6 border rounded"
+            required
+          />
           <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
             로그인
           </button>

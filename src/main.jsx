@@ -1,5 +1,5 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from './lib';
+import { createFormData, createRouter, createVNode, renderElement } from './lib';
 import { HomePage, LoginPage, ProfilePage } from './pages';
 import { globalStore } from './stores';
 import { ForbiddenError, UnauthorizedError } from './errors';
@@ -7,7 +7,7 @@ import { userStorage } from './storages';
 import { addEvent, registerGlobalEvents } from './utils';
 import { App } from './App';
 
-const router = createRouter({
+export const router = createRouter({
   '/': HomePage,
   '/login': () => {
     const { loggedIn } = globalStore.getState();
@@ -21,6 +21,7 @@ const router = createRouter({
     if (!loggedIn) {
       throw new UnauthorizedError();
     }
+
     return <ProfilePage />;
   },
 });
@@ -29,6 +30,30 @@ function logout() {
   globalStore.setState({ currentUser: null, loggedIn: false });
   router.push('/login');
   userStorage.reset();
+}
+
+function login(e) {
+  const _currentUser = createFormData(e.target);
+  const currentUser = {
+    username: _currentUser.username,
+    email: '',
+    bio: '',
+  };
+  globalStore.setState({
+    currentUser,
+    loggedIn: true,
+  });
+  userStorage.set(currentUser);
+  router.push('/profile');
+}
+
+function updateProfile(e) {
+  const currentUser = createFormData(e.target);
+  globalStore.setState({
+    currentUser,
+    loggedIn: true,
+  });
+  userStorage.set(currentUser);
 }
 
 function handleError(error) {
@@ -70,11 +95,20 @@ function main() {
     logout();
   });
 
+  addEvent('submit', '#login-form', (e) => {
+    e.preventDefault();
+    login(e);
+  });
+
+  addEvent('submit', '#profile-form', (e) => {
+    e.preventDefault();
+    updateProfile(e);
+  });
+
   addEvent('click', '#error-boundary', (e) => {
     e.preventDefault();
     globalStore.setState({ error: null });
   });
-
   render();
 }
 

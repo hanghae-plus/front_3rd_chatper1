@@ -5,6 +5,11 @@ import { globalStore } from './stores/globalStore';
 export const App = ({ targetPage }) => {
   const PageComponent = targetPage ?? NotFoundPage;
   const error = globalStore.getState().error;
+
+  const resetError = () => {
+    globalStore.setState({ error: null });
+  };
+
   return (
     <div>
       <PageComponent />
@@ -13,6 +18,7 @@ export const App = ({ targetPage }) => {
           id="error-boundary"
           className="fixed bottom-4 left-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 hover:opacity-75"
           role="alert"
+          onClick={resetError}
         >
           <div className="flex justify-between items-center">
             <div>

@@ -5,11 +5,15 @@
 // 4. Infinity를 사용하여 모든 깊이의 배열을 평탄화하세요.
 
 export function createVNode(type, props, ...children) {
-    const filteredChildren = children.flat(Infinity).filter(Boolean);
-
-    return {
+    const filteredChildren = children.flat(Infinity).filter((child) => child != null && child !== false);
+    console.log("createVNode", {
         type,
         props: props || {},
+        children: filteredChildren,
+    });
+    return {
+        type,
+        props: props || null,
         children: filteredChildren,
     };
 }

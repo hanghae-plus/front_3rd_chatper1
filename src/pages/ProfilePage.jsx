@@ -1,10 +1,9 @@
-/** @jsx createVNode */
 import { Footer, Header, Navigation } from "../components";
 import { createVNode } from "../lib";
 import { userStorage } from "../storages";
 
 export const ProfilePage = () => {
-  const { username, email, bio } = userStorage.get("user");
+  const { username, email, bio } = userStorage.get('user');
 
   return (
     <div className="max-w-md w-full min-h-screen">
@@ -17,42 +16,31 @@ export const ProfilePage = () => {
           </h2>
           <form id="profile-form" data-submit="profile-form">
             <div class="mb-4">
-              <label
-                for="username"
-                class="block text-gray-700 text-sm font-bold mb-2"
-              >
+              <label for="username" class="block text-gray-700 text-sm font-bold mb-2">
                 사용자 이름
               </label>
               <input
                 type="text"
                 id="username"
                 name="username"
+                value={username ? username : ''}
                 class="w-full p-2 border rounded"
-                value={username}
-                required
               />
             </div>
             <div class="mb-4">
-              <label
-                for="email"
-                class="block text-gray-700 text-sm font-bold mb-2"
-              >
+              <label for="email" class="block text-gray-700 text-sm font-bold mb-2">
                 이메일
               </label>
               <input
-                type="email"
+                type="text"
                 id="email"
                 name="email"
+                value={email ? email : ''}
                 class="w-full p-2 border rounded"
-                value={email}
-                required
               />
             </div>
             <div class="mb-6">
-              <label
-                for="bio"
-                class="block text-gray-700 text-sm font-bold mb-2"
-              >
+              <label for="bio" class="block text-gray-700 text-sm font-bold mb-2">
                 자기소개
               </label>
               <textarea
@@ -60,8 +48,8 @@ export const ProfilePage = () => {
                 name="bio"
                 rows="4"
                 class="w-full p-2 border rounded"
-                value={bio}
               >
+                {bio ? bio : ''}
               </textarea>
             </div>
             <button

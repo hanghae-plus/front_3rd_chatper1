@@ -1,0 +1,8 @@
+__tests__
+*.md
+.babelrc
+vite.config.js
+
+# Ignore GitHub workflow files
+.github/workflows/**/*.yml
+.github/workflows/**/*.yaml

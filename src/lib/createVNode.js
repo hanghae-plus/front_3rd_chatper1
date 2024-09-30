@@ -5,6 +5,22 @@
 // 4. Infinity를 사용하여 모든 깊이의 배열을 평탄화하세요.
 
 export function createVNode(type, props, ...children) {
-  // 여기에 구현하세요
-  return {}
+  function flatten(arr) {
+    return arr.reduce((acc, val) => {
+      // 배열이면 재귀적으로 평탄화
+      if (Array.isArray(val)) {
+        acc.push(...flatten(val));
+      } else if (Boolean(val)) {
+        // falsy 값 필터링
+        acc.push(val);
+      }
+      return acc;
+    }, []);
+  }
+
+  return {
+    type,
+    props,
+    children: flatten(children),
+  };
 }

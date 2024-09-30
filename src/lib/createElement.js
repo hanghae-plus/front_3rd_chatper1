@@ -15,6 +15,14 @@ export function createElement(vNode) {
   if (typeof vNode === "string" || typeof vNode === "number")
     return document.createTextNode(vNode);
 
+  if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((child) => {
+      fragment.appendChild(createElement(child));
+    });
+    return fragment;
+  }
+
   if (typeof vNode.type === "function") {
     const props = vNode.props || {};
 

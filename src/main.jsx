@@ -26,9 +26,41 @@ const router = createRouter({
 });
 
 function logout() {
+    localStorage.removeItem("user");
     globalStore.setState({ currentUser: null, loggedIn: false });
     router.push("/login");
     userStorage.reset();
+}
+
+function login() {
+    const username = document.getElementById("username");
+
+    let user = {
+        username: username.value,
+        email: "",
+        bio: "",
+    };
+
+    localStorage.setItem("user", JSON.stringify(user));
+    globalStore.setState({ currentUser: user, loggedIn: true });
+    router.push("/profile");
+}
+
+function updateProfile() {
+    const username = document.getElementById("username");
+    const email = document.getElementById("email");
+    const bio = document.getElementById("bio");
+
+    let user = {
+        username: username.value,
+        email: email.value,
+        bio: bio.value,
+    };
+
+    localStorage.setItem("user", JSON.stringify(user));
+    globalStore.setState({ currentUser: user, loggedIn: true });
+
+    alert("수정되었습니다.");
 }
 
 function handleError(error) {
@@ -83,6 +115,16 @@ function main() {
     addEvent("click", "#error-boundary", (e) => {
         e.preventDefault();
         globalStore.setState({ error: null });
+    });
+
+    addEvent("submit", "#login-form", (e) => {
+        e.preventDefault();
+        login();
+    });
+
+    addEvent("submit", "#profile-form", (e) => {
+        e.preventDefault();
+        updateProfile();
     });
 
     render();

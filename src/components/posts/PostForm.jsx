@@ -1,4 +1,6 @@
 /** @jsx createVNode */
-import{ createVNode } from "../../lib";
+import { createVNode } from "../../lib";
 
-export const PostForm = () => ({});
+export const PostForm = () => {
+  return <></>;
+};

@@ -23,6 +23,9 @@ const router = createRouter({
     }
     return <ProfilePage/>;
   },
+  "*": () => {
+    return null;
+  },
 });
 
 function logout() {
@@ -38,7 +41,7 @@ function handleError(error) {
 // 초기화 함수
 function render() {
   const $root = document.querySelector('#root');
-
+  console.log('router.getTarget : ',router.getTarget())
   try {
     const $app = createElement(<App targetPage={router.getTarget()}/>);
     if ($root.hasChildNodes()) {
@@ -82,6 +85,25 @@ function main() {
   addEvent('click', '#error-boundary', (e) => {
     e.preventDefault();
     globalStore.setState({ error: null });
+  });
+
+  addEvent('submit', '#login-form', (e) => {
+    e.preventDefault();
+    const username = document.querySelector('#username').value.trim();
+
+    if(!username){
+      alert('이메일 또는 전화번호를 입력해 주세요.')
+      return
+    }
+    console.log(username)
+    const userInfo = {
+      username : username,
+      email : '',
+      bio : ''
+    }
+    userStorage.set(userInfo)
+    router.push('/profile');
+
   });
 
   render();

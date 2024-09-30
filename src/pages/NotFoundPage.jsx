@@ -2,6 +2,7 @@
 import { createVNode } from '../lib';
 
 export const NotFoundPage = () => {
+  return(
     <main className="bg-gray-100 flex items-center justify-center min-h-screen">
       <div
         className="bg-white p-8 rounded-lg shadow-md w-full text-center"
@@ -20,4 +21,5 @@ export const NotFoundPage = () => {
         </a>
       </div>
     </main>
+  )
 };

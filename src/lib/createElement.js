@@ -19,7 +19,7 @@ export function createElement(vNode) {
 
   if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment();
-    vNode.forEach(child => fragment.appendChild(createElement(child)));
+    vNode.forEach((child) => fragment.appendChild(createElement(child)));
     return fragment;
   }
 
@@ -30,7 +30,7 @@ export function createElement(vNode) {
   const element = document.createElement(vNode.type);
 
   if (vNode.props) {
-    Object.keys(vNode.props).forEach(key => {
+    Object.keys(vNode.props).forEach((key) => {
       const value = vNode.props[key];
 
       if (key.startsWith('on') && typeof value === 'function') {
@@ -45,7 +45,7 @@ export function createElement(vNode) {
   }
 
   if (vNode.children) {
-    vNode.children.forEach(child => {
+    vNode.children.forEach((child) => {
       element.appendChild(createElement(child));
     });
   }

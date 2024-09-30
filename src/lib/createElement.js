@@ -20,16 +20,27 @@ export function createElement(vNode) {
     vNode.forEach((child) => {
       fragment.appendChild(createElement(child));
     });
+
     return fragment;
   }
 
   if (typeof vNode.type === "function") {
     const props = vNode.props || {};
+    const children = vNode.children || [];
 
-    return createElement(vNode.type(props));
+    return createElement(vNode.type({ ...props, children }));
   }
 
   const { type, props, children = [] } = vNode;
+
+  if (!type) {
+    const fragment = document.createDocumentFragment();
+    children.forEach((child) => {
+      fragment.appendChild(createElement(child));
+    });
+
+    return fragment;
+  }
 
   const element = document.createElement(type);
 

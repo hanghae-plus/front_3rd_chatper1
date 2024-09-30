@@ -106,12 +106,13 @@ function main() {
           alert("사용자 이름을 입력해 주세요.");
           return;
         }
-        const currentUset = { ...defaultUser, username };
+        const currentUser = { ...defaultUser, username };
         globalStore.setState({
-          currentUset,
+          currentUser,
           loggedIn: true,
         });
-        userStorage.set(currentUset);
+        userStorage.set(currentUser);
+
         router.push("/profile");
         break;
 
@@ -120,7 +121,6 @@ function main() {
           currentUser: { username, email, bio },
         });
         userStorage.set({ username, email, bio });
-        console.log({ username, email, bio });
         alert("프로필 수정 완료");
         break;
     }

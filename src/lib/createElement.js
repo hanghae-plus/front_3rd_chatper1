@@ -13,6 +13,10 @@ export function createElement(vNode) {
     return document.createTextNode(vNode);
   }
 
+  if (!vNode && vNode !== 0) {
+    return document.createTextNode('');
+  }
+
   if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment();
     vNode.forEach((child) => {
@@ -33,6 +37,10 @@ export function createElement(vNode) {
         element.className = value;
       } else if (key.startsWith('on') && typeof value === 'function') {
         element.addEventListener(key.toLowerCase().slice(2), value);
+      } else if (typeof value === 'boolean') {
+        if (value) element.setAttribute(key, 'true');
+      } else if (key.startsWith('data-')) {
+        element.setAttribute(key, value);
       } else {
         element.setAttribute(key, value);
       }

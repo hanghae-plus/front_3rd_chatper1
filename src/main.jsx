@@ -27,8 +27,23 @@ const router = createRouter({
 
 function logout() {
   globalStore.setState({ currentUser: null, loggedIn: false });
-  router.push('/login');
+  router.push('/');
   userStorage.reset();
+}
+
+function login(username) {
+  globalStore.setState({ currentUser: { username }, loggedIn: true });
+  userStorage.set({ username, email: '', bio: '' });
+  router.push('/profile');
+}
+
+function updateProfile({ username, email, bio }) {
+  const { currentUser } = globalStore.getState();
+  globalStore.setState({
+    currentUser: { ...currentUser, username, email, bio },
+  });
+  userStorage.set({ ...currentUser, username, email, bio });
+  alert('프로필이 업데이트되었습니다.');
 }
 
 function handleError(error) {
@@ -40,16 +55,16 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const newVNode = createVNode(App, { targetPage: router.getTarget() });
-
-    // 가상 DOM을 실제 DOM으로 변환
-    const $app = createElement(newVNode);
-
-    console.log('app', $app);
+    // App 컴포넌트를 가상 DOM으로 생성합니다.
+    const $app = createElement(<App targetPage={router.getTarget()} />);
 
     if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app);
+      $root.replaceChild($app, $root.firstChild);
     } else {
+      // // 자식 노드가 없을 때 새로운 노드를 추가합니다.
+      // console.log('vNode', vNode);
+      // const newElement = renderElement(vNode, $root);
+      // console.log('newElement', newElement);
       $root.appendChild($app);
     }
   } catch (error) {
@@ -78,6 +93,26 @@ function main() {
   addEvent('click', '[data-link]', (e) => {
     e.preventDefault();
     router.push(e.target.href.replace(window.location.origin, ''));
+  });
+
+  addEvent('submit', '#login-form', (event) => {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value;
+
+    if (username) {
+      login(username);
+    }
+  });
+
+  addEvent('submit', '#profile-form', (event) => {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const bio = document.getElementById('bio').value;
+
+    updateProfile({ username, email, bio });
   });
 
   addEvent('click', '#logout', (e) => {

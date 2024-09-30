@@ -12,10 +12,10 @@ export const HomePage = () => {
         <Header />
         <Navigation loggedIn={loggedIn} />
         <main className="p-4">
-          {loggedIn ? PostForm() : ''}
+          {loggedIn && <PostForm />}
           <div id="posts-container" className="space-y-4">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <Post key={index} />
+            {posts.map((post) => (
+              <Post {...post} />
             ))}
           </div>
         </main>

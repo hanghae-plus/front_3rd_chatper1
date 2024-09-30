@@ -1,10 +1,56 @@
 /** @jsx createVNode */
+import { Header, Navigation, Footer } from "../components";
 import { createVNode } from "../lib";
 import { globalStore } from "../stores";
+import { userStorage } from "../storages";
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = "", email = "", bio = "" } = currentUser ?? {};
+
+  // userInfo 객체 생성
+  let userInfo = {
+    username,
+    email,
+    bio,
+  };
+
+  const handleProfileUpdate = (e) => {
+    e.preventDefault();
+
+    // 폼 제출 시, 값 가져오기
+    const updatedUsername = document.getElementById("username").value;
+    const updatedEmail = document.getElementById("email").value;
+    const updatedBio = document.getElementById("bio").value;
+
+    // 사용자 정보 업데이트
+    const updatedUser = {
+      username: updatedUsername,
+      email: updatedEmail,
+      bio: updatedBio,
+    };
+
+    // 로그인 정보 저장
+    globalStore.setState({ currentUser: updatedUser });
+    userStorage.set(updatedUser);
+
+    // 상태 업데이트
+    userInfo = { ...updatedUser };
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    userInfo[name] = value;
+  };
+
+  if (!loggedIn) {
+    return (
+      <div class="bg-gray-100 min-h-screen flex justify-center items-center">
+        <h2 class="text-xl text-red-500">로그인이 필요합니다.</h2>
+      </div>
+    );
+  }
+
   return (
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
@@ -16,7 +62,7 @@ export const ProfilePage = () => {
             <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
               내 프로필
             </h2>
-            <form id="profile-form">
+            <form id="profile-form" onSubmit={handleProfileUpdate}>
               <div class="mb-4">
                 <label
                   for="username"
@@ -29,7 +75,8 @@ export const ProfilePage = () => {
                   id="username"
                   name="username"
                   class="w-full p-2 border rounded"
-                  value={username}
+                  value={userInfo.username}
+                  onInput={handleChange}
                   required
                 />
               </div>
@@ -45,7 +92,8 @@ export const ProfilePage = () => {
                   id="email"
                   name="email"
                   class="w-full p-2 border rounded"
-                  value={email}
+                  value={userInfo.email}
+                  onInput={handleChange}
                   required
                 />
               </div>
@@ -61,9 +109,10 @@ export const ProfilePage = () => {
                   name="bio"
                   rows="4"
                   class="w-full p-2 border rounded"
-                >
-                  ${bio}
-                </textarea>
+                  value={userInfo.bio}
+                  onInput={handleChange}
+                  required
+                />
               </div>
               <button
                 type="submit"

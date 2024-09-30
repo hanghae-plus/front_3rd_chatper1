@@ -1,6 +1,6 @@
 /** @jsx createVNode */
 import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
+import { HomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
@@ -23,6 +23,9 @@ const router = createRouter({
     }
     return <ProfilePage />;
   },
+  "*": () => {
+    return <NotFoundPage />;
+  },
 });
 
 function logout() {
@@ -38,9 +41,12 @@ function handleError(error) {
 // 초기화 함수
 function render() {
   const $root = document.querySelector("#root");
+  const targetPage = router.getTarget();
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
+    const $app = createElement(
+      targetPage ? <App targetPage={targetPage} /> : <NotFoundPage />
+    );
     if ($root.hasChildNodes()) {
       $root.firstChild.replaceWith($app);
     } else {

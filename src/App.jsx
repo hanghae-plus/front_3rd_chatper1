@@ -1,14 +1,14 @@
 /** @jsx createVNode */
-import{ createVNode } from "./lib";
+import { createVNode } from './lib';
+import { globalStore } from './stores';
 
-export const App = () => {
+export const App = ({ targetPage }) => {
   const PageComponent = targetPage ?? NotFoundPage;
   const error = globalStore.getState().error;
 
   return (
     <div>
-      ${PageComponent()}
-      ${error ? `
+      {error ? `
         <div id="error-boundary" class="fixed bottom-4 left-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 hover:opacity-75" role="alert">
           <div class="flex justify-between items-center">
             <div>
@@ -20,7 +20,7 @@ export const App = () => {
             </button>
           </div>
         </div>
-      `  : ''}
+      `  : targetPage()}
     </div>
   );
 };

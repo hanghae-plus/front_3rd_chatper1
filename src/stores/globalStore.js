@@ -2,8 +2,8 @@ import { createStore } from "../lib";
 import { userStorage } from "../storages";
 
 export const globalStore = createStore({
-  currentUser: userStorage.get(),
-  loggedIn: Boolean(userStorage.get()),
+  currentUser: userStorage.get('user'),
+  loggedIn: Boolean(userStorage.get('user')),
   posts: [
     { id: 1, author: '홍길동', time: '5분 전', content: '오늘 날씨가 정말 좋네요. 다들 좋은 하루 보내세요!' },
     { id: 2, author: '김철수', time: '15분 전', content: '새로운 프로젝트를 시작했어요. 열심히 코딩 중입니다!' },

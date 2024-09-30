@@ -1,29 +1,39 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
-import { globalStore } from "./stores";
-import { ForbiddenError, UnauthorizedError } from "./errors";
-import { userStorage } from "./storages";
-import { addEvent, registerGlobalEvents } from "./utils";
-import { App } from "./App";
+import { createElement, createRouter, createVNode, renderElement } from './lib';
+import { HomePage, LoginPage, ProfilePage } from './pages';
+import { globalStore } from './stores';
+import { ForbiddenError, UnauthorizedError } from './errors';
+import { userStorage } from './storages';
+import { addEvent, registerGlobalEvents } from './utils';
+import { App } from './App';
 
 const router = createRouter({
-  "/": HomePage,
-  "/login": () => {
+  '/': HomePage,
+  '/login': () => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {
       throw new ForbiddenError();
     }
-    return <LoginPage/>;
+    return <LoginPage />;
   },
-  "/profile": () => {
+  '/profile': () => {
     const { loggedIn } = globalStore.getState();
     if (!loggedIn) {
       throw new UnauthorizedError();
     }
-    return <ProfilePage/>;
+    return <ProfilePage />;
   },
 });
+
+function login(username) {
+  const user = { username, email: '', bio: '' };
+  globalStore.setState({
+    currentUser: user,
+    loggedIn: true,
+  });
+  router.push('/');
+  userStorage.set(user);
+}
 
 function logout() {
   globalStore.setState({ currentUser: null, loggedIn: false });
@@ -40,19 +50,19 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
+    const $app = createElement(<App targetPage={router.getTarget()} />);
     if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else{
+      $root.firstChild.replaceWith($app);
+    } else {
       $root.appendChild($app);
     }
   } catch (error) {
     if (error instanceof ForbiddenError) {
-      router.push("/");
+      router.push('/');
       return;
     }
     if (error instanceof UnauthorizedError) {
-      router.push("/login");
+      router.push('/login');
       return;
     }
 
@@ -82,6 +92,12 @@ function main() {
   addEvent('click', '#error-boundary', (e) => {
     e.preventDefault();
     globalStore.setState({ error: null });
+  });
+
+  addEvent('submit', '#login-form', (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    login(username);
   });
 
   render();

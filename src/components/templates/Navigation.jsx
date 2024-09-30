@@ -1,8 +1,10 @@
 /** @jsx createVNode */
 import { createVNode } from "@/lib";
 
+import { globalStore } from "@/stores";
+
 export function Navigation() {
-  const isLogin = true;
+  const isLogin = globalStore.getState().loggedIn;
 
   const isActive = (href) => {
     return window.location.pathname === `/${href}`;

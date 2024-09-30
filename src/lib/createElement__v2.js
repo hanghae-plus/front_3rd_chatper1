@@ -33,20 +33,28 @@ export function createElement__v2(vNode) {
 }
 
 /**
-  * @function applyProps
-  * @terms vNode.props를 DOM 요소에 적용
-  * @desc 전체적으로 DOM 요소에 속성들을 적용
-  * props 객체의 각 엔트리를 반복하며, 이벤트 리스너, className, 스타일, 그 외 일반 속성 등을 설정 
-  * 이벤트 리스너는 on으로 시작하는 속성명을 감지하고, 해당 이벤트를 요소에 연결
-  * className은 요소의 CSS 클래스를 설정하며, style 객체는 요소의 인라인 스타일을 조작
-  * 그 외의 속성들은 모두 setAttribute를 사용하여 적용
-*/
+ * DOM 요소에 속성들을 설정하고 이벤트 위임을 활용하여 이벤트 리스너를 등록하는 함수
+ * 
+ * @function applyProps
+ * @param {HTMLElement} element - 속성을 적용할 DOM 요소
+ * @param {Object} props - 속성들을 포함하는 객체. 이벤트 리스너, 스타일, 클래스 등을 포함
+ * @desc
+ * 이벤트 리스너는 `on`으로 시작하는 속성명을 감지하여, document 레벨에서 이벤트 위임을 통해 처리
+ *   각 이벤트 타입에 대해 이벤트 위임 배열을 생성하고, 발생된 이벤트가 등록된 요소와 일치할 때 실행
+ * `className` 속성을 통해 요소의 클래스를 설정
+ * `style` 객체를 사용하여 요소의 스타일을 인라인으로 직접 조작
+ * 기타 속성은 `setAttribute`를 사용하여 요소에 직접 적용
+ */
 
 function applyProps(element, props) {
+  const eventDelegation = {};
+
   if (props) {
     Object.entries(props).forEach(([key, value]) => {
       if (key.startsWith('on') && typeof value === 'function') {
-        element.addEventListener(key.slice(2).toLowerCase(), value);
+        const eventType = key.slice(2).toLowerCase();
+        eventDelegation[eventType] = eventDelegation[eventType] || [];
+        eventDelegation[eventType].push({ target: element, handler: value });
       } else if (key === 'className') {
         element.className = value;
       } else if (key === 'style' && typeof value === 'object') {
@@ -56,4 +64,14 @@ function applyProps(element, props) {
       }
     });
   }
+
+  Object.keys(eventDelegation).forEach(eventType => {
+    document.addEventListener(eventType, (e) => {
+      eventDelegation[eventType].forEach(event => {
+        if (e.target === event.target) {
+          event.handler(e);
+        }
+      });
+    });
+  });
 }

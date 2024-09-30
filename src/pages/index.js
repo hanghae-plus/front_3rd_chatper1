@@ -2,3 +2,8 @@ export * from "./HomePage";
 export * from "./LoginPage";
 export * from "./NotFoundPage";
 export * from "./ProfilePage";
+export * from "./Header";
+export * from "./Navigation";
+export * from "./Post";
+export * from "./PostForm";
+export * from "./Footer";

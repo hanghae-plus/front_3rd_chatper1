@@ -10,5 +10,32 @@
 
 export function createElement(vNode) {
   // 여기에 구현하세요
-  return {}
+  if (!vNode) {
+    return document.createTextNode("");
+  } else if (typeof vNode === "string" || typeof vNode === "number") {
+    return document.createTextNode(vNode);
+  } else if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((child) => {
+      fragment.appendChild(createElement(child));
+    });
+    return fragment;
+  } else if (typeof vNode.type === "function") {
+    return createElement(vNode.type(vNode.props));
+  } else {
+    const $el = document.createElement(vNode.type);
+    for (const [k, v] of Object.entries(vNode.props || {})) {
+      if (k.startsWith("on")) {
+        $el.addEventListener(k.substring(2).toLowerCase(), v);
+      } else if (k === "className") {
+        $el.setAttribute("class", v);
+      } else {
+        $el.setAttribute(k, v);
+      }
+    }
+    (vNode.children || []).forEach((child) => {
+      $el.appendChild(createElement(child));
+    });
+    return $el;
+  }
 }

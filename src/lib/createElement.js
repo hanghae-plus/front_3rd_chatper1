@@ -7,7 +7,7 @@
 //    - vNode.type에 해당하는 요소를 생성
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
-
+/** @jsx createVNode */
 import { createVNode } from './createVNode';
 
 export function createElement(vNode) {
@@ -16,7 +16,7 @@ export function createElement(vNode) {
     return document.createTextNode(vNode);
   }
 
-  if(!vNode){
+  if(!vNode || typeof vNode === 'boolean'){
     return document.createTextNode('');
   }
 
@@ -39,7 +39,7 @@ export function createElement(vNode) {
       }else if (key === 'className') {
         element.className = value;
       //className이 아닌 style로 들어갈 때 객체로 들어가서 해당 부분 추가
-      }else if (key === 'style' && typeof value === 'object') {
+      }else if (key === 'style' && typeof value === 'object' && value) {
         Object.assign(element.style, value);
       //textArea defaultValue처리 
       }else if (key === 'value' && element.tagName === 'TEXTAREA') {

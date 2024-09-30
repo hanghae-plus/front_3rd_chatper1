@@ -8,7 +8,68 @@
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
+import { ALL_EVENTS } from "../utils/eventUtils";
+
+function isUpperCase(char) {
+  if (!char) return false;
+  return char === char.toUpperCase() && char !== char.toLowerCase();
+}
+
+function convertToEventName(attr) {
+  return attr.slice(2, 3).toLowerCase() + attr.slice(3);
+}
+
+function isEventName(attr) {
+  if (
+    !attr.startsWith("on") ||
+    !isUpperCase(attr[2]) ||
+    !ALL_EVENTS.includes(convertToEventName(attr))
+  ) {
+    return false;
+  }
+  return true;
+}
+
 export function createElement(vNode) {
-  // 여기에 구현하세요
-  return {}
+  // 1
+  if (!vNode) {
+    return document.createTextNode("");
+  }
+  // 2
+  if (typeof vNode === "string" || typeof vNode === "number") {
+    return document.createTextNode(vNode);
+  }
+  // 3
+  if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((oneNode) => {
+      fragment.appendChild(createElement(oneNode));
+    });
+    return fragment;
+  }
+  // 4
+  if (typeof vNode.type === "function") {
+    const node = vNode.type({ ...vNode.props, children: vNode.children });
+    return createElement(node);
+  }
+  // 5-1
+  const $el = document.createElement(vNode.type);
+  // 5-2
+  if (vNode.props !== null) {
+    for (const key in vNode.props) {
+      if (key === "className") {
+        $el.setAttribute("class", vNode.props[key]);
+      } else if (isEventName(key)) {
+        $el.addEventListener(convertToEventName(key), vNode.props[key]);
+      } else {
+        $el.setAttribute(key, vNode.props[key]);
+      }
+    }
+  }
+  // 5-3
+  if (vNode.children?.length > 0) {
+    $el.appendChild(createElement(vNode.children));
+  }
+
+  return $el;
 }

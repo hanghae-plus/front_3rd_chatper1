@@ -1,31 +1,39 @@
 /** @jsx createVNode */
 import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
+import { HomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
 import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
 
-const router = createRouter({
-  "/": HomePage,
-  "/login": () => {
-    const { loggedIn } = globalStore.getState();
-    if (loggedIn) {
-      throw new ForbiddenError();
+const getRouteComponent = (path) => {
+  const { loggedIn } = globalStore.getState();
+  
+  if(path === "/") {
+      return <HomePage/>;
+  }else if(path === "/login") {
+    if(loggedIn){
+      window.history.pushState('', '', '/')
+      return <HomePage/>
     }
-    return <LoginPage/>;
-  },
-  "/profile": () => {
-    const { loggedIn } = globalStore.getState();
-    if (!loggedIn) {
-      throw new UnauthorizedError();
+    return <LoginPage/>
+  }else if(path === "/profile") {
+    if(!loggedIn){
+      window.history.pushState('', '', '/login')
+      return <LoginPage/>
     }
-    return <ProfilePage/>;
-  },
-  "*": () => {
-    return null;
-  },
+    return <ProfilePage/>
+  }else{
+    return null
+  }
+  
+};
+
+const router = createRouter({ 
+  "/": () => getRouteComponent("/"), 
+  "/login": () => getRouteComponent("/login"), 
+  "/profile": () => getRouteComponent("/profile"), 
 });
 
 function logout() {
@@ -41,7 +49,7 @@ function handleError(error) {
 // 초기화 함수
 function render() {
   const $root = document.querySelector('#root');
-  console.log('router.getTarget : ',router.getTarget())
+
   try {
     const $app = createElement(<App targetPage={router.getTarget()}/>);
     if ($root.hasChildNodes()) {
@@ -95,18 +103,46 @@ function main() {
       alert('이메일 또는 전화번호를 입력해 주세요.')
       return
     }
-    console.log(username)
+
     const userInfo = {
       username : username,
       email : '',
       bio : ''
     }
-    userStorage.set(userInfo)
+    setStore(userInfo)
+    alert(1)
     router.push('/profile');
-
+    alert(2)
   });
 
+
+  addEvent('submit', '#profile-form', (e) => {
+    const profileForm = document.getElementById("profile-form");
+    if (profileForm) {
+    e.preventDefault();
+
+    const username = document.querySelector('#username')?.value.trim();
+    const email = document.querySelector('#email')?.value.trim();
+    const bio = document.querySelector('#bio').value;
+
+    const userInfo = {
+      username: username,
+      email: email,
+      bio: bio,
+    };
+    alert("프로필이 성공적으로 업데이트되었습니다.");
+    setStore(userInfo);
+
+    }
+  })
   render();
+}
+
+const setStore = (userInfo)=>{
+  userStorage.set(userInfo)
+  globalStore.setState({
+    currentUser: userInfo,
+  });
 }
 
 main();

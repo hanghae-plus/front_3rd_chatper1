@@ -1,6 +1,6 @@
 /** @jsx createVNode */
 import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
+import { CustomHomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
@@ -14,7 +14,7 @@ import { defaultUser } from "./contant";
 const router = createRouter({
   "/": () => (
     <Layout>
-      <HomePage />
+      <CustomHomePage />
     </Layout>
   ),
   "/login": () => {

@@ -48,7 +48,7 @@ export const ProfilePage = () => {
                   name="bio"
                   rows="4"
                   className="w-full p-2 border rounded"
-                  defaultValue={bio}
+                  value={bio}
                 />
               </div>
               <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded font-bold">프로필 업데이트</button>

@@ -42,9 +42,9 @@ export function createElement(vNode) {
       }else if (key === 'style' && typeof value === 'object') {
         Object.assign(element.style, value);
       //textArea defaultValue처리 
-      }else if (vNode.props.defaultValue) {
-        element.defaultValue = vNode.props.defaultValue;
-      } else {
+      }else if (key === 'value' && element.tagName === 'TEXTAREA') {
+        element.value = value;
+      }else {
         element.setAttribute(key, value);
       }
     });

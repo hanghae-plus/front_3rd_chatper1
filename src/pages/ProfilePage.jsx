@@ -1,7 +1,6 @@
 /** @jsx createVNode */
 import { createVNode } from '../lib';
-import { HomePage } from './HomePage.jsx';
-import { Footer, Navigation } from '../components/index.js';
+import { Footer, Header, Navigation } from '../components/index.js';
 import { globalStore } from '../stores/index.js';
 
 export const ProfilePage = () => {
@@ -11,7 +10,7 @@ export const ProfilePage = () => {
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">
       <div className="max-w-md w-full">
-        <HomePage />
+        <Header />
 
         <Navigation loggedIn={loggedIn} />
 

@@ -28,6 +28,7 @@ export function Navigation() {
                 isActive(href) ? "text-blue-500" : "",
               ].join(" ")}
               href={`/${href}`}
+              data-link={href}
               id={href}
             >
               {title}

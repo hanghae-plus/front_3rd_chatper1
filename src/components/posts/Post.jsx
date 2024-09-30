@@ -6,13 +6,13 @@ export const Post = ({ author, time, content, id }) => (
     <div class="flex items-center mb-2">
       <img src="https://via.placeholder.com/40" alt="프로필" class="rounded-full mr-2" />
       <div>
-        <div class="font-bold">${author}</div>
-        <div class="text-gray-500 text-sm">${time}</div>
+        <div class="font-bold">{author}</div>
+        <div class="text-gray-500 text-sm">{time}</div>
       </div>
     </div>
-    <p>${content}</p>
+    <p>{content}</p>
     <div class="mt-2 flex justify-between text-gray-500">
-      <span class="like-button" data-post-id="${id}">
+      <span class="like-button" data-post-id={id}>
         좋아요
       </span>
       <span>댓글</span>

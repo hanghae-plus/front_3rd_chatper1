@@ -1,6 +1,7 @@
 /** @jsx createVNode */
 import { createVNode } from './lib';
-import NotFoundPage from './pages/NotFoundPage';
+import { NotFoundPage } from './pages/NotFoundPage';
+import { globalStore } from './stores';
 
 export const App = ({ targetPage }) => {
   const PageComponent = targetPage ?? NotFoundPage;
@@ -8,7 +9,7 @@ export const App = ({ targetPage }) => {
 
   return (
     <div>
-      ${PageComponent()}$
+      {PageComponent()}
       {error ? (
         <div
           id="error-boundary"

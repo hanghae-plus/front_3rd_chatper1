@@ -29,14 +29,14 @@
 #### 3) 컴포넌트를 jsx로 정의하여 사용했는지 확인하기
 - [x] Post
 - [x] PostForm
-- [ ] Header
-- [ ] Navigation
-- [ ] Footer
-- [ ] HomePage
-- [ ] LoginPage
-- [ ] NotFoundPage
-- [ ] ProfilePage
-- [ ] HomePage를 렌더링 했을 때 html 문자열로 잘 변환되는지 확인
+- [x] Header
+- [x] Navigation
+- [x] Footer
+- [x] HomePage
+- [x] LoginPage
+- [x] NotFoundPage
+- [x] ProfilePage
+- [x] HomePage를 렌더링 했을 때 html 문자열로 잘 변환되는지 확인
 
 ### 심화 과제
 #### 1) Diff 알고리즘 구현

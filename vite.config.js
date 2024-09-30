@@ -4,12 +4,12 @@ import { defineConfig } from 'vite';
 export default mergeConfig(
   defineConfig({
     esbuild: {
-      jsxFactory: 'createVNode',
+      jsxFactory: 'createVNode'
     },
     optimizeDeps: {
       esbuildOptions: {
         jsx: 'transform',
-        jsxFactory: 'createVNode',
+        jsxFactory: 'createVNode'
       }
     }
   }),
@@ -18,6 +18,6 @@ export default mergeConfig(
       globals: true,
       environment: 'jsdom',
       setupFiles: './src/setupTests.js'
-    },
+    }
   })
 );

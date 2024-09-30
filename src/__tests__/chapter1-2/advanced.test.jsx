@@ -42,7 +42,9 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
       );
       renderElement(updatedVNode, container);
 
-      expect(container.innerHTML).toBe('<div><h1>Updated Title</h1><p>Paragraph 1</p></div>');
+      expect(container.innerHTML).toBe(
+        '<div><h1>Updated Title</h1><p>Paragraph 1</p></div>'
+      );
       expect(container.querySelector('h1')).toBe(originalH1); // 같은 요소 참조 확인
       expect(container.querySelector('p')).toBe(originalP); // 같은 요소 참조 확인
       expect(container.querySelector('h1').textContent).toBe('Updated Title');
@@ -70,20 +72,32 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
       renderElement(updatedVNode, container);
 
       expect(container.querySelectorAll('li').length).toBe(3);
-      expect(container.querySelector('li:nth-child(2)').textContent).toBe('New Item');
+      expect(container.querySelector('li:nth-child(2)').textContent).toBe(
+        'New Item'
+      );
       expect(container.querySelector('li:first-child')).toBe(originalFirstLi); // 같은 요소 참조 확인
     });
 
     it('요소의 속성만 변경되었을 때 요소를 재사용해야 한다', () => {
-      const initialVNode = <div id="test" className="old">Hello</div>;
+      const initialVNode = (
+        <div id="test" className="old">
+          Hello
+        </div>
+      );
       renderElement(initialVNode, container);
 
       const originalDiv = container.querySelector('div');
 
-      const updatedVNode = <div id="test" className="new">Hello</div>;
+      const updatedVNode = (
+        <div id="test" className="new">
+          Hello
+        </div>
+      );
       renderElement(updatedVNode, container);
 
-      expect(container.innerHTML).toBe('<div id="test" class="new">Hello</div>');
+      expect(container.innerHTML).toBe(
+        '<div id="test" class="new">Hello</div>'
+      );
       expect(container.querySelector('div')).toBe(originalDiv); // 같은 요소 참조 확인
     });
 

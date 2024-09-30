@@ -92,17 +92,37 @@ function main() {
     logout();
   });
 
-  addEvent("submit", "#login-form", (e) => {
+  addEvent("submit", "form", (e) => {
     e.preventDefault();
+
+    const { id } = e.target;
     const username = e.target.elements["username"].value;
-    if (username === "") {
-      alert("사용자 이름을 입력해 주세요.");
-      return;
+    const email = e.target.elements["email"]?.value || "";
+    const bio = e.target.elements["bio"]?.value || "";
+    switch (id) {
+      case "login-form":
+        if (username === "") {
+          alert("사용자 이름을 입력해 주세요.");
+          return;
+        }
+        const currentUset = { ...defaultUser, username };
+        globalStore.setState({
+          currentUset,
+          loggedIn: true,
+        });
+        userStorage.set(currentUset);
+        router.push("/profile");
+        break;
+
+      case "profile-form":
+        globalStore.setState({
+          currentUser: { username, email, bio },
+        });
+        userStorage.set({ username, email, bio });
+        console.log({ username, email, bio });
+        alert("프로필 수정 완료");
+        break;
     }
-    globalStore.setState({
-      currentUser: { ...defaultUser, username },
-    });
-    router.push("/profile");
   });
 
   addEvent("click", "#error-boundary", (e) => {

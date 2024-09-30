@@ -8,27 +8,29 @@ import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
 
 const router = createRouter({
-  "/": HomePage,
+  "/": () => <HomePage />,
   "/login": () => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {
-      throw new ForbiddenError();
+      window.history.pushState(null, null, "/");
+      return <HomePage />;
     }
-    return <LoginPage/>;
+    return <LoginPage />;
   },
   "/profile": () => {
     const { loggedIn } = globalStore.getState();
     if (!loggedIn) {
-      throw new UnauthorizedError();
+      window.history.pushState(null, null, "/login");
+      return <LoginPage />;
     }
-    return <ProfilePage/>;
+    return <ProfilePage />;
   },
 });
 
 function logout() {
   globalStore.setState({ currentUser: null, loggedIn: false });
-  router.push('/login');
-  userStorage.reset();
+  router.push("/login");
+  userStorage.reset("user");
 }
 
 function handleError(error) {
@@ -37,13 +39,12 @@ function handleError(error) {
 
 // 초기화 함수
 function render() {
-  const $root = document.querySelector('#root');
-
+  const $root = document.querySelector("#root");
   try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
+    const $app = createElement(<App targetPage={router.getTarget()} />);
     if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else{
+      $root.firstChild.replaceWith($app);
+    } else {
       $root.appendChild($app);
     }
   } catch (error) {
@@ -66,25 +67,51 @@ function render() {
 function main() {
   router.subscribe(render);
   globalStore.subscribe(render);
-  window.addEventListener('error', handleError);
-  window.addEventListener('unhandledrejection', handleError);
+  window.addEventListener("error", handleError);
+  window.addEventListener("unhandledrejection", handleError);
 
-  addEvent('click', '[data-link]', (e) => {
+  addEvent("click", "[data-link]", (e) => {
     e.preventDefault();
-    router.push(e.target.href.replace(window.location.origin, ''));
+    router.push(e.target.href.replace(window.location.origin, ""));
   });
 
-  addEvent('click', '#logout', (e) => {
+  addEvent("click", "#logout", (e) => {
     e.preventDefault();
+
     logout();
   });
 
-  addEvent('click', '#error-boundary', (e) => {
+  addEvent("click", "#error-boundary", (e) => {
     e.preventDefault();
     globalStore.setState({ error: null });
   });
 
+  addEvent("submit", "#login-form", (e) => {
+    e.preventDefault();
+
+    const currentUser = {
+      username: e.target.querySelector("#username").value,
+      email: "",
+      bio: "",
+    };
+    userStorage.set("user", currentUser);
+    globalStore.setState({ currentUser, loggedIn: true });
+    router.push("/profile");
+  });
+
+  addEvent("submit", "#profile-form", (e) => {
+    e.preventDefault();
+
+    const currentUser = {
+      username: e.target.querySelector("#username").value,
+      email: e.target.querySelector("#email").value,
+      bio: e.target.querySelector("#bio").value,
+    };
+
+    userStorage.set("user", currentUser);
+    globalStore.setState({ currentUser, loggedIn: true });
+  });
+
   render();
 }
-
 main();

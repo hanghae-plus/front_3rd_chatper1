@@ -5,7 +5,7 @@ import { globalStore } from "../stores";
 import { defaultUser } from "../contant";
 
 export function ProfilePage() {
-  const { getState, setState } = globalStore;
+  const { getState } = globalStore;
   const { currentUser } = getState();
 
   const userInfo = currentUser ?? defaultUser;
@@ -36,13 +36,21 @@ export function ProfilePage() {
               </label>
               {key !== "bio" ? (
                 <input
-                  type="text"
+                  type={key === "email" ? "email" : "text"}
+                  name={key}
                   value={userInfo[key] ?? ""}
                   id={key}
                   className={inputClass}
                 />
               ) : (
-                <textarea value={userInfo[key] ?? ""} className={inputClass} />
+                <textarea
+                  value={userInfo[key] ?? ""}
+                  id={key}
+                  name={key}
+                  className={inputClass}
+                >
+                  {userInfo[key] ?? ""}
+                </textarea>
               )}
             </div>
           );

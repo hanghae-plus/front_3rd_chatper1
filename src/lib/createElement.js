@@ -27,7 +27,8 @@ export function createElement(vNode) {
   }
 
   if (typeof vNode.type === "function") {
-    return createElement(vNode.type(vNode.props || {}));
+    const result = vNode.type(vNode.props || {});
+    return createElement(result);
   }
 
   const domElement = document.createElement(vNode.type);
@@ -46,9 +47,11 @@ export function createElement(vNode) {
     });
   }
 
-  vNode.children.forEach((child) =>
-    domElement.appendChild(createElement(child))
-  );
+  if (vNode.children) {
+    vNode.children.forEach((child) => {
+      domElement.appendChild(createElement(child));
+    });
+  }
 
   return domElement;
 }

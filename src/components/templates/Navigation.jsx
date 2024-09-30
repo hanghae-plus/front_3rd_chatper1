@@ -2,7 +2,7 @@
 import { createVNode } from "@/lib";
 
 export function Navigation() {
-  const isLogin = false;
+  const isLogin = true;
 
   const isActive = (href) => {
     return window.location.pathname === `/${href}`;
@@ -16,8 +16,10 @@ export function Navigation() {
             case "profile":
             case "logout":
               if (!isLogin) return null;
-            default:
+              break;
+            case "login":
               if (isLogin) return null;
+              break;
           }
           return (
             <a
@@ -26,6 +28,7 @@ export function Navigation() {
                 isActive(href) ? "text-blue-500" : "",
               ].join(" ")}
               href={`/${href}`}
+              id={href}
             >
               {title}
             </a>

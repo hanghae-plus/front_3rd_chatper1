@@ -12,20 +12,20 @@ import { App } from "./App";
 import { defaultUser } from "./contant";
 
 const router = createRouter({
-  "/": (
+  "/": () => (
     <Layout>
       <HomePage />
     </Layout>
   ),
-  "/login": (() => {
+  "/login": () => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {
       throw new ForbiddenError();
     }
 
     return <LoginPage />;
-  })(),
-  "/profile": (() => {
+  },
+  "/profile": () => {
     const { loggedIn } = globalStore.getState();
     if (!loggedIn) {
       throw new UnauthorizedError();
@@ -35,7 +35,7 @@ const router = createRouter({
         <ProfilePage />
       </Layout>
     );
-  })(),
+  },
 });
 
 function logout() {

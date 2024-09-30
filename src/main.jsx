@@ -9,6 +9,7 @@ import { addEvent, registerGlobalEvents } from "./utils";
 import { Layout } from "./components";
 
 import { App } from "./App";
+import { defaultUser } from "./contant";
 
 const router = createRouter({
   "/": (
@@ -24,7 +25,7 @@ const router = createRouter({
 
     return <LoginPage />;
   })(),
-  "/profile": () => {
+  "/profile": (() => {
     const { loggedIn } = globalStore.getState();
     if (!loggedIn) {
       throw new UnauthorizedError();
@@ -34,7 +35,7 @@ const router = createRouter({
         <ProfilePage />
       </Layout>
     );
-  },
+  })(),
 });
 
 function logout() {
@@ -96,9 +97,10 @@ function main() {
     const username = e.target.elements["username"].value;
     if (username === "") {
       alert("사용자 이름을 입력해 주세요.");
+      return;
     }
     globalStore.setState({
-      currentUser: { username },
+      currentUser: { ...defaultUser, username },
     });
     router.push("/profile");
   });

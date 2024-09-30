@@ -2,6 +2,7 @@
 import { createVNode } from "../lib";
 import { globalStore } from "../stores";
 import { userStorage } from "../storages";
+import { router } from "../main";
 
 const login = (username) => {
 	const user = { username, email: "", bio: "" };
@@ -10,8 +11,9 @@ const login = (username) => {
 		loggedIn: true,
 	});
 	userStorage.set(user);
+	router.push("/profile");
 };
-const handleLogin = () => {
+const handleLogin = (e) => {
 	e.preventDefault();
 	const username = document.getElementById("username").value;
 	login(username);
@@ -22,7 +24,7 @@ export const LoginPage = () => {
 		<div className="bg-gray-100 flex items-center justify-center min-h-screen">
 			<div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
 				<h1 className="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-				<form id="login-form">
+				<form id="login-form" onSubmit={handleLogin}>
 					<input
 						type="text"
 						id="username"
@@ -36,11 +38,7 @@ export const LoginPage = () => {
 						className="w-full p-2 mb-6 border rounded"
 						required
 					/>
-					<button
-						type="submit"
-						onClick={handleLogin}
-						className="w-full bg-blue-600 text-white p-2 rounded"
-					>
+					<button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
 						로그인
 					</button>
 				</form>

@@ -5,23 +5,35 @@ import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
 import { addEvent, registerGlobalEvents } from "./utils";
+
+import { Layout } from "./components";
+
 import { App } from "./App";
 
 const router = createRouter({
-  "/": HomePage,
-  "/login": () => {
+  "/": (
+    <Layout>
+      <HomePage />
+    </Layout>
+  ),
+  "/login": (() => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {
       throw new ForbiddenError();
     }
+
     return <LoginPage />;
-  },
+  })(),
   "/profile": () => {
     const { loggedIn } = globalStore.getState();
     if (!loggedIn) {
       throw new UnauthorizedError();
     }
-    return <ProfilePage />;
+    return (
+      <Layout>
+        <ProfilePage />
+      </Layout>
+    );
   },
 });
 

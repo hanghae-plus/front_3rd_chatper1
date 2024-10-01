@@ -36,12 +36,13 @@ export function createElement(vNode) {
   if (vNode.props) {
     Object.keys(vNode.props).forEach((key) => {
       const value = vNode.props[key];
+
       if (key.startsWith("on") && typeof value === "function") {
         const event = key.slice(2).toLowerCase();
         domElement.addEventListener(event, value);
       } else if (key === "className") {
         domElement.className = value;
-      } else {
+      } else if (typeof value !== "symbol") {
         domElement.setAttribute(key, value);
       }
     });

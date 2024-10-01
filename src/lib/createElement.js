@@ -1,4 +1,3 @@
-// TODO: createElement 함수 구현
 // 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
 // 2. vNode가 문자열이나 숫자면 텍스트 노드를 생성하여 반환합니다.
 // 3. vNode가 배열이면 DocumentFragment를 생성하고 각 자식에 대해 createElement를 재귀 호출하여 추가합니다.

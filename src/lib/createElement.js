@@ -24,15 +24,14 @@ function createFragmentFromArray(array) {
 
 export function createElement(vNode) {
   // 여기에 구현하세요
-  if (vNode === undefined) return;
+  if (vNode === undefined) return '';
   if (Array.isArray(vNode)) return createFragmentFromArray(vNode);
 
   if (vNode?.type === undefined || vNode === null || vNode === false) {
     return document.createTextNode(vNode ? vNode.toString() : '');
   }
   if (typeof vNode.type === 'function') {
-    console.log('createElement function', vNode);
-    return createElement(vNode.type(vNode.props));
+    return createElement(vNode.type(vNode));
   }
 
   const $el = document.createElement(vNode.type);

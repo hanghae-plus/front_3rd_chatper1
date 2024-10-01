@@ -80,6 +80,12 @@ describe('Chapter1-2 > 기본과제 > 가상돔 만들기 > ', () => {
       expect(result.textContent).toBe('42');
     });
 
+    it('빈 배열에 대해 빈 텍스트 노드를 생성해야 한다', () => {
+      const result = createElement([]);
+      expect(result.nodeType).toBe(Node.TEXT_NODE);
+      expect(result.textContent).toBe('');
+    });
+
     it('null 입력에 대해 빈 텍스트 노드를 생성해야 한다', () => {
       const result = createElement(null);
       expect(result.nodeType).toBe(Node.TEXT_NODE);
@@ -90,6 +96,16 @@ describe('Chapter1-2 > 기본과제 > 가상돔 만들기 > ', () => {
       const result = createElement(false);
       expect(result.nodeType).toBe(Node.TEXT_NODE);
       expect(result.textContent).toBe('');
+    });
+
+    it('true 입력에 대해 빈 텍스트 노드를 생성해야 한다', () => {
+      const result = createElement(true);
+      expect(result.textContent).toBe('');
+    });
+
+    it('Number 타입인 0 입력에 대해 0을 텍스트로 생성해야 한다', () => {
+      const result = createElement(0);
+      expect(result.textContent).toBe('0');
     });
 
     it('배열 입력에 대해 DocumentFragment를 생성해야 한다', () => {
@@ -240,3 +256,5 @@ describe('Chapter1-2 > 기본과제 > 가상돔 만들기 > ', () => {
     })
   })
 })
+
+

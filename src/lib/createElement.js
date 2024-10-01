@@ -1,11 +1,14 @@
 import { formatVNodeAttr } from './formatVNodeAttr';
 
 export function createElement(vNode) {
-  if (!vNode) return document.createTextNode('');
+  if (vNode === null || vNode === undefined) return document.createTextNode('');
+
+  if (typeof vNode === 'boolean') return document.createTextNode('');
 
   //TODO: type이 number이면서 Number.isNaN()일 경우 체크
   if (typeof vNode === 'string' || typeof vNode === 'number') return document.createTextNode(vNode);
   if (Array.isArray(vNode)) {
+    if (vNode.length === 0) return document.createTextNode('');
     const fragment = new DocumentFragment();
     vNode.forEach((child) => fragment.appendChild(createElement(child)));
     return fragment;
@@ -14,9 +17,6 @@ export function createElement(vNode) {
   if (typeof vNode.type === 'function') {
     return createElement(vNode.type(vNode.props, vNode.children));
   }
-
-  // Good
-  // if (Boolean(vNode) || Number.isNaN(vNode)) return document.createTextNode('');
 
   const element = document.createElement(vNode.type);
 

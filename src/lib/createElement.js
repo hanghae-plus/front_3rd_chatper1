@@ -8,7 +8,50 @@
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
+import {createVNode} from "./createVNode.js";
+
+
 export function createElement(vNode) {
   // 여기에 구현하세요
-  return {}
+  // console.dir(vNode)
+  const {type, props, children} = vNode
+  console.dir(type)
+  console.dir(props)
+  console.dir(children)
+
+  console.log('--------------------------------------')
+
+
+  if (!vNode) {
+    return document.createTextNode('');
+  }
+
+
+  if (typeof vNode.type === "function") {
+    const { type, props, children } = vNode.type(vNode.props || {});
+    return createElement(createVNode(type, props, children));
+  }
+
+  const element = document.createElement(vNode.type);
+  applyProps(element, vNode.props)
+  return document.createTextNode('hello');
+}
+
+function applyProps(element, props) {
+  if (!!props) {
+    for (const [key,value] of Object.entries(props)) {
+      console.log(key)
+      console.log(value)
+
+      if (key.startsWith('on') && typeof value === 'function') {
+        // prop이 handler일 경우 이벤트 등록
+        element.addEventListener(key.slice(2).toLowerCase(), value);
+      } else if (key === 'className') {
+        // prop이 class명일 경우 class 등록
+        element.className = value;
+      } else {
+        element.setAttribute(key, value);
+      }
+    }
+  }
 }

@@ -13,6 +13,7 @@
 // typeof vNode 로 분기처리 -> typeof null 의 값이 object...
 // 배열은 Array.isArray() 로 판단
 // 객체를 만들지 말고 document.createDocumentFragment(), document.createElement()로 반환하면 됨
+// function은 vNode.type으로 들어옴!
 
 export function createElement(vNode) {
   // 여기에 구현하세요
@@ -27,13 +28,23 @@ export function createElement(vNode) {
   }
   // object일때
   if (vNode && typeof vNode === "object") {
+    // function일 때
+    if (typeof vNode.type === "function") {
+      return createElement(vNode.type(vNode.props));
+    }
+
     const element = document.createElement(vNode.type);
+
+    // children 처리
+    if (Array.isArray(vNode.children)) {
+      vNode.children.forEach((child) =>
+        element.appendChild(createElement(child))
+      );
+    } else if (vNode.children) {
+      element.appendChild(createElement(children));
+    }
+
     return element;
-  }
-  // 함수일때
-  if (typeof vNode === "function") {
-    const componentVNode = vNode.type(vNode.props || {});
-    return createElement(componentVNode);
   }
   // 문자열로 반환해야할때
   if (!vNode || typeof vNode === "string" || typeof vNode === "number") {

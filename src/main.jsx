@@ -8,7 +8,7 @@ import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
 
 const router = createRouter({
-  "/": HomePage,
+  "/": () => <HomePage />,
   "/login": () => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {
@@ -37,10 +37,11 @@ function handleError(error) {
 
 // 초기화 함수
 function render() {
+
   const $root = document.querySelector('#root');
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
+    const $app = createElement(<App targetPage={router.getTarget()} />);
     if ($root.hasChildNodes()) {
       $root.firstChild.replaceWith($app)
     } else{

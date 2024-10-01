@@ -10,48 +10,73 @@
 
 import {createVNode} from "./createVNode.js";
 
+// element 속성 적용
+function createElementProps(element, props) {
+  if (!!props) {
+    for (const [key,value] of Object.entries(props)) {
+      const isEventHandler = key.startsWith('on') && typeof value === 'function'
+      if (isEventHandler) {
+        // prop이 handler일 경우 이벤트 등록
+        element.addEventListener(key.slice(2).toLowerCase(), value);
 
+      } else if (key === 'className') {
+        // prop이 class명일 경우 class 등록
+        element.className = value;
+
+      } else {
+        element.setAttribute(key, value);
+
+      }
+    }
+  }
+}
+
+// virtual dom node를 실제 dom node로 변환
 export function createElement(vNode) {
-  // 여기에 구현하세요
-  // console.dir(vNode)
-  const {type, props, children} = vNode
-  console.dir(type)
-  console.dir(props)
-  console.dir(children)
 
-  console.log('--------------------------------------')
-
-
+  // null 입력에 대해 빈 텍스트 노드를 생성해야 한다
+  // false 입력에 대해 빈 텍스트 노드를 생성해야 한다
   if (!vNode) {
     return document.createTextNode('');
   }
 
+  // 문자열 입력에 대해 텍스트 노드를 생성해야 한다
+  // 숫자 입력에 대해 텍스트 노드를 생성해야 한다
+  if (typeof vNode === 'string' || typeof vNode === 'number') {
+    return document.createTextNode(String(vNode));
+  }
 
+  // 배열 입력에 대해 DocumentFragment를 생성해야 한다
+  if (Array.isArray(vNode)) {
+    // documentFragment : 메인 DOM 트리에 포함되지 않는, 가상 메모리에 존재하는 DOM 노드 객체 (repaint X)
+    const fragment = document.createDocumentFragment();
+
+    for (const value of vNode) {
+      fragment.appendChild(createElement(value))
+    }
+
+    return fragment
+  }
+
+  // 함수 컴포넌트를 처리해야 한다
   if (typeof vNode.type === "function") {
     const { type, props, children } = vNode.type(vNode.props || {});
     return createElement(createVNode(type, props, children));
   }
 
   const element = document.createElement(vNode.type);
-  applyProps(element, vNode.props)
-  return document.createTextNode('hello');
-}
+  createElementProps(element, vNode.props)
 
-function applyProps(element, props) {
-  if (!!props) {
-    for (const [key,value] of Object.entries(props)) {
-      console.log(key)
-      console.log(value)
+  // 중첩된 자식 요소를 올바르게 처리해야 한다
+  if (vNode.children) {
+    const fragment = document.createDocumentFragment();
 
-      if (key.startsWith('on') && typeof value === 'function') {
-        // prop이 handler일 경우 이벤트 등록
-        element.addEventListener(key.slice(2).toLowerCase(), value);
-      } else if (key === 'className') {
-        // prop이 class명일 경우 class 등록
-        element.className = value;
-      } else {
-        element.setAttribute(key, value);
-      }
+    for (const value of vNode.children) {
+      fragment.appendChild(createElement(value))
     }
+    element.appendChild(fragment);
   }
+
+  return element;
 }
+

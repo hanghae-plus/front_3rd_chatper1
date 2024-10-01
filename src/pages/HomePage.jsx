@@ -1,8 +1,7 @@
 /** @jsx createVNode */
 import { createVNode } from '../lib';
 
-import { Footer, Header, Navigation, Post } from '../components';
-import { NotFoundPage } from './NotFoundPage';
+import { Footer, Header, Navigation, Post, PostForm } from '../components';
 import { globalStore } from '../stores';
 
 export const HomePage = () => {

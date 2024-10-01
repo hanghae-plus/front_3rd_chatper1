@@ -17,7 +17,7 @@ export function setupEventListeners(root) {
   rootElement = root;
   if (eventMap.size <= 0) return;
   for (const [eventType] of eventMap) {
-    removeEvent;
+    rootElement.removeEventListener(eventType, handleEvent, true);
     rootElement.addEventListener(eventType, handleEvent, true);
   }
 }
@@ -34,7 +34,6 @@ function handleEvent(e) {
   const handlers = eventMap.get(type);
   for (const { element, handler } of handlers) {
     if (element === target) {
-      element.removeEventListener(type, handleEvent, false);
       handler(e);
       break;
     }
@@ -52,7 +51,7 @@ export function addEvent(element, eventType, handler) {
   if (filteredArr.length > 0) return;
   arr.push({ element, handler });
   eventMap.set(eventType, arr);
-  element?.addEventListener(eventType, handleEvent, false);
+  document.addEventListener('DOMContentLoaded', function () {});
 }
 
 // TODO: removeEvent 함수 구현
@@ -63,10 +62,5 @@ export function removeEvent(element, eventType) {
   const arr = eventMap.get(eventType) || [];
   const filteredArr = arr.filter((item) => item.element !== element);
 
-  if (filteredArr.length <= 0) {
-    eventMap.delete(eventType);
-    rootElement?.removeEventListener(eventType, handleEvent, true);
-  } else {
-    eventMap.set(eventType, filteredArr);
-  }
+  eventMap.set(eventType, filteredArr);
 }

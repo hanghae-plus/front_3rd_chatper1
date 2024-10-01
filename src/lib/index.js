@@ -2,6 +2,7 @@ export * from './createStore';
 export * from './createStorage';
 export * from './createRouter';
 export * from './createVNode';
+export * from './createElement__v2';
 export * from './createElement';
 export * from './createFormData';
 export * from './renderElement';

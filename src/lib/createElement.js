@@ -34,8 +34,7 @@ export function createElement(vNode) {
     const value = vNode.props[key];
 
     if (key.startsWith('on') && typeof value === 'function') {
-      addEvent(element, key.slice(2).toLowerCase(), value);
-      element._vNode = vNode;
+      element.addEventListener(key.slice(2).toLowerCase(), value, false);
     } else {
       if (key === 'style') {
         const ObjStyleToStringStyle = Object.entries(value)

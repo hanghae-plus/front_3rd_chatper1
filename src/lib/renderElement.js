@@ -1,17 +1,7 @@
 // renderElement.js
-import { addEvent, removeEvent, setupEventListeners } from './eventManager';
-import { createElement } from './createElement.js';
-import { flatObject } from './flatObject.js';
 import { createElement__v2 } from './createElement__v2.js';
-
-// TODO: processVNode 함수 구현
-function processVNode() {
-  // vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
-  // - null, undefined, boolean 값 처리
-  // - 문자열과 숫자를 문자열로 변환
-  // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
-  // - 자식 요소들에 대해 재귀적으로 processVNode 호출
-}
+import { addEvent, removeEvent, setupEventListeners } from './eventManager';
+import { flatObject } from './flatObject.js';
 
 // TODO: updateAttributes 함수 구현
 function updateAttributes(newNode, oldNode) {
@@ -27,15 +17,24 @@ function updateAttributes(newNode, oldNode) {
   const newNodeAttributes = [...newNode.attributes, ...flatObject(newNode._vNode?.props)];
   const oldNodeAttributes = [...oldNode.attributes, ...flatObject(oldNode._vNode?.props)];
 
-  // console.log(newNodeAttributes);
-  // console.log(oldNodeAttributes);
-
   for (const { name, value } of newNodeAttributes) {
     if (name.startsWith('on')) {
       addEvent(oldNode, name.slice(2).toLowerCase(), value);
       oldNode._vNode = newNode._vNode;
     } else {
-      oldNode.setAttribute(name, value);
+      if (name === 'style') {
+        const ObjStyleToStringStyle = Object.entries(value)
+          .reduce((acc, [key, value]) => {
+            const _key = key.replaceAll(/([A-Z])/g, '-$1').toLowerCase();
+            const _value = typeof value === 'string' ? value : `${value}px`;
+            return acc + `${_key}: ${_value}; `;
+          }, '')
+          .trim();
+        oldNode.setAttribute(name, ObjStyleToStringStyle);
+      } else {
+        const _key = name === 'className' ? 'class' : name;
+        oldNode.setAttribute(_key, value);
+      }
     }
   }
   for (const { name } of oldNodeAttributes) {
@@ -106,10 +105,9 @@ export function renderElement(vNode, container) {
   // - 이전 vNode와 새로운 vNode를 비교하여 업데이트
   // - 최초 렌더링 시에는 createElement__v2로 실행
   // - 리렌더링일 때에는 updateElement로 실행
-  processVNode();
 
   const oldEl = container.firstChild;
-  const newEl = createElement(vNode);
+  const newEl = createElement__v2(vNode);
 
   if (!oldEl) {
     container.appendChild(newEl);

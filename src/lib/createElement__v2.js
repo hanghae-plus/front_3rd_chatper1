@@ -1,11 +1,51 @@
+import { addEvent } from './eventManager';
+
 export function createElement__v2(vNode) {
-  // 이 함수는 createElement의 개선된 버전입니다.
-// 1. falsy vNode 처리
-// 2. 문자열 또는 숫자 vNode 처리
-// 3. 배열 vNode 처리 (DocumentFragment 사용)
-// 4. 일반 요소 vNode 처리:
-//    - 요소 생성
-//    - 속성 설정 (이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선)
-//    - 자식 요소 추가
-  return {}
+  if (!vNode) return document.createTextNode('');
+
+  //TODO: type이 number이면서 Number.isNaN()일 경우 체크
+  if (typeof vNode === 'string' || typeof vNode === 'number') return document.createTextNode(vNode);
+  if (Array.isArray(vNode)) {
+    const fragment = new DocumentFragment();
+    vNode.forEach((child) => fragment.appendChild(createElement__v2(child)));
+    return fragment;
+  }
+
+  if (typeof vNode.type === 'function') {
+    return createElement__v2(vNode.type(vNode.props, vNode.children));
+  }
+
+  // Good
+  // if (Boolean(vNode) || Number.isNaN(vNode)) return document.createTextNode('');
+
+  const element = document.createElement(vNode.type);
+
+  for (const key in vNode.props) {
+    const value = vNode.props[key];
+
+    if (key.startsWith('on') && typeof value === 'function') {
+      addEvent(element, key.slice(2).toLowerCase(), value);
+      element._vNode = vNode;
+    } else {
+      if (key === 'style') {
+        const ObjStyleToStringStyle = Object.entries(value)
+          .reduce((acc, [key, value]) => {
+            const _key = key.replaceAll(/([A-Z])/g, '-$1').toLowerCase();
+            const _value = typeof value === 'string' ? value : `${value}px`;
+            return acc + `${_key}: ${_value}; `;
+          }, '')
+          .trim();
+        element.setAttribute(key, ObjStyleToStringStyle);
+      } else {
+        const _key = key === 'className' ? 'class' : key;
+        element.setAttribute(_key, value);
+      }
+    }
+  }
+
+  for (const child of vNode.children) {
+    element.appendChild(createElement__v2(child));
+  }
+
+  return element;
 }

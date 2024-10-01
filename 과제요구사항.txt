@@ -1,0 +1,327 @@
+#과제 목표 
+-> 가상돔을 만들고 적용하기
+-> createVnode , createElement
+-> main.jsx 의 createElement로 jsx을 받와서 
+변환을해서 root element 에 생성을 하는 경험 
+
+ 2-1. VirtualDOM 만들기
+
+
+VirtualDOM 
+DOM을 추상화한 Object가 VirtualDOM 입니다. 
+조금 더 쉽게 말해서 “DOM 처럼 생긴 객체”가 바로 가상돔입니다.
+############# HTML #############
+<div id="app">
+  <ul>
+    <li>
+      <input type="checkbox" class="toggle" />
+      todo list item 1
+      <button class="remove">삭제</button>
+    </li>
+    <li class="completed">
+      <input type="checkbox" class="toggle" checked />
+      todo list item 2
+      <button class="remove">삭제</button>
+    </li>
+  </ul>
+  <form>
+    <input type="text" />
+    <button type="submit">추가</button>
+  </form>
+</div>
+
+############# VirtualDOM  #############
+
+function virtualDom(type, props, ...children) {
+  return { type, props, children: children.flat() }
+}
+
+const result = (
+	virtualDom('div', { id: 'app' },
+	  virtualDom('ul', null,
+	    virtualDom('li', null,
+	      virtualDom('input', { type: 'checkbox', className: 'toggle' }),
+	      'todo list item 1',
+	      virtualDom('button', { className: 'remove' }, '삭제')
+	    ),
+	    virtualDom('li', { className: 'completed' },
+	      virtualDom('input', { type: 'checkbox', className: 'toggle', checked: true }),
+	      'todo list item 2',
+	      virtualDom('button', { className: 'remove' }, '삭제')
+	    ),
+	  ),
+	  virtualDom('form',
+	    virtualDom('input', { type: 'text' }),
+	    virtualDom('button', { type: 'submit' }, '추가'),
+	  )
+	)
+);
+보통 virtualDom 대신 h 로 표현합니다.
+
+function h(type, props, ...children) {
+  return { type, props, children: children.flat() }
+}
+
+const result = (
+	h('div', { id: 'app' },
+	  h('ul', null,
+	    h('li', null,
+	      h('input', { type: 'checkbox', className: 'toggle' }),
+	      'todo list item 1',
+	      h('button', { className: 'remove' }, '삭제')
+	    ),
+	    h('li', { className: 'completed' },
+	      h('input', { type: 'checkbox', className: 'toggle', checked: true }),
+	      'todo list item 2',
+	      h('button', { className: 'remove' }, '삭제')
+	    ),
+	  ),
+	  h('form',
+	    h('input', { type: 'text' }),
+	    h('button', { type: 'submit' }, '추가'),
+	  )
+	)
+);
+
+위의 코드는 다음과 같은 객체로 변환답니다.
+
+
+{
+  "type": "div",
+  "props": { "id": "app" },
+  "children": [
+    {
+      "type": "ul",
+      "props": null,
+      "children": [
+        {
+          "type": "li",
+          "props": null,
+          "children": [
+            {
+              "type": "input",
+              "props": { "type": "checkbox", "className": "toggle" },
+              "children": []
+            },
+            "todo list item 1",
+            {
+              "type": "button",
+              "props": { "className": "remove" },
+              "children": [ "삭제" ]
+            }
+          ]
+        },
+        {
+          "type": "li",
+          "props": { "className": "completed" },
+          "children": [
+            {
+              "type": "input",
+              "props": { "type": "checkbox", "className": "toggle", "checked": true },
+              "children": []
+            },
+            "todo list item 2",
+            {
+              "type": "button",
+              "props": { "className": "remove" },
+              "children": [ "삭제" ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "form",
+      "props": {
+        "type": "input",
+        "props": { "type": "text" },
+        "children": []
+      },
+      "children": [
+        {
+          "type": "button",
+          "props": { "type": "submit" },
+          "children": [ "추가" ]
+        }
+      ]
+    }
+  ]
+}
+
+
+가상돔(VirtualDOM)은 거창한게 아니라 DOM의 형태를 본따 만든 객체 덩어리입니다. 
+사실 가상돔(VirtualDOM)만 쓴다고해서 드라마틱한 변화가 생기는 것은 아닙니다.
+
+/** @jsx h */
+function h(type, props, ...children) { /* 중간 생략 */ }
+
+const result = (
+  <div id="app">
+    <ul>
+      <li>
+        <input type="checkbox" class="toggle" />
+        todo list item 1
+        <button class="remove">삭제</button>
+      </li>
+      <li class="completed">
+        <input type="checkbox" class="toggle" checked />
+        todo list item 2
+        <button class="remove">삭제</button>
+      </li>
+    </ul>
+    <form>
+      <input type="text" />
+      <button type="submit">추가</button>
+    </form>
+  </div>
+);
+
+가상돔을 돔으로 변환하는 createElement 라는 함수가 있다고 가정해보면 다음과 같은 모습
+/** @jsx h */
+function h(type, props, ...children) { /* 중간 생략 */ }
+function createElement(node) { /* 중간 생략 */ }
+
+const result = createElement(
+  <div id="app">
+    <ul>
+      <li>
+        <input type="checkbox" class="toggle" />
+        todo list item 1
+        <button class="remove">삭제</button>
+      </li>
+      <li class="completed">
+        <input type="checkbox" class="toggle" checked />
+        todo list item 2
+        <button class="remove">삭제</button>
+      </li>
+    </ul>
+    <form>
+      <input type="text" />
+      <button type="submit">추가</button>
+    </form>
+  </div>
+);
+
+상태를 추가하면 다음과 같이 됩니다.
+function h(type, props, ...children) { /* 중간 생략 */ }
+function createElement(node) { /* 중간 생략 */ }
+
+const state = [
+  { id: 1, completed: false, content: 'todo list item 1' },
+  { id: 2, completed: true, content: 'todo list item 2' },
+];
+
+createElement(
+  <div id="app">
+    <ul>
+      { state.map(({ completed, content }) => (
+        <li class={completed ? 'completed' : null}>
+          <input type="checkbox" class="toggle" checked={completed} />
+          { content }
+          <button class="remove">삭제</button>
+        </li>
+      )) }
+    </ul>
+    <form>
+      <input type="text" />
+      <button type="submit">추가</button>
+    </form>
+  </div>
+);
+
+diff 함수를 이용하여 DOM 업데이트
+
+createElement가 돔을 만드는 함수라면, updateElement는 돔을 업데이트 하는 함수
+
+function h(type, props, ...children) { /* 중간 생략 */ }
+function createElement(node) { /* 생략 */ };
+function updateElement(parent, newNode, oldNode) { /* 구현부 */ }
+
+const oldState = [
+  { id: 1, completed: false, content: 'todo list item 1' },
+  { id: 2, completed: true, content: 'todo list item 2' },
+];
+
+const newState = [
+  { id: 1, completed: true, content: 'todo list item 1 update' },
+  { id: 2, completed: true, content: 'todo list item 2' },
+  { id: 3, completed: false, content: 'todo list item 3' },
+];
+
+const render = (state) => (
+  <div id="app">
+    <ul>
+      { state.map(({ completed, content }) => (
+        <li class={completed ? 'completed' : null}>
+          <input type="checkbox" class="toggle" checked={completed} />
+          { content }
+          <button class="remove">삭제</button>
+        </li>
+      )) }
+    </ul>
+    <form>
+      <input type="text" />
+      <button type="submit">추가</button>
+    </form>
+  </div>
+);
+
+const oldNode = render(oldState);
+const newNode = render(newState);
+
+const $root = document.createElement('div');
+
+document.body.appendChild($root);
+updateElement($root, oldNode);
+setTimeout(() => 
+  updateElement($root, newNode, oldNode),
+  1000
+); 
+
+* 노션 확인
+
+
+1) createVNode
+[] 올바른 구조의 vNode를 생성해야 한다
+[] 여러 자식을 처리해야 한다
+[] 자식 배열을 평탄화해야 한다
+[] 중첩 구조를 올바르게 표현해야 한다
+[] JSX로 표현한 결과가 createVNode 함수 호출과 동일해야 한다
+2) createElement
+[] 문자열 입력에 대해 텍스트 노드를 생성해야 한다
+[] 숫자 입력에 대해 텍스트 노드를 생성해야 한다
+[] null 입력에 대해 빈 텍스트 노드를 생성해야 한다
+[] false 입력에 대해 빈 텍스트 노드를 생성해야 한다
+[] 배열 입력에 대해 DocumentFragment를 생성해야 한다
+[] 함수 컴포넌트를 처리해야 한다
+[] 올바른 속성으로 요소를 생성해야 한다
+[] 이벤트 리스너를 연결해야 한다
+[] 중첩된 자식 요소를 올바르게 처리해야 한다
+[] 깊게 중첩된 구조를 처리해야 한다
+[] 혼합 콘텐츠(텍스트와 요소)를 처리해야 한다
+[] 빈 자식 배열을 처리해야 한다
+[] undefined 자식을 무시해야 한다
+[] 불리언 속성을 처리해야 한다
+[] 데이터 속성을 처리해야 한다
+3) 컴포넌트를 jsx로 정의하여 사용했는지 확인하기
+[] Post
+[] PostForm
+[] Header
+[] Navigation
+[] Footer
+[] HomePage
+[] LoginPage
+[] NotFoundPage
+[] ProfilePage
+[] HomePage를 렌더링 했을 때 html 문자열로 잘 변환되는지 확인
+심화 과제
+1) Diff 알고리즘 구현
+ 초기 렌더링이 올바르게 수행되어야 한다
+ diff 알고리즘을 통해 변경된 부분만 업데이트해야 한다
+ 새로운 요소를 추가하고 불필요한 요소를 제거해야 한다
+ 요소의 속성만 변경되었을 때 요소를 재사용해야 한다
+ 요소의 타입이 변경되었을 때 새로운 요소를 생성해야 한다
+2) 이벤트 위임 구현
+ 이벤트가 위임 방식으로 등록되어야 한다
+ 동적으로 추가된 요소에도 이벤트가 정상적으로 작동해야 한다
+ 이벤트 핸들러가 제거되면 더 이상 호출되지 않아야 한다

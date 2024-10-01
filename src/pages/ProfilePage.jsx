@@ -1,6 +1,7 @@
 /** @jsx createVNode */
 import { createVNode } from "../lib";
 import { globalStore } from "../stores";
+import { Header, Navigation, Footer } from "../components";
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
@@ -9,6 +10,8 @@ export const ProfilePage = () => {
   return (
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
+        <Header />
+        <Navigation loggedIn={loggedIn} />
         <main class="p-4">
           <div class="bg-white p-8 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
@@ -28,7 +31,6 @@ export const ProfilePage = () => {
                   name="username"
                   class="w-full p-2 border rounded"
                   value={username}
-                  required
                 />
               </div>
               <div class="mb-4">
@@ -44,7 +46,6 @@ export const ProfilePage = () => {
                   name="email"
                   class="w-full p-2 border rounded"
                   value={email}
-                  required
                 />
               </div>
               <div class="mb-6">
@@ -72,6 +73,7 @@ export const ProfilePage = () => {
             </form>
           </div>
         </main>
+        <Footer />
       </div>
     </div>
   );

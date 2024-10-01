@@ -19,7 +19,6 @@ export const LoginPage = () => (
           type="password"
           placeholder="비밀번호"
           class="w-full p-2 mb-6 border rounded"
-          required
         />
         <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded">
           로그인

@@ -24,6 +24,8 @@ export const ProfilePage = () => {
     globalStore.setState({
       currentUser: userStorage.get(),
     });
+
+    alert('프로필이 업데이트되었습니다.');
   };
 
   return (

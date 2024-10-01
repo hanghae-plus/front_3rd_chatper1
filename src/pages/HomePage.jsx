@@ -1,7 +1,5 @@
 /** @jsx createVNode */
-import { Footer, Post } from "../components"
-import { Header } from "../components/templates/Header"
-import { Navigation } from "../components/templates/Navigation"
+import { Footer, Post, Navigation, Header } from "../components"
 import { createVNode } from "../lib"
 import { globalStore } from "../stores"
 

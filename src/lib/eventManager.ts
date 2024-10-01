@@ -1,5 +1,3 @@
-// eventManager.js
-
 // 이벤트 위임을 위한 전역 이벤트 맵
 // 이 맵은 이벤트 타입별로 요소와 해당 요소의 이벤트 핸들러를 저장합니다.
 const eventMap = new Map();

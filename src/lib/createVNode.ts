@@ -2,7 +2,7 @@ export type VNodeType = Function | keyof HTMLElementTagNameMap;
 export type VNodeProps = Record<string, any> | null;
 export type VNodeChildren = VNode[];
 
-type VNodeElement = {
+export type VNodeElement = {
   type: VNodeType;
   props: VNodeProps;
   children: VNodeChildren;

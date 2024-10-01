@@ -1,9 +1,11 @@
-// renderElement.js
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { createElement__v2 } from './createElement__v2';
+import { VNode } from './createVNode';
 
-// TODO: processVNode 함수 구현
-function processVNode() {
+/**
+ * vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
+ */
+function processVNode(vNode: VNode) {
   // vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
   // - null, undefined, boolean 값 처리
   // - 문자열과 숫자를 문자열로 변환
@@ -47,8 +49,11 @@ function updateElement() {
 // TODO: renderElement 함수 구현
 export function renderElement(vNode, container) {
   // 최상위 수준의 렌더링 함수입니다.
+  // - processVNode를 실행해서 함수 컴포넌트로 정의된 vNode를 전부 해체
   // - 이전 vNode와 새로운 vNode를 비교하여 업데이트
-  // - 최초 렌더링과 업데이트 렌더링 처리
+  // - 최초 렌더링 시에는 createElement__v2로 실행
+  // - 리렌더링일 때에는 updateElement로 실행
+  //
   // 이벤트 위임 설정
   // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
   // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.

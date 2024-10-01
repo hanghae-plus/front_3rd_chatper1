@@ -4,6 +4,7 @@ function setAttributes($element: HTMLElement, props: NonNullable<VNodeProps>) {
   Object.entries(props).forEach(([key, value]) => {
     if (typeof value === 'function' && key.toLowerCase() in $element) {
       const eventType = key.replace(/^on/, '').toLowerCase();
+      // TODO: 이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선
       $element.addEventListener(eventType, value);
     } else if (key === 'className') {
       $element.className = value;
@@ -19,6 +20,12 @@ function appendChildren($element: HTMLElement, children: VNodeChildren) {
   }
 }
 
+/**
+ * 주어진 가상 DOM 노드(vNode)를 실제 DOM 노드로 변환하여 반환합니다.
+ *
+ * @param {VNode} vNode - 가상 DOM 노드
+ * @returns {Node} 변환된 DOM 노드
+ */
 export function createElement__v2(vNode: VNode): Node {
   if (!vNode) return document.createTextNode('');
 

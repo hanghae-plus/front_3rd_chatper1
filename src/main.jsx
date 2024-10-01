@@ -1,27 +1,27 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
-import { globalStore } from "./stores";
-import { ForbiddenError, UnauthorizedError } from "./errors";
-import { userStorage } from "./storages";
-import { addEvent, registerGlobalEvents } from "./utils";
-import { App } from "./App";
+import { App } from './App';
+import { ForbiddenError, UnauthorizedError } from './errors';
+import { createRouter, createVNode, renderElement } from './lib';
+import { HomePage, LoginPage, ProfilePage } from './pages';
+import { userStorage } from './storages';
+import { globalStore } from './stores';
+import { addEvent, registerGlobalEvents } from './utils';
 
 const router = createRouter({
-  "/": HomePage,
-  "/login": () => {
+  '/': HomePage,
+  '/login': () => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {
       throw new ForbiddenError();
     }
-    return <LoginPage/>;
+    return <LoginPage />;
   },
-  "/profile": () => {
+  '/profile': () => {
     const { loggedIn } = globalStore.getState();
     if (!loggedIn) {
       throw new UnauthorizedError();
     }
-    return <ProfilePage/>;
+    return <ProfilePage />;
   },
 });
 
@@ -35,24 +35,19 @@ function handleError(error) {
   globalStore.setState({ error });
 }
 
-// 초기화 함수
+// 수정된 초기화 함수
 function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else{
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
-      router.push("/");
+      router.push('/');
       return;
     }
     if (error instanceof UnauthorizedError) {
-      router.push("/login");
+      router.push('/login');
       return;
     }
 

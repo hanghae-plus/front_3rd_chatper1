@@ -9,23 +9,19 @@ import { globalStore } from "../stores";
 
 export const HomePage = () => {
   const { loggedIn, posts } = globalStore.getState();
-  return createVNode(
-    "div",
-    { className: "bg-gray-100 min-h-screen flex justify-center" },
-    [
-      createVNode("div", { className: "max-w-md w-full" }, [
-        Header(),
-        Navigation({ loggedIn }),
-        createVNode("main", { className: "p-4" }, [
-          loggedIn ? PostForm() : null,
-          createVNode(
-            "div",
-            { id: "posts-container", className: "space-y-4" },
-            posts.map((post) => Post(post))
-          )
-        ]),
-        Footer()
-      ])
-    ]
+  return (
+    <div className="bg-gray-100 min-h-screen flex justify-center">
+      <div className="max-w-md w-full">
+        {Header()}
+        {Navigation({ loggedIn })}
+        <main className="p-4">
+          {loggedIn && PostForm()}
+          <div id="posts-container" className="space-y-4">
+            {posts.map(Post)}
+          </div>
+        </main>
+        {Footer()}
+      </div>
+    </div>
   );
 };

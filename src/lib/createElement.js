@@ -30,17 +30,17 @@ export function createElement(vNode) {
 
   if (typeof vNode.type === "function") {
     //vNode.type이 함수면 해당 함수를 호출하고 그 결과로 createElement를 재귀 호출
-    return createElement(vNode.type(vNode.props, vNode.children));
+    return createElement(vNode.type({ ...vNode.props, ...vNode.children }));
   } else {
     const $el = document.createElement(vNode.type); //Node.type에 해당하는 요소를 생성
     if (vNode.props) {
       const props = Object.entries(vNode.props); //vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
       props.forEach(([key, value]) => {
         //evnet binding
-        if (key === "onClick") {
-          $el.addEventListener("click", () => value());
-        } else if (key === "onChange") {
-          $el.addEventListener("change", () => value());
+        if (key.startsWith("on") && typeof value === "function") {
+          $el.addEventListener(key.substring(2, key.length).toLowerCase(), () =>
+            value()
+          );
         }
 
         if (key === "className") {

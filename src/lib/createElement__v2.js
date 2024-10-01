@@ -1,11 +1,49 @@
+// TODO: 이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선
+// 이 함수는 createElement의 개선된 버전입니다.
+
 export function createElement__v2(vNode) {
-  // 이 함수는 createElement의 개선된 버전입니다.
-  // 1. falsy vNode 처리
-  // 2. 문자열 또는 숫자 vNode 처리
-  // 3. 배열 vNode 처리 (DocumentFragment 사용)
-  // 4. 일반 요소 vNode 처리:
-  //    - 요소 생성
-  //    - 속성 설정 (이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선)
-  //    - 자식 요소 추가
-  return {};
+  if (!vNode) {
+    return document.createTextNode("");
+  }
+  if (typeof vNode === "string" || typeof vNode === "number") {
+    return document.createTextNode(String(vNode));
+  }
+  if (Array.isArray(vNode)) {
+    const fragment = new DocumentFragment();
+    const components = vNode.map((child) => createElement(child));
+    fragment.append(...components);
+
+    return fragment;
+  }
+  if (typeof vNode.type === "function") {
+    const component = vNode.type({ ...vNode.props, children: vNode.children });
+    return createElement(component);
+  }
+
+  const node = document.createElement(vNode.type);
+  if (vNode.props) {
+    Object.entries(vNode.props).forEach(([key, value]) => {
+      if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+        if (key === "className") {
+          node.classList.add(...value.split(" "));
+        } else {
+          node.setAttribute(key, value);
+        }
+      } else if (typeof value === "function" && key.toLowerCase() in node) {
+        const eventType = key.toLowerCase().replace("on", "");
+        node.addEventListener(eventType, value);
+      } else if (typeof value === "object") {
+        Object.entries(value).forEach(([_key, _value]) => {
+          node[key][_key] = _value;
+        });
+      } else {
+        node[key] = value;
+      }
+    });
+  }
+  if (vNode.children) {
+    const child = createElement(vNode.children);
+    node.appendChild(child);
+  }
+  return node;
 }

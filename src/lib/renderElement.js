@@ -1,6 +1,7 @@
 // renderElement.js
 import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
 import { createElement__v2 } from "./createElement__v2.js";
+import { createElement } from "./createElement.js";
 
 // TODO: processVNode 함수 구현
 function processVNode() {
@@ -52,4 +53,10 @@ export function renderElement(vNode, container) {
   // 이벤트 위임 설정
   // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
   // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
+  const $element = createElement(vNode);
+  if (container.hasChildNodes()) {
+    container.firstChild.replaceWith($element);
+  } else {
+    container.appendChild($element);
+  }
 }

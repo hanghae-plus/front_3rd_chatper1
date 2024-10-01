@@ -1,6 +1,7 @@
 // renderElement.js
 import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
 import { createElement__v2 } from "./createElement__v2.js";
+import { camelToKebab } from "../utils/camelToKebab.js";
 
 // TODO: processVNode 함수 구현
 function processVNode(vNode) {
@@ -50,6 +51,11 @@ function updateAttributes($element, newNode, oldNode) {
 				addEvent($element, eventType, value);
 			} else if (key === "className") {
 				$element.setAttribute("class", value);
+			} else if (key === "style") {
+				const formattedStyle = Object.entries(value)
+					.map(([k, v]) => `${camelToKebab(k)}: ${v}`)
+					.join("; ");
+				$element.setAttribute(key, formattedStyle);
 			} else {
 				$element.setAttribute(key, value);
 			}

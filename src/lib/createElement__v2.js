@@ -1,4 +1,5 @@
 import { addEvent } from "./eventManager";
+import { camelToKebab } from "../utils";
 
 export function createElement__v2(vNode) {
 	// 이 함수는 createElement의 개선된 버전입니다.
@@ -29,6 +30,12 @@ export function createElement__v2(vNode) {
 			addEvent($el, event, value);
 		} else if (key === "className") {
 			$el.setAttribute("class", value);
+		} else if (key === "style") {
+			const formattedStyle = Object.entries(value)
+				.map(([k, v]) => `${camelToKebab(k)}: ${v}`)
+				.join("; ");
+
+			$el.setAttribute(key, formattedStyle);
 		} else {
 			$el.setAttribute(key, value);
 		}

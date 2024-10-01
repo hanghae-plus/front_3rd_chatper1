@@ -4,7 +4,7 @@ import { Header } from '../components/templates/Header';
 import { Navigation } from '../components/templates/Navigation';
 import { Footer } from '../components/templates/Footer';
 
-export const DefaultLayout = ({ children }) => {
+export const DefaultLayout = (_, children) => {
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">
       <div className="max-w-md w-full">

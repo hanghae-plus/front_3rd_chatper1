@@ -31,7 +31,7 @@ export function createElement(vNode) {
     return document.createTextNode(vNode ? vNode.toString() : '');
   }
   if (typeof vNode.type === 'function') {
-    return createElement(vNode.type(vNode));
+    return createElement(vNode.type(vNode.props, vNode.children));
   }
 
   const $el = document.createElement(vNode.type);

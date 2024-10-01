@@ -31,7 +31,11 @@ export function createElement(vNode) {
   if (vNode.props) {
     Object.entries(vNode.props).forEach(([key, value]) => {
       if (typeof value === "string" || typeof value === "number") {
-        node.setAttribute(key, value);
+        if (key === "className") {
+          node.classList.add(...value.split(" "));
+        } else {
+          node.setAttribute(key, value);
+        }
       } else if (typeof value === "boolean") {
         if (value) node.setAttribute(key, "");
         else node.setAttribute(key, value);

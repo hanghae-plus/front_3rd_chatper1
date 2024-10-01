@@ -84,6 +84,26 @@ function main() {
     globalStore.setState({ error: null });
   });
 
+  addEvent('submit', '#login-form', e => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const currentUser = { username, email: '', bio: '' };
+    userStorage.set(currentUser);
+    globalStore.setState({ loggedIn: true, currentUser });
+    router.push('/');
+  });
+
+  addEvent('submit', '#profile-form', e => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const bio = document.getElementById('bio').value;
+    const currentUser = { username, email, bio };
+    userStorage.set(currentUser);
+    globalStore.setState({ currentUser });
+    alert('유저정보가 저장되었습니다!');
+  });
+
   render();
 }
 

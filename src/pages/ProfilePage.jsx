@@ -5,7 +5,7 @@ import { globalStore } from '../stores';
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
-  const { username = '', email = '', bio = '' } = currentUser ?? {};
+  const { username, email, bio } = currentUser ?? {};
 
   return (
     <div class="bg-gray-100 min-h-screen flex justify-center">

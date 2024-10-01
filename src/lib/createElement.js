@@ -11,25 +11,33 @@
 
 // 오답노트
 // typeof vNode 로 분기처리 -> typeof null 의 값이 object...
+// 배열은 Array.isArray() 로 판단
+// 객체를 만들지 말고 document.createDocumentFragment(), document.createElement()로 반환하면 됨
 
 export function createElement(vNode) {
   // 여기에 구현하세요
+  // array일때
+  if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((child) => {
+      const element = createElement(child);
+      fragment.appendChild(element);
+    });
+    return fragment;
+  }
+  // object일때
   if (vNode && typeof vNode === "object") {
-    const element = {
-      nodeType: Node.DOCUMENT_FRAGMENT_NODE,
-      tagName: vNode.type,
-      childNodes: vNode.children.map((child) => {
-        //undefined일때 map??
-        createElement(child);
-      }),
-    };
+    const element = document.createElement(vNode.type);
     return element;
-  } else {
+  }
+  // 함수일때
+  if (typeof vNode === "function") {
+    const componentVNode = vNode.type(vNode.props || {});
+    return createElement(componentVNode);
+  }
+  // 문자열로 반환해야할때
+  if (!vNode || typeof vNode === "string" || typeof vNode === "number") {
     const textContent = vNode ? `${vNode}` : "";
-    const element = {
-      nodeType: Node.TEXT_NODE,
-      textContent: textContent,
-    };
-    return element;
+    return document.createTextNode(textContent);
   }
 }

@@ -60,8 +60,7 @@ function render() {
     }
 
     console.error(error);
-
-    // globalStore.setState({ error });
+    globalStore.setState({ error });
   }
   registerGlobalEvents();
 }

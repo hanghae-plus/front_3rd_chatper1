@@ -1,14 +1,15 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from './lib';
-import { HomePage, LoginPage, ProfilePage } from './pages';
-import { globalStore } from './stores';
-import { ForbiddenError, UnauthorizedError } from './errors';
-import { userStorage } from './storages';
-import { addEvent, registerGlobalEvents } from './utils';
 import { App } from './App';
+import { ForbiddenError, UnauthorizedError } from './errors';
+import { createElement, createVNode } from './lib';
+import { HomePage, LoginPage, ProfilePage } from './pages';
+import { createRouterContext } from './router';
+import { userStorage } from './storages';
+import { globalStore } from './stores';
+import { addEvent, registerGlobalEvents } from './utils';
 
-const router = createRouter({
-  '/': HomePage,
+const router = createRouterContext({
+  '/': () => <HomePage />,
   '/login': () => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {

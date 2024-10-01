@@ -9,6 +9,39 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
 export function createElement(vNode) {
-  // 여기에 구현하세요
-  return {}
+  // 1번
+  if (!vNode) return document.createTextNode('');
+
+  // 2번
+  if (typeof vNode === 'string' || typeof vNode === 'number') return document.createTextNode(vNode);
+
+  // 3번
+  if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((node) => fragment.appendChild(createElement(node)));
+    return fragment;
+  }
+
+  // 4번
+  if (typeof vNode.type === 'function') {
+    return createElement(vNode.type(vNode.props));
+  }
+
+  // 5번
+  const node = document.createElement(vNode.type);
+
+  for (const key in vNode.props) {
+    if (key === 'className') {
+      node.setAttribute('class', vNode.props['className']);
+    } else if (key.startsWith('on')) {
+      const eventType = key.replace('on', '').toLowerCase();
+      node.addEventListener(eventType, vNode.props[key]);
+    } else node.setAttribute(key, vNode.props[key]);
+  }
+
+  if (Array.isArray(vNode.children) && vNode.children.length > 0) {
+    vNode.children.forEach((child) => node.appendChild(createElement(child)));
+  }
+
+  return node;
 }

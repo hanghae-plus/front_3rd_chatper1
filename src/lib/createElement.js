@@ -23,22 +23,19 @@ export function createElement(vNode) {
     return fragment;
   }
   if (typeof vNode.type === "function") {
-    const component = vNode.type(vNode.props, vNode.children);
+    const component = vNode.type({ ...vNode.props, children: vNode.children });
     return createElement(component);
   }
 
   const node = document.createElement(vNode.type);
   if (vNode.props) {
     Object.entries(vNode.props).forEach(([key, value]) => {
-      if (typeof value === "string" || typeof value === "number") {
+      if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
         if (key === "className") {
           node.classList.add(...value.split(" "));
         } else {
           node.setAttribute(key, value);
         }
-      } else if (typeof value === "boolean") {
-        if (value) node.setAttribute(key, "");
-        else node.setAttribute(key, value);
       } else if (typeof value === "function" && key.toLowerCase() in node) {
         const eventType = key.toLowerCase().replace("on", "");
         node.addEventListener(eventType, value);

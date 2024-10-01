@@ -5,7 +5,6 @@ export function createElement(vNode) {
 
   if (typeof vNode === 'boolean') return document.createTextNode('');
 
-  //TODO: type이 number이면서 Number.isNaN()일 경우 체크
   if (typeof vNode === 'string' || typeof vNode === 'number') return document.createTextNode(vNode);
   if (Array.isArray(vNode)) {
     if (vNode.length === 0) return document.createTextNode('');
@@ -20,14 +19,15 @@ export function createElement(vNode) {
 
   const element = document.createElement(vNode.type);
 
-  for (const key in vNode.props) {
-    const [name, value] = formatVNodeAttr(key, vNode.props[key]);
-
-    if (key.startsWith('on') && typeof value === 'function') {
-      element.addEventListener(name, value);
-    } else {
-      element.setAttribute(name, value);
-    }
+  for (const name in vNode.props) {
+    formatVNodeAttr(name, vNode.props[name], {
+      eventWorker: (key, value) => {
+        element.addEventListener(key, value);
+      },
+      attributeWorker: (key, value) => {
+        element.setAttribute(key, value);
+      },
+    });
   }
 
   for (const child of vNode.children) {

@@ -1,10 +1,9 @@
 import { addEvent } from './eventManager';
-import { formatVNodeAttr } from './formatVNodeAttr';
+import { formatVNodeAttr } from './';
 
 export function createElement__v2(vNode) {
   if (!vNode) return document.createTextNode('');
 
-  //TODO: type이 number이면서 Number.isNaN()일 경우 체크
   if (typeof vNode === 'string' || typeof vNode === 'number') return document.createTextNode(vNode);
   if (Array.isArray(vNode)) {
     const fragment = new DocumentFragment();
@@ -16,20 +15,18 @@ export function createElement__v2(vNode) {
     return createElement__v2(vNode.type(vNode.props, vNode.children));
   }
 
-  // Good
-  // if (Boolean(vNode) || Number.isNaN(vNode)) return document.createTextNode('');
-
   const element = document.createElement(vNode.type);
 
-  for (const key in vNode.props) {
-    const [name, value] = formatVNodeAttr(key, vNode.props[key]);
-
-    if (key.startsWith('on') && typeof value === 'function') {
-      addEvent(element, name, value);
-      element._vNode = vNode;
-    } else {
-      element.setAttribute(name, value);
-    }
+  for (const name in vNode.props) {
+    formatVNodeAttr(name, vNode.props[name], {
+      eventWorker: (key, value) => {
+        addEvent(element, key, value);
+        element._vNode = vNode;
+      },
+      attributeWorker: (key, value) => {
+        element.setAttribute(key, value);
+      },
+    });
   }
 
   for (const child of vNode.children) {

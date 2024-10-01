@@ -8,21 +8,26 @@ function updateAttributes(newElement, oldElement) {
   const oldNodeAttributes = [...oldElement.attributes, ...flatObject(oldElement._vNode?.props)];
 
   for (const { name, value } of newNodeAttributes) {
-    const [key, v] = formatVNodeAttr(name, value);
-    if (name.startsWith('on') && typeof v === 'function') {
-      addEvent(oldElement, key, v);
-      oldElement._vNode = newElement._vNode;
-    } else {
-      oldElement.setAttribute(key, v);
-    }
+    formatVNodeAttr(name, value, {
+      eventWorker: (key, value) => {
+        addEvent(oldElement, key, value);
+        oldElement._vNode = newElement._vNode;
+      },
+      attributeWorker: (key, value) => {
+        oldElement.setAttribute(key, value);
+      },
+    });
   }
-  for (const { name } of oldNodeAttributes) {
+  for (const { name, value } of oldNodeAttributes) {
     if (!newElement.getAttribute(name) && !newNodeAttributes.map((item) => item.name).includes(name)) {
-      if (name.startsWith('on')) {
-        removeEvent(oldElement, name.slice(2).toLowerCase());
-      } else {
-        oldElement.removeAttribute(name);
-      }
+      formatVNodeAttr(name, value, {
+        eventWorker: (key) => {
+          removeEvent(oldElement, key);
+        },
+        attributeWorker: (key) => {
+          oldElement.removeAttribute(key);
+        },
+      });
     }
   }
 }

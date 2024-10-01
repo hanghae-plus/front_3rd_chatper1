@@ -7,3 +7,4 @@ export * from './createElement';
 export * from './createFormData';
 export * from './renderElement';
 export * from './flatObject';
+export * from './formatVNodeAttr';

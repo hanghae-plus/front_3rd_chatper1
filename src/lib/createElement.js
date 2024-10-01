@@ -14,41 +14,39 @@
 // 배열은 Array.isArray() 로 판단
 // 객체를 만들지 말고 document.createDocumentFragment(), document.createElement()로 반환하면 됨
 // function은 vNode.type으로 들어옴!
+// children을 잊지말자...
+// className은 class,,,,
 
 export function createElement(vNode) {
   // 여기에 구현하세요
-  // array일때
-  if (Array.isArray(vNode)) {
+  if (!vNode || typeof vNode === "string" || typeof vNode === "number") {
+    const textContent = vNode ? `${vNode}` : "";
+    return document.createTextNode(textContent);
+  } else if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment();
     vNode.forEach((child) => {
       const element = createElement(child);
       fragment.appendChild(element);
     });
     return fragment;
-  }
-  // object일때
-  if (vNode && typeof vNode === "object") {
-    // function일 때
-    if (typeof vNode.type === "function") {
-      return createElement(vNode.type(vNode.props));
-    }
-
+  } else if (typeof vNode.type === "function") {
+    return createElement(vNode.type(vNode.props));
+  } else {
     const element = document.createElement(vNode.type);
-
-    // children 처리
-    if (Array.isArray(vNode.children)) {
-      vNode.children.forEach((child) =>
-        element.appendChild(createElement(child))
-      );
-    } else if (vNode.children) {
-      element.appendChild(createElement(children));
+    for (const key in vNode.props) {
+      const value = vNode.props[key];
+      if (key.startsWith("on") && typeof value === "function") {
+        element.addEventListener(key.slice(2).toLowerCase(), value);
+      } else if (key === "className") {
+        element.setAttribute("class", value);
+      } else {
+        element.setAttribute(key, value);
+      }
     }
+    (vNode.children || []).forEach((child) =>
+      element.appendChild(createElement(child))
+    );
 
     return element;
-  }
-  // 문자열로 반환해야할때
-  if (!vNode || typeof vNode === "string" || typeof vNode === "number") {
-    const textContent = vNode ? `${vNode}` : "";
-    return document.createTextNode(textContent);
   }
 }

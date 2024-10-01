@@ -9,7 +9,7 @@ export const createStore = (initialStore) => {
     state = { ...state, ...newState }
     notify()
   }
-  console.log("state",state)
+  // console.log("state",state)
 
   const getState = () => ({ ...state });
 

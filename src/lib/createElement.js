@@ -11,7 +11,6 @@ if(typeof vNode === 'string'|| typeof vNode === 'number'){
 if(Array.isArray(vNode)){
 
   const fragment = document.createDocumentFragment();
-  vNode.forEach(child=>console.log("child",child))
   vNode.forEach(child => fragment.appendChild(createElement(child)));
 
   return fragment;

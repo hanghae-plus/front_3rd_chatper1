@@ -22,7 +22,7 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
       expect(container.innerHTML).toBe('<div id="test">Hello</div>');
     });
 
-    it('diff 알고리즘을 통해 변경된 부분만 업데이트해야 한다', () => {
+    ('diff 알고리즘을 통해 변경된 부분만 업데이트해야 한다', () => {
       const initialVNode = (
         <div>
           <h1>Title</h1>

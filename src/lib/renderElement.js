@@ -35,6 +35,7 @@ function processVNode(vNode) {
 
 // TODO: updateAttributes 함수 구현
 function updateAttributes($element, oldProps, newProps) {
+  console.log($element, oldProps, newProps, 'props!!!!!');
   // DOM 요소의 속성을 업데이트합니다.
   // - 이전 props에서 제거된 속성 처리
   // - 새로운 props의 속성 추가 또는 업데이트
@@ -64,6 +65,7 @@ function updateAttributes($element, oldProps, newProps) {
 
   for (const [key, value] of Object.entries(newProps)) {
     if (value !== oldProps[key]) {
+      console.log(oldProps[key], value, key, '!!!!!!!');
       if (key === 'className') {
         $element.className = value;
       } else if (key.startsWith('on')) {
@@ -72,6 +74,8 @@ function updateAttributes($element, oldProps, newProps) {
         $element.addEventListener(eventName, value);
       } else if (key === 'style') {
         Object.assign($element.style, value);
+      } else if (key in $element) {
+        $element[key] = value;
       } else {
         $element.setAttribute(key, value);
       }
@@ -86,6 +90,7 @@ function updateElement($parent, newNode, oldNode, index = 0) {
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
 
+  console.log(oldNode, newNode);
   if (!newNode && oldNode) {
     $parent.removeChild($parent.childNodes[index]);
     return;
@@ -96,11 +101,7 @@ function updateElement($parent, newNode, oldNode, index = 0) {
   if (newNode && !oldNode) {
     const newElement = createElement__v2(newNode);
 
-    if ($parent.childNodes[index]) {
-      $parent.replaceChild(newElement, $parent.childNodes[index]);
-    } else {
-      $parent.appendChild(newElement);
-    }
+    $parent.appendChild(newElement);
 
     return;
   }
@@ -108,12 +109,9 @@ function updateElement($parent, newNode, oldNode, index = 0) {
   // 3. 텍스트 노드 업데이트
   // TODO: newNode와 oldNode가 둘 다 문자열 또는 숫자인 경우
   // TODO: 내용이 다르면 텍스트 노드 업데이트
+  console.log(oldNode, 'olodNode', newNode);
 
-  if (
-    (typeof oldNode === 'number' || typeof oldNode === 'string') &&
-    (typeof newNode === 'number' || typeof newNode === 'string')
-  ) {
-    //
+  if (typeof oldNode === 'string' || typeof oldNode === 'number') {
     if (oldNode !== newNode) {
       $parent.childNodes[index].nodeValue = newNode;
     }
@@ -125,13 +123,16 @@ function updateElement($parent, newNode, oldNode, index = 0) {
 
   if (oldNode.type !== newNode.type) {
     const newElement = createElement__v2(newNode);
+    $parent.replaceChild(newElement, $parent.childNodes[index]);
 
-    if ($parent && $parent.childNodes[index]) {
-      $parent.replaceChild(newElement, $parent.childNodes[index]);
-    } else {
-      $parent.appendChild(newElement);
-    }
+    return;
+  }
 
+  if (typeof newNode.type === 'function') {
+    const newVNode = newNode.type(newNode.props);
+    const oldVNode = oldNode.type(oldNode.props);
+
+    updateElement($parent, newVNode, oldVNode, index);
     return;
   }
 

@@ -42,11 +42,11 @@ export function createElement(vNode) {
         element.addEventListener(key.slice(2).toLowerCase(), vNode.props[key]);
         return;
       }
-      if (key.startsWith('data-')) {
-        element.dataset[key.slice(5)] = vNode.props[key];
+      if (key.startsWith('className')) {
+        element.className = vNode.props[key];
         return;
       }
-      element[key] = vNode.props[key];
+      element.setAttribute(key, vNode.props[key]);
     });
   }
   if (Array.isArray(vNode.children)) {

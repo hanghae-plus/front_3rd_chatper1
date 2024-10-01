@@ -39,7 +39,7 @@ export function createElement(vNode) {
       } else if (typeof value === "boolean") {
         if (value) node.setAttribute(key, "");
         else node.setAttribute(key, value);
-      } else if (typeof value === "function" && key in node) {
+      } else if (typeof value === "function" && key.toLowerCase() in node) {
         const eventType = key.toLowerCase().replace("on", "");
         node.addEventListener(eventType, value);
       } else if (typeof value === "object") {

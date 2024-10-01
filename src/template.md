@@ -76,7 +76,7 @@ const HomePage = () => {
         <main class="p-4">
           ${loggedIn ? NotFoundPage() : ''}
           <div id="posts-container" class="space-y-4">
-            ${posts.map(ProfilePage).join('')}
+            ${posts.map(Post).join('')}
           </div>
         </main>
         

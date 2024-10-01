@@ -26,7 +26,7 @@ export function createElement__v2(vNode) {
 	Object.entries(vNode.props || {}).forEach(([key, value]) => {
 		if (key.startsWith("on")) {
 			const event = key.toLowerCase().substring(2);
-			$el.addEventListener(event, value);
+			addEvent($el, event, value);
 		} else if (key === "className") {
 			$el.setAttribute("class", value);
 		} else {

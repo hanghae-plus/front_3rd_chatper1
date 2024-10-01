@@ -2,8 +2,9 @@ import type { VNode, VNodeChildren, VNodeProps } from './createVNode';
 
 function setAttributes($element: HTMLElement, props: NonNullable<VNodeProps>) {
   Object.entries(props).forEach(([key, value]) => {
-    if (typeof value === 'function' && key.startsWith('on')) {
-      $element.addEventListener(key.slice(2).toLowerCase(), value);
+    if (typeof value === 'function' && key.toLowerCase() in $element) {
+      const eventType = key.replace(/^on/, '').toLowerCase();
+      $element.addEventListener(eventType, value);
     } else if (key === 'className') {
       $element.className = value;
     } else {
@@ -38,7 +39,9 @@ export function createElement(vNode: VNode): Node {
   }
 
   if (typeof vNode.type === 'function') {
-    return createElement(vNode.type(vNode.props));
+    return createElement(
+      vNode.type({ ...vNode.props, children: vNode.children })
+    );
   }
 
   const $element = document.createElement(vNode.type);

@@ -16,6 +16,31 @@ function processVNode(vNode) {
 	return vNode;
 }
 
+const handleUpdateAttributes = (type, $element, key, value) => {
+	if (key.startsWith("on")) {
+		const eventType = key.toLowerCase().substring(2);
+
+		if (type === "remove" || type === "update") removeEvent($element, eventType, value);
+		if (type === "add" || type === "update") addEvent($element, eventType, value);
+		return;
+	}
+
+	let newKey = key;
+	let newValue = value;
+
+	if (key === "className") {
+		newKey = "class";
+	} else if (key === "style" && type !== "remove") {
+		newValue = Object.entries(value)
+			.map(([k, v]) => `${camelToKebab(k)}: ${v}`)
+			.join("; ");
+	}
+
+	// setAttribute를 사용하면 동일한 key가 있을 경우 덮어씌워지기 때문에 removeAttribute 사용할 필요 없음
+	if (type === "add" || type === "update") $element.setAttribute(newKey, newValue);
+	else if (type === "remove") $element.removeAttribute(newKey);
+};
+
 // updateAttributes: DOM 요소의 속성을 업데이트합니다.
 // - 이벤트 리스너, className, style 등 특별한 경우 처리
 // - 이전 props에서 제거된 속성 처리
@@ -30,50 +55,15 @@ function updateAttributes($element, newNode, oldNode) {
 
 	Object.entries(oldNode.props).forEach(([key, value]) => {
 		if (!(key in newNode.props)) {
-			if (key.startsWith("on")) {
-				const eventType = key.toLowerCase().substring(2);
-				removeEvent($element, eventType, value);
-			} else if (key === "className") {
-				$element.removeAttribute("class");
-			} else {
-				$element.removeAttribute(key);
-			}
+			handleUpdateAttributes("remove", $element, key, value);
 		}
 	});
 
 	Object.entries(newNode.props).forEach(([key, value]) => {
-		// 추가
 		if (!(key in oldNode.props)) {
-			if (key.startsWith("on")) {
-				const eventType = key.toLowerCase().substring(2);
-				addEvent($element, eventType, value);
-			} else if (key === "className") {
-				$element.setAttribute("class", value);
-			} else if (key === "style") {
-				const formattedStyle = Object.entries(value)
-					.map(([k, v]) => `${camelToKebab(k)}: ${v}`)
-					.join("; ");
-				$element.setAttribute(key, formattedStyle);
-			} else {
-				$element.setAttribute(key, value);
-			}
+			handleUpdateAttributes("add", $element, key, value);
 		} else {
-			// 업데이트
-			// setAttribute를 사용하면 동일한 key가 있을 경우 덮어씌워지기 때문에 removeAttribute 사용할 필요 없음
-			if (key.startsWith("on")) {
-				const eventType = key.toLowerCase().substring(2);
-				removeEvent($element, eventType, value);
-				addEvent($element, eventType, value);
-			} else if (key === "className") {
-				$element.setAttribute("class", value);
-			} else if (key === "style") {
-				const formattedStyle = Object.entries(value)
-					.map(([k, v]) => `${camelToKebab(k)}: ${v}`)
-					.join("; ");
-				$element.setAttribute(key, formattedStyle);
-			} else {
-				$element.setAttribute(key, value);
-			}
+			handleUpdateAttributes("update", $element, key, value);
 		}
 	});
 }

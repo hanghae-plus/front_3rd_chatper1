@@ -23,7 +23,6 @@ export const HomePage = () => {
             ))}
           </div>
         </main>
-
         <Footer />
       </div>
     </div>

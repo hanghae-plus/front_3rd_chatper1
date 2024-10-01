@@ -1,2 +1,2 @@
 export * from "./eventUtils.js";
-export * from "./camelToKebab.js";
+export * from "./camelToKebabUtil.js";

@@ -1,6 +1,6 @@
 import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
 import { createElement__v2 } from "./createElement__v2.js";
-import { camelToKebab } from "../utils/camelToKebab.js";
+import { camelToKebab } from "../utils";
 
 // processVNode: vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
 // - null, undefined, boolean 값 처리

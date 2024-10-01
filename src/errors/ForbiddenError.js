@@ -4,5 +4,4 @@ export class ForbiddenError extends Error {
   constructor() {
     super(ForbiddenError.MESSAGE);
   }
-
 }

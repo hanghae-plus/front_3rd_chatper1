@@ -1,11 +1,30 @@
 /** @jsx createVNode */
-import { Header, Navigation } from '../components';
+import { Footer, Header, Navigation } from '../components';
 import { createVNode } from '../lib';
+import { userStorage } from '../storages';
 import { globalStore } from '../stores';
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = '', email = '', bio = '' } = currentUser ?? {};
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const bio = document.getElementById('bio').value.trim();
+
+    userStorage.set({
+      username,
+      email,
+      bio,
+    });
+
+    globalStore.setState({
+      currentUser: userStorage.get(),
+    });
+  };
 
   return (
     <div class="bg-gray-100 min-h-screen flex justify-center">
@@ -17,7 +36,7 @@ export const ProfilePage = () => {
             <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
               내 프로필
             </h2>
-            <form id="profile-form">
+            <form id="profile-form" onSubmit={handleSubmit}>
               <div class="mb-4">
                 <label
                   for="username"
@@ -63,7 +82,7 @@ export const ProfilePage = () => {
                   rows="4"
                   class="w-full p-2 border rounded"
                 >
-                  ${bio}
+                  {bio}
                 </textarea>
               </div>
               <button
@@ -75,7 +94,7 @@ export const ProfilePage = () => {
             </form>
           </div>
         </main>
-        ${Footer()}
+        <Footer />
       </div>
     </div>
   );

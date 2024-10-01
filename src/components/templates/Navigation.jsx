@@ -15,20 +15,21 @@ export const Navigation = ({ loggedIn }) => {
             홈
           </a>
         </li>
-        {loggedIn ? (
-          <>
-            <li>
-              <a href="/profile" class={getNavItemClass('/profile')} data-link>
-                프로필
-              </a>
-            </li>
-            <li>
-              <a href="#" id="logout" class="text-gray-600">
-                로그아웃
-              </a>
-            </li>
-          </>
-        ) : (
+        {loggedIn && (
+          <li>
+            <a href="/profile" class={getNavItemClass('/profile')} data-link>
+              프로필
+            </a>
+          </li>
+        )}
+        {loggedIn && (
+          <li>
+            <a href="#" id="logout" class="text-gray-600">
+              로그아웃
+            </a>
+          </li>
+        )}
+        {!loggedIn && (
           <li>
             <a href="/login" class={getNavItemClass('/login')} data-link>
               로그인

@@ -11,5 +11,13 @@ export function createVNode(type, props, ...children) {
   )
     return null;
 
-  return { type, props, children: children.flat(Infinity).filter(Boolean) };
+  return {
+    type,
+    props,
+    children: children.flat(Infinity).filter((item) => {
+      if (item === 0) return true;
+
+      return Boolean(item);
+    }),
+  };
 }

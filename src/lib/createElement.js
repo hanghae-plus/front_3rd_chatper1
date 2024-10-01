@@ -29,7 +29,23 @@ export function createElement(vNode) {
 
   const node = document.createElement(vNode.type);
   if (vNode.props) {
-    Object.keys(vNode.props).forEach((key) => node.setAttribute(key, vNode.props[key]));
+    Object.entries(vNode.props).forEach(([key, value]) => {
+      if (typeof value === "string" || typeof value === "number") {
+        node.setAttribute(key, value);
+      } else if (typeof value === "boolean") {
+        if (value) node.setAttribute(key, "");
+        else node.setAttribute(key, value);
+      } else if (typeof value === "function" && key in node) {
+        const eventType = key.toLowerCase().replace("on", "");
+        node.addEventListener(eventType, value);
+      } else if (typeof value === "object") {
+        Object.entries(value).forEach(([_key, _value]) => {
+          node[key][_key] = _value;
+        });
+      } else {
+        node[key] = value;
+      }
+    });
   }
   if (vNode.children) {
     const child = createElement(vNode.children);

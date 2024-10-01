@@ -5,7 +5,7 @@ import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
 import { addEvent, registerGlobalEvents } from "./utils";
-import { App } from "./App";
+import App from "./App";
 
 const router = createRouter({
   "/": HomePage,

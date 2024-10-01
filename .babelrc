@@ -1,7 +1,13 @@
 {
+  "presets": [
+    "@babel/preset-env" // 최신 JavaScript 문법을 트랜스파일
+  ],
   "plugins": [
-    ["@babel/plugin-transform-react-jsx", {
-      "pragma": "createVNode",
-    }]
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "pragma": "createVNode"
+      }
+    ]
   ]
 }

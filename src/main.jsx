@@ -1,29 +1,11 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
-import { globalStore } from "./stores";
-import { ForbiddenError, UnauthorizedError } from "./errors";
-import { userStorage } from "./storages";
-import { addEvent, registerGlobalEvents } from "./utils";
-import { App } from "./App";
-
-const router = createRouter({
-  "/": HomePage,
-  "/login": () => {
-    const { loggedIn } = globalStore.getState();
-    if (loggedIn) {
-      throw new ForbiddenError();
-    }
-    return <LoginPage/>;
-  },
-  "/profile": () => {
-    const { loggedIn } = globalStore.getState();
-    if (!loggedIn) {
-      throw new UnauthorizedError();
-    }
-    return <ProfilePage/>;
-  },
-});
+import { createElement, createVNode, renderElement } from './lib';
+import { globalStore } from './stores';
+import { router } from './router';
+import { ForbiddenError, UnauthorizedError } from './errors';
+import { userStorage } from './storages';
+import { addEvent, registerGlobalEvents } from './utils';
+import { App } from './App';
 
 function logout() {
   globalStore.setState({ currentUser: null, loggedIn: false });
@@ -40,25 +22,24 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
+    const $app = createElement(<App targetPage={router.getTarget()} />);
+
     if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else{
+      $root.firstChild.replaceWith($app);
+    } else {
       $root.appendChild($app);
     }
   } catch (error) {
     if (error instanceof ForbiddenError) {
-      router.push("/");
+      router.push('/');
       return;
     }
     if (error instanceof UnauthorizedError) {
-      router.push("/login");
+      router.push('/login');
       return;
     }
 
     console.error(error);
-
-    // globalStore.setState({ error });
   }
   registerGlobalEvents();
 }

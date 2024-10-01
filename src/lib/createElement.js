@@ -44,6 +44,7 @@ export function createElement(vNode) {
       }
       if (attr.startsWith('on')) {
         $el.addEventListener(attr.slice(2).toLowerCase(), value);
+        return;
       }
 
       return $el.setAttribute(attr, value);

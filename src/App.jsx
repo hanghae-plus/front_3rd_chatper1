@@ -1,8 +1,8 @@
 /** @jsx createVNode */
 import { createVNode } from '@/lib';
-import { NotFoundPage } from '@/pages';
-import { ErrorBoundary } from './components/templates/ErrorBoundary';
-import { globalStore } from './stores';
+import { ErrorBoundary } from '@/components/templates/ErrorBoundary';
+import { globalStore } from '@/stores';
+import { NotFoundPage } from '@/pages/NotFoundPage';
 
 export const App = ({ targetPage }) => {
   const error = globalStore.getState().error;

@@ -9,6 +9,52 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
 export function createElement(vNode) {
-  // 여기에 구현하세요
-  return {}
+  // 1. vNode가 falsy인 경우
+  if (!vNode) return document.createTextNode("");
+
+  // 2. 문자열이나 숫자인 경우
+  if (typeof vNode === "string" || typeof vNode === "number") {
+    return document.createTextNode(vNode);
+  }
+
+  // 3. 배열인 경우
+  if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((child) => fragment.appendChild(createElement(child)));
+    return fragment;
+  }
+  // 4. 함수인 경우
+  if (typeof vNode.type === "function") {
+    return createElement(
+      vNode.type({ ...vNode.props, children: vNode.children })
+    );
+  }
+  // 5. 일반 DOM 요소
+  const $el = document.createElement(vNode.type);
+
+  // 속성(props) 처리
+  if (vNode.props) {
+    Object.entries(vNode.props).forEach(([key, value]) => {
+      if (key.startsWith("on") && typeof value === "function") {
+        $el.addEventListener(key.slice(2).toLowerCase(), value);
+      } else if (key === "className") {
+        $el.className = value;
+      } else if (typeof value === "boolean") {
+        $el[key] = value;
+      } else {
+        $el.setAttribute(key, value);
+      }
+    });
+  }
+
+  if (vNode.children) {
+    vNode.children
+      .filter(
+        (child) => child !== undefined && child !== null && child !== false
+      )
+      .map(createElement)
+      .forEach((child) => $el.appendChild(child));
+  }
+
+  return $el;
 }

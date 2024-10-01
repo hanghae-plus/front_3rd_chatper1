@@ -1,5 +1,5 @@
 export function createElement__v2(vNode) {
-  if (vNode === null || vNode === undefined || vNode === true || vNode === false) {
+  if (!vNode) {
     return document.createTextNode('');
   }
 
@@ -25,12 +25,7 @@ export function createElement__v2(vNode) {
 
       if (key.startsWith('on') && typeof value === 'function') {
         const eventType = key.slice(2).toLowerCase();
-        element.dataset[eventType] = '';
-        document.addEventListener(eventType, (e) => {
-          if (e.target === element) {
-            value(e);
-          }
-        });
+        element.addEventListener(eventType, value);
       } else if (key === 'className') {
         element.className = value;
       } else {

@@ -1,6 +1,6 @@
 /** @jsx createVNode */
 import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
+import { HomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
@@ -41,26 +41,13 @@ function login() {
         bio: "",
     };
 
-    localStorage.setItem("user", JSON.stringify(user));
-    globalStore.setState({ currentUser: user, loggedIn: true });
-    router.push("/profile");
-}
-
-function updateProfile() {
-    const username = document.getElementById("username");
-    const email = document.getElementById("email");
-    const bio = document.getElementById("bio");
-
-    let user = {
-        username: username.value,
-        email: email.value,
-        bio: bio.value,
-    };
-
-    localStorage.setItem("user", JSON.stringify(user));
-    globalStore.setState({ currentUser: user, loggedIn: true });
-
-    alert("수정되었습니다.");
+    try {
+        localStorage.setItem("user", JSON.stringify(user));
+        globalStore.setState({ currentUser: user, loggedIn: true });
+        router.push("/profile");
+    } catch (error) {
+        globalStore.setState({ error });
+    }
 }
 
 function handleError(error) {
@@ -70,9 +57,11 @@ function handleError(error) {
 // 초기화 함수
 function render() {
     const $root = document.querySelector("#root");
+    const eventDelegator = initializeEventDelegator(); // 이벤트 위임 관리 객체 생성
+    const targetPage = router.getTarget();
 
     try {
-        const $app = createElement(<App targetPage={router.getTarget()} />);
+        const $app = createElement(targetPage ? <App targetPage={router.getTarget()} /> : <NotFoundPage />);
 
         if ($root.hasChildNodes()) {
             $root.firstChild.replaceWith($app);
@@ -84,15 +73,15 @@ function render() {
             router.push("/");
             return;
         }
+
         if (error instanceof UnauthorizedError) {
             router.push("/login");
             return;
         }
 
-        console.error(error);
-
-        // globalStore.setState({ error });
+        globalStore.setState({ error });
     }
+
     registerGlobalEvents();
 }
 
@@ -120,11 +109,6 @@ function main() {
     addEvent("submit", "#login-form", (e) => {
         e.preventDefault();
         login();
-    });
-
-    addEvent("submit", "#profile-form", (e) => {
-        e.preventDefault();
-        updateProfile();
     });
 
     render();

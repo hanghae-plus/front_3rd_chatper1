@@ -8,7 +8,48 @@
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
+import {createVNode} from "./createVNode.js";
+
 export function createElement(vNode) {
-  // 여기에 구현하세요
-  return {}
+    if (!vNode) {
+        return document.createTextNode('');
+    }
+
+    if (typeof vNode === "string" || typeof vNode === "number") {
+        return document.createTextNode(vNode);
+    }
+
+    if (Array.isArray(vNode)) {
+        const fragment = document.createDocumentFragment();
+        vNode.forEach((childNode) => fragment.appendChild(createElement(childNode)));
+        return fragment;
+    }
+
+    if (typeof vNode.type === "function") {
+        const result = vNode.type(vNode.props || {});
+        return createElement(result);
+    }
+
+    const element = document.createElement(vNode.type);
+    if (vNode.props) {
+        Object.keys(vNode.props).forEach((key) => {
+            if (key.startsWith("on")) {
+                const eventType = key.slice(2).toLowerCase();
+                element.addEventListener(eventType, vNode.props[key]);
+            }
+            else if (key === 'className') {
+                element.className = vNode.props[key];
+            }  else {
+                element.setAttribute(key, vNode.props[key]);
+            }
+        })
+    }
+
+    if (vNode.children) {
+        const fragment = document.createDocumentFragment();
+        vNode.children.forEach((childNode) =>
+            fragment.appendChild(createElement(childNode)));
+        element.appendChild(fragment);
+    }
+    return element;
 }

@@ -61,16 +61,14 @@ function updateAttributes($element, newNode, oldNode) {
 			}
 		} else {
 			// 업데이트
+			// setAttribute를 사용하면 동일한 key가 있을 경우 덮어씌워지기 때문에 removeAttribute 사용할 필요 없음
 			if (key.startsWith("on")) {
 				const eventType = key.toLowerCase().substring(2);
 				removeEvent($element, eventType, value);
 				addEvent($element, eventType, value);
 			} else if (key === "className") {
-				// TODO: setAttribute만 사용해도 되는 지 확인
-				$element.removeAttribute("class");
 				$element.setAttribute("class", value);
 			} else {
-				$element.removeAttribute(key);
 				$element.setAttribute(key, value);
 			}
 		}

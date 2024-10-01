@@ -48,8 +48,18 @@ const Navigation = ({ loggedIn }) => `
   <nav class="bg-white shadow-md p-2 sticky top-14">
     <ul class="flex justify-around">
       <li><a href="/" class="${getNavItemClass("/")}" data-link>홈</a></li>
-      ${!loggedIn ? `<li><a href="/login" class="${getNavItemClass("/login")}" data-link>로그인</a></li>` : ""}
-      ${loggedIn ? `<li><a href="/profile" class="${getNavItemClass("/profile")}" data-link>프로필</a></li>` : ""}
+      ${
+        !loggedIn
+          ? `<li><a href="/login" class="${getNavItemClass("/login")}" data-link>로그인</a></li>`
+          : ""
+      }
+      ${
+        loggedIn
+          ? `<li><a href="/profile" class="${getNavItemClass(
+              "/profile"
+            )}" data-link>프로필</a></li>`
+          : ""
+      }
       ${loggedIn ? `<li><a href="#" id="logout" class="text-gray-600">로그아웃</a></li>` : ""}
     </ul>
   </nav>
@@ -70,17 +80,17 @@ const HomePage = () => {
   return `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
-        ${ProfilePage()}
-        ${NotFoundPage({ loggedIn })}
+        ${Header()}
+        ${Navigation({ loggedIn })}
 
         <main class="p-4">
           ${loggedIn ? NotFoundPage() : ""}
           <div id="posts-container" class="space-y-4">
-            ${posts.map(ProfilePage).join("")}
+            ${posts.map(Post).join("")}
           </div>
         </main>
 
-        ${HomePage()}
+        ${Footer()}
       </div>
     </div>
   `;
@@ -130,8 +140,8 @@ const ProfilePage = () => {
   return `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
-        ${ProfilePage()}
-        ${NotFoundPage({ loggedIn })}
+        ${Header()}
+        ${Navigation({ loggedIn })}
         <main class="p-4">
           <div class="bg-white p-8 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
@@ -152,7 +162,7 @@ const ProfilePage = () => {
             </form>
           </div>
         </main>
-        ${HomePage()}
+        ${Footer()}
       </div>
     </div>
   `;
@@ -174,7 +184,9 @@ function App({ targetPage }) {
           <div class="flex justify-between items-center">
             <div>
               <strong class="font-bold">오류 발생!</strong>
-              <span class="block sm:inline ml-1">${error.message || "알 수 없는 오류가 발생했습니다."}</span>
+              <span class="block sm:inline ml-1">${
+                error.message || "알 수 없는 오류가 발생했습니다."
+              }</span>
             </div>
             <button class="text-red-700 hover:text-red-900 font-semibold">
               &times;

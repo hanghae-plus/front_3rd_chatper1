@@ -7,7 +7,7 @@ import { userStorage } from "./storages";
 import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
 
-const router = createRouter({
+export const router = createRouter({
   "/": HomePage,
   "/login": () => {
     const { loggedIn } = globalStore.getState();

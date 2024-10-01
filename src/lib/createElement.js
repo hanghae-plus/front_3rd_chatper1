@@ -36,10 +36,6 @@ export function createElement(vNode) {
         attr = 'class';
       }
 
-      if (attr === 'id') {
-        attr = 'id';
-      }
-
       return $el.setAttribute(attr, value);
     });
 

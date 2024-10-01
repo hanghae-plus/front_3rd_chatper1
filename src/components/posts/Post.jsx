@@ -2,7 +2,6 @@
 import { createVNode } from '../../lib';
 
 export const Post = ({ author, time, content, id }) => {
-  console.log(content, 'content');
   return (
     <div className="bg-white rounded-lg shadow p-4 mb-4">
       <div className="flex items-center mb-2">

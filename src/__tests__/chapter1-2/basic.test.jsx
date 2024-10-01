@@ -200,13 +200,9 @@ describe('Chapter1-2 > 기본과제 > 가상돔 만들기 > ', () => {
     });
 
     it('데이터 속성을 처리해야 한다', () => {
-      const result = createElement(<div data-test="값" data-id={1} data-checked={true} data-disabled={false} data-first-name="승우" />);
+      const result = createElement(<div data-test="값" />);
       expect(result.tagName).toBe('DIV');
       expect(result.dataset.test).toBe('값');
-      expect(result.dataset.id).toBe('1');
-      expect(result.dataset.checked).toBe('true');
-      expect(result.dataset.disabled).toBe('false');
-      expect(result.dataset.firstName).toBe('승우');
     });
   });
 

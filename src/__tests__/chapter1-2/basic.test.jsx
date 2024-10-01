@@ -22,7 +22,6 @@ describe("Chapter1-2 > 기본과제 > 가상돔 만들기 > ", () => {
 
     it("자식 배열을 평탄화해야 한다", () => {
       const vNode = createVNode("div", null, ["Hello", ["world", "!"]]);
-      console.log("🚀 ~ it ~ vNode:", vNode.children);
       expect(vNode.children).toEqual(["Hello", "world", "!"]);
     });
 

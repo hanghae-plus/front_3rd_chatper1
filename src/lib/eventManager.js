@@ -10,11 +10,18 @@ let rootElement = null;
 // TODO: setupEventListeners 함수 구현
 export function setupEventListeners(root) {
   // 1. rootElement 설정
+  if(!root) {
+    console.error('root x');
+    return;
+  }
   rootElement = root;
 
   // 2. 기존에 설정된 이벤트 리스너 제거 (있다면)
-  rootElement.removeEventListener('click', handleEvent, true); // 예: 클릭 이벤트
-  rootElement.removeEventListener('mouseover', handleEvent, true); // 예: 마우스오버 이벤트
+  if (rootElement && !!eventMap.size) {
+    eventMap.forEach((_, eventType) => {
+      rootElement.removeEventListener(eventType, handleEvent, true);
+    });
+  }
   // 3. eventMap에 등록된 모든 이벤트 타입에 대해 루트 요소에 이벤트 리스너 추가
   for (let [eventType] of eventMap) {
     rootElement.addEventListener(eventType, handleEvent, true); // 이벤트 캡처링 단계에서 처리
@@ -32,17 +39,18 @@ function handleEvent(event) {
   // 2. 각 요소에 대해 해당 이벤트 타입의 핸들러가 있는지 확인
   while (currentElement && currentElement !== rootElement) {
     const handlers = eventMap.get(type);
-  console.log('handlers',handlers)
+    console.log('handlers',handlers)
 
     if (handlers) {
-  console.log('handlerInfo',handlers.get(currentElement))
-
+      console.log('handlerInfo',handlers.get(currentElement))
       const handlerInfo = handlers.get(currentElement);
       if (handlerInfo) {
         handlerInfo.forEach(handler => {
           console.log(handler)
+          console.log(event)
           // 3. 핸들러가 있으면 실행
-          // event.preventDefault();
+          event.preventDefault();
+          // handler.handler.call(target, event);
           handler(event);
           // createSyntheticEvent(event);
           // handler(createSyntheticEvent(event));
@@ -50,7 +58,6 @@ function handleEvent(event) {
         break; // 이벤트 버블링 중단
       }
     }
-
     // 상위 요소로 버블링
     currentElement = currentElement.parentElement;
   }

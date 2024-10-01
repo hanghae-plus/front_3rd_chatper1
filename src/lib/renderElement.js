@@ -127,6 +127,7 @@ function updateElement(container, newVNode, oldNode, index = 0) {
 
 // TODO: renderElement 함수 구현
 export function renderElement(vNode, container) {
+  if (!container) return;
   // 최상위 수준의 렌더링 함수입니다.
   const oldNode = container.__vNode; // 이전 vNode 저장
   const newVNode = processVNode(vNode); // 새로 들어온 vNode 처리
@@ -136,6 +137,7 @@ export function renderElement(vNode, container) {
   // - 최초 렌더링과 업데이트 렌더링 처리
   updateElement(container, newVNode ,oldNode); // 업데이트 또는 추가
   container.__vNode = newVNode; // 새 vNode 저장
+  console.log(container)
   // 이벤트 위임 설정
   // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
   setupEventListeners(container);

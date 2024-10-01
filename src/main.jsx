@@ -56,7 +56,7 @@ function render() {
 
     console.error(error);
   }
-//   registerGlobalEvents();
+  registerGlobalEvents();
 }
 
 function main() {
@@ -81,6 +81,7 @@ function main() {
   });
 
   render();
+
 }
 
 main();

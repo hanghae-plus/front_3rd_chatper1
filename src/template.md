@@ -42,7 +42,7 @@ const Footer = () => `
 const getNavItemClass = (path) => {
   const currentPath = window.location.pathname;
   return currentPath === path ? 'text-blue-600 font-bold' : 'text-gray-600';
-}
+};
 
 const Navigation = ({ loggedIn }) => `
   <nav class="bg-white shadow-md p-2 sticky top-14">
@@ -76,7 +76,7 @@ const HomePage = () => {
         <main class="p-4">
           ${loggedIn ? NotFoundPage() : ''}
           <div id="posts-container" class="space-y-4">
-            ${posts.map(ProfilePage).join('')}
+            ${posts.map(Post).join('')}
           </div>
         </main>
         
@@ -84,7 +84,7 @@ const HomePage = () => {
       </div>
     </div>
   `;
-}
+};
 ```
 
 ```javascript
@@ -121,13 +121,12 @@ const NotFoundPage = () => `
     </div>
   </main>
 `;
-
 ```
 
 ```javascript
 const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
-  const { username = '', email = '', bio = '' } = currentUser ?? {}
+  const { username = '', email = '', bio = '' } = currentUser ?? {};
   return `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
@@ -157,18 +156,20 @@ const ProfilePage = () => {
       </div>
     </div>
   `;
-}
+};
 ```
 
 ```javascript
 function App({ targetPage }) {
   const PageComponent = targetPage ?? NotFoundPage;
   const error = globalStore.getState().error;
-  
+
   return `
     <div>
       ${PageComponent()}
-      ${error ? `
+      ${
+        error
+          ? `
         <div id="error-boundary" class="fixed bottom-4 left-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 hover:opacity-75" role="alert">
           <div class="flex justify-between items-center">
             <div>
@@ -180,7 +181,10 @@ function App({ targetPage }) {
             </button>
           </div>
         </div>
-      `  : ''}
+      `
+          : ''
+      }
     </div>
   `;
 }
+```

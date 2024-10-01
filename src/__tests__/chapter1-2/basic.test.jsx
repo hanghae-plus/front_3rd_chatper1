@@ -204,6 +204,18 @@ describe('Chapter1-2 > 기본과제 > 가상돔 만들기 > ', () => {
       expect(result.tagName).toBe('DIV');
       expect(result.dataset.test).toBe('값');
     });
+
+    it('숫자와 불리언 타입의 데이터 속성 값을 문자열로 변환해야 한다', () => {
+      const result = createElement(<div data-id={1} data-checked={true} data-disabled={false} />);
+      expect(result.dataset.id).toBe('1');
+      expect(result.dataset.checked).toBe('true');
+      expect(result.dataset.disabled).toBe('false');
+    });
+
+    it('하이픈으로 구분된 데이터 속성을 카멜 케이스로 올바르게 처리해야 한다', () => {
+      const result = createElement(<div data-first-name="승우" />);
+      expect(result.dataset.firstName).toBe('승우');
+    });
   });
 
   describe('컴포넌트를 jsx로 정의하여 사용했는지 확인하기', () => {

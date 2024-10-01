@@ -22,8 +22,7 @@ export function createElement(vNode) {
     const fragment = document.createDocumentFragment();
 
     vNode.forEach((item) => {
-      const element = document.createElement(item.type);
-      element.appendChild(createElement(item.children[0]));
+      const element = createElement(item);
       fragment.appendChild(element);
     });
     return fragment;
@@ -31,14 +30,9 @@ export function createElement(vNode) {
   // 4번 요구사항
   if (typeof vNode.type === 'function') {
     const node = vNode.type(vNode.props);
-    const element = document.createElement(node.type);
-    element.appendChild(createElement(node.children[0]));
+    const element = createElement(node);
     return element;
   }
-  // 5. 위 경우가 아니면 실제 DOM 요소를 생성합니다:
-  //    - vNode.type에 해당하는 요소를 생성
-  //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
-  //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
   // 5번 요구사항
   const element = document.createElement(vNode.type);
   if (vNode.props) {
@@ -46,6 +40,10 @@ export function createElement(vNode) {
     Object.keys(vNode.props).forEach((key) => {
       if (key.startsWith('on')) {
         element.addEventListener(key.slice(2).toLowerCase(), vNode.props[key]);
+        return;
+      }
+      if (key.startsWith('data-')) {
+        element.dataset[key.slice(5)] = vNode.props[key];
         return;
       }
       element[key] = vNode.props[key];

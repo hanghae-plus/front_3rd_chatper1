@@ -14,9 +14,7 @@ import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
 
 const router = createRouter({
-  "/": () => {
-    return <HomePage />;
-  },
+  "/": () => <HomePage />,
   "/login": () => {
     const { loggedIn } = globalStore.getState();
 

@@ -11,7 +11,7 @@ export const HomePage = () => {
         <Header />
         <Navigation loggedIn={loggedIn} />
         <main class="p-4">
-          {loggedIn ? <PostForm /> : ''}
+          {loggedIn && <PostForm />}
           <div id="posts-container" class="space-y-4">
             {posts.map((post) => (
               <Post

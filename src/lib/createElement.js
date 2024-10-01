@@ -32,20 +32,20 @@ export function createElement(vNode) {
 
   const element = document.createElement(vNode.type);
 
-  if (vNode.props) {
+  if(vNode.props) {
     Object.entries(vNode.props).forEach(([key, value]) => {
       if(key.startsWith('on') && typeof value === 'function') {
         element.addEventListener(key.slice(2).toLowerCase(), value);
       }else if (key === 'className') {
         element.className = value;
-      //className이 아닌 style로 들어갈 때 객체로 들어가서 해당 부분 추가
       }else if (key === 'style' && typeof value === 'object' && value) {
         Object.assign(element.style, value);
-      //textArea defaultValue처리 
-      }else if (key === 'value' && element.tagName === 'TEXTAREA') {
-        element.value = value;
       }else {
-        element.setAttribute(key, value);
+        if(key in element) {
+          element[key] = value;
+        } else{
+          element.setAttribute(key, value);
+        }
       }
     });
   }

@@ -5,7 +5,6 @@ import { Navigation } from '../components/templates/Navigation';
 import { Footer, Header, PostForm } from "../components";
 import { Post } from "../components";
 
-
 export const HomePage = () => { 
   const { loggedIn, posts } = globalStore.getState(); 
   return (          

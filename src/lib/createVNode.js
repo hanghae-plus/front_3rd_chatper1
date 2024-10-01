@@ -6,5 +6,16 @@
 
 export function createVNode(type, props, ...children) {
   // 여기에 구현하세요
-  return {}
+
+  //children 평탄화
+  const flattenChildren = children.flat(Infinity);
+
+  //반환할 객체 생성
+  const vNode = {
+    type: type,
+    props: props,
+    children: flattenChildren,
+  };
+
+  return vNode;
 }

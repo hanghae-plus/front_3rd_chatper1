@@ -1,10 +1,11 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
+import { createRouter, createVNode, renderElement } from "./lib";
 import { HomePage, LoginPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
-import { registerGlobalEvents } from "./utils";
+import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
+import { userStorage } from "./storages";
 
 export const router = createRouter({
 	"/": HomePage,
@@ -23,6 +24,12 @@ export const router = createRouter({
 		return <ProfilePage />;
 	},
 });
+
+function logout() {
+	globalStore.setState({ currentUser: null, loggedIn: false });
+	router.push("/login");
+	userStorage.reset();
+}
 
 function handleError(error) {
 	globalStore.setState({ error });
@@ -56,6 +63,21 @@ function main() {
 	globalStore.subscribe(render);
 	window.addEventListener("error", handleError);
 	window.addEventListener("unhandledrejection", handleError);
+
+	addEvent("click", "[data-link]", (e) => {
+		e.preventDefault();
+		router.push(e.target.href.replace(window.location.origin, ""));
+	});
+
+	addEvent("click", "#logout", (e) => {
+		e.preventDefault();
+		logout();
+	});
+
+	addEvent("click", "#error-boundary", (e) => {
+		e.preventDefault();
+		globalStore.setState({ error: null });
+	});
 
 	render();
 }

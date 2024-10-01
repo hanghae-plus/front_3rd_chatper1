@@ -9,6 +9,62 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
 export function createElement(vNode) {
-  // 여기에 구현하세요
-  return {};
+  if (!vNode) {
+    return createTextNode('');
+  }
+
+  if (typeof vNode === 'string' || typeof vNode === 'number') {
+    return createTextNode(String(vNode));
+  }
+
+  if (Array.isArray(vNode)) {
+    return createFragment(vNode);
+  }
+
+  if (typeof vNode.type === 'function') {
+    return createElement(vNode.type(vNode.props));
+  }
+
+  const element = document.createElement(vNode.type);
+  setProps(element, vNode.props);
+  appendChildren(element, vNode.children);
+
+  return element;
 }
+
+const createTextNode = (text) => document.createTextNode(text);
+
+const createFragment = (vNodes) => {
+  const newFragment = document.createDocumentFragment();
+  vNodes.forEach((child) => newFragment.appendChild(createElement(child)));
+  return newFragment;
+};
+
+const createEventListener = (element, key, value) => {
+  const eventName = key.replace(/^on/, '').toLowerCase();
+  element.addEventListener(eventName, value);
+};
+
+const setAttribute = (element, key, value) => {
+  if (key === 'className') {
+    element.className = value;
+  } else {
+    element.setAttribute(key, value);
+  }
+};
+
+const setProps = (element, props) => {
+  Object.entries(props || {}).forEach(([key, value]) => {
+    if (key.startsWith('on')) {
+      createEventListener(element, key, value);
+    } else {
+      setAttribute(element, key, value);
+    }
+  });
+};
+
+const appendChildren = (element, children) => {
+  children.map(createElement).forEach((child) => {
+    element.appendChild(child);
+  });
+};

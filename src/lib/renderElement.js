@@ -68,6 +68,11 @@ function updateAttributes($element, newNode, oldNode) {
 				addEvent($element, eventType, value);
 			} else if (key === "className") {
 				$element.setAttribute("class", value);
+			} else if (key === "style") {
+				const formattedStyle = Object.entries(value)
+					.map(([k, v]) => `${camelToKebab(k)}: ${v}`)
+					.join("; ");
+				$element.setAttribute(key, formattedStyle);
 			} else {
 				$element.setAttribute(key, value);
 			}

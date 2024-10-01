@@ -9,7 +9,8 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
 export function createElement(vNode) {
-  if (!vNode) {
+  if (!vNode && vNode !== 0) {
+    //  null undefined false true 에 대해서만 빈 텍스트 노드로 처리
     return createTextNode('');
   }
 

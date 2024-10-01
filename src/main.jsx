@@ -31,6 +31,12 @@ export function login(userInfo) {
   userStorage.set(userInfo);
 }
 
+export function updateProfile(userInfo) {
+  globalStore.setState({ currentUser: userInfo });
+  router.push("/profile");
+  userStorage.set(userInfo);
+}
+
 function logout() {
   globalStore.setState({ currentUser: null, loggedIn: false });
   router.push("/login");
@@ -91,7 +97,7 @@ function main() {
     globalStore.setState({ error: null });
   });
 
-  render();
+  document.addEventListener("DOMContentLoaded", render);
 }
 
 main();

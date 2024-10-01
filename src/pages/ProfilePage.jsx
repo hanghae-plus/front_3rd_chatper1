@@ -32,7 +32,18 @@ export const ProfilePage = () => {
                 "form",
                 {
                   id: "profile-form",
-export const ProfilePage = () => ({});
+                  onSubmit: (e) => {
+                    e.preventDefault();
+
+                    const username = document.getElementById("username");
+                    const email = document.getElementById("email");
+                    const bio = document.getElementById("bio");
+                    updateProfile({
+                      username: username.value || "",
+                      email: email.value || "",
+                      bio: bio.value || ""
+                    });
+                  }
                 },
                 [
                   createVNode("div", { className: "mb-4" }, [

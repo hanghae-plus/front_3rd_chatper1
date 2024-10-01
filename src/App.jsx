@@ -20,7 +20,7 @@ export const App = ({ targetPage }) => {
             <div>
               <strong class="font-bold">오류 발생!</strong>
               <span class="block sm:inline ml-1">
-                ${error.message || '알 수 없는 오류가 발생했습니다.'}
+                {error.message || '알 수 없는 오류가 발생했습니다.'}
               </span>
             </div>
             <button class="text-red-700 hover:text-red-900 font-semibold">

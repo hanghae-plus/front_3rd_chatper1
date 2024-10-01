@@ -9,7 +9,8 @@ function processVNode(vNode) {
 	// - 문자열과 숫자를 문자열로 변환
 	// - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
 	// - 자식 요소들에 대해 재귀적으로 processVNode 호출
-	if (vNode === null || vNode === undefined || typeof vNode === "boolean") return "";
+	if (vNode === null || vNode === undefined || vNode === "" || typeof vNode === "boolean")
+		return "";
 	if (typeof vNode === "string" || typeof vNode === "number") return String(vNode);
 	if (typeof vNode.type === "function") return processVNode(vNode.type(vNode.props));
 	vNode.children.map(processVNode);

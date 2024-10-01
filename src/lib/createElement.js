@@ -10,7 +10,7 @@
 
 export function createElement(vNode) {
   // 1번 요구사항
-  if (!vNode) {
+  if (!vNode || typeof vNode === 'boolean') {
     return document.createTextNode('');
   }
   // 2번 요구사항

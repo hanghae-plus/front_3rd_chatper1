@@ -12,13 +12,15 @@ import { createVNode } from './createVNode';
 
 export function createElement(vNode) {
 
+  if(!vNode){
+    return document.createTextNode('');
+  }
+  
   if(typeof vNode === 'string' || typeof vNode === 'number'){
     return document.createTextNode(vNode);
   }
 
-  if(!vNode || typeof vNode === 'boolean'){
-    return document.createTextNode('');
-  }
+
 
   if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment();

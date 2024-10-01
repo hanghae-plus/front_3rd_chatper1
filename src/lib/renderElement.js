@@ -1,29 +1,19 @@
 import { createElement__v2 } from './createElement__v2.js';
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { flatObject } from './flatObject.js';
+import { formatVNodeAttr } from './formatVNodeAttr.js';
 
 function updateAttributes(newElement, oldElement) {
   const newNodeAttributes = [...newElement.attributes, ...flatObject(newElement._vNode?.props)];
   const oldNodeAttributes = [...oldElement.attributes, ...flatObject(oldElement._vNode?.props)];
 
   for (const { name, value } of newNodeAttributes) {
-    if (name.startsWith('on')) {
-      addEvent(oldElement, name.slice(2).toLowerCase(), value);
+    const [key, v] = formatVNodeAttr(name, value);
+    if (name.startsWith('on') && typeof v === 'function') {
+      addEvent(oldElement, key, v);
       oldElement._vNode = newElement._vNode;
     } else {
-      if (name === 'style') {
-        const ObjStyleToStringStyle = Object.entries(value)
-          .reduce((acc, [key, value]) => {
-            const _key = key.replaceAll(/([A-Z])/g, '-$1').toLowerCase();
-            const _value = typeof value === 'string' ? value : `${value}px`;
-            return acc + `${_key}: ${_value}; `;
-          }, '')
-          .trim();
-        oldElement.setAttribute(name, ObjStyleToStringStyle);
-      } else {
-        const _key = name === 'className' ? 'class' : name;
-        oldElement.setAttribute(_key, value);
-      }
+      oldElement.setAttribute(key, v);
     }
   }
   for (const { name } of oldNodeAttributes) {

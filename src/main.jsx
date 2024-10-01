@@ -33,9 +33,9 @@ function logout() {
 }
 
 function login(e) {
-  const _currentUser = createFormData(e.target);
+  const formData = createFormData(e.target);
   const currentUser = {
-    username: _currentUser.username,
+    username: formData.username,
     email: '',
     bio: '',
   };

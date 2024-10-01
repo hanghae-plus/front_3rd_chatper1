@@ -1,4 +1,5 @@
 import { addEvent } from './eventManager';
+import { formatVNodeAttr } from './formatVNodeAttr';
 
 export function createElement__v2(vNode) {
   if (!vNode) return document.createTextNode('');
@@ -21,25 +22,13 @@ export function createElement__v2(vNode) {
   const element = document.createElement(vNode.type);
 
   for (const key in vNode.props) {
-    const value = vNode.props[key];
+    const [name, value] = formatVNodeAttr(key, vNode.props[key]);
 
     if (key.startsWith('on') && typeof value === 'function') {
-      addEvent(element, key.slice(2).toLowerCase(), value);
+      addEvent(element, name, value);
       element._vNode = vNode;
     } else {
-      if (key === 'style') {
-        const ObjStyleToStringStyle = Object.entries(value)
-          .reduce((acc, [key, value]) => {
-            const _key = key.replaceAll(/([A-Z])/g, '-$1').toLowerCase();
-            const _value = typeof value === 'string' ? value : `${value}px`;
-            return acc + `${_key}: ${_value}; `;
-          }, '')
-          .trim();
-        element.setAttribute(key, ObjStyleToStringStyle);
-      } else {
-        const _key = key === 'className' ? 'class' : key;
-        element.setAttribute(_key, value);
-      }
+      element.setAttribute(name, value);
     }
   }
 

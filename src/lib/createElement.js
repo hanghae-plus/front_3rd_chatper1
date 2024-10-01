@@ -32,7 +32,7 @@ function isEventName(attr) {
 
 export function createElement(vNode) {
   // 1
-  if (!vNode) {
+  if (vNode === null || vNode === undefined || typeof vNode === "boolean") {
     return document.createTextNode("");
   }
   // 2
@@ -68,7 +68,9 @@ export function createElement(vNode) {
   }
   // 5-3
   if (vNode.children?.length > 0) {
-    $el.appendChild(createElement(vNode.children));
+    vNode.children.forEach((child) => {
+      $el.appendChild(createElement(child));
+    });
   }
 
   return $el;

@@ -2,6 +2,7 @@
 import { createVNode } from "../lib";
 import { Footer, Header, Post, PostForm, Navigation } from "../components";
 import { globalStore } from "../stores";
+import { addEvent } from "../utils/eventUtils.js";
 
 export const HomePage = () => {
   const { loggedIn, posts } = globalStore.getState();
@@ -25,3 +26,22 @@ export const HomePage = () => {
     </div>
   );
 };
+
+const addPost = (content) => {
+  const { currentUser, posts } = globalStore.getState();
+  globalStore.setState({
+    posts: [
+      ...posts,
+      {
+        id: Date.now(),
+        author: currentUser.name,
+        time: "방금 전",
+        content: content,
+      },
+    ],
+  });
+};
+addEvent("click", "#post-submit", () => {
+  const content = document.getElementById("post-content").value;
+  addPost(content);
+});

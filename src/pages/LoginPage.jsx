@@ -1,5 +1,8 @@
 /** @jsx createVNode */
 import { createVNode } from "../lib";
+import { addEvent } from "../utils/eventUtils.js";
+import { globalStore } from "../stores";
+import { userStorage } from "../storages";
 
 export const LoginPage = () => {
   return (
@@ -45,3 +48,18 @@ export const LoginPage = () => {
     </div>
   );
 };
+
+function login(username) {
+  const user = { username, email: "", bio: "" };
+  globalStore.setState({
+    currentUser: user,
+    loggedIn: true,
+  });
+  userStorage.set(user);
+}
+
+addEvent("submit", "#login-form", (e) => {
+  e.preventDefault();
+  const username = document.getElementById("username").value;
+  login(username);
+});

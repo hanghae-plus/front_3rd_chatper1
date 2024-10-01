@@ -8,7 +8,7 @@ import { addEvent, registerGlobalEvents } from './utils';
 import { App } from './App';
 
 const router = createRouter({
-  '/': HomePage,
+  '/': () => <HomePage />,
   '/login': () => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {

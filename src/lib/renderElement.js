@@ -1,14 +1,37 @@
 // renderElement.js
-import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
+import { addEvent, removeEvent, setupEventListeners } from "./eventManager.js";
 import { createElement__v2 } from "./createElement__v2.js";
 
 // TODO: processVNode 함수 구현
-function processVNode() {
+export function processVNode(vNode) {
   // vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
   // - null, undefined, boolean 값 처리
   // - 문자열과 숫자를 문자열로 변환
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
+  if (
+    vNode === null ||
+    vNode === undefined ||
+    typeof vNode === "boolean" ||
+    (typeof vNode === "object" && Object.keys(vNode).length === 0)
+  )
+    return "";
+
+  if (typeof vNode === "string" || typeof vNode === "number")
+    return String(vNode);
+
+  if (Array.isArray(vNode)) {
+    return vNode.map((child) => processVNode(child));
+  }
+
+  if (typeof vNode.type === "function") {
+    const props = vNode.props || {};
+    const children = vNode.children || [];
+
+    return processVNode(vNode.type({ ...props, children }));
+  }
+
+  return vNode;
 }
 
 // TODO: updateAttributes 함수 구현

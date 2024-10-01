@@ -8,7 +8,7 @@ export const App = ({ targetPage }) => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100 ">
             {error ? (
-                <p id="error-boundary" class="font-bold p-10 text-red-600" role="alert">
+                <p id="error-boundary" className="font-bold p-10 text-red-600" role="alert">
                     오류 발생! [{error.message}]
                 </p>
             ) : (

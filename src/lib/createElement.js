@@ -60,8 +60,7 @@ export function createElement(vNode) {
 
   // 함수 컴포넌트를 처리해야 한다
   if (typeof vNode.type === "function") {
-    const { type, props, children } = vNode.type(vNode.props || {});
-    return createElement(createVNode(type, props, children));
+    return createElement(vNode.type(vNode.props || {}));
   }
 
   const element = document.createElement(vNode.type);

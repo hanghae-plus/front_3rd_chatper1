@@ -1,13 +1,13 @@
 /** @jsx createVNode */
 import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
+import {HomePage, LoginPage, NotFoundPage, ProfilePage} from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
 import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
 
-const router = createRouter({
+export const router = createRouter({
   "/": () => <HomePage />,
   "/login": () => {
     const { loggedIn } = globalStore.getState();
@@ -23,6 +23,8 @@ const router = createRouter({
     }
     return <ProfilePage/>;
   },
+  '/notfound': () => <NotFoundPage />,
+
 });
 
 function logout() {

@@ -1,5 +1,4 @@
 // TODO: createElement 함수 구현
-import { createVNode } from "./createVNode";
 // 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
 // 2. vNode가 문자열이나 숫자면 텍스트 노드를 생성하여 반환합니다.
 // 3. vNode가 배열이면 DocumentFragment를 생성하고 각 자식에 대해 createElement를 재귀 호출하여 추가합니다.
@@ -9,6 +8,10 @@ import { createVNode } from "./createVNode";
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
+function isPrimitive(vNode) {
+  return typeof vNode === "string" || typeof vNode === "number";
+}
+
 export function createElement(vNode) {
   // 1
   if (!vNode) {
@@ -16,20 +19,46 @@ export function createElement(vNode) {
   }
 
   // 2
-  if (typeof vNode === "string" || typeof vNode === "number") {
+  if (isPrimitive(vNode)) {
     return document.createTextNode(vNode);
   }
 
-  // if (Array.isArray(vNode)) {
-  //   const len = vNode.length;
+  // 3
+  if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((child) => fragment.appendChild(createElement(child)));
+    return fragment;
+  }
 
-  //   if (len) {
-
-  //   } else {
-  //   }
-  // }
+  // 4
+  if (typeof vNode.type === "function") {
+    const componentVNode = vNode.type(vNode.props || {});
+    return createElement(componentVNode);
+  }
 
   // 5
-  createVNode({ ...vNode });
-  return {};
+  const $element = document.createElement(vNode.type);
+
+  if (vNode.props) {
+    for (const [key, value] of Object.entries(vNode.props)) {
+      if (key.startsWith("on") && typeof value === "function") {
+        const event = key.slice(2).toLowerCase();
+        $element.addEventListener(event, value);
+      } else if (key === "className") {
+        $element.setAttribute("class", value);
+      } else {
+        $element.setAttribute(key, value);
+      }
+    }
+  }
+
+  if (vNode.children) {
+    vNode.children
+      .filter((el) => el)
+      .forEach((child) => {
+        $element.appendChild(createElement(child));
+      });
+  }
+
+  return $element;
 }

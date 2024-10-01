@@ -1,12 +1,34 @@
 /** @jsx createVNode */
 import { createVNode } from "../lib";
+import { userStorage } from "../storages";
+import { globalStore } from "../stores";
 
 export const LoginPage = () => {
+    const handleLogin = (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById("username");
+
+        let user = {
+            username: username.value,
+            email: "",
+            bio: "",
+        };
+
+        try {
+            globalStore.setState({ currentUser: user, loggedIn: true });
+            userStorage.set(user);
+            router.push("/profile");
+        } catch (error) {
+            globalStore.setState({ error });
+        }
+    };
+
     return (
         <div class="bg-gray-100 flex items-center justify-center min-h-screen">
             <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
                 <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-                <form id="login-form">
+                <form id="login-form" onSubmit={handleLogin}>
                     <input type="text" id="username" placeholder="사용자 이름" class="w-full p-2 mb-4 border rounded" required />
                     <input type="password" placeholder="비밀번호" class="w-full p-2 mb-6 border rounded" required />
                     <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded">

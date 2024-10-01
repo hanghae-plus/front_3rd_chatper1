@@ -6,5 +6,18 @@
 
 export function createVNode(type, props, ...children) {
   // 여기에 구현하세요
-  return {}
+
+  // 평탄화, flasy 값을 필터링
+  const flatteAndFilter = (arr) => {
+    return arr.flat(Infinity).filter(Boolean);
+  };
+
+  // 배열을 평탄화하고 falsy 값 제거
+  const flattenChildren = flatteAndFilter(children);
+
+  return {
+    type,
+    props,
+    children: flattenChildren
+  };
 }

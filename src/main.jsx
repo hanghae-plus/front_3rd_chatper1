@@ -25,6 +25,10 @@ const router = createRouter({
   },
 });
 
+export const navigateTo = (path) => {
+  router.push(path);
+};
+
 function logout() {
   globalStore.setState({ currentUser: null, loggedIn: false });
   router.push('/login');

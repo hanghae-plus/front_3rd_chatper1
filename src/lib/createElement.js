@@ -8,7 +8,54 @@
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
+// 배열을 입력받아 DocumentFragment를 생성하는 함수
+function createFragmentFromArray(array) {
+  // DocumentFragment 생성
+  const fragment = document.createDocumentFragment();
+
+  // 배열의 각 요소를 순회하며 fragment에 추가
+  array.forEach((item) => {
+    const $el = createElement(item);
+    fragment.appendChild($el);
+  });
+
+  return fragment;
+}
+
 export function createElement(vNode) {
   // 여기에 구현하세요
-  return {}
+  if (vNode === undefined) return;
+  if (Array.isArray(vNode)) return createFragmentFromArray(vNode);
+
+  if (vNode?.type === undefined || vNode === null || vNode === false) {
+    return document.createTextNode(vNode ? vNode.toString() : '');
+  }
+  if (typeof vNode.type === 'function') {
+    console.log('createElement function', vNode);
+    return createElement(vNode.type(vNode.props));
+  }
+
+  const $el = document.createElement(vNode.type);
+
+  Object.entries(vNode.props || {})
+    .filter(([_attr, value]) => value)
+    .forEach(([attr, value]) => {
+      if (attr === 'className') {
+        attr = 'class';
+      }
+      if (attr.startsWith('on')) {
+        $el.addEventListener(attr.slice(2).toLowerCase(), value);
+      }
+
+      return $el.setAttribute(attr, value);
+    });
+
+  try {
+    vNode.children.map(createElement).forEach((child) => $el.appendChild(child));
+  } catch (e) {
+    console.log(vNode);
+    console.error(e);
+  }
+
+  return $el;
 }

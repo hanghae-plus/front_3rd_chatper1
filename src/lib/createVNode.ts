@@ -16,7 +16,7 @@ export type VNode = VNodeElement | string | number | any[];
 export function createVNode(
   type: VNodeType,
   props: Record<string, any> | null,
-  ...children: any[]
+  ...children: VNodeChildren
 ): VNode {
   const filteredChildren = children.flat(Infinity).filter((v) => Boolean(v));
 

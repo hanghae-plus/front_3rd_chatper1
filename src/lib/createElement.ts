@@ -5,7 +5,7 @@ function setAttributes($element: HTMLElement, props: NonNullable<VNodeProps>) {
     if (typeof value === 'function' && key.startsWith('on')) {
       $element.addEventListener(key.slice(2).toLowerCase(), value);
     } else if (key === 'className') {
-      $element.classList.add(value);
+      $element.className = value;
     } else {
       $element.setAttribute(key, value);
     }
@@ -20,6 +20,7 @@ function appendChildren($element: HTMLElement, children: VNodeChildren) {
 
 /**
  * 주어진 가상 DOM 노드(vNode)를 실제 DOM 노드로 변환하여 반환합니다.
+ *
  * @param {VNode} vNode - 가상 DOM 노드
  * @returns {Node} 변환된 DOM 노드
  */

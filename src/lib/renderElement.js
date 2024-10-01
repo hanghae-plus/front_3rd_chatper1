@@ -2,6 +2,7 @@
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { createElement } from './createElement.js';
 import { flatObject } from './flatObject.js';
+import { createElement__v2 } from './createElement__v2.js';
 
 // TODO: processVNode 함수 구현
 function processVNode() {
@@ -26,6 +27,9 @@ function updateAttributes(newNode, oldNode) {
   const newNodeAttributes = [...newNode.attributes, ...flatObject(newNode._vNode?.props)];
   const oldNodeAttributes = [...oldNode.attributes, ...flatObject(oldNode._vNode?.props)];
 
+  // console.log(newNodeAttributes);
+  // console.log(oldNodeAttributes);
+
   for (const { name, value } of newNodeAttributes) {
     if (name.startsWith('on')) {
       addEvent(oldNode, name.slice(2).toLowerCase(), value);
@@ -34,10 +38,10 @@ function updateAttributes(newNode, oldNode) {
       oldNode.setAttribute(name, value);
     }
   }
-  for (const { name, value } of oldNodeAttributes) {
-    if (!newNode.getAttribute(name)) {
+  for (const { name } of oldNodeAttributes) {
+    if (!newNode.getAttribute(name) && !newNodeAttributes.map((item) => item.name).includes(name)) {
       if (name.startsWith('on')) {
-        removeEvent(oldNode, name.slice(2).toLowerCase(), value);
+        removeEvent(oldNode, name.slice(2).toLowerCase());
       } else {
         oldNode.removeAttribute(name);
       }
@@ -46,7 +50,7 @@ function updateAttributes(newNode, oldNode) {
 }
 
 // TODO: updateElement 함수 구현
-function updateElement(container, newNode, oldNode, realNewNode) {
+function updateElement(container, newNode, oldNode) {
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
   if (!newNode && oldNode) {
@@ -104,13 +108,13 @@ export function renderElement(vNode, container) {
   // - 리렌더링일 때에는 updateElement로 실행
   processVNode();
 
-  const newEl = createElement(vNode);
   const oldEl = container.firstChild;
+  const newEl = createElement(vNode);
 
   if (!oldEl) {
     container.appendChild(newEl);
   } else {
-    updateElement(container, newEl, oldEl, vNode);
+    updateElement(container, newEl, oldEl);
   }
 
   // 이벤트 위임 설정

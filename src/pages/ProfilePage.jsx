@@ -1,12 +1,22 @@
 /** @jsx createVNode */
 import { Footer, Header, Navigation } from '../components';
-import { createVNode } from '../lib';
-
+import { createFormData, createVNode } from '../lib';
+import { userStorage } from '../storages';
 import { globalStore } from '../stores';
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = '', email = '', bio = '' } = currentUser ?? {};
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const currentUser = createFormData(e.target);
+    globalStore.setState({
+      currentUser,
+      loggedIn: true,
+    });
+    userStorage.set(currentUser);
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">
@@ -16,7 +26,7 @@ export const ProfilePage = () => {
         <main className="p-4">
           <div className="bg-white p-8 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-            <form id="profile-form">
+            <form id="profile-form" onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label for="username" className="block text-gray-700 text-sm font-bold mb-2">
                   사용자 이름

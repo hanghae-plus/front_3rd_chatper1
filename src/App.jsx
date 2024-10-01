@@ -6,7 +6,8 @@ export const App = ({ targetPage }) => {
   const PageComponent = targetPage ?? NotFoundPage;
   const error = globalStore.getState().error;
 
-  const resetError = () => {
+  const resetError = (e) => {
+    e.preventDefault();
     globalStore.setState({ error: null });
   };
 

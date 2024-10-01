@@ -32,30 +32,6 @@ function logout() {
   userStorage.reset();
 }
 
-function login(e) {
-  const _currentUser = createFormData(e.target);
-  const currentUser = {
-    username: _currentUser.username,
-    email: '',
-    bio: '',
-  };
-  globalStore.setState({
-    currentUser,
-    loggedIn: true,
-  });
-  userStorage.set(currentUser);
-  router.push('/profile');
-}
-
-function updateProfile(e) {
-  const currentUser = createFormData(e.target);
-  globalStore.setState({
-    currentUser,
-    loggedIn: true,
-  });
-  userStorage.set(currentUser);
-}
-
 function handleError(error) {
   globalStore.setState({ error });
 }
@@ -80,6 +56,8 @@ function render() {
 }
 
 function main() {
+  globalStore.setState({ router });
+
   router.subscribe(render);
   globalStore.subscribe(render);
   window.addEventListener('error', handleError);
@@ -93,16 +71,6 @@ function main() {
   addEvent('click', '#logout', (e) => {
     e.preventDefault();
     logout();
-  });
-
-  addEvent('submit', '#login-form', (e) => {
-    e.preventDefault();
-    login(e);
-  });
-
-  addEvent('submit', '#profile-form', (e) => {
-    e.preventDefault();
-    updateProfile(e);
   });
 
   addEvent('click', '#error-boundary', (e) => {

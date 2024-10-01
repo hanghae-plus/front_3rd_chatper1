@@ -55,18 +55,15 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    // App 컴포넌트를 가상 DOM으로 생성합니다.
-    const $app = createElement(<App targetPage={router.getTarget()} />);
+    const $app = <App targetPage={router.getTarget()} />;
 
-    if ($root.hasChildNodes()) {
-      $root.replaceChild($app, $root.firstChild);
-    } else {
-      // // 자식 노드가 없을 때 새로운 노드를 추가합니다.
-      // console.log('vNode', vNode);
-      // const newElement = renderElement(vNode, $root);
-      // console.log('newElement', newElement);
-      $root.appendChild($app);
-    }
+    // if ($root.hasChildNodes()) {
+    //   $root.replaceChild($app, $root.firstChild);
+    // } else {
+    //   $root.appendChild($app);
+    // }
+
+    renderElement($app, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push('/');
@@ -79,7 +76,7 @@ function render() {
 
     console.error(error);
 
-    // globalStore.setState({ error });
+    globalStore.setState({ error });
   }
   registerGlobalEvents();
 }

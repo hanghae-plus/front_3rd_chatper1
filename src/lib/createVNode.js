@@ -6,6 +6,7 @@
 
 export function createVNode(type, props, ...children) {
   // 객체 형태로 반환
+
   return {
     type,
     props,

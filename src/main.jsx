@@ -25,6 +25,12 @@ const router = createRouter({
   }
 });
 
+export function login(userInfo) {
+  globalStore.setState({ currentUser: userInfo, loggedIn: true });
+  router.push("/");
+  userStorage.set(userInfo);
+}
+
 function logout() {
   globalStore.setState({ currentUser: null, loggedIn: false });
   router.push("/login");

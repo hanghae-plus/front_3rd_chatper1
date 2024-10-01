@@ -21,7 +21,16 @@ export const LoginPage = () =>
             "form",
             {
               id: "login-form",
-export const LoginPage = () => ({});
+              onSubmit: (e) => {
+                e.preventDefault();
+
+                const username = document.getElementById("username");
+                login({
+                  username: username.value,
+                  email: "",
+                  bio: ""
+                });
+              }
             },
             [
               createVNode("input", {

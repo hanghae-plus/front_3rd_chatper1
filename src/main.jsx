@@ -41,17 +41,9 @@ function handleError(error) {
 // 초기화 함수
 function render() {
   const $root = document.querySelector("#root");
-  const targetPage = router.getTarget();
 
   try {
-    const $app = createElement(
-      targetPage ? <App targetPage={targetPage} /> : <NotFoundPage />
-    );
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app);
-    } else {
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");
@@ -63,9 +55,8 @@ function render() {
     }
 
     console.error(error);
-
-    // globalStore.setState({ error });
   }
+
   registerGlobalEvents();
 }
 

@@ -42,13 +42,18 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
+    /**
+    // 기본과제
     const $app = createElement(<App targetPage={router.getTarget()} />);
-
     if ($root.hasChildNodes()) {
       $root.firstChild.replaceWith($app);
     } else {
       $root.appendChild($app);
     }
+    /*/
+    // 심화과제
+    renderElement(<App targetPage={router.getTarget()} />, $root);
+    /**/
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push('/');

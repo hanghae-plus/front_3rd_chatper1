@@ -1,8 +1,25 @@
 /** @jsx createVNode */
 import { createVNode } from "../lib/createVNode";
+import { userStorage } from "../storages/userStorage";
+import { globalStore } from "../stores/globalStore";
 
 export const LoginPage = () => {
-  function login() {}
+  function handleLogin(e) {
+    e.preventDefault();
+
+    const username = e.target.username.value;
+    if (username) {
+      userStorage.set({
+        username,
+        email: "",
+        bio: "",
+      }); // 사용자 이름을 userStorage에 저장
+      globalStore.setState({
+        currentUser: username,
+        loggedIn: true,
+      }); // 로그인 상태 업데이트
+    }
+  }
 
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -10,7 +27,7 @@ export const LoginPage = () => {
         <h1 className="text-2xl font-bold text-center text-blue-600 mb-8">
           항해플러스
         </h1>
-        <form id="login-form">
+        <form id="login-form" onSubmit={handleLogin}>
           <input
             type="text"
             id="username"

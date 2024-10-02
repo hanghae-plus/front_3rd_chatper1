@@ -13,29 +13,20 @@ export function createElement(vNode) {
   const nodeType = typeof vNode;
 
   // 여기에 구현하세요
-  if (vNode == null || typeof vNode === "boolean") {
-    console.log("Falsy node detected, returning empty text node.");
+  if (vNode == null || typeof vNode === "boolean")
     return document.createTextNode("");
-  }
 
-  if (nodeType === "string" || nodeType === "number") {
-    console.log("Text node detected, returning text node:", vNode);
+  if (nodeType === "string" || nodeType === "number")
     return document.createTextNode(vNode);
-  }
 
   if (Array.isArray(vNode)) {
-    console.log("Array node detected, creating DocumentFragment.");
-
     const fragment = document.createDocumentFragment();
     vNode.forEach((child) => fragment.appendChild(createElement(child)));
     return fragment;
   }
 
-  if (typeof vNode.type === "function") {
-    console.log("Function component detected, calling component:", vNode.type);
-
+  if (typeof vNode.type === "function")
     return createElement(vNode.type(vNode.props));
-  }
 
   const element = document.createElement(vNode.type);
 
@@ -50,8 +41,6 @@ export function createElement(vNode) {
   }
 
   vNode.children.forEach((child) => element.appendChild(createElement(child)));
-
-  console.log(vNode);
 
   return element;
 }

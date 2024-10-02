@@ -71,17 +71,21 @@ export function createElement__v2(vNode) {
 
 // 이벤트 위임을 위한 전역 이벤트 리스너 설정
 document.addEventListener('DOMContentLoaded', () => {
-  document.body.addEventListener('click', (e) => {
-    let target = e.target;
-    while (target != null) {
-      if (target.hasAttribute('data-event-click')) {
-        const handler = target['__clickHandler'];
-        if (handler) {
-          handler.call(target, e);
-          break;
-        }
-      }
-      target = target.parentElement;
-    }
-  });
+  document.body.addEventListener('click', handleEvent);
+  document.body.addEventListener('submit', handleEvent);
 });
+
+function handleEvent(e) {
+  let target = e.target;
+  const eventType = e.type;
+  while (target != null) {
+    if (target.hasAttribute(`data-event-${eventType}`)) {
+      const handler = target[`__${eventType}Handler`];
+      if (handler) {
+        handler.call(target, e);
+        break;
+      }
+    }
+    target = target.parentElement;
+  }
+}

@@ -9,6 +9,27 @@ function processVNode() {
   // - 문자열과 숫자를 문자열로 변환
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
+
+  if(!vNode) {
+    return createElement__v2(''); 
+  }
+
+  if(typeof vNode === 'string' || typeof vNode === 'number') {
+    return createElement__v2(String(vNode));
+  }
+
+  if(typeof vNode.type === 'function') {
+    const props = vNode.props || {};
+    return processVNode(vNode.type(props)); 
+  }
+
+  const children = vNode.children || [];
+  const processedChildren = children.map(child => processVNode(child));
+
+  return createElement__v2({
+    type: vNode.type,
+    props: { ...vNode.props, children: processedChildren }
+  });
 }
 
 // TODO: updateAttributes 함수 구현

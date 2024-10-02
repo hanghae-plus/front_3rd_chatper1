@@ -141,6 +141,7 @@ function updateElement(container, oldNode, newNode, index = 0) {
 
   // 5-3. 불필요한 자식 노드 제거: 기존 요소의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
   // childNodes는 주석, 요소, 줄바꿈 등 모든 것을 포함
+  // 새로운 가상돔의 자식(newNode.children)보다 기존 요소(oldElement) 안에 더 많은 자식이 렌더링되어 있다면 제거.
   while (oldElement.childNodes.length > newChildren.length) {
     oldElement.removeChild(oldElement.lastChild);
   }
@@ -150,8 +151,7 @@ function updateElement(container, oldNode, newNode, index = 0) {
 export function renderElement(vNode, container) {
   // - 이전 vNode와 새로운 vNode를 비교하여 업데이트
   // - 최초 렌더링과 업데이트 렌더링 처리
-
-  const oldVNode = container?.oldVNode;
+  const oldVNode = container?.oldVNode; // 최상위 가상돔을 root div에 저장.
   const newVNode = processVNode(vNode); // 새 가상 노드 생성
 
   if (oldVNode) {

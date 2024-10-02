@@ -8,7 +8,50 @@
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
+//가상돔을 돔으로 변환하는 함수
 export function createElement(vNode) {
+  const nodeType = typeof vNode;
+
   // 여기에 구현하세요
-  return {}
+  if (vNode == null || typeof vNode === "boolean") {
+    console.log("Falsy node detected, returning empty text node.");
+    return document.createTextNode("");
+  }
+
+  if (nodeType === "string" || nodeType === "number") {
+    console.log("Text node detected, returning text node:", vNode);
+    return document.createTextNode(vNode);
+  }
+
+  if (Array.isArray(vNode)) {
+    console.log("Array node detected, creating DocumentFragment.");
+
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((child) => fragment.appendChild(createElement(child)));
+    return fragment;
+  }
+
+  if (typeof vNode.type === "function") {
+    console.log("Function component detected, calling component:", vNode.type);
+
+    return createElement(vNode.type(vNode.props));
+  }
+
+  const element = document.createElement(vNode.type);
+
+  for (const [name, value] of Object.entries(vNode.props || {})) {
+    if (name.startsWith("on")) {
+      element.addEventListener(name.slice(2).toLowerCase(), value);
+    } else if (name === "className") {
+      element.className = value;
+    } else {
+      element.setAttribute(name, value);
+    }
+  }
+
+  vNode.children.forEach((child) => element.appendChild(createElement(child)));
+
+  console.log(vNode);
+
+  return element;
 }

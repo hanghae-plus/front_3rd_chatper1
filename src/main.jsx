@@ -7,8 +7,8 @@ import { userStorage } from "./storages";
 import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
 
-const router = createRouter({
-  "/": HomePage,
+export const router = createRouter({
+  "/":()=> <HomePage/>,
   "/login": () => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {
@@ -23,6 +23,7 @@ const router = createRouter({
     }
     return <ProfilePage/>;
   },
+  
 });
 
 function logout() {
@@ -52,14 +53,12 @@ function render() {
       return;
     }
 
-    console.error(error);
-
-    // globalStore.setState({ error });
   }
   registerGlobalEvents();
 }
 
 function main() {
+  globalStore.setState({ router });
   router.subscribe(render);
   globalStore.subscribe(render);
   window.addEventListener('error', handleError);

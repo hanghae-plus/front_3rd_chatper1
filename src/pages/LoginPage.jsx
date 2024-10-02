@@ -1,11 +1,29 @@
 /** @jsx createVNode */
 import{ createVNode } from "../lib";
+import { userStorage } from '../storages';
+import { globalStore } from '../stores';
+import { router } from "../main"
 
-export const LoginPage = () => (
+
+const handleSubmitLogin = (e)=>{
+  e.preventDefault();
+  const username = document.getElementById("username").value;
+  const userData = {username, email:"",bio:""};
+  globalStore.setState({
+    currentUser:userData,
+    loggedIn:true,
+  });
+  userStorage.set(userData);
+  router.push("/profile")
+
+}
+export const LoginPage = () => {
+  
+  return(
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form id="login-form">
+        <form id="login-form" onSubmit={handleSubmitLogin}>
           <input
             type="text"
             id="username"
@@ -30,10 +48,11 @@ export const LoginPage = () => (
         </div>
         <hr className="my-6" />
         <div className="text-center">
-          <button className="bg-green-500 text-white px-4 py-2 rounded">
+          <button  className="bg-green-500 text-white px-4 py-2 rounded">
             새 계정 만들기
           </button>
         </div>
       </div>
     </div>
-  );
+    )
+  }

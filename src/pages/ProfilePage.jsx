@@ -6,6 +6,23 @@ import { HomePage } from './HomePage';
 import { Header } from '../components';
 import { Navigation } from '../components';
 import { Footer } from '../components';
+import { userStorage } from '../storages';
+
+function updateProfile(profile){
+  const user = {...globalStore.getState().currentUser, ...profile};
+  globalStore.setState({currentUser:user});
+  userStorage.set(user);
+  alert("프로필 업데이트");
+}
+
+const handleUpdate = (e) => {
+  e.preventDefault();
+	const formData = new FormData(e.target);
+	const updatedProfile = Object.fromEntries(formData);
+	updateProfile(updatedProfile);
+}
+
+
 export const ProfilePage = () => {
     const { loggedIn, currentUser } = globalStore.getState();
     const { username = '', email = '', bio = '' } = currentUser ?? {};
@@ -18,7 +35,7 @@ export const ProfilePage = () => {
           <main className="p-4">
             <div className="bg-white p-8 rounded-lg shadow-md">
               <h2 className="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>
-              <form id="profile-form">
+              <form id="profile-form" onSubmit={handleUpdate}>
                 <div className="mb-4">
                   <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2">
                     사용자 이름

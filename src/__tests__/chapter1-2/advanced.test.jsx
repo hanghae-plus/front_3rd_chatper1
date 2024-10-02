@@ -148,7 +148,6 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
         </div>
       );
       renderElement(initialVNode, container);
-console.log("renderElement(initialVNode, container);",renderElement(initialVNode, container))
       const updatedVNode = (
         <div>
           <button>Button Without Handler</button>

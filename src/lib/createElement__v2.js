@@ -1,3 +1,5 @@
+import { addEvent } from "./eventManager";
+
 export function createElement__v2(vNode) {
   // 이 함수는 createElement의 개선된 버전입니다.
 // 1. falsy vNode 처리
@@ -32,15 +34,20 @@ if (vNode.props) {
     if (key === 'className') {
       element.className = value;
     } else if (key.startsWith('on') && typeof value === 'function') {
-      element.addEventListener(key.toLowerCase().slice(2), value);
+      // element.addEventListener(key.toLowerCase().slice(2), value);
+      // 이벤트 위임 방식으로 변경
+      const event = key.toLowerCase().substring(2)
+      addEvent(element, event, value)
     } else {
       element.setAttribute(key, value);
     }
   });
 }
 if (vNode.children) {
-  const childrenFragment = createElement__v2(vNode.children);
-  element.appendChild(childrenFragment);
+  vNode.children.forEach((child)=>{
+    element.appendChild(createElement__v2(child));
+
+  })
 }
 
   return element

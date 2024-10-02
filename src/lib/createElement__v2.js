@@ -1,5 +1,5 @@
 export function createElement__v2(vNode) {
-  if (!vNode) {
+  if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
     return document.createTextNode('');
   }
 

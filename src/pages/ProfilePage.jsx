@@ -3,7 +3,6 @@ import { createVNode } from '../lib';
 import { Footer, Header, Navigation } from '../components/index.js';
 import { globalStore } from '../stores/index.js';
 import { userStorage } from '../storages/index.js';
-import { router } from '../main.jsx';
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
@@ -19,27 +18,12 @@ export const ProfilePage = () => {
     alert('프로필이 업데이트되었습니다.');
   };
 
-  const logout = (e) => {
-    e.preventDefault();
-
-    globalStore.setState({ currentUser: null, loggedIn: false });
-    router.push('/login');
-    userStorage.reset();
-  };
-
-  const navigate = (e) => {
-    e.preventDefault();
-    if (e.target.tagName !== 'A' || !e.target.dataset.link) return;
-
-    router.push(e.target.href.replace(window.location.origin, ''));
-  };
-
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">
       <div className="max-w-md w-full">
         <Header />
 
-        <Navigation loggedIn={loggedIn} logout={logout} navigate={navigate} />
+        <Navigation loggedIn={loggedIn} />
 
         <main className="p-4">
           <div className="bg-white p-8 rounded-lg shadow-md">

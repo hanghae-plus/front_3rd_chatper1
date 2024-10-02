@@ -14,13 +14,9 @@ let rootElement = null;
 export const setupEventListeners = (root) => {
 	rootElement = root;
 
-	if (eventMap.size !== 0) {
-		eventMap.forEach((_, eventType) => {
-			rootElement.removeEventListener(eventType, handleEvent, true);
-		});
-	}
-
+	if (eventMap.size <= 0) return;
 	eventMap.forEach((_, eventType) => {
+		rootElement.removeEventListener(eventType, handleEvent, true);
 		rootElement.addEventListener(eventType, handleEvent, true);
 	});
 };

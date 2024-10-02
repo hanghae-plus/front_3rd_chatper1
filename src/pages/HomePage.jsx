@@ -1,25 +1,26 @@
 /** @jsx createVNode */
 import { createVNode } from "../lib";
-import { Navigation } from "../components/templates/Navigation";
-import { Footer, Header, Post } from "../components";
 import { globalStore } from "../stores";
+import { Footer, Header, Navigation, Post, PostForm } from "../components";
 
 export const HomePage = () => {
-  const { postsItems } = globalStore.getState();
-  return (
-    <div>
-      <div className="max-w-md w-full">
-        <Header />
-        <Navigation />
-        <main className="p-4">
-          <div id="posts-container" className="space-y-4">
-            {postsItems.map(({ author, time, content, id }) => (
-              <Post postId={id} author={author} time={time} content={content} />
-            ))}
-          </div>
-        </main>
-        <Footer />
-      </div>
-    </div>
-  );
+	const { loggedIn, posts } = globalStore.getState();
+
+	return (
+		<div className="bg-gray-100 min-h-screen flex justify-center">
+			<div className="max-w-md w-full">
+				<Header />
+				<Navigation loggedIn={loggedIn} />
+				<main className="p-4">
+					{loggedIn && <PostForm />}
+					<div id="posts-container" className="space-y-4">
+						{posts.map((post) => (
+							<Post key={post.id} post={post} />
+						))}
+					</div>
+				</main>
+				<Footer />
+			</div>
+		</div>
+	);
 };

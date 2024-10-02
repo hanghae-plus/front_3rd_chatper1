@@ -115,7 +115,11 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 	const oldLength = oldNode.children.length;
 
 	for (let i = 0; i < Math.max(newLength, oldLength); i++) {
-		updateElement(newNode.children[i], oldNode.children[i], $parent.childNodes[index], i);
+		if (i <= newLength) {
+			updateElement(newNode.children[i], oldNode.children[i], $parent.childNodes[index], i);
+		} else {
+			$parent.removeChild($parent.childNodes[index].lastChild);
+		}
 	}
 }
 

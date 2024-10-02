@@ -51,20 +51,20 @@ export function addEvent(eventType, element, handler) {
 }
 
 export function removeEvent(element, eventType, handler) {
-  // 1. eventMap에서 해당 요소와 이벤트 타입에 대한 핸들러 제거
-  // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
-  // 이를 통해 더 이상 필요 없는 이벤트 핸들러를 정리하고 메모리 누수 방지
   if (!eventMap.has(eventType)) {
     return;
   }
 
   const handlerMap = eventMap.get(eventType);
 
+  // 1. eventMap에서 해당 요소와 이벤트 타입에 대한 핸들러 제거
   if (handlerMap.has(element)) {
     handlerMap.delete(element);
   }
 
+  // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
   if (!handlerMap.size) {
     eventMap.delete(eventType);
   }
+  // 이를 통해 더 이상 필요 없는 이벤트 핸들러를 정리하고 메모리 누수 방지
 }

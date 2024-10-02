@@ -10,5 +10,56 @@
 
 export function createElement(vNode) {
   // 여기에 구현하세요
-  return {}
+
+  if (!vNode) {
+    return document.createTextNode("");
+  }
+
+  if (typeof vNode === "string" || typeof vNode === "number") {
+    return document.createTextNode(vNode);
+  }
+
+  if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((child) => {
+      fragment.appendChild(createElement(child));
+    });
+    return fragment;
+  }
+
+  // 4. vNode.type이 함수면 해당 함수를 호출하고 그 결과로 createElement를 재귀 호출합니다.
+  if (typeof vNode.type === "function") {
+    const componentInstance = vNode.type(vNode.props);
+    return createElement(componentInstance);
+  }
+
+  // 5. 위 경우가 아니면 실제 DOM 요소를 생성합니다.
+  const element = document.createElement(vNode.type);
+
+  // - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
+  for (const prop in vNode.props) {
+    if (prop === "className") {
+      element.className = vNode.props[prop];
+    } else if (prop.startsWith("on")) {
+      // 이벤트 리스너 처리
+      const eventType = prop.slice(2).toLowerCase(); // 'onClick' -> 'click'
+      element.addEventListener(eventType, vNode.props[prop]);
+    } else {
+      element.setAttribute(prop, vNode.props[prop]);
+    }
+  }
+
+  // - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
+  if (vNode.children) {
+    vNode.children.forEach((child) => {
+      if (child != undefined) {
+        const childNode = createElement(child);
+        element.appendChild(childNode); // 빈 텍스트 노드도 추가됨
+      } else {
+        return;
+      }
+    });
+  }
+
+  return element;
 }

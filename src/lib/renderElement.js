@@ -1,6 +1,6 @@
-import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
 import { createElement__v2 } from "./createElement__v2.js";
-import { camelToKebab } from "../utils";
+import { setupEventListeners } from "./eventManager";
+import { handleUpdateAttributes } from "../utils";
 
 // processVNode: vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
 // - null, undefined, boolean 값 처리
@@ -14,31 +14,6 @@ const processVNode = (vNode) => {
 	if (typeof vNode.type === "function") return processVNode(vNode.type(vNode.props));
 	vNode.children = vNode.children.map(processVNode);
 	return vNode;
-};
-
-const handleUpdateAttributes = (type, $element, key, value) => {
-	if (key.startsWith("on")) {
-		const eventType = key.toLowerCase().substring(2);
-
-		if (type === "remove" || type === "update") removeEvent($element, eventType, value);
-		if (type === "add" || type === "update") addEvent($element, eventType, value);
-		return;
-	}
-
-	let newKey = key;
-	let newValue = value;
-
-	if (key === "className") {
-		newKey = "class";
-	} else if (key === "style" && type !== "remove") {
-		newValue = Object.entries(value)
-			.map(([k, v]) => `${camelToKebab(k)}: ${v}`)
-			.join("; ");
-	}
-
-	// setAttribute를 사용하면 동일한 key가 있을 경우 덮어씌워지기 때문에 removeAttribute 사용할 필요 없음
-	if (type === "add" || type === "update") $element.setAttribute(newKey, newValue);
-	else if (type === "remove") $element.removeAttribute(newKey);
 };
 
 // updateAttributes: DOM 요소의 속성을 업데이트합니다.

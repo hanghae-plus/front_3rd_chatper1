@@ -6,8 +6,7 @@
 //    - 요소 생성
 //    - 속성 설정 (이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선)
 //    - 자식 요소 추가
-import { addEvent } from "./eventManager";
-import { camelToKebab } from "../utils";
+import { handleUpdateAttributes } from "../utils";
 
 export const createElement__v2 = (vNode) => {
 	if (vNode === undefined || vNode === null || vNode === "" || typeof vNode === "boolean")
@@ -25,20 +24,7 @@ export const createElement__v2 = (vNode) => {
 	}
 	const $el = document.createElement(vNode.type);
 	Object.entries(vNode.props || {}).forEach(([key, value]) => {
-		if (key.startsWith("on")) {
-			const event = key.toLowerCase().substring(2);
-			addEvent($el, event, value);
-		} else if (key === "className") {
-			$el.setAttribute("class", value);
-		} else if (key === "style") {
-			const formattedStyle = Object.entries(value)
-				.map(([k, v]) => `${camelToKebab(k)}: ${v}`)
-				.join("; ");
-
-			$el.setAttribute(key, formattedStyle);
-		} else {
-			$el.setAttribute(key, value);
-		}
+		handleUpdateAttributes("add", $el, key, value);
 	});
 	vNode.children.forEach((child) => {
 		$el.appendChild(createElement__v2(child));

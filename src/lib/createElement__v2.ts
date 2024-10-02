@@ -1,11 +1,11 @@
 import type { VNode, VNodeChildren, VNodeProps } from './createVNode';
+import { addEvent } from './eventManager';
 
 function setAttributes($element: HTMLElement, props: NonNullable<VNodeProps>) {
   Object.entries(props).forEach(([key, value]) => {
     if (typeof value === 'function' && key.toLowerCase() in $element) {
       const eventType = key.replace(/^on/, '').toLowerCase();
-      // TODO: 이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선
-      $element.addEventListener(eventType, value);
+      addEvent($element, eventType as keyof HTMLElementTagNameMap, value);
     } else if (key === 'className') {
       $element.className = value;
     } else {

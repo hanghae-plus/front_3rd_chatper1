@@ -8,7 +8,7 @@ export type VNodeElement = {
   children: VNodeChildren;
 };
 
-export type VNode = VNodeElement | string | number | any[];
+export type VNode = VNodeElement | string | number;
 
 /**
  * 주어진 타입, 속성, 자식 요소들로 가상 DOM 노드(VNode)를 생성합니다.

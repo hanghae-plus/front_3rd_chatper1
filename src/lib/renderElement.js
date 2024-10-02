@@ -1,18 +1,33 @@
 // renderElement.js
-import { addEvent, removeEvent, setupEventListeners } from './eventManager';
-import { createElement__v2 } from "./createElement__v2.js";
+import { setupEventListeners } from './eventManager'
+import { removeAttribute, updateAttribute } from './renderHelpers.js'
+import { createElement__v2 } from './createElement.js'
 
 // TODO: processVNode 함수 구현
-function processVNode() {
+function processVNode(vNode) {
   // vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
   // - null, undefined, boolean 값 처리
   // - 문자열과 숫자를 문자열로 변환
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
+  if (!vNode || typeof vNode === 'boolean') {
+    return document.createTextNode('')
+  }
+  if (typeof vNode === 'string' || typeof vNode === 'number') {
+    return String(vNode)
+  }
+  if (typeof vNode.type === 'function') {
+    return processVNode(vNode.type({ ...vNode.props, children: vNode.children }))
+  }
+
+  return {
+    ...vNode,
+    children: vNode.children.map(processVNode).filter(Boolean),
+  }
 }
 
 // TODO: updateAttributes 함수 구현
-function updateAttributes() {
+function updateAttributes(target, newProps = {}, oldProps = {}) {
   // DOM 요소의 속성을 업데이트합니다.
   // - 이전 props에서 제거된 속성 처리
   // - 새로운 props의 속성 추가 또는 업데이트
@@ -21,10 +36,22 @@ function updateAttributes() {
   //     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
   //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
   //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
+
+  Object.keys(oldProps).forEach((attribute) => {
+    if (!(attribute in newProps)) {
+      removeAttribute(target, attribute, oldProps[attribute])
+    }
+  })
+
+  Object.keys(newProps).forEach((attribute) => {
+    const newValue = newProps[attribute]
+    const oldValue = oldProps[attribute]
+    updateAttribute(target, attribute, newValue, oldValue)
+  })
 }
 
 // TODO: updateElement 함수 구현
-function updateElement() {
+function updateElement(parentElement, newNode, oldNode, index = 0) {
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
 
@@ -48,7 +75,45 @@ function updateElement() {
 
   // 5-3. 불필요한 자식 노드 제거
   // TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
+  const currentNode = parentElement.childNodes[index]
+
+  if (!newNode && oldNode) {
+    return currentNode && parentElement.removeChild(currentNode)
+  }
+
+  if (newNode && !oldNode) {
+    return parentElement.appendChild(createElement__v2(newNode))
+  }
+
+  if (typeof newNode === 'string' || typeof newNode === 'number') {
+    if (newNode !== oldNode && currentNode) {
+      const newTextNode = document.createTextNode(String(newNode))
+      parentElement.replaceChild(newTextNode, currentNode)
+    }
+    return
+  }
+
+  if (newNode.type !== oldNode.type) {
+    parentElement.replaceChild(createElement__v2(newNode), currentNode)
+    return
+  }
+
+  updateAttributes(currentNode, newNode.props || {}, oldNode.props || {})
+
+  const newChildren = newNode.children || []
+  const oldChildren = oldNode.children || []
+  const maxLength = Math.max(newChildren.length, oldChildren.length)
+
+  for (let i = 0; i < maxLength; i++) {
+    updateElement(currentNode, newChildren[i], oldChildren[i], i)
+  }
+
+  while (currentNode.childNodes.length > newChildren.length) {
+    currentNode.removeChild(currentNode.lastChild)
+  }
 }
+
+const containerVNodeMap = new WeakMap()
 
 // TODO: renderElement 함수 구현
 export function renderElement(vNode, container) {
@@ -59,4 +124,16 @@ export function renderElement(vNode, container) {
   // 이벤트 위임 설정
   // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
   // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
+
+  const oldNode = containerVNodeMap.get(container)
+  const newNode = processVNode(vNode)
+
+  if (!oldNode) {
+    container.appendChild(createElement__v2(newNode))
+  } else {
+    updateElement(container, newNode, oldNode)
+  }
+
+  containerVNodeMap.set(container, newNode)
+  setupEventListeners(container)
 }

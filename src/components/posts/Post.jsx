@@ -11,13 +11,13 @@ export const Post = ({ author, time, content, id }) => {
           class="rounded-full mr-2"
         />
         <div>
-          <div class="font-bold">${author}</div>
-          <div class="text-gray-500 text-sm">${time}</div>
+          <div class="font-bold">{author}</div>
+          <div class="text-gray-500 text-sm">{time}</div>
         </div>
       </div>
-      <p>${content}</p>
+      <p>{content}</p>
       <div class="mt-2 flex justify-between text-gray-500">
-        <span class="like-button" data-post-id="${id}">
+        <span class="like-button" data-post-id={id}>
           좋아요
         </span>
         <span>댓글</span>

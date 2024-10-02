@@ -9,7 +9,7 @@ export const App = ({ targetPage }) => {
 
   return (
     <div>
-      {PageComponent()}
+      <PageComponent />
       {error ? (
         <div
           id="error-boundary"

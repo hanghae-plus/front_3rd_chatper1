@@ -1,90 +1,91 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
-import { globalStore } from "./stores";
-import { ForbiddenError, UnauthorizedError } from "./errors";
-import { userStorage } from "./storages";
-import { addEvent, registerGlobalEvents } from "./utils";
-import { App } from "./App";
+import { createRouter, createVNode, renderElement } from '@lib'
+import { HomePage, LoginPage, ProfilePage } from '@pages'
+import { globalStore } from '@stores'
+import { ForbiddenError, UnauthorizedError } from '@errors'
+import { userStorage } from '@storages'
+import { addEvent, registerGlobalEvents } from '@utils'
+import { App } from './App'
+
+const ROUTES = {
+  HOME: '/',
+  LOGIN: '/login',
+  PROFILE: '/profile',
+}
+const LINK_ELEMENTS = '[data-link]'
+const LOGOUT_BUTTON = '#logout'
+const ERROR_BOUNDARY = '#error-boundary'
 
 const router = createRouter({
-  "/": HomePage,
-  "/login": () => {
-    const { loggedIn } = globalStore.getState();
+  [ROUTES.HOME]: HomePage,
+  [ROUTES.LOGIN]: () => {
+    const { loggedIn } = globalStore.getState()
     if (loggedIn) {
-      throw new ForbiddenError();
+      throw new ForbiddenError()
     }
-    return <LoginPage/>;
+    return <LoginPage />
   },
-  "/profile": () => {
-    const { loggedIn } = globalStore.getState();
+  [ROUTES.PROFILE]: () => {
+    const { loggedIn } = globalStore.getState()
     if (!loggedIn) {
-      throw new UnauthorizedError();
+      throw new UnauthorizedError()
     }
-    return <ProfilePage/>;
+    return <ProfilePage />
   },
-});
+})
 
 function logout() {
-  globalStore.setState({ currentUser: null, loggedIn: false });
-  router.push('/login');
-  userStorage.reset();
+  globalStore.setState({ currentUser: null, loggedIn: false })
+  router.push(ROUTES.LOGIN)
+  userStorage.reset()
 }
 
 function handleError(error) {
-  globalStore.setState({ error });
+  globalStore.setState({ error })
 }
 
 // 초기화 함수
 function render() {
-  const $root = document.querySelector('#root');
-
+  const $root = document.querySelector('#root')
   try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else{
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root)
   } catch (error) {
     if (error instanceof ForbiddenError) {
-      router.push("/");
-      return;
+      router.push(ROUTES.HOME)
+      return
     }
     if (error instanceof UnauthorizedError) {
-      router.push("/login");
-      return;
+      router.push(ROUTES.LOGIN)
+      return
     }
 
-    console.error(error);
-
-    // globalStore.setState({ error });
+    console.error(error)
   }
-  registerGlobalEvents();
+  registerGlobalEvents()
 }
 
 function main() {
-  router.subscribe(render);
-  globalStore.subscribe(render);
-  window.addEventListener('error', handleError);
-  window.addEventListener('unhandledrejection', handleError);
+  router.subscribe(render)
+  globalStore.subscribe(render)
+  window.addEventListener('error', handleError)
+  window.addEventListener('unhandledrejection', handleError)
 
-  addEvent('click', '[data-link]', (e) => {
-    e.preventDefault();
-    router.push(e.target.href.replace(window.location.origin, ''));
-  });
+  addEvent('click', LINK_ELEMENTS, (e) => {
+    e.preventDefault()
+    router.push(e.target.href.replace(window.location.origin, ''))
+  })
 
-  addEvent('click', '#logout', (e) => {
-    e.preventDefault();
-    logout();
-  });
+  addEvent('click', LOGOUT_BUTTON, (e) => {
+    e.preventDefault()
+    logout()
+  })
 
-  addEvent('click', '#error-boundary', (e) => {
-    e.preventDefault();
-    globalStore.setState({ error: null });
-  });
+  addEvent('click', ERROR_BOUNDARY, (e) => {
+    e.preventDefault()
+    globalStore.setState({ error: null })
+  })
 
-  render();
+  render()
 }
 
-main();
+main()

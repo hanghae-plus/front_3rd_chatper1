@@ -10,7 +10,7 @@ export function setupEventListeners(root) {
   // 1. rootElement 설정
   rootElement = root;
 
-  eventMap.keys().forEach((eventType) => {
+  [...eventMap.keys()].forEach((eventType) => {
     // 주의: 이벤트 캡처링을 사용하여 이벤트를 상위에서 하위로 전파
     rootElement.removeEventListener(eventType, handleEvent, true); // 2. 기존에 설정된 이벤트 리스너 제거 (있다면)
     rootElement.addEventListener(eventType, handleEvent, true); // 3. eventMap에 등록된 모든 이벤트 타입에 대해 루트 요소에 이벤트 리스너 추가

@@ -41,12 +41,13 @@ function render() {
   const $root = document.querySelector("#root")
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />)
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else {
-      $root.appendChild($app)
-    }
+    // const $app = createElement(<App targetPage={router.getTarget()} />)
+    const $app = renderElement(<App targetPage={router.getTarget()} />, $root)
+    // if ($root.hasChildNodes()) { // 이미 root div 에 넣으므로 필요 없음
+    //   $root.firstChild.replaceWith($app)
+    // } else {
+    //   $root.appendChild($app)
+    // }
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/")

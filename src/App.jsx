@@ -6,10 +6,9 @@ export const App = ({ targetPage }) => {
   const { error } = globalStore.getState()
 
   return (
-    <div>
-      {!error ? (
-        targetPage()
-      ) : (
+    <div class="bg-gray-100 min-h-screen flex justify-center">
+      {targetPage()}
+      {error && (
         <div
           id="error-boundary"
           class="fixed bottom-4 left-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 hover:opacity-75"

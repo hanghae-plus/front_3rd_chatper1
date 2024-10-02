@@ -10,7 +10,7 @@ function processVNode(vNode) {
 
   // null, undefined, boolean 값 처리
   if (!vNode || typeof vNode === 'boolean') {
-    return null;
+    return {};
   }
 
   // 문자열과 숫자를 문자열로 변환
@@ -38,7 +38,6 @@ function processVNode(vNode) {
   };
 }
 
-// TODO: updateAttributes 함수 구현
 function updateAttributes(domElement, oldProps = {}, newProps = {}) {
   // DOM 요소의 속성을 업데이트합니다.
   // - 이전 props에서 제거된 속성 처리

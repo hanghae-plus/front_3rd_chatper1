@@ -17,7 +17,7 @@ export function setupEventListeners(root) {
   rootElement = root;
 
   // 기존 리스너 제거
-  rootElement.removeEventListener('click', handleEvent, true);
+  rootElement.removeEventListener("click", handleEvent, true);
 
   // eventMap에 등록된 모든 이벤트 타입에 대해 리스너 추가
   eventMap.forEach((handlers, eventType) => {
@@ -67,17 +67,33 @@ export function removeEvent(element, eventType, handler) {
   // 1. eventMap에서 해당 요소와 이벤트 타입에 대한 핸들러 제거
   // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
   // 이를 통해 더 이상 필요 없는 이벤트 핸들러를 정리하고 메모리 누수 방지
-  const handlers = eventMap.get(eventType) || [];
+  // const handlers = eventMap.get(eventType) || [];
 
-  // 해당 핸들러 제거
-  const updatedHandlers = handlers.filter(
-    (h) => h.element !== element || h.handler !== handler
-  );
+  // // 해당 핸들러 제거
+  // const updatedHandlers = handlers.filter(
+  //   (h) => h.element !== element || h.handler !== handler
+  // );
 
-  eventMap.set(eventType, updatedHandlers);
+  // eventMap.set(eventType, updatedHandlers);
+  console.log("eventMap", eventMap);
 
-  // 이벤트 타입의 모든 핸들러가 제거되면 루트에서 리스너 제거
-  if (updatedHandlers.length === 0) {
-    rootElement.removeEventListener(eventType, handleEvent, true);
+  // // 이벤트 타입의 모든 핸들러가 제거되면 루트에서 리스너 제거
+  // if (updatedHandlers.length === 0) {
+  //   rootElement.removeEventListener(eventType, handleEvent, true);
+  // }
+  const handlers = eventMap.get(eventType);
+  if (handlers) {
+    const index = handlers.findIndex(
+      (h) => h.element === element && h.handler === handler
+    );
+    if (index !== -1) {
+      handlers.splice(index, 1);
+    }
+    if (handlers.length === 0) {
+      eventMap.delete(eventType);
+      if (rootElement) {
+        rootElement.removeEventListener(eventType, handleEvent, true);
+      }
+    }
   }
 }

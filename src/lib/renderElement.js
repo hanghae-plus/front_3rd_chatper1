@@ -1,6 +1,6 @@
 // renderElement.js
-import { addEvent, removeEvent, setupEventListeners } from './eventManager';
-import { createElement__v2 } from './createElement__v2.js';
+import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
+import { createElement__v2 } from "./createElement__v2.js";
 
 // // TODO: processVNode 함수 구현
 // function processVNode() {
@@ -12,15 +12,15 @@ import { createElement__v2 } from './createElement__v2.js';
 // }
 
 export function processVNode(vNode) {
-  if (vNode == null || typeof vNode === 'boolean') {
+  if (vNode == null || typeof vNode === "boolean") {
     return null;
   }
 
-  if (typeof vNode === 'string' || typeof vNode === 'number') {
+  if (typeof vNode === "string" || typeof vNode === "number") {
     return String(vNode);
   }
 
-  if (typeof vNode.type === 'function') {
+  if (typeof vNode.type === "function") {
     const props = vNode.props || {};
     const childVNode = vNode.type(props);
     return processVNode(childVNode);
@@ -68,43 +68,57 @@ export function processVNode(vNode) {
 //   //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
 // }
 
-function updateAttributes(element, newProps) {
-  const oldProps = Array.from(element.attributes);
+function updateAttributes(element, newProps = {}, oldProps = {}) {
+  // // 이전 속성 중 새로운 속성에 없는 것들 제거
+  // for (const [key, value] of Object.entries(oldProps)) {
+  //   if (!(key in newProps)) {
+  //     if (key.startsWith("on")) {
+  //       const eventType = key.slice(2).toLowerCase();
+  //       removeEvent(element, eventType, value);
+  //       delete element[`__${key}`];
+  //     } else {
+  //       element.removeAttribute(key);
+  //     }
+  //   }
+  // }
 
-  // 이전 속성 중 새로운 속성에 없는 것들 제거
+  // // 새로운 속성 추가 또는 업데이트
+  // for (const [key, value] of Object.entries(newProps)) {
+  //   if (key.startsWith("on")) {
+  //     const eventType = key.slice(2).toLowerCase();
+  //     if (oldProps[key] !== value) {
+  //       if (oldProps[key]) {
+  //         removeEvent(element, eventType, oldProps[key]);
+  //       }
+  //       addEvent(element, eventType, value);
+  //       element[`__${key}`] = value;
+  //     }
+  //   } else if (key === "className") {
+  //     element.setAttribute("class", value);
+  //   } else if (key === "style") {
+  //     Object.assign(element.style, value);
+  //   } else {
+  //     element.setAttribute(key, value);
+  //   }
+  // }
+  // 이전 props의 이벤트 핸들러 제거
+  console.log("entries(oldProps)", Object.entries(oldProps));
   for (const [key, value] of Object.entries(oldProps)) {
-    if (!(key in newProps)) {
-      if (key.startsWith('on') && typeof value === 'function') {
-        removeEvent(element, key.toLowerCase().slice(2), value);
-      } else {
-        element.removeAttribute(key);
-      }
+    if (key.startsWith("on") && typeof value === "function") {
+      const eventType = key.slice(2).toLowerCase();
+      removeEvent(element, eventType, value);
     }
   }
-
-  // 새로운 속성 추가 또는 업데이트
+  console.log("entries(newProps)", Object.entries(newProps));
+  // 새로운 props의 이벤트 핸들러 추가
   for (const [key, value] of Object.entries(newProps)) {
-    if (key.startsWith('on')) {
-      // 이벤트 리스너일 경우
+    if (key.startsWith("on") && typeof value === "function") {
       const eventType = key.slice(2).toLowerCase();
-
-      // 기존 이벤트 리스너 제거 (있다면)
-      if (element[`__on${eventType}`]) {
-        removeEvent(element, eventType, element[`__on${eventType}`]);
-      }
-
-      // 새로운 이벤트 리스너 추가
-      element[`__on${eventType}`] = value; // 리스너를 참조로 저장
       addEvent(element, eventType, value);
-    } else if (key === 'className') {
-      element.setAttribute('class', value);
-    } else if (key === 'style') {
-      // 스타일 업데이트
-      Object.entries(value).forEach(([styleKey, styleValue]) => {
-        element.style[styleKey] = styleValue;
-      });
-    } else {
-      element.setAttribute(key, value); // 일반 속성 업데이트
+    } else if (key === "className") {
+      element.setAttribute("class", value);
+    } else if (key !== "children") {
+      element.setAttribute(key, value);
     }
   }
 }
@@ -131,7 +145,7 @@ function updateElement(container, oldNode, newNode, index = 0) {
   }
 
   // 3. 텍스트 노드 업데이트
-  if (typeof newNode === 'string' || typeof newNode === 'number') {
+  if (typeof newNode === "string" || typeof newNode === "number") {
     if (oldNode.nodeType === Node.TEXT_NODE) {
       if (oldNode.nodeValue !== newNode) {
         oldNode.nodeValue = newNode;
@@ -143,7 +157,7 @@ function updateElement(container, oldNode, newNode, index = 0) {
   }
 
   // 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
-  if (oldNode.nodeName.toLowerCase() !== (newNode.type || '').toLowerCase()) {
+  if (oldNode.nodeName.toLowerCase() !== (newNode.type || "").toLowerCase()) {
     const newElement = createElement__v2(newNode);
     container.replaceChild(newElement, oldNode);
     return;
@@ -151,7 +165,8 @@ function updateElement(container, oldNode, newNode, index = 0) {
 
   // 5. 같은 타입의 노드 업데이트
   // 5-1. 속성 업데이트
-  updateAttributes(oldNode, newNode.props || {});
+
+  updateAttributes(oldNode, newNode.props || {}, oldNode.props || {});
 
   // 5-2. 자식 노드 재귀적 업데이트
   const oldChildren = Array.from(oldNode.childNodes);
@@ -179,17 +194,17 @@ export function renderElement(vNode, container) {
 
   vNode = processVNode(vNode);
 
-  console.log('Rendering vNode:', vNode);
+  console.log("Rendering vNode:", vNode);
 
   const oldNode = container.firstChild;
 
-  console.log('oldNode:', oldNode);
+  console.log("oldNode:", oldNode);
 
   if (oldNode) {
     updateElement(container, oldNode, vNode, 0);
   } else {
     const newElement = createElement__v2(vNode);
-    console.log('newElement:', newElement);
+    console.log("newElement:", newElement);
     container.appendChild(newElement);
   }
 

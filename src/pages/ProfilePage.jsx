@@ -1,11 +1,11 @@
 /** @jsx createVNode */
-import { createVNode } from '../lib';
-import { globalStore } from '../stores';
-import { Footer, Header, Navigation } from '../components/templates';
+import { createVNode } from "../lib";
+import { globalStore } from "../stores";
+import { Footer, Header, Navigation } from "../components/templates";
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
-  const { username = '', email = '', bio = '' } = currentUser ?? {};
+  const { username = "", email = "", bio = "" } = currentUser ?? {};
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">
       <div className="max-w-md w-full">

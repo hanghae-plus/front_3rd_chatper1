@@ -1,16 +1,16 @@
-import { addEvent } from './eventManager';
-import { processVNode } from './renderElement';
+import { addEvent } from "./eventManager";
+import { processVNode } from "./renderElement";
 
 export function createElement__v2(vNode) {
   vNode = processVNode(vNode);
   // 이 함수는 createElement의 개선된 버전입니다.
   // 1. falsy vNode 처리
   if (!vNode) {
-    return document.createTextNode('');
+    return document.createTextNode("");
   }
 
   // 2. 문자열 또는 숫자 vNode 처리
-  if (typeof vNode === 'string' || typeof vNode === 'number') {
+  if (typeof vNode === "string" || typeof vNode === "number") {
     return document.createTextNode(vNode);
   }
   // 3. 배열 vNode 처리 (DocumentFragment 사용)
@@ -23,21 +23,23 @@ export function createElement__v2(vNode) {
   }
   // vNode.type이 없는 경우 처리
   if (!vNode.type) {
-    console.error('Invalid vNode:', vNode);
-    return document.createTextNode('');
+    console.error("Invalid vNode:", vNode);
+    return document.createTextNode("");
   }
 
   // 4. 일반 요소 vNode 처리:
 
   //    - 요소 생성
   const element = document.createElement(vNode.type);
+
+  element._vProps = vNode.props || {};
   //    - 속성 설정 (이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선)
   for (const [key, value] of Object.entries(vNode.props || {})) {
-    if (key.startsWith('on') && typeof value === 'function') {
+    if (key.startsWith("on") && typeof value === "function") {
       // 이벤트 리스너 추가 (이벤트 위임 방식)
       const eventType = key.slice(2).toLowerCase();
       addEvent(element, eventType, value);
-    } else if (key === 'className') {
+    } else if (key === "className") {
       element.className = value;
     } else {
       element.setAttribute(key, value);

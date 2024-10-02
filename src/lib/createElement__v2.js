@@ -36,7 +36,10 @@ export function createElement__v2(vNode) {
       const eventType = key.slice(2).toLowerCase();
       addEvent(eventType, element, value);
     } else if (key === 'className') {
-      element.className = value;
+      element.setAttribute('class', value || '');
+    } else if (key === 'style') {
+      // 스타일 처리 (객체)
+      Object.assign(element.style, value);
     } else {
       element.setAttribute(key, value);
     }

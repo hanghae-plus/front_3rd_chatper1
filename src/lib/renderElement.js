@@ -38,60 +38,49 @@ function processVNode(vNode) {
   };
 }
 
-function updateAttributes(domElement, oldProps = {}, newProps = {}) {
-  // DOM 요소의 속성을 업데이트합니다.
-  // - 이전 props에서 제거된 속성 처리
-  // - 새로운 props의 속성 추가 또는 업데이트
-  // - 이벤트 리스너, className, style 등 특별한 경우 처리
-  //   <이벤트 리스너 처리>
-  //     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
-  //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
-  //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
+function updateAttributes(oldElement, oldProps = {}, newProps = {}) {
   // 새로운 속성 추가 및 업데이트
   for (const [key, value] of Object.entries(newProps)) {
-    if (key === 'children') continue; // 자식은 따로 처리
-
-    if (key.startsWith('on')) {
-      // 이벤트 리스너 처리
-      const eventName = key.slice(2).toLowerCase();
-      const newEventHandler = newProps[key];
+    // 이벤트 리스너 처리
+    if (key.startsWith('on') && typeof value === 'function') {
+      const eventType = key.slice(2).toLowerCase();
       const oldEventHandler = oldProps[key];
 
-      if (newEventHandler !== oldEventHandler) {
-        if (oldEventHandler) {
-          removeEvent(domElement, eventName, oldEventHandler);
-        }
-        if (newEventHandler) {
-          addEvent(eventName, domElement, newEventHandler);
-        }
+      // 기존 요소와 새 요소의 핸들러가 같으면 유지
+      if (value === oldEventHandler) {
+        continue;
       }
+
+      // 이벤트 위임을 위해 eventManager의 addEvent와 removeEvent 사용
+      oldEventHandler && removeEvent(oldElement, eventType, oldEventHandler);
+      value && addEvent(eventType, oldElement, value);
     } else if (key === 'className') {
       // className 처리
-      domElement.className = value || '';
+      oldElement.setAttribute('class', value || '');
     } else if (key === 'style') {
       // 스타일 처리 (객체)
-      Object.assign(domElement.style, value);
+      Object.assign(oldElement.style, value);
     } else {
       // 일반 속성 처리
-      domElement.setAttribute(key, value);
+      oldElement.setAttribute(key, value);
     }
   }
 
   // 제거된 속성 처리
-  for (const key of Object.keys(oldProps)) {
-    if (!(key in newProps)) {
-      if (key.startsWith('on')) {
-        const eventName = key.slice(2).toLowerCase();
-        const oldEventHandler = oldProps[key];
-        removeEvent(domElement, eventName, oldEventHandler);
-      } else {
-        domElement.removeAttribute(key);
-      }
+  for (const [key, value] of Object.entries(oldProps)) {
+    if (key in newProps) {
+      continue;
+    }
+
+    if (key.startsWith('on') && typeof value === 'function') {
+      const eventType = key.slice(2).toLowerCase();
+      removeEvent(oldElement, eventType, value);
+    } else {
+      oldElement.removeAttribute(key);
     }
   }
 }
 
-// TODO: updateElement 함수 구현
 function updateElement(container, oldNode, newNode, index = 0) {
   const oldElement = container.childNodes[index];
 

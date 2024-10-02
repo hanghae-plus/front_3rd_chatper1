@@ -31,16 +31,16 @@ export const PostForm = () => {
   };
 
   return (
-    <div classsName="mb-4 bg-white rounded-lg shadow p-4">
+    <div className="mb-4 bg-white rounded-lg shadow p-4">
       <form onSubmit={handleSubmit}>
         <textarea
           id="post-content"
           placeholder="무슨 생각을 하고 계신가요?"
-          classsName="w-full p-2 border rounded"
+          className="w-full p-2 border rounded"
         ></textarea>
         <button
           type="submit"
-          classsName="mt-2 bg-blue-600 text-white px-4 py-2 rounded"
+          className="mt-2 bg-blue-600 text-white px-4 py-2 rounded"
         >
           게시
         </button>

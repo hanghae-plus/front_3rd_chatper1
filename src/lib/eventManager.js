@@ -31,13 +31,17 @@ export function setupEventListeners(root) {
  * 
  * @param {Event} event - 발생한 이벤트 객체
  */
-
 function handleEvent(event) {
-  let currentTarget = event.target;
+  const { target, type } = event;
+  const handlerMap = eventMap.get(type);
+
+  if (!handlerMap) return;
+
+  let currentTarget = target;
   while (currentTarget && currentTarget !== rootElement.parentNode) {
-    if (eventMap.has(event.type)) {
-      const handlers = eventMap.get(event.type).filter(handler => handler.element === currentTarget);
-      handlers.forEach(handler => handler.handler(event));
+    if (handlerMap.has(currentTarget)) {
+      const handler = handlerMap.get(currentTarget);
+      handler(event);
     }
     currentTarget = currentTarget.parentNode;
   }
@@ -47,25 +51,25 @@ function handleEvent(event) {
  * @function addEvent
  * @terms 지정된 요소와 이벤트 유형에 이벤트 핸들러를 추가
  * @desc eventMap에 이벤트 타입과 요소, 핸들러 정보를 저장
- * 루트 요소에 새 이벤트 리스너를 추가합
+ * 루트 요소에 새 이벤트 리스너를 추가
  * 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
  * 
  * @param {HTMLElement} element - 이벤트를 추가할 요소
  * @param {string} eventType - 이벤트 타입
  * @param {Function} handler - 이벤트 핸들러 함수
  */
-
-export function addEvent(element, eventType, handler) {
-  let eventList = eventMap.get(eventType);
-  if (!eventList) {
-    eventList = [];
-    eventMap.set(eventType, eventList);
+export function addEvent(eventType, element, handler) {
+  if (!eventMap.has(eventType)) {
+    eventMap.set(eventType, new Map());
     if (rootElement) {
       rootElement.addEventListener(eventType, handleEvent);
     }
   }
-  if (!eventList.some(item => item.element === element && item.handler === handler)) {
-    eventList.push({ element, handler });
+
+  const handlerMap = eventMap.get(eventType);
+
+  if (!handlerMap.has(element) || handlerMap.get(element) !== handler) {
+    handlerMap.set(element, handler);
   }
 }
 
@@ -79,10 +83,21 @@ export function addEvent(element, eventType, handler) {
  * @param {HTMLElement} element - 이벤트를 제거할 요소
  * @param {string} eventType - 이벤트 타입
  */
-
 export function removeEvent(element, eventType) {
-  const eventList = eventMap.get(eventType);
-  const filteredEventList = eventList.filter((item) => item.element !== element);
+  if (!eventMap.has(eventType)) {
+    return;
+  }
 
-  eventMap.set(eventType, filteredEventList);
+  const handlerMap = eventMap.get(eventType);
+
+  if (handlerMap.has(element)) {
+    handlerMap.delete(element);
+  }
+
+  if (!handlerMap.size) {
+    eventMap.delete(eventType);
+    if (rootElement) {
+      rootElement.removeEventListener(eventType, handleEvent);
+    }
+  }
 }

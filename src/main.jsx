@@ -56,7 +56,7 @@ function updateProfile() {
 }
 
 function handleError(error) {
-  globalStore.setState({ error });
+  globalStore.setState({ error: error.message });
 }
 
 // 초기화 함수

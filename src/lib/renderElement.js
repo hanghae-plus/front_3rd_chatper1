@@ -12,7 +12,7 @@ function processVNode(vNode) {
 		return "";
 	if (typeof vNode === "string" || typeof vNode === "number") return String(vNode);
 	if (typeof vNode.type === "function") return processVNode(vNode.type(vNode.props));
-	vNode.children.map(processVNode);
+	vNode.children = vNode.children.map(processVNode);
 	return vNode;
 }
 
@@ -87,9 +87,13 @@ function updateAttributes($element, newNode, oldNode) {
 // 5-3. 불필요한 자식 노드 제거
 // : oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
 function updateElement(newNode, oldNode, $parent, index = 0) {
-	if (!newNode) return $parent.removeChild($parent.childNodes[index]);
+	if (!newNode) {
+		$parent.removeChild($parent.childNodes[index]);
+		return;
+	}
 	if (!oldNode) {
-		return $parent.appendChild(createElement__v2(newNode));
+		$parent.appendChild(createElement__v2(newNode));
+		return;
 	}
 	if (
 		(typeof newNode === "number" || typeof newNode === "string") &&
@@ -101,8 +105,8 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 		return;
 	}
 	if (newNode.type !== oldNode.type) {
-		$parent.removeChild($parent.childNodes[index]);
-		return $parent.appendChild(createElement__v2(newNode));
+		$parent.replaceChild(createElement__v2(newNode), $parent.childNodes[index]);
+		return;
 	}
 
 	updateAttributes($parent.childNodes[index], newNode, oldNode);
@@ -112,12 +116,6 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 
 	for (let i = 0; i < Math.max(newLength, oldLength); i++) {
 		updateElement(newNode.children[i], oldNode.children[i], $parent.childNodes[index], i);
-	}
-
-	if (newLength < oldLength) {
-		for (let i = newLength; i < oldLength; i++) {
-			$parent.childNodes[index].removeChild($parent.childNodes[index].lastChild);
-		}
 	}
 }
 

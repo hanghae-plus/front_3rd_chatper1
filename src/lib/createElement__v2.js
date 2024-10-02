@@ -67,7 +67,7 @@ export const createElement__v2 = (vNode) => {
 
 /**
  * @function applyPropsBatch
- * @description 주어진 DOM 요소에 속성(key-value 쌍)을 적용합니다.
+ * @description 주어진 DOM 요소에 속성(key-value 쌍) 적용
  * 이벤트 핸들러는 'on'으로 시작하는 속성명에서 추출되며, 'className'은 요소의 클래스 속성으로 설정하고,
  * 스타일 객체는 요소에 인라인 스타일로 적용하며, 그 외의 속성은 setAttribute를 통해 적용합니다.
  * @param {HTMLElement} element - 속성을 적용할 DOM 요소

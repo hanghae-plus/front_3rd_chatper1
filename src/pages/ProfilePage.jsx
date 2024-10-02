@@ -1,6 +1,22 @@
 /** @jsx createVNode */
 import { createVNode } from "../lib";
 import { globalStore } from "../stores";
+import { Header, Footer, Navigation } from "../components";
+import { userStorage } from "../storages";
+
+function updateProfile(profile) {
+  const user = { ...globalStore.getState().currentUser, ...profile };
+  globalStore.setState({ currentUser: user });
+  userStorage.set(user);
+  alert("프로필이 업데이트되었습니다.");
+}
+
+const handleUpdate = (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const updatedProfile = Object.fromEntries(formData);
+  updateProfile(updatedProfile);
+};
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
@@ -8,13 +24,14 @@ export const ProfilePage = () => {
   return (
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
-        ${Header()} ${Navigation({ loggedIn })}
+        <Header />
+        <Navigation loggedIn={loggedIn} />
         <main class="p-4">
           <div class="bg-white p-8 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
               내 프로필
             </h2>
-            <form id="profile-form">
+            <form id="profile-form" onSubmit={handleUpdate}>
               <div class="mb-4">
                 <label
                   for="username"
@@ -27,7 +44,7 @@ export const ProfilePage = () => {
                   id="username"
                   name="username"
                   class="w-full p-2 border rounded"
-                  value="${username}"
+                  value={username}
                   required
                 />
               </div>
@@ -43,7 +60,7 @@ export const ProfilePage = () => {
                   id="email"
                   name="email"
                   class="w-full p-2 border rounded"
-                  value="${email}"
+                  value={email}
                   required
                 />
               </div>
@@ -60,7 +77,7 @@ export const ProfilePage = () => {
                   rows="4"
                   class="w-full p-2 border rounded"
                 >
-                  ${bio}
+                  {bio}
                 </textarea>
               </div>
               <button
@@ -72,7 +89,7 @@ export const ProfilePage = () => {
             </form>
           </div>
         </main>
-        ${Footer()}
+        <Footer />
       </div>
     </div>
   );

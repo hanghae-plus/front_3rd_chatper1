@@ -62,9 +62,8 @@ export function createElement(vNode) {
 }
 
 /**
- * 주어진 DOM 요소에 속성들을 적용
- * 이 함수는 이벤트 리스너, 스타일, 클래스 등 다양한 HTML 속성을 설정
  * @function applyPropsToElement
+ * @terms 주어진 DOM 요소에 속성들을 적용
  * @param {HTMLElement} element - 속성을 적용할 DOM 요소
  * @param {Object} props - 적용할 속성들을 담고 있는 객체
  * @desc 이 함수는 props 객체 내의 각 속성을 확인하고, 적절하게 DOM 요소에 적용

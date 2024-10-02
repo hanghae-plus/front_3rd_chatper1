@@ -1,7 +1,12 @@
 /** @jsx createVNode */
 import { createVNode } from "../../lib";
 
-export const Navigation = () => {
+const getNavItemClass = (path) => {
+  const currentPath = window.location.pathname;
+  return currentPath === path ? "text-blue-600 font-bold" : "text-gray-600";
+};
+
+export const Navigation = ({ loggedIn }) => {
   return (
     <nav className="bg-white shadow-md p-2 sticky top-14">
       <ul className="flex justify-around">

@@ -113,6 +113,54 @@ describe("Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리", () => {
       expect(container.innerHTML).toBe("<span>Hello</span>");
       expect(container.firstChild).not.toBe(originalElement); // 다른 요소 참조 확인
     });
+
+    it("함수형 컴포넌트가 업데이트될 때 필요한 부분만 렌더링해야 한다", () => {
+      const FuncComponent = ({ title, content }) => (
+        <div>
+          <h1>{title}</h1>
+          <p>{content}</p>
+        </div>
+      );
+      const initialVNode = (
+        <FuncComponent title="Initial Title" content="Initial Content" />
+      );
+      renderElement(initialVNode, container);
+      const originalH1 = container.querySelector("h1");
+      const originalP = container.querySelector("p");
+      const updatedVNode = (
+        <FuncComponent title="Updated Title" content="Initial Content" />
+      );
+      renderElement(updatedVNode, container);
+      expect(container.querySelector("h1")).toBe(originalH1);
+      expect(container.querySelector("p")).toBe(originalP);
+      expect(container.querySelector("h1").textContent).toBe("Updated Title");
+      expect(container.querySelector("p").textContent).toBe("Initial Content");
+    });
+    it("중첩된 함수형 컴포넌트에서 깊은 레벨의 변경사항만 업데이트해야 한다", () => {
+      const ChildComponent = ({ text }) => <p>{text}</p>;
+      const ParentComponent = ({ title, childText }) => (
+        <div>
+          <h1>{title}</h1>
+          <ChildComponent text={childText} />
+        </div>
+      );
+      const initialVNode = (
+        <ParentComponent title="Parent Title" childText="Child Text" />
+      );
+      renderElement(initialVNode, container);
+      const originalH1 = container.querySelector("h1");
+      const originalP = container.querySelector("p");
+      const updatedVNode = (
+        <ParentComponent title="Parent Title" childText="Updated Child Text" />
+      );
+      renderElement(updatedVNode, container);
+      expect(container.querySelector("h1")).toBe(originalH1);
+      expect(container.querySelector("p")).toBe(originalP);
+      expect(container.querySelector("h1").textContent).toBe("Parent Title");
+      expect(container.querySelector("p").textContent).toBe(
+        "Updated Child Text"
+      );
+    });
   });
 
   describe("이벤트 관리 > ", () => {

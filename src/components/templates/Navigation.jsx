@@ -13,7 +13,7 @@ export const Navigation = () => {
   const createLi = (href, text) => {
     return (
       <li>
-        <a href={href} class={currentStyle(href)} data-link="true">
+        <a href={href} className={currentStyle(href)} data-link="true">
           {text}
         </a>
       </li>
@@ -21,15 +21,15 @@ export const Navigation = () => {
   }
 
   return (
-    <nav class="bg-white shadow-md p-2 sticky top-14">
-      <ul class="flex justify-around">
+    <nav className="bg-white shadow-md p-2 sticky top-14">
+      <ul className="flex justify-around">
         {createLi("/", "홈")}
         {loggedIn
           ? createLi("/profile", "프로필")
           : createLi("/login", "로그인")}
         {loggedIn && (
           <li>
-            <a href="/login" id="logout" class={currentStyle("/login")}>
+            <a href="/login" id="logout" className={currentStyle("/login")}>
               로그아웃
             </a>
           </li>

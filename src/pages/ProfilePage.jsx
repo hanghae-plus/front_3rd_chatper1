@@ -1,6 +1,7 @@
 /** @jsx createVNode */
 import { createVNode } from '../lib';
 import { globalStore } from '../stores';
+import { Header, Navigation, Footer } from '../components';
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();

@@ -27,6 +27,11 @@ export function createElement(vNode) {
     return createElement(vNode.type(vNode.props));
   }
 
+  // + @ - router에 함수 실행이 아닌, 컴포넌트 자체를 넣어줄 때 실행되는 코드.
+  if (typeof vNode.type === 'object' && typeof vNode.type.type === 'function') {
+    return createElement(vNode.type);
+  }
+
   // 5번
   const node = document.createElement(vNode.type);
 
@@ -39,7 +44,7 @@ export function createElement(vNode) {
     } else node.setAttribute(key, vNode.props[key]);
   }
 
-  if (Array.isArray(vNode.children) && vNode.children.length > 0) {
+  if (vNode.children.length > 0) {
     vNode.children.forEach((child) => node.appendChild(createElement(child)));
   }
 

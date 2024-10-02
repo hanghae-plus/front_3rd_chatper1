@@ -1,11 +1,12 @@
 import { formatVNodeAttr } from './formatVNodeAttr';
+import { isPrimitiveDataType } from './isPrimitiveDataType';
 
 export function createElement(vNode) {
   if (vNode === null || vNode === undefined) return document.createTextNode('');
 
   if (typeof vNode === 'boolean') return document.createTextNode('');
 
-  if (typeof vNode === 'string' || typeof vNode === 'number') return document.createTextNode(vNode);
+  if (isPrimitiveDataType(vNode, ['string', 'number'])) return document.createTextNode(vNode);
   if (Array.isArray(vNode)) {
     if (vNode.length === 0) return document.createTextNode('');
     const fragment = new DocumentFragment();
@@ -34,5 +35,6 @@ export function createElement(vNode) {
     element.appendChild(createElement(child));
   }
 
+  element._vNode = vNode;
   return element;
 }

@@ -2,16 +2,24 @@ import { createElement__v2 } from './createElement__v2.js';
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { flatObject } from './flatObject.js';
 import { formatVNodeAttr } from './formatVNodeAttr.js';
+import { isPrimitiveDataType } from './isPrimitiveDataType.js';
 
-function updateAttributes(newElement, oldElement) {
-  const newNodeAttributes = [...newElement.attributes, ...flatObject(newElement._vNode?.props)];
-  const oldNodeAttributes = [...oldElement.attributes, ...flatObject(oldElement._vNode?.props)];
+function processVNode(vNode) {
+  if (typeof vNode.type === 'function') return processVNode(vNode.type(vNode.props));
+  if (Array.isArray(vNode.children)) {
+    vNode.children = vNode.children.map(processVNode);
+  }
+  return vNode;
+}
+
+function updateAttributes(newVNode, oldElement) {
+  const newNodeAttributes = flatObject(newVNode.props);
+  const oldNodeAttributes = flatObject(oldElement._vNode.props);
 
   for (const { name, value } of newNodeAttributes) {
     formatVNodeAttr(name, value, {
       eventWorker: (key, value) => {
         addEvent(oldElement, key, value);
-        oldElement._vNode = newElement._vNode;
       },
       attributeWorker: (key, value) => {
         oldElement.setAttribute(key, value);
@@ -19,7 +27,8 @@ function updateAttributes(newElement, oldElement) {
     });
   }
   for (const { name, value } of oldNodeAttributes) {
-    if (!newElement.getAttribute(name) && !newNodeAttributes.map((item) => item.name).includes(name)) {
+    const incorrectProperty = newNodeAttributes.findIndex((item) => item.name === name) === -1;
+    if (incorrectProperty) {
       formatVNodeAttr(name, value, {
         eventWorker: (key) => {
           removeEvent(oldElement, key);
@@ -32,46 +41,51 @@ function updateAttributes(newElement, oldElement) {
   }
 }
 
-function updateElement(container, newElement, oldElement) {
-  if (!newElement && oldElement) {
+function updateElement(container, newVNode, oldVNode, index = 0) {
+  const oldElement = container.childNodes[index];
+  const newElement = createElement__v2(newVNode);
+
+  if (!newVNode && oldVNode) {
     container.removeChild(oldElement);
     return;
   }
-  if (newElement && !oldElement) {
+  if (newVNode && !oldVNode) {
     container.appendChild(newElement);
     return;
   }
 
-  if (newElement instanceof Text && oldElement instanceof Text) {
-    if (newElement.textContent !== oldElement.textContent) {
-      oldElement.textContent = newElement.textContent;
+  if (isPrimitiveDataType(newVNode, ['string', 'number']) && isPrimitiveDataType(oldVNode, ['string', 'number'])) {
+    if (newVNode !== oldVNode) {
+      oldElement.textContent = newVNode;
     }
     return;
   }
 
-  if (newElement.nodeName !== oldElement.nodeName) {
+  if (newVNode.type !== oldVNode.type) {
     container.replaceChild(newElement, oldElement);
     return;
   }
 
-  updateAttributes(newElement, oldElement);
+  updateAttributes(newVNode, oldElement);
 
-  const newChildren = [...newElement.childNodes];
-  const oldChildren = [...oldElement.childNodes];
-  const maxLength = Math.max(newChildren.length, oldChildren.length);
+  const newChildrenLength = newVNode.children.length;
+  const oldChildrenLength = oldVNode.children.length;
+  const maxLength = Math.max(newChildrenLength, oldChildrenLength);
   for (let i = 0; i < maxLength; i++) {
-    updateElement(oldElement, newChildren[i], oldChildren[i]);
+    updateElement(oldElement, newVNode.children[i], oldVNode.children[i], i);
   }
 }
 
 export function renderElement(vNode, container) {
-  const oldEl = container.firstChild;
-  const newEl = createElement__v2(vNode);
+  const newNode = processVNode(vNode);
+  const oldNode = container._vNode;
 
-  if (!oldEl) {
-    container.appendChild(newEl);
+  if (!oldNode) {
+    container.appendChild(createElement__v2(newNode));
   } else {
-    updateElement(container, newEl, oldEl);
+    updateElement(container, newNode, oldNode);
   }
+  container._vNode = newNode;
+
   setupEventListeners(container);
 }

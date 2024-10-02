@@ -1,16 +1,26 @@
 /** @jsx createVNode */
 import { createVNode } from '../lib';
+import { userStorage } from '../storages/index.js';
+import { globalStore } from '../stores/index.js';
 
 export const LoginPage = () => {
-  const handleLogin = () => {
+  const handleLogin = (event) => {
+    event.preventDefault();
     const form = document.getElementById('login-form');
+    const formData = new FormData(form);
+    const username = formData.get('username');
+
+    if (!username) return alert('이메일을 입력해 주세요.');
+
+    userStorage.set({ username, email: '', bio: '' });
+    globalStore.setState({ loggedIn: true, currentUser: { username, email: '', bio: '' } });
   };
 
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold text-center text-blue-600 mb-8">항해플러스</h1>
-        <form id="login-form">
+        <form id="login-form" onSubmit={(event) => handleLogin(event)}>
           <input
             type="text"
             id="username"

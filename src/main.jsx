@@ -1,5 +1,5 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createStorage, createVNode, renderElement } from './lib';
+import { createRouter, createVNode, renderElement } from './lib';
 import { HomePage, LoginPage, ProfilePage } from './pages';
 import { globalStore } from './stores';
 import { ForbiddenError, UnauthorizedError } from './errors';
@@ -35,47 +35,14 @@ function handleError(error) {
   globalStore.setState({ error });
 }
 
-function login() {
-  const form = document.getElementById('login-form');
-  const formData = new FormData(form);
-  const username = formData.get('username');
-
-  if (!username) return alert('이메일을 입력해 주세요.');
-
-  userStorage.set({ username, email: '', bio: '' });
-  globalStore.setState({ loggedIn: true, currentUser: { username, email: '', bio: '' } });
-  router.push('/profile');
-}
-
-function profileUpdate() {
-  const form = document.getElementById('profile-form');
-  const formData = new FormData(form);
-  const username = formData.get('username');
-  const email = formData.get('email');
-  const bio = formData.get('bio');
-
-  console.log(username, email, bio);
-
-  userStorage.set({ username, email, bio });
-  globalStore.setState({ currentUser: { username, email, bio } });
-  alert('프로필이 업데이트되었습니다.');
-}
-
 // 초기화 함수
 function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
-    renderElement(<App targetPage={router.getTarget()} />, $root);
-
-    // if ($root.hasChildNodes()) {
-    //   $root.firstChild.replaceWith($app);
-    //   renderElement(<App targetPage={router.getTarget()} />, $root);
-    // } else {
-    //   $root.appendChild($app);
-    //   renderElement(<App targetPage={router.getTarget()} />, $root);
-    // }
+    const $app = <App targetPage={router.getTarget()} />;
+    console.log('다시 랜더');
+    renderElement($app, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push('/');
@@ -107,16 +74,6 @@ function main() {
   addEvent('click', '#logout', (e) => {
     e.preventDefault();
     logout();
-  });
-
-  addEvent('submit', '#login-form', (e) => {
-    e.preventDefault();
-    login();
-  });
-
-  addEvent('submit', '#profile-form', (e) => {
-    e.preventDefault();
-    profileUpdate();
   });
 
   addEvent('click', '#error-boundary', (e) => {

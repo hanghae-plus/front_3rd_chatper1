@@ -31,7 +31,7 @@ export const Navigation = ({ loggedIn }) => {
         )}
         {loggedIn && (
           <li>
-            <a href="#" id="logout" className="text-gray-600">
+            <a href="#" id="logout" className="text-gray-600" onClick={() => 'logout'}>
               로그아웃
             </a>
           </li>

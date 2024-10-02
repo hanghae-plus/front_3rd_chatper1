@@ -1,3 +1,5 @@
+import { addEvent } from './eventManager.js';
+
 export function createElement__v2(vNode) {
   // 이 함수는 createElement의 개선된 버전입니다.
   // 1. falsy vNode 처리
@@ -7,8 +9,6 @@ export function createElement__v2(vNode) {
   //    - 요소 생성
   //    - 속성 설정 (이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선)
   //    - 자식 요소 추가
-
-  // console.log(vNode, 'vNode');
 
   if (!vNode) return document.createTextNode('');
   if (typeof vNode === 'string' || typeof vNode === 'number') return document.createTextNode(vNode);
@@ -29,8 +29,9 @@ export function createElement__v2(vNode) {
     .filter(([attr, value]) => value)
     .forEach(([attr, value]) => {
       if (attr.startsWith('on')) {
-        $el.addEventListener('click', value);
-        return;
+        const eventType = attr.slice(2).toLowerCase();
+        console.log('여기서 추가 되냐?');
+        addEvent($el, eventType, value);
       }
 
       if (attr === 'className') {

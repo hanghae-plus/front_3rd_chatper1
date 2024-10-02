@@ -15,27 +15,26 @@ function processVNode(vNode) {
   }
 
   if (typeof vNode === 'number' || typeof vNode === 'string') {
-    return document.createTextNode(vNode);
+    return vNode;
   }
 
-  if (typeof vNode === 'function') {
+  if (typeof vNode.type === 'function') {
     const result = vNode.type(vNode.props || {});
 
     return processVNode(result);
   }
 
-  const $element = document.createElement(vNode.type);
+  const children = (vNode.children || []).map((child) => processVNode(child));
 
-  if (vNode.children) {
-    vNode.children.map(processVNode).forEach((child) => $element.appendChild(child));
-  }
-
-  return $element;
+  return {
+    type: vNode.type,
+    props: vNode.props || {},
+    children: children,
+  };
 }
 
 // TODO: updateAttributes 함수 구현
 function updateAttributes($element, oldProps, newProps) {
-  console.log($element, oldProps, newProps, 'props!!!!!');
   // DOM 요소의 속성을 업데이트합니다.
   // - 이전 props에서 제거된 속성 처리
   // - 새로운 props의 속성 추가 또는 업데이트
@@ -53,8 +52,8 @@ function updateAttributes($element, oldProps, newProps) {
         $element.className = '';
       } else if (key.startsWith('on')) {
         const eventName = key.slice(2).toLowerCase();
-        //TODO removeEvent 변경해야함
-        $element.removeEventListener(eventName, value);
+
+        removeEvent($element, eventName, oldProps[key]);
       } else if (key === 'style') {
         Object.assign($element.style, {});
       } else {
@@ -65,24 +64,18 @@ function updateAttributes($element, oldProps, newProps) {
 
   for (const [key, value] of Object.entries(newProps)) {
     if (value !== oldProps[key]) {
-      console.log(oldProps[key], value, key, '!!!!!!!');
       if (key === 'className') {
         $element.className = value;
       } else if (key.startsWith('on')) {
         const eventName = key.slice(2).toLowerCase();
-        //TODO addEvent로 변경해야함
-        $element.addEventListener(eventName, value);
+        addEvent($element, eventName, value);
       } else if (key === 'style') {
         Object.assign($element.style, value);
-      } else if (key in $element) {
-        $element[key] = value;
       } else {
         $element.setAttribute(key, value);
       }
     }
   }
-
-  return $element;
 }
 
 // TODO: updateElement 함수 구현
@@ -90,7 +83,6 @@ function updateElement($parent, newNode, oldNode, index = 0) {
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
 
-  console.log(oldNode, newNode);
   if (!newNode && oldNode) {
     $parent.removeChild($parent.childNodes[index]);
     return;
@@ -100,20 +92,17 @@ function updateElement($parent, newNode, oldNode, index = 0) {
 
   if (newNode && !oldNode) {
     const newElement = createElement__v2(newNode);
-
     $parent.appendChild(newElement);
-
     return;
   }
 
   // 3. 텍스트 노드 업데이트
   // TODO: newNode와 oldNode가 둘 다 문자열 또는 숫자인 경우
   // TODO: 내용이 다르면 텍스트 노드 업데이트
-  console.log(oldNode, 'olodNode', newNode);
 
   if (typeof oldNode === 'string' || typeof oldNode === 'number') {
     if (oldNode !== newNode) {
-      $parent.childNodes[index].nodeValue = newNode;
+      $parent.childNodes[index].textContent = newNode;
     }
     return;
   }
@@ -125,14 +114,6 @@ function updateElement($parent, newNode, oldNode, index = 0) {
     const newElement = createElement__v2(newNode);
     $parent.replaceChild(newElement, $parent.childNodes[index]);
 
-    return;
-  }
-
-  if (typeof newNode.type === 'function') {
-    const newVNode = newNode.type(newNode.props);
-    const oldVNode = oldNode.type(oldNode.props);
-
-    updateElement($parent, newVNode, oldVNode, index);
     return;
   }
 
@@ -158,29 +139,29 @@ function updateElement($parent, newNode, oldNode, index = 0) {
     updateElement($element, newNodeChldren[i], oldNodeChildren[i], i);
   }
 
-  if (oldNodeChildren.length > newNodeChldren.length) {
-    for (let i = newNodeChldren.length; i < oldNodeChildren.length; i++) {
-      $element.removeChild($element.childNodes[i]);
-    }
+  while ($element.childNodes.length > newNodeChldren.length) {
+    $element.removeChild($element.lastChild);
   }
 }
 
 // TODO: renderElement 함수 구현
-let oldNode = null;
+
 export function renderElement(vNode, container) {
   // 최상위 수준의 렌더링 함수입니다.
   // - 이전 vNode와 새로운 vNode를 비교하여 업데이트
   // - 최초 렌더링과 업데이트 렌더링 처리
 
-  if (!container.hasChildNodes()) {
-    const $element = createElement__v2(vNode);
+  if (!container) return;
 
-    container.appendChild($element);
+  const newNode = processVNode(vNode);
+
+  if (container._vNode) {
+    updateElement(container, newNode, container._vNode);
   } else {
-    updateElement(container, vNode, oldNode);
+    container.appendChild(createElement__v2(newNode));
   }
 
-  oldNode = vNode;
+  container._vNode = newNode;
 
   setupEventListeners(container);
 

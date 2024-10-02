@@ -1,8 +1,14 @@
 /** @jsx createVNode */
 import { createVNode } from '@/lib';
-import { goHome } from '@/main';
+import { router } from '@/main';
 
 export const NotFoundPage = () => {
+  function goHome(e) {
+    e.preventDefault();
+
+    router.push('/');
+  }
+
   return (
     <main className="bg-gray-100 flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-lg shadow-md w-full text-center" style={{ maxWidth: '480px' }}>

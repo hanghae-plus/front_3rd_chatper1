@@ -6,6 +6,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage';
 
 export const App = ({ targetPage }) => {
   const error = globalStore.getState().error;
+  const PageComponent = targetPage ?? NotFoundPage;
 
   if (error) {
     return (
@@ -15,13 +16,5 @@ export const App = ({ targetPage }) => {
     );
   }
 
-  if (!targetPage) {
-    return (
-      <div>
-        <NotFoundPage />
-      </div>
-    );
-  }
-
-  return <div>{targetPage()}</div>;
+  return <PageComponent />;
 };

@@ -1,12 +1,11 @@
 /** @jsx createVNode */
 import { Footer, Header, Navigation, Post, PostForm } from '@/components';
 import { createVNode } from '@/lib';
-import { userStorage } from '@/storages';
 import { globalStore } from '@/stores';
 
 export const HomePage = () => {
   const posts = globalStore.getState().posts;
-  const loggedIn = userStorage.get();
+  const loggedIn = globalStore.getState().loggedIn;
 
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">

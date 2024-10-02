@@ -1,3 +1,5 @@
+import { addEvent } from './eventManager';
+
 export function createElement__v2(vNode) {
   // 이 함수는 createElement의 개선된 버전입니다.
   // 1. falsy vNode 처리
@@ -38,11 +40,7 @@ export function createElement__v2(vNode) {
       } else if (key.startsWith('on')) {
         const eventName = key.slice(2).toLowerCase();
 
-        document.body.addEventListener(eventName, (e) => {
-          if (e.target.matches(vNode.type)) {
-            value(e);
-          }
-        });
+        addEvent($element, eventName, value);
       } else {
         $element.setAttribute(key, value);
       }

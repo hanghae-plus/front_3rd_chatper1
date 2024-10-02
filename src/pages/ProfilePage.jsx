@@ -2,10 +2,21 @@
 import { createVNode } from '@/lib';
 import { Header, Footer, Navigation } from '@/components';
 import { userStorage } from '@/storages';
-import { updateUserInfo } from '@/main';
+import { globalStore } from '@/stores';
 
 export const ProfilePage = () => {
   const { username, bio, email } = userStorage.get();
+
+  function updateUserInfo(e) {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value ?? '';
+    const email = document.getElementById('email').value ?? '';
+    const bio = document.getElementById('bio').value ?? '';
+
+    userStorage.set({ username, email, bio });
+    globalStore.setState({ currentUser: { username, email, bio } });
+  }
 
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">

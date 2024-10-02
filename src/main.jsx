@@ -1,23 +1,25 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from '@/lib';
-import { HomePage, LoginPage, ProfilePage, NotFoundPage } from '@/pages';
+import { createRouter, createVNode, renderElement } from '@/lib';
+import { HomePage, LoginPage, ProfilePage } from '@/pages';
 import { globalStore } from '@/stores';
 import { ForbiddenError, UnauthorizedError } from '@/errors';
 import { userStorage } from '@/storages';
 import { addEvent, registerGlobalEvents } from '@/utils';
 import { App } from '@/App';
 
-const router = createRouter({
+export const router = createRouter({
   '/': HomePage,
   '/login': () => {
-    const user = userStorage.get();
+    const user = globalStore.getState().currentUser;
+
     if (user) {
       throw new ForbiddenError();
     }
     return <LoginPage />;
   },
   '/profile': () => {
-    const user = userStorage.get();
+    const user = globalStore.getState().currentUser;
+
     if (!user) {
       throw new UnauthorizedError();
     }
@@ -25,23 +27,7 @@ const router = createRouter({
   },
 });
 
-export function handleLogin(e) {
-  e.preventDefault();
-
-  const username = document.getElementById('username').value;
-
-  if (username) {
-    userStorage.set({ username, email: '', bio: '' });
-
-    router.push('/');
-  } else {
-    alert('아이디를 입력해주세요');
-  }
-}
-
-export function logout(e) {
-  e.preventDefault();
-
+export function logout() {
   globalStore.setState({ currentUser: null, loggedIn: false });
   userStorage.reset();
 
@@ -52,32 +38,11 @@ function handleError(error) {
   globalStore.setState({ error });
 }
 
-export function updateUserInfo(e) {
-  e.preventDefault();
-
-  const username = document.getElementById('username').value;
-  const email = document.getElementById('email').value;
-  const bio = document.getElementById('bio').value;
-
-  userStorage.set({ username, email, bio });
-}
-
-export function goHome(e) {
-  e.preventDefault();
-
-  router.push('/');
-}
-
 // 초기화 함수
 function render() {
-  const $root = document.querySelector('#root');
+  const $root = document.getElementById('root');
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
-    if ($root?.hasChildNodes && $root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app);
-    } else {
-      $root?.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push('/');
@@ -105,6 +70,11 @@ function main() {
   addEvent('click', '[data-link]', (e) => {
     e.preventDefault();
     router.push(e.target.href.replace(window.location.origin, ''));
+  });
+
+  addEvent('click', '#logout', (e) => {
+    e.preventDefault();
+    logout();
   });
 
   addEvent('click', '#error-boundary', (e) => {

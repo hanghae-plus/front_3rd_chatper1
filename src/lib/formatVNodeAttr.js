@@ -1,3 +1,10 @@
+/**
+ * VNode 속성을 포맷팅하는 함수입니다.
+ * @param {string} key - 속성의 키
+ * @param {*} value - 속성의 값
+ * @param {Object.<string, function(string, *)>} callback - 콜백 메소드들의 객체
+ * @throws {Error} 유효하지 않은 이벤트 핸들러일 경우 에러를 던집니다.
+ */
 export function formatVNodeAttr(key, value, callback) {
   if (key.startsWith('on')) {
     if (!value || typeof value !== 'function') {

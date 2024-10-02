@@ -7,12 +7,10 @@
  **/
 
 export function createElement(vNode) {
-
   /**
     * @terms vNode가 falsy면 빈 텍스트 노드를 반환하는 기능 조건
     * @desc vNode가 null, undefined 또는 false와 같은 falsy 값인 경우, 빈 텍스트 노드를 반환
   */
-
   if (!vNode) {
     return document.createTextNode('');
   }
@@ -54,13 +52,13 @@ export function createElement(vNode) {
 
   const element = document.createElement(vNode.type);
   applyPropsToElement(element, vNode.props);
-  vNode.children.forEach((child) => {
+  
+  (vNode.children || []).forEach(child => {
     element.appendChild(createElement(child));
   });
 
   return element;
 }
-
 /**
  * @function applyPropsToElement
  * @terms 주어진 DOM 요소에 속성들을 적용
@@ -70,18 +68,18 @@ export function createElement(vNode) {
  * 이벤트 핸들러는 'on'으로 시작하는 속성명에서 추출되며, className은 요소의 클래스 속성을 설정
  * 스타일 객체는 요소에 인라인 스타일로 적용되며, 그 외의 속성은 setAttribute를 통해 적용
  */
-
 function applyPropsToElement(element, props) {
-  for (const key in props) {
-    const value = props[key];
+  Object.entries(props || {}).forEach(([key, value]) => {
     if (key.startsWith('on') && typeof value === 'function') {
       element.addEventListener(key.slice(2).toLowerCase(), value);
     } else if (key === 'className') {
       element.className = value;
     } else if (key === 'style') {
-      element.setAttribute(Object.entries(value));
+      Object.entries(value).forEach(([styleKey, styleValue]) => {
+        element.style[styleKey] = styleValue;
+      });
     } else {
       element.setAttribute(key, value);
     }
-  }
+  });
 }

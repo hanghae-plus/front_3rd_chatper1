@@ -4,10 +4,30 @@ import { Footer } from "../components/templates/Footer";
 import { Header } from "../components/templates/Header";
 import { Navigation } from "../components/templates/Navigation";
 import { globalStore } from "../stores/globalStore";
+import { userStorage } from "../storages/userStorage";
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = "", email = "", bio = "" } = currentUser ?? {};
+
+  function handleUpdate(e) {
+    e.preventDefault();
+
+    const username = e.target.username.value;
+    const email = e.target.email.value;
+    const bio = e.target.bio.value;
+
+    const updateUser = {
+      username,
+      email,
+      bio,
+    };
+
+    userStorage.set(updateUser);
+    globalStore.setState({
+      currentUser: updateUser,
+    });
+  }
 
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">
@@ -65,10 +85,13 @@ export const ProfilePage = () => {
                   rows="4"
                   className="w-full p-2 border rounded"
                   value={bio}
-                />
+                >
+                  {bio}
+                </textarea>
               </div>
               <button
                 type="submit"
+                onSubmit={handleUpdate}
                 className="w-full bg-blue-600 text-white p-2 rounded font-bold"
               >
                 프로필 업데이트

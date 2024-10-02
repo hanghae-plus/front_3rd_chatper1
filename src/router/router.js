@@ -1,5 +1,5 @@
 import { createRouter } from '../lib';
-import { setRouter } from './RouterContext';
+import { clearRouter, setRouter } from './RouterContext';
 
 const createRouterContext = (routes) => {
   const router = createRouter(routes);
@@ -8,4 +8,9 @@ const createRouterContext = (routes) => {
   return router;
 };
 
-export { createRouterContext };
+// todo: clean up을 언제 해주지?
+const cleanupRouter = () => {
+  clearRouter();
+};
+
+export { cleanupRouter, createRouterContext };

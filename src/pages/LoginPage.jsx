@@ -1,5 +1,22 @@
 /** @jsx createVNode */
 import { createVNode } from "../lib";
+import { globalStore } from "../stores";
+import { userStorage } from "../storages";
+
+const login = (username) => {
+  const user = { username, email: "", bio: "" };
+  globalStore.setState({
+    currentUser: user,
+    loggedIn: true,
+  });
+  userStorage.set(user);
+};
+
+const handleLogin = (e) => {
+  e.preventDefault();
+  const username = document.getElementById("username").value;
+  login(username);
+};
 
 export const LoginPage = () => {
   return (
@@ -8,7 +25,7 @@ export const LoginPage = () => {
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">
           항해플러스
         </h1>
-        <form id="login-form">
+        <form id="login-form" onSubmit={handleLogin}>
           <input
             type="text"
             id="username"

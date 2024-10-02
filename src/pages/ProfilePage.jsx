@@ -45,28 +45,28 @@ export const ProfilePage = () => {
 
   if (!loggedIn) {
     return (
-      <div class="bg-gray-100 min-h-screen flex justify-center items-center">
-        <h2 class="text-xl text-red-500">로그인이 필요합니다.</h2>
+      <div classsName="bg-gray-100 min-h-screen flex justify-center items-center">
+        <h2 classsName="text-xl text-red-500">로그인이 필요합니다.</h2>
       </div>
     );
   }
 
   return (
-    <div class="bg-gray-100 min-h-screen flex justify-center">
-      <div class="max-w-md w-full">
+    <div classsName="bg-gray-100 min-h-screen flex justify-center">
+      <div classsName="max-w-md w-full">
         <Header />
         <Navigation loggedIn={loggedIn} />
 
-        <main class="p-4">
-          <div class="bg-white p-8 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
+        <main classsName="p-4">
+          <div classsName="bg-white p-8 rounded-lg shadow-md">
+            <h2 classsName="text-2xl font-bold text-center text-blue-600 mb-8">
               내 프로필
             </h2>
             <form id="profile-form" onSubmit={handleProfileUpdate}>
-              <div class="mb-4">
+              <div classsName="mb-4">
                 <label
                   for="username"
-                  class="block text-gray-700 text-sm font-bold mb-2"
+                  classsName="block text-gray-700 text-sm font-bold mb-2"
                 >
                   사용자 이름
                 </label>
@@ -74,16 +74,16 @@ export const ProfilePage = () => {
                   type="text"
                   id="username"
                   name="username"
-                  class="w-full p-2 border rounded"
+                  classsName="w-full p-2 border rounded"
                   value={userInfo.username}
                   onInput={handleChange}
                   required
                 />
               </div>
-              <div class="mb-4">
+              <div classsName="mb-4">
                 <label
                   for="email"
-                  class="block text-gray-700 text-sm font-bold mb-2"
+                  classsName="block text-gray-700 text-sm font-bold mb-2"
                 >
                   이메일
                 </label>
@@ -91,16 +91,16 @@ export const ProfilePage = () => {
                   type="email"
                   id="email"
                   name="email"
-                  class="w-full p-2 border rounded"
+                  classsName="w-full p-2 border rounded"
                   value={userInfo.email}
                   onInput={handleChange}
                   required
                 />
               </div>
-              <div class="mb-6">
+              <div classsName="mb-6">
                 <label
                   for="bio"
-                  class="block text-gray-700 text-sm font-bold mb-2"
+                  classsName="block text-gray-700 text-sm font-bold mb-2"
                 >
                   자기소개
                 </label>
@@ -108,7 +108,7 @@ export const ProfilePage = () => {
                   id="bio"
                   name="bio"
                   rows="4"
-                  class="w-full p-2 border rounded"
+                  classsName="w-full p-2 border rounded"
                   value={userInfo.bio}
                   onInput={handleChange}
                   required
@@ -116,7 +116,7 @@ export const ProfilePage = () => {
               </div>
               <button
                 type="submit"
-                class="w-full bg-blue-600 text-white p-2 rounded font-bold"
+                classsName="w-full bg-blue-600 text-white p-2 rounded font-bold"
               >
                 프로필 업데이트
               </button>

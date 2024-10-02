@@ -1,6 +1,6 @@
 import { addEvent } from './eventManager';
 
-export function createElement__v2(vNode) {
+export const createElement__v2 = (vNode) => {
   // 이벤트 위임 부분만 개선
   // 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
   if (!vNode || typeof vNode === 'boolean') {
@@ -51,4 +51,4 @@ export function createElement__v2(vNode) {
   });
 
   return element;
-}
+};

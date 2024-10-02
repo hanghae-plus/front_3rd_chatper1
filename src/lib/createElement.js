@@ -1,4 +1,4 @@
-export function createElement(vNode) {
+export const createElement = (vNode) => {
   // 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
   if (!vNode || typeof vNode === 'boolean') {
     return document.createTextNode('');
@@ -49,4 +49,4 @@ export function createElement(vNode) {
   });
 
   return element;
-}
+};

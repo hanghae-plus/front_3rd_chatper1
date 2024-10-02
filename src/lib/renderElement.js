@@ -3,7 +3,7 @@ import { createElement__v2 } from './createElement__v2';
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 
 // vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
-function processVNode(vNode) {
+const processVNode = (vNode) => {
   // - null, undefined, boolean 값 처리
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
@@ -36,9 +36,9 @@ function processVNode(vNode) {
     props: vNode.props || {},
     children: processedChildren,
   };
-}
+};
 
-function updateAttributes(oldElement, oldProps = {}, newProps = {}) {
+const updateAttributes = (oldElement, oldProps = {}, newProps = {}) => {
   // 새로운 속성 추가 및 업데이트
   for (const [key, value] of Object.entries(newProps)) {
     // 이벤트 리스너 처리
@@ -79,9 +79,9 @@ function updateAttributes(oldElement, oldProps = {}, newProps = {}) {
       oldElement.removeAttribute(key);
     }
   }
-}
+};
 
-function updateElement(container, oldNode, newNode, index = 0) {
+const updateElement = (container, oldNode, newNode, index = 0) => {
   const oldElement = container.childNodes[index];
 
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우): oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
@@ -145,10 +145,10 @@ function updateElement(container, oldNode, newNode, index = 0) {
   while (oldElement.childNodes.length > newChildren.length) {
     oldElement.removeChild(oldElement.lastChild);
   }
-}
+};
 
 // 최상위 수준의 렌더링 함수
-export function renderElement(vNode, container) {
+export const renderElement = (vNode, container) => {
   // - 이전 vNode와 새로운 vNode를 비교하여 업데이트
   // - 최초 렌더링과 업데이트 렌더링 처리
   const oldVNode = container?.oldVNode; // 최상위 가상돔을 root div에 저장.
@@ -167,4 +167,4 @@ export function renderElement(vNode, container) {
   // 이벤트 위임 설정: 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리
   // 이벤트 위임 설정 (렌더링 완료 후 호출)
   setupEventListeners(container);
-}
+};

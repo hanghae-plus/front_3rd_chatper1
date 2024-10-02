@@ -9,74 +9,68 @@ import { App } from "./App";
 
 const router = createRouter({
   '/': () => <HomePage />,
-  '/login': () => {
-    const loggedIn = userStorage.get('user');
-    if (loggedIn) {
-      // throw new ForbiddenError();
+	'/login': () => {
+		const { loggedIn } = globalStore.getState();
+		if (loggedIn) {
       window.history.pushState(null, null, '/');
       return <HomePage />;
-    } else {
-      return <LoginPage />;
-    }
-  },
+		}
+		return <LoginPage />;
+	},
   '/profile': () => {
-    const loggedIn = userStorage.get('user');
-    if (!loggedIn) {
-      // throw new UnauthorizedError();
+		const { loggedIn } = globalStore.getState();
+		if (!loggedIn) {
       window.history.pushState(null, null, '/login');
       return <LoginPage />;
-    }
-    return <ProfilePage />;
-  },
+		}
+		return <ProfilePage />;
+	},
   '/404': () => <NotFoundPage />,
 });
 
 function logout() {
-  router.push('/login');
-  userStorage.reset('user');
-  userStorage.reset('loggedIn');
-  globalStore.setState({ currentUser: null, loggedIn: false });
+	globalStore.setState({ currentUser: null, loggedIn: false });
+	router.push('/login');
+	userStorage.reset();
 }
 
 function handleError(error) {
-  globalStore.setState({ error });
+	globalStore.setState({ error });
 }
+
 // 초기화 함수
 function render() {
-  const $root = document.querySelector('#root');
+	const $root = document.querySelector('#root');
 
-  try {
-    renderElement(<App targetPage={router.getTarget()}/>, $root);
-    // if ($root.hasChildNodes()) {
-    //   $root.firstChild.replaceWith($app);
-    // } else {
-    //   $root.appendChild($app);
-    // }
-  } catch (error) {
-    if (error instanceof ForbiddenError) {
-      router.push('/');
-      return;
-    }
-    if (error instanceof UnauthorizedError) {
-      router.push('/login');
-      return;
-    }
-    console.error(error);
+	try {
+		renderElement(<App targetPage={router.getTarget()} />, $root);
+	} catch (error) {
+		if (error instanceof ForbiddenError) {
+			router.push('/');
+			return;
+		}
+		if (error instanceof UnauthorizedError) {
+			router.push('/login');
+			return;
+		}
 
-    globalStore.setState({ error });
-  }
-  registerGlobalEvents();
+		console.error(error);
+
+		// globalStore.setState({ error });
+	}
+	registerGlobalEvents();
 }
-function main() {
-  router.subscribe(render);
-  globalStore.subscribe(render);
-  window.addEventListener('error', handleError);
-  window.addEventListener('unhandledrejection', handleError);
-  addEvent('click', '[data-link]', (e) => {
-    e.preventDefault();
-    router.push(e.target.href.replace(window.location.origin, ''));
-  });
 
+function main() {
+	router.subscribe(render);
+	globalStore.subscribe(render);
+	window.addEventListener('error', handleError);
+	window.addEventListener('unhandledrejection', handleError);
+
+	addEvent("click", "[data-link]", (e) => {
+		e.preventDefault();
+		router.push(e.target.href.replace(window.location.origin, ""));
+	});
   addEvent('submit', '[data-submit]', (e) => {
     e.preventDefault();
     const form = e.target;
@@ -115,16 +109,16 @@ function main() {
     globalStore.setState({ currentUser, loggedIn: true });
     alert('수정 완료');
   }
+	addEvent('click", "#logout', (e) => {
+		e.preventDefault();
+		logout();
+	});
 
-  addEvent('click', '#logout', (e) => {
-    e.preventDefault();
-    logout();
-  });
+	addEvent('click', '#error-boundary', (e) => {
+		e.preventDefault();
+		globalStore.setState({ error: null });
+	});
 
-  addEvent('click', '#error-boundary', (e) => {
-    e.preventDefault();
-    globalStore.setState({ error: null });
-  });
-  render();
+	render();
 }
 main();

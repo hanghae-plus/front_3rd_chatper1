@@ -15,12 +15,8 @@ function processVNode(vNode) {
     return processVNode(vNode.type(vNode.props));
   }
 
-  if (Array.isArray(vNode)) {
-    return vNode.map(processVNode);
-  }
-
   if (typeof vNode === 'object') {
-    const children = Array.isArray(vNode.children) ? vNode.children.map(processVNode) : processVNode(vNode.children);
+    const children = vNode.children.map(processVNode);
     return { ...vNode, children };
   }
 

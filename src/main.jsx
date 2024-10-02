@@ -40,9 +40,7 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const $app = <App targetPage={router.getTarget()} />;
-    console.log('다시 랜더');
-    renderElement($app, $root);
+    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push('/');

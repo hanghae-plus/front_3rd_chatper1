@@ -27,16 +27,15 @@ export function createElement(vNode) {
   Object.entries(vNode.props || {})
     .filter(([attr, value]) => value)
     .forEach(([attr, value]) => {
-      // @TODO 나중에 빌더 패턴 적용?
+      // 5-1. 이벤트 리스너 처리 (onClick, onChange 등)
       if (attr.startsWith('on')) {
-        $el.addEventListener('click', value);
+        const eventType = attr.slice(2).toLowerCase();
+        $el.addEventListener(eventType, value);
+      } else if (attr === 'className') {
+        $el.className = value; // className을 class 속성으로 적용
+      } else {
+        $el.setAttribute(attr, value);
       }
-
-      if (attr === 'className') {
-        attr = 'class';
-      }
-
-      return $el.setAttribute(attr, value);
     });
 
   (vNode.children || []).map(createElement).forEach((child) => $el.appendChild(child));

@@ -30,8 +30,8 @@ export function createElement__v2(vNode) {
     .forEach(([attr, value]) => {
       if (attr.startsWith('on')) {
         const eventType = attr.slice(2).toLowerCase();
-        console.log('여기서 추가 되냐?');
         addEvent($el, eventType, value);
+        return;
       }
 
       if (attr === 'className') {

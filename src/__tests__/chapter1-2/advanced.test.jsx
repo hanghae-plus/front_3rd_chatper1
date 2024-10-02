@@ -75,12 +75,20 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
     });
 
     it('요소의 속성만 변경되었을 때 요소를 재사용해야 한다', () => {
-      const initialVNode = <div id="test" className="old">Hello</div>;
+      const initialVNode = (
+        <div id="test" className="old">
+          Hello
+        </div>
+      );
       renderElement(initialVNode, container);
 
       const originalDiv = container.querySelector('div');
 
-      const updatedVNode = <div id="test" className="new">Hello</div>;
+      const updatedVNode = (
+        <div id="test" className="new">
+          Hello
+        </div>
+      );
       renderElement(updatedVNode, container);
 
       expect(container.innerHTML).toBe('<div id="test" class="new">Hello</div>');
@@ -204,6 +212,7 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
       renderElement(updatedVNode, container);
 
       const button = container.querySelector('button');
+      console.log(button, 'test button');
       button.click();
 
       expect(clickHandler).not.toHaveBeenCalled();

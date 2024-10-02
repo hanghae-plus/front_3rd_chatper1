@@ -83,7 +83,7 @@ export function removeEvent(element, eventType, handler) {
   // 1. eventMap에서 해당 요소와 이벤트 타입에 대한 핸들러 제거
   const handlers = eventMap.get(eventType);
 
-  if (handlers) {
+  if (handlers && handlers.has(element)) {
     const registeredHandler = handlers.get(element);
 
     // 2. 해당 핸들러가 등록된 경우에만 제거

@@ -21,7 +21,7 @@ function processVNode(vNode) {
 
   return {
     ...vNode,
-    children: vNode.children.map(processVNode) || [],
+    children: vNode.children.map(processVNode).filter(Boolean) || [],
   };
 }
 
@@ -35,6 +35,7 @@ function updateAttributes(targetEl, newVNodeProps, oldVNodeProps) {
     if (!(key in newVNodeProps)) {
       if (key.startsWith('on')) {
         const eventType = key.toLowerCase().substring(2);
+        console.log('delete event');
         removeEvent(targetEl, eventType, value);
       } else if (key === 'className') {
         targetEl.removeAttribute('class');

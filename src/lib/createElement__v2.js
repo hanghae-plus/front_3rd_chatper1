@@ -33,7 +33,7 @@ export function createElement__v2(vNode) {
         element.className = value;
       } else if (key.startsWith('on') && typeof value === 'function') {
         // 이벤트 위임을 위해 데이터 속성으로 저장
-        const eventType = key.toLowerCase().substr(2);
+        const eventType = key.toLowerCase().slice(2);
         element.setAttribute(`data-event-${eventType}`, '');
         // 이벤트 핸들러를 요소에 직접 저장
         element[`__${eventType}Handler`] = value;

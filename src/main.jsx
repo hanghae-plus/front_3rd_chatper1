@@ -9,116 +9,80 @@ import { App } from "./App";
 
 const router = createRouter({
   '/': () => <HomePage />,
-	'/login': () => {
-		const { loggedIn } = globalStore.getState();
-		if (loggedIn) {
+  '/login': () => {
+    const { loggedIn } = globalStore.getState();
+
+    if (loggedIn) {
       window.history.pushState(null, null, '/');
       return <HomePage />;
-		}
+    }
+
 		return <LoginPage />;
-	},
+  },
   '/profile': () => {
-		const { loggedIn } = globalStore.getState();
-		if (!loggedIn) {
+    const { loggedIn } = globalStore.getState();
+    if (!loggedIn) {
       window.history.pushState(null, null, '/login');
       return <LoginPage />;
 		}
-		return <ProfilePage />;
-	},
-  '/404': () => <NotFoundPage />,
+    return <ProfilePage />;
+  },
 });
 
 function logout() {
-	globalStore.setState({ currentUser: null, loggedIn: false });
-	router.push('/login');
-	userStorage.reset();
+  globalStore.setState({ currentUser: null, loggedIn: false });
+  router.push('/login');
+  userStorage.reset();
 }
 
 function handleError(error) {
-	globalStore.setState({ error });
+  globalStore.setState({ error });
 }
 
 // 초기화 함수
 function render() {
-	const $root = document.querySelector('#root');
+  const $root = document.querySelector('#root');
 
-	try {
-		renderElement(<App targetPage={router.getTarget()} />, $root);
-	} catch (error) {
-		if (error instanceof ForbiddenError) {
-			router.push('/');
-			return;
-		}
-		if (error instanceof UnauthorizedError) {
-			router.push('/login');
-			return;
-		}
+  try {
+    renderElement(<App targetPage={router.getTarget()} />, $root);
+  } catch (error) {
+    if (error instanceof ForbiddenError) {
+      router.push('/');
+      return;
+    }
+    if (error instanceof UnauthorizedError) {
+      router.push('/login');
+      return;
+    }
 
-		console.error(error);
-
-		// globalStore.setState({ error });
-	}
-	registerGlobalEvents();
+    console.error(error);
+    globalStore.setState({ error });
+  }
+  registerGlobalEvents();
 }
 
 function main() {
-	router.subscribe(render);
-	globalStore.subscribe(render);
-	window.addEventListener('error', handleError);
-	window.addEventListener('unhandledrejection', handleError);
+  router.subscribe(render);
+  globalStore.subscribe(render);
+  window.addEventListener('error', handleError);
+  window.addEventListener('unhandledrejection', handleError);
 
-	addEvent("click", "[data-link]", (e) => {
-		e.preventDefault();
-		router.push(e.target.href.replace(window.location.origin, ""));
-	});
-  addEvent('submit', '[data-submit]', (e) => {
+  addEvent('click', '[data-link]', (e) => {
     e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const formType = form.getAttribute('data-submit');
-  
-    const formHandlers = {
-      'login-form': () => handleLoginForm(formData),
-      'profile-form': () => handleProfileForm(formData)
-    };
-  
-    const handleForm = formHandlers[formType];
-    if (handleForm) {
-      handleForm();
-    }
+    router.push(e.target.href.replace(window.location.origin, ''));
   });
-  
-  function handleLoginForm(formData) {
-    const username = formData.get('username');
-    if (username) {
-      const currentUser = { username, email: '', bio: '' };
-      userStorage.set('user', currentUser);
-      userStorage.set('loggedIn', { loggedIn: true });
-      globalStore.setState({ currentUser, loggedIn: true });
-      router.push('/profile');
-    }
-  }
-  
-  function handleProfileForm(formData) {
-    const username = formData.get('username');
-    const email = formData.get('email');
-    const bio = formData.get('bio');
-    const currentUser = { username, email, bio };
-    userStorage.set('user', currentUser);
-    userStorage.set('loggedIn', { loggedIn: true });
-    globalStore.setState({ currentUser, loggedIn: true });
-    alert('수정 완료');
-  }
-	addEvent('click", "#logout', (e) => {
-		e.preventDefault();
-		logout();
-	});
 
-	addEvent('click', '#error-boundary', (e) => {
-		e.preventDefault();
-		globalStore.setState({ error: null });
-	});
+  addEvent('click', '#logout', (e) => {
+    e.preventDefault();
+    logout();
+  });
 
-	render();
+  addEvent('click', '#error-boundary', (e) => {
+    e.preventDefault();
+    globalStore.setState({ error: null });
+  });
+
+  render();
 }
+
 main();

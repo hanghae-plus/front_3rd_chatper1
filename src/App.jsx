@@ -1,9 +1,9 @@
 /** @jsx createVNode */
-import { createVNode } from './lib';
-import { globalStore } from './stores/globalStore';
+import { createVNode } from "./lib";
+import { globalStore } from "./stores";
 
 export const App = ({ targetPage }) => {
-  const PageComponent = targetPage ?? NotFoundPage;
+  const PageComponent = targetPage;
   const error = globalStore.getState().error;
 
   return (
@@ -18,9 +18,13 @@ export const App = ({ targetPage }) => {
           <div className="flex justify-between items-center">
             <div>
               <strong className="font-bold">오류 발생!</strong>
-              <span className="block sm:inline ml-1">${error.message || '알 수 없는 오류가 발생했습니다.'}</span>
+              <span className="block sm:inline ml-1">
+                ${error.message || "알 수 없는 오류가 발생했습니다."}
+              </span>
             </div>
-            <button className="text-red-700 hover:text-red-900 font-semibold">&times;</button>
+            <button className="text-red-700 hover:text-red-900 font-semibold">
+              &times;
+            </button>
           </div>
         </div>
       ) : null}

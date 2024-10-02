@@ -32,7 +32,7 @@ export function createElement(vNode) {
         const eventType = attr.slice(2).toLowerCase();
         $el.addEventListener(eventType, value);
       } else if (attr === 'className') {
-        $el.className = value; // className을 class 속성으로 적용
+        $el.setAttribute('class', value);
       } else {
         $el.setAttribute(attr, value);
       }

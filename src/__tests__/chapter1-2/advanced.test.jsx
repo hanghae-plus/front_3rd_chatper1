@@ -212,7 +212,6 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
       renderElement(updatedVNode, container);
 
       const button = container.querySelector('button');
-      console.log(button, 'test button');
       button.click();
 
       expect(clickHandler).not.toHaveBeenCalled();

@@ -118,7 +118,6 @@ describe('Chapter1-2 > 기본과제 > 가상돔 만들기 > ', () => {
     it('이벤트 리스너를 연결해야 한다', () => {
       const clickHandler = vi.fn();
       const result = createElement(<button onClick={clickHandler} />);
-      console.log(result, 'test result');
       result.click();
       expect(clickHandler).toHaveBeenCalledTimes(1);
     });

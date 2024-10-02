@@ -40,7 +40,6 @@ function handleEvent(event) {
       // 요소가 등록되어 있는지 확인
       const handler = handlers.get(targetElement);
       if (handler) {
-        console.log(handler, 'handle');
         // 3. 핸들러가 있다면 실행
         handler.call(targetElement, event);
         break; // 첫 번째로 매칭된 핸들러만 실행

@@ -31,14 +31,11 @@ export function createElement__v2(vNode) {
       if (attr.startsWith('on')) {
         const eventType = attr.slice(2).toLowerCase();
         addEvent($el, eventType, value);
-        return;
+      } else if (attr === 'className') {
+        $el.setAttribute('class', value);
+      } else {
+        $el.setAttribute(attr, value);
       }
-
-      if (attr === 'className') {
-        attr = 'class';
-      }
-
-      return $el.setAttribute(attr, value);
     });
 
   (vNode.children || []).map(createElement__v2).forEach((child) => $el.appendChild(child));

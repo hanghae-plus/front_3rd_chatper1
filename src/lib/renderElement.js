@@ -22,11 +22,11 @@ function processVNode(vNode) {
 }
 
 function updateAttributes(element, oldVNode, newVNode) {
-  const allProps = { ...oldVNode.props, ...newVNode.props };
+  const allProps = { ...oldVNode?.props, ...newVNode?.props };
 
   const handleKey = (key, addHandler, removeHandler, updateHandler) => {
     const oldVal = oldVNode.props && key in oldVNode.props ? oldVNode.props[key] : null;
-    const newVal = oldVNode.props && key in newVNode.props ? newVNode.props[key] : null;
+    const newVal = newVNode.props && key in newVNode.props ? newVNode.props[key] : null;
     if ((!oldVNode.props && newVNode.props) || (!oldVal && newVal)) {
       console.log("추가:", key);
       addHandler();
@@ -63,11 +63,11 @@ function updateAttributes(element, oldVNode, newVNode) {
       const eventType = key.toLowerCase().replace("on", "");
       handleKey(
         key,
-        () => element.addEventListener(eventType, value), // TODO: 변경 필요
-        () => element.removeEventListener(eventType),
+        () => addEvent(element, eventType, value),
+        () => removeEvent(element, eventType, value),
         () => {
-          element.removeEventListener(eventType);
-          element.addEventListener(eventType, value);
+          removeEvent(element, eventType, value);
+          addEvent(element, eventType, value);
         }
       );
     } else if (typeof value === "object") {

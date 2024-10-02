@@ -1,3 +1,5 @@
+import { addEvent } from "./eventManager";
+
 export function createElement__v2(vNode) {
   if (!vNode) {
     return document.createTextNode("");
@@ -23,7 +25,7 @@ export function createElement__v2(vNode) {
         }
       } else if (typeof value === "function" && key.toLowerCase() in node) {
         const eventType = key.toLowerCase().replace("on", "");
-        node.addEventListener(eventType, value); // TODO: eventManager로 바꿔야함
+        addEvent(node, eventType, value);
       } else if (typeof value === "object") {
         Object.entries(value).forEach(([_key, _value]) => {
           node[key][_key] = _value;

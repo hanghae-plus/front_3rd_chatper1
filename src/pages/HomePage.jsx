@@ -6,9 +6,8 @@ import { globalStore } from '../stores';
 
 export const HomePage = () => {
   const { loggedIn, posts } = globalStore.getState();
-  console.log('hi')
-  console.log(posts)
-  
+
+
 
   return (
     <div className='bg-gray-100 min-h-screen flex justify-center'>

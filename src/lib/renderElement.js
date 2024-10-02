@@ -1,16 +1,24 @@
 /** @jsx createVNode */
 
 // renderElement.js
-import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
+import { addEvent, removeEvent, setupEventListeners } from "./eventManager.js";
 import { createElement__v2 } from "./createElement__v2.js";
 
 // TODO: processVNode 함수 구현
-function processVNode() {
+const processVNode = (vNode) =>  {
   // vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
   // - null, undefined, boolean 값 처리
   // - 문자열과 숫자를 문자열로 변환
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
+  if (vNode === null || vNode === undefined) {
+    return false;
+  }
+  if (typeof vNode === 'string' || typeof vNode === 'number'){
+    vNode = String(vNode);
+  }
+
+  return createElement__v2(vNode);
 }
 
 // TODO: updateAttributes 함수 구현
@@ -23,7 +31,7 @@ const updateAttributes = (oldNode, newNode) => {
   //     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
   //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
   //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
-  
+
   for (const {name, value} of [ ...newNode.attributes ]) {
     if (value === oldNode.getAttribute(name)) continue;
     oldNode.setAttribute(name, value);

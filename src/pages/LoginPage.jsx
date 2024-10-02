@@ -6,10 +6,19 @@ import { globalStore } from '../stores';
 
 export const LoginPage = () => {
   const router = useRouter();
+
   const handleLogin = (e) => {
     e.preventDefault();
 
-    const username = e.target.username.value;
+    // const username = e.target.username.value // 테스트 코드 오류 (dom이슈..?)
+
+    // sol 1
+    const username = e.target.querySelector('#username').value;
+
+    // sol 2
+    // const formData = new FormData(e.target);
+    // const username = Object.fromEntries(formData);
+
     const updatedUser = { username, email: '', bio: '' };
 
     userStorage.set(updatedUser);

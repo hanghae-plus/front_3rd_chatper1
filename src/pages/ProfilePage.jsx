@@ -11,10 +11,12 @@ export const ProfilePage = () => {
   function handleUpdate(e) {
     e.preventDefault();
 
-    const username = e.target.username.value;
-    const email = e.target.email.value;
-    const bio = e.target.bio.value;
-    const updatedUser = { username, email, bio };
+    // const username = e.target.querySelector('#username').value;
+    // const email = e.target.querySelector('#email').value;
+    // const bio = e.target.querySelector('#bio').value;
+    const formData = new FormData(e.target);
+    const updatedUser = Object.fromEntries(formData);
+
     globalStore.setState({
       ...globalStore,
       currentUser: updatedUser

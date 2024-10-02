@@ -17,7 +17,7 @@ export function setupEventListeners(root) {
   
   rootElement = root;
 
-  if (rootElement) {
+  if(rootElement) {
     const elementEvents = eventMap.get(rootElement);
     if (elementEvents) {
       elementEvents.forEach((handler, eventType) => {

@@ -7,14 +7,14 @@ import { camelToKebab } from "../utils";
 // - 문자열과 숫자를 문자열로 변환
 // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
 // - 자식 요소들에 대해 재귀적으로 processVNode 호출
-function processVNode(vNode) {
+const processVNode = (vNode) => {
 	if (vNode === null || vNode === undefined || vNode === "" || typeof vNode === "boolean")
 		return "";
 	if (typeof vNode === "string" || typeof vNode === "number") return String(vNode);
 	if (typeof vNode.type === "function") return processVNode(vNode.type(vNode.props));
 	vNode.children = vNode.children.map(processVNode);
 	return vNode;
-}
+};
 
 const handleUpdateAttributes = (type, $element, key, value) => {
 	if (key.startsWith("on")) {
@@ -49,7 +49,7 @@ const handleUpdateAttributes = (type, $element, key, value) => {
 //     - 'on'으로 시작하는 속성을 이벤트 리스너로 처리
 //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
 //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
-function updateAttributes($element, newNode, oldNode) {
+const updateAttributes = ($element, newNode, oldNode) => {
 	oldNode.props = oldNode.props || {};
 	newNode.props = newNode.props || {};
 
@@ -66,7 +66,7 @@ function updateAttributes($element, newNode, oldNode) {
 			handleUpdateAttributes("update", $element, key, value);
 		}
 	});
-}
+};
 
 // updateElement
 // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
@@ -86,7 +86,7 @@ function updateAttributes($element, newNode, oldNode) {
 // HINT: 최대 자식 수를 기준으로 루프를 돌며 업데이트
 // 5-3. 불필요한 자식 노드 제거
 // : oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
-function updateElement(newNode, oldNode, $parent, index = 0) {
+const updateElement = (newNode, oldNode, $parent, index = 0) => {
 	if (!newNode) {
 		$parent.removeChild($parent.childNodes[index]);
 		return;
@@ -121,7 +121,7 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 			$parent.removeChild($parent.childNodes[index].lastChild);
 		}
 	}
-}
+};
 
 // renderElement
 // 최상위 수준의 렌더링 함수입니다.
@@ -130,7 +130,7 @@ function updateElement(newNode, oldNode, $parent, index = 0) {
 // 이벤트 위임 설정
 // : 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
 // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
-export function renderElement(vNode, container) {
+export const renderElement = (vNode, container) => {
 	if (!container) return;
 	vNode = processVNode(vNode);
 
@@ -141,4 +141,4 @@ export function renderElement(vNode, container) {
 	}
 	container._vNode = vNode;
 	setupEventListeners(container);
-}
+};

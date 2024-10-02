@@ -9,7 +9,7 @@
 import { addEvent } from "./eventManager";
 import { camelToKebab } from "../utils";
 
-export function createElement__v2(vNode) {
+export const createElement__v2 = (vNode) => {
 	if (vNode === undefined || vNode === null || vNode === "" || typeof vNode === "boolean")
 		return document.createTextNode("");
 	if (typeof vNode === "string" || typeof vNode === "number") return document.createTextNode(vNode);
@@ -44,4 +44,4 @@ export function createElement__v2(vNode) {
 		$el.appendChild(createElement__v2(child));
 	});
 	return $el;
-}
+};

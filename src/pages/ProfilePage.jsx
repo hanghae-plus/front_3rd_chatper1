@@ -4,12 +4,12 @@ import { globalStore } from "../stores";
 import { Header, Navigation, Footer } from "../components";
 import { userStorage } from "../storages";
 
-function updateProfile(profile) {
+const updateProfile = (profile) => {
 	const user = { ...globalStore.getState().currentUser, ...profile };
 	globalStore.setState({ currentUser: user });
 	userStorage.set(user);
 	alert("프로필이 업데이트되었습니다.");
-}
+};
 
 const handleUpdate = (e) => {
 	e.preventDefault();

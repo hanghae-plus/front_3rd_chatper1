@@ -1,4 +1,3 @@
-// renderElement.js
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { createElement__v2 } from './createElement__v2.js';
 
@@ -19,13 +18,17 @@ function processVNode(vNode) {
   };
 }
 
+function camelToKebab(str) {
+  return str.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`);
+}
+
 function updateAttributes(vNode, newProps, oldProps) {
   for (let name in oldProps) {
     if (!Object.hasOwn(newProps, name)) {
       vNode.removeAttribute(name);
 
       if (name.startsWith('on')) {
-        removeEvent(vNode, name.slice(2).toLowerCase(), oldProps[name]);
+        removeEvent(vNode, name.slice(2).toLowerCase());
       }
     }
     if (!Object.hasOwn(newProps, 'className')) {
@@ -89,12 +92,9 @@ export function renderElement(vNode, $root) {
   if ($root.childNodes.length === 0) {
     vNodeMap.set('oldNode', processVNode(vNode));
     $root.appendChild(createElement__v2(vNodeMap.get('newNode')));
-    return;
+  } else {
+    updateElement($root, vNodeMap.get('newNode'), vNodeMap.get('oldNode'), 0);
+    vNodeMap.set('oldNode', vNodeMap.get('newNode'));
   }
-  updateElement($root, vNodeMap.get('newNode'), vNodeMap.get('oldNode'), 0);
-  vNodeMap.set('oldNode', vNodeMap.get('newNode'));
-}
-
-function camelToKebab(str) {
-  return str.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`);
+  setupEventListeners($root);
 }

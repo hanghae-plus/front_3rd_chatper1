@@ -10,28 +10,22 @@ function processVNode(vNode) {
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
 
-  // null, undefined, boolean 값 처리
-  if (!vNode) return document.createTextNode("");
+  if (!vNode) {
+    return document.createTextNode("");
+  }
 
-  // 문자열과 숫자를 문자열로 변환
   if (typeof vNode === "string" || typeof vNode === "number") {
     return vNode;
   }
 
-  // 함수형 컴포넌트 처리
   if (typeof vNode.type === "function") {
-    return processVNode(vNode.type(vNode.props));
+    return processVNode(vNode.type(vNode.props) || {});
   }
 
-  const processedChildren = (vNode.children || []).map((child) =>
-    processVNode(child)
-  );
-
-  // 자식 요소들에 대해 재귀적으로 processVNode 호출
   return {
     type: vNode.type,
     props: vNode.props || {},
-    children: processedChildren,
+    children: (vNode.children || []).map((child) => processVNode(child)),
   };
 }
 
@@ -46,8 +40,9 @@ function updateAttributes(domElement, oldProps = {}, newProps = {}) {
   //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
   //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
   // 새로운 속성 추가 및 업데이트
+
   for (const [key, value] of Object.entries(newProps)) {
-    if (key === "children") continue; // 자식은 따로 처리
+    if (key === "children") continue;
 
     if (key.startsWith("on")) {
       // 이벤트 리스너 처리
@@ -151,9 +146,9 @@ function updateElement(container, oldNode, newNode, index = 0) {
   if (newNode.type !== oldNode.type) {
     const newElement = createElement__v2(newNode);
     if (oldElement) {
-      container.replaceChild(newElement, oldElement); // 노드 교체
+      container.replaceChild(newElement, oldElement);
     } else {
-      container.appendChild(newElement); // 새로운 노드 추가
+      container.appendChild(newElement);
     }
     return;
   }

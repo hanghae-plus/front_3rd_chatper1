@@ -3,7 +3,6 @@
 // 이벤트 위임을 위한 전역 이벤트 맵
 // 이 맵은 이벤트 타입별로 요소와 해당 요소의 이벤트 핸들러를 저장합니다.
 const eventMap = new Map();
-// Map<string, Map<string, () => void>>
 
 // 이벤트 위임이 설정될 루트 요소
 let rootElement = null;
@@ -19,7 +18,10 @@ export function setupEventListeners(root) {
   rootElement = root;
 
   Array.from(eventMap.keys()).forEach((eventType) => {
-    removeEvent(rootElement, eventType, handleEvent);
+    rootElement.removeEventListener(eventType, handleEvent);
+  });
+
+  Array.from(eventMap.keys()).forEach((eventType) => {
     rootElement.addEventListener(eventType, handleEvent);
   });
 }
@@ -57,7 +59,9 @@ export function addEvent(eventType, element, handler) {
   // 이벤트 위임: event.target이 이벤트 핸들러를 가지고 있는지 확인
   // 이 함수를 통해 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
 
-  if (!eventMap.has(eventType)) eventMap.set(eventType, new Map());
+  if (!eventMap.has(eventType)) {
+    eventMap.set(eventType, new Map());
+  }
 
   const elementMap = eventMap.get(eventType);
   // if (elementMap.has(element)) return;

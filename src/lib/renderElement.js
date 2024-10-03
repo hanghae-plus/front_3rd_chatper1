@@ -120,4 +120,5 @@ export function renderElement(vNode, container) {
     container.appendChild(createElement__v2(pVNode));
   }
   container.prevVNode = pVNode;
+  setupEventListeners(container);
 }

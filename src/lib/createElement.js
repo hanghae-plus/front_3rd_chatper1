@@ -1,41 +1,36 @@
-// TODO: createElement 함수 구현
-// 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
-// 2. vNode가 문자열이나 숫자면 텍스트 노드를 생성하여 반환합니다.
-// 3. vNode가 배열이면 DocumentFragment를 생성하고 각 자식에 대해 createElement를 재귀 호출하여 추가합니다.
-// 4. vNode.type이 함수면 해당 함수를 호출하고 그 결과로 createElement를 재귀 호출합니다.
-// 5. 위 경우가 아니면 실제 DOM 요소를 생성합니다:
-//    - vNode.type에 해당하는 요소를 생성
-//    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
-//    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
-
+// 가상 DOM 노드를 기반으로 실제 DOM 요소를 생성하는 함수
 export function createElement(vNode) {
-  // 1. falsy
+  // 빈 노드 처리
   if (!vNode) {
     return document.createTextNode(""); // 빈 텍스트 노드 반환
   }
 
-  // 2. 문자열이나 숫자
+  // 문자열 또는 숫자 노드 처리
   if (typeof vNode === "string" || typeof vNode === "number") {
-    return document.createTextNode(vNode); // vNode 값으로 텍스트 노드 반환
+    return document.createTextNode(vNode); // 텍스트 노드 반환
   }
 
-  // 3. 배열
+  // 배열 노드 처리
   if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment(); // DocumentFragment 생성
     vNode.forEach((child) => {
-      const childElement = createElement(child); // 각 자식 요소에 대해 재귀 호출
+      const childElement = createElement(child); // 각 자식 노드에 대해 재귀 호출
       fragment.appendChild(childElement); // DocumentFragment에 추가
     });
-    return fragment; // 완성된 DocumentFragment 반환
+    return fragment; // 완성된 Fragment 반환
   }
 
-  // 4. vNode.type이 함수면
+  // 함수형 노드 컴포넌트 처리
   if (typeof vNode.type === "function") {
-    const componentVNode = vNode.type(vNode.props); // 해당 함수를 호출
+    const componentVNode = vNode.type(vNode.props); // 해당 함수를 호출하여 컴포넌트 노드 생성
     return createElement(componentVNode); // 그 결과로 createElement를 재귀 호출
   }
-  // 5. 위 경우가 아니면
-  const element = document.createElement(vNode.type); // vNode.type에 해당하는 DOM 요소 생성
+
+  // 그 외의 처리
+  const $element = document.createElement(vNode.type); // vNode.type에 해당하는 DOM 요소 생성
+  if (process.env.NODE_ENV === "development") {
+    console.log("DOM 요소를 생성합니다:", vNode.type);
+  }
 
   // vNode.props의 속성들을 적용
   if (vNode.props) {
@@ -43,24 +38,24 @@ export function createElement(vNode) {
       if (key.startsWith("on")) {
         // 이벤트 리스너 처리 (onClick, onChange 등)
         const eventType = key.slice(2).toLowerCase(); // 'onClick' -> 'click'
-        element.addEventListener(eventType, value);
+        $element.addEventListener(eventType, value); // 이벤트 리스너 추가
       } else if (key === "className") {
         // className을 class 속성으로 설정
-        element.className = value;
+        $element.className = value;
       } else {
         // 일반 속성 설정 (예: id, data-* 등)
-        element.setAttribute(key, value);
+        $element.setAttribute(key, value);
       }
     }
   }
 
-  // vNode.children의 각 자식에 대해 createElement 재귀 호출하여 추가
+  // vNode.children의 각 자식 노드에 대해 createElement 재귀 호출하여 추가
   if (vNode.children) {
     vNode.children.forEach((child) => {
-      const childElement = createElement(child); // 자식 요소에 대해 재귀 호출
-      element.appendChild(childElement); // 자식 요소를 DOM에 추가
+      const childElement = createElement(child); // 자식 노드에 대해 재귀 호출
+      $element.appendChild(childElement); // 자식 노드를 DOM에 추가
     });
   }
 
-  return element; // 완성된 DOM 요소 반환
+  return $element; // 완성된 DOM 요소 반환
 }

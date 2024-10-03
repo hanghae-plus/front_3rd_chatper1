@@ -14,11 +14,29 @@ export const Navigation = ({ loggedIn }) => (
           홈
         </a>
       </li>
-      <li>
-        <a href="/login" class="text-gray-600" data-link="true">
-          로그인
-        </a>
-      </li>
+
+      {loggedIn && (
+        <li>
+          <a href="/profile" class="text-gray-600" data-link="true">
+            프로필
+          </a>
+        </li>
+      )}
+      {loggedIn && (
+        <li>
+          <a href="" id="logout" class="text-gray-600">
+            로그아웃
+          </a>
+        </li>
+      )}
+
+      {!loggedIn && (
+        <li>
+          <a href="/login" class="text-gray-600" data-link="true">
+            로그인
+          </a>
+        </li>
+      )}
     </ul>
   </nav>
 );

@@ -36,7 +36,7 @@ function processVNode(vNode: VNode): VNodeChild {
     return String(vNode);
   }
 
-  if (!Array.isArray(vNode) && typeof vNode.type === 'function') {
+  if (typeof vNode.type === 'function') {
     const componentVNode = vNode.type(vNode.props);
     return processVNode(componentVNode);
   }

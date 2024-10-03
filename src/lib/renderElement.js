@@ -1,55 +1,127 @@
-// renderElement.js
 import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
 import { createElement__v2 } from "./createElement__v2.js";
 
-// TODO: processVNode 함수 구현
-function processVNode() {
-  // vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
-  // - null, undefined, boolean 값 처리
-  // - 문자열과 숫자를 문자열로 변환
-  // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
-  // - 자식 요소들에 대해 재귀적으로 processVNode 호출
+function processVNode(vNode) {
+  if (!vNode) {
+    return "";
+  }
+
+  if (typeof vNode === "string" || typeof vNode === "number") {
+    return String(vNode);
+  }
+
+  if (typeof vNode.type === "function") {
+    return processVNode(
+      vNode.type({
+        ...vNode.props,
+        children: vNode.children,
+      }),
+    );
+  }
+
+  if (Array.isArray(vNode.children)) {
+    vNode.children = vNode.children.map(processVNode).filter(Boolean);
+  }
+
+  return vNode;
 }
 
-// TODO: updateAttributes 함수 구현
-function updateAttributes() {
-  // DOM 요소의 속성을 업데이트합니다.
-  // - 이전 props에서 제거된 속성 처리
-  // - 새로운 props의 속성 추가 또는 업데이트
-  // - 이벤트 리스너, className, style 등 특별한 경우 처리
-  //   <이벤트 리스너 처리>
-  //     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
-  //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
-  //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
+function updateAttributes(element, oldProps, newProps) {
+  const _oldProps = oldProps || {};
+  const _newProps = newProps || {};
+
+  Object.entries(_oldProps).map(([oldPropKey, oldPropValue]) => {
+    if (oldPropKey in _newProps) return;
+
+    if (oldPropKey.startsWith("on") && typeof oldPropValue === "function") {
+      const eventType = oldPropKey.toLowerCase().substring(2);
+      removeEvent(element, eventType, oldPropValue);
+    } else if (oldPropKey === "className") {
+      element.removeAttribute("class");
+    } else {
+      element.removeAttribute(oldPropKey);
+    }
+  });
+
+  Object.entries(_newProps).map(([newPropKey, newPropValue]) => {
+    if (newPropKey.startsWith("on") && typeof newPropValue === "function") {
+      const eventType = newPropKey.toLowerCase().substring(2);
+      if (oldProps[newPropKey] !== newPropValue) {
+        if (oldProps[newPropKey]) {
+          removeEvent(element, eventType, oldProps[newPropKey]);
+        }
+        addEvent(element, eventType, newPropValue);
+      }
+    } else if (newPropKey === "className") {
+      element.setAttribute("class", newPropValue);
+    } else if (newPropKey === "style") {
+      Object.assign(element.style, newPropValue);
+    } else {
+      element.setAttribute(newPropKey, newPropValue);
+    }
+  });
 }
 
-// TODO: updateElement 함수 구현
-function updateElement() {
-  // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
-  // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
-  // 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
-  // TODO: newNode만 존재하는 경우, 새 노드를 생성하여 DOM에 추가
+function updateElement(parent, oldNode, newNode, index = 0) {
+  const currentNode = parent.childNodes[index];
+
+  if (!newNode && oldNode) {
+    parent.removeChild(parent.childNodes[index]);
+    return;
+  }
+
+  if (newNode && !oldNode) {
+    parent.appendChild(createElement__v2(newNode));
+    return;
+  }
+
   // 3. 텍스트 노드 업데이트
-  // TODO: newNode와 oldNode가 둘 다 문자열 또는 숫자인 경우
-  // TODO: 내용이 다르면 텍스트 노드 업데이트
-  // 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
-  // TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
-  // 5. 같은 타입의 노드 업데이트
-  // 5-1. 속성 업데이트
-  // TODO: updateAttributes 함수를 호출하여 속성 업데이트
-  // 5-2. 자식 노드 재귀적 업데이트
-  // TODO: newNode와 oldNode의 자식 노드들을 비교하며 재귀적으로 updateElement 호출
-  // HINT: 최대 자식 수를 기준으로 루프를 돌며 업데이트
-  // 5-3. 불필요한 자식 노드 제거
-  // TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
+  if (
+    typeof newNode === "string" ||
+    typeof newNode === "number" ||
+    typeof oldNode === "string" ||
+    typeof oldNode === "number"
+  ) {
+    if (newNode === oldNode) return;
+
+    parent.replaceChild(createElement__v2(newNode), currentNode);
+  }
+
+  if (newNode.type !== oldNode.type) {
+    parent.replaceChild(createElement__v2(newNode), currentNode);
+    return;
+  }
+
+  updateAttributes(currentNode, oldNode.props, newNode.props);
+
+  if (oldNode.children && newNode.children) {
+    const maxChildrenLength = Math.max(oldNode.children.length, newNode.children.length);
+
+    for (let i = 0; i < maxChildrenLength; i++) {
+      updateElement(currentNode, oldNode.children[i], newNode.children[i], i);
+    }
+
+    while (currentNode.childNodes && newNode.children && currentNode.childNodes.length > newNode.children.length) {
+      currentNode.removeChild(currentNode.lastChild);
+    }
+  }
 }
 
-// TODO: renderElement 함수 구현
 export function renderElement(vNode, container) {
-  // 최상위 수준의 렌더링 함수입니다.
-  // - 이전 vNode와 새로운 vNode를 비교하여 업데이트
-  // - 최초 렌더링과 업데이트 렌더링 처리
-  // 이벤트 위임 설정
-  // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
-  // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
+  console.log("container:", container);
+  console.log(`JSON container: ${JSON.stringify(container, undefined, 2)}`);
+  console.dir("dir container:", JSON.stringify(container, undefined, 2));
+  const oldVNode = container._vNode || null;
+
+  const newVNode = processVNode(vNode);
+
+  if (oldVNode === null) {
+    container.appendChild(createElement__v2(newVNode));
+  } else {
+    updateElement(container, oldVNode, newVNode);
+  }
+
+  container._vNode = newVNode;
+
+  setupEventListeners(container);
 }

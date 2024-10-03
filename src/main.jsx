@@ -4,7 +4,7 @@ import { HomePage, LoginPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
-import { addEvent, registerGlobalEvents } from "./utils";
+import { addEvent } from "./lib/eventManager";
 import { App } from "./App";
 
 const router = createRouter({
@@ -40,12 +40,7 @@ function render() {
   const $root = document.querySelector("#root");
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app);
-    } else {
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");
@@ -57,10 +52,7 @@ function render() {
     }
 
     console.error(error);
-
-    // globalStore.setState({ error });
   }
-  registerGlobalEvents();
 }
 
 function main() {
@@ -69,17 +61,17 @@ function main() {
   window.addEventListener("error", handleError);
   window.addEventListener("unhandledrejection", handleError);
 
-  addEvent("click", "[data-link]", (e) => {
+  addEvent("[data-link]", "click", (e) => {
     e.preventDefault();
     router.push(e.target.href.replace(window.location.origin, ""));
   });
 
-  addEvent("click", "#logout", (e) => {
+  addEvent("#logout", "click", (e) => {
     e.preventDefault();
     logout();
   });
 
-  addEvent("click", "#error-boundary", (e) => {
+  addEvent("#error-boundary", "click", (e) => {
     e.preventDefault();
     globalStore.setState({ error: null });
   });

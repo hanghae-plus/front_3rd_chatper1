@@ -1,3 +1,4 @@
+import { isArray, isFunction, isNumber, isString } from '../utils';
 import { addEvent } from './eventManager';
 
 export function createElement__v2(vNode) {
@@ -13,15 +14,15 @@ export function createElement__v2(vNode) {
     return createTextNode('');
   }
 
-  if (typeof vNode === 'string' || typeof vNode === 'number') {
+  if (isString(vNode) || isNumber(vNode)) {
     return createTextNode(String(vNode));
   }
 
-  if (Array.isArray(vNode)) {
+  if (isArray(vNode)) {
     return createFragment(vNode);
   }
 
-  if (typeof vNode.type === 'function') {
+  if (isFunction(vNode.type)) {
     return createElement__v2(vNode.type(vNode.props));
   }
 

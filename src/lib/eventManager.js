@@ -20,7 +20,7 @@ export function setupEventListeners(root) {
 
   Array.from(eventMap.keys()).forEach((eventType) => {
     removeEvent(rootElement, eventType, handleEvent);
-    rootElement.addEventListener(eventType, handleEvent);
+    rootElement.addEventListener(eventType, handleEvent, true);
   });
 }
 
@@ -61,10 +61,21 @@ export function addEvent(eventType, element, handler) {
   // 이벤트 위임: event.target이 이벤트 핸들러를 가지고 있는지 확인
   // 이 함수를 통해 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
 
-  if (!eventMap.has(eventType)) eventMap.set(eventType, new Map());
+   if(!eventMap.has(eventType)){
+    eventMap.set(eventType, new Map());
+
+    if(rootElement){
+      rootElement.addEventListener(eventType, handleEvent, true);
+    }
+
+  }
 
   const elementMap = eventMap.get(eventType);
-  // if (elementMap.has(element)) return;
+  
+  if (!elementMap) {
+    eventMap.set(eventType, new Map());
+  }
+
   elementMap.set(element, handler);
 }
 
@@ -76,7 +87,9 @@ export function removeEvent(element, eventType, handler) {
 
   if (eventMap.has(eventType)) {
     const elementMap = eventMap.get(eventType);
-    if (elementMap.has(element)) elementMap.delete(element);
+    if (elementMap.has(element)){
+      elementMap.delete(element);
+    } 
 
     if (elementMap.size === 0) {
       eventMap.delete(eventType);

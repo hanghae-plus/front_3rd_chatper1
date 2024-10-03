@@ -41,11 +41,14 @@ function render() {
 
   try {
     const $app = createElement(<App targetPage={router.getTarget()} />)
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else {
-      $root.appendChild($app)
-    }
+    // if ($root.hasChildNodes()) {
+    //   $root.firstChild.replaceWith($app)
+    // } else {
+    //   $root.appendChild($app)
+    // }
+
+    // 가상 돔으로 변경
+    renderElement($app, $root)
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push('/')

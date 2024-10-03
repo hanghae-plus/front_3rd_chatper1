@@ -1,11 +1,10 @@
 /** @jsx createVNode */
+import { Post, PostForm } from "../components";
+import { Footer } from "../components/templates/Footer";
+import { Header } from "../components/templates/Header";
+import { Navigation } from "../components/templates/Navigation";
 import { createVNode } from "../lib";
 import { globalStore } from "../stores/globalStore";
-import { Header } from "../components/templates/Header";
-import { Footer } from "../components/templates/Footer";
-import { Navigation } from "../components/templates/Navigation";
-import { Post } from "../components";
-import { NotFoundPage } from "./NotFoundPage";
 
 export const HomePage = () => {
   const { loggedIn, posts } = globalStore.getState();
@@ -15,7 +14,7 @@ export const HomePage = () => {
         <Header />
         <Navigation loggedIn={loggedIn} />
         <main class="p-4">
-          {loggedIn ? <NotFoundPage /> : ""}
+          {loggedIn && <PostForm />}
           <div id="posts-container" class="space-y-4">
             {posts.map(({ author, content, id, time }) => (
               <Post author={author} content={content} id={id} time={time} />

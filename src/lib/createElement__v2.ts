@@ -1,4 +1,10 @@
-import type { VNode, VNodeChild, VNodeProps } from './createVNode';
+import {
+  isVNodeElement,
+  isVNodeText,
+  type VNode,
+  type VNodeChild,
+  type VNodeProps,
+} from './createVNode';
 import { addEvent, extractEventType, isEventListenerKey } from './eventManager';
 
 /** 주어진 HTML 요소에 속성을 설정합니다. */
@@ -28,17 +34,17 @@ function appendChildren($element: HTMLElement, children: VNodeChild[]) {
  * @param {VNode} vNode - 가상 DOM 노드
  * @returns {Node} 변환된 DOM 노드
  */
-export function createElement__v2(vNode: VNode): Node {
-  if (!vNode) return document.createTextNode('');
-
-  if (typeof vNode === 'string' || typeof vNode === 'number') {
-    return document.createTextNode(String(vNode));
-  }
+export function createElement__v2(vNode: VNode | VNode[]): Node {
+  if (!vNode || typeof vNode === 'boolean') return document.createTextNode('');
 
   if (Array.isArray(vNode)) {
     const $fragment = document.createDocumentFragment();
     vNode.forEach((child) => $fragment.appendChild(createElement__v2(child)));
     return $fragment;
+  }
+
+  if (isVNodeText(vNode)) {
+    return document.createTextNode(String(vNode));
   }
 
   if (typeof vNode.type === 'function') {

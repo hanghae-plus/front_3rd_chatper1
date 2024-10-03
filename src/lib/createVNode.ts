@@ -1,6 +1,8 @@
 export type VNodeType = Function | keyof HTMLElementTagNameMap;
 export type VNodeProps = Record<string, any> | null;
-export type VNodeChild = VNodeElement | string;
+
+export type VNodeText = number | string;
+export type VNodeChild = VNodeElement | VNodeText;
 
 export type VNodeElement = {
   type: VNodeType;
@@ -8,11 +10,15 @@ export type VNodeElement = {
   children: VNodeChild[];
 };
 
-export function isVNodeElement(node: VNodeChild): node is VNodeElement {
-  return typeof node === 'object' && node !== null && 'type' in node;
+export type VNode = VNodeChild | boolean | null | undefined;
+
+export function isVNodeElement(vNode: VNode): vNode is VNodeElement {
+  return typeof vNode === 'object' && vNode !== null && 'type' in vNode;
 }
 
-export type VNode = VNodeChild | number;
+export function isVNodeText(vNode: VNode): vNode is VNodeText {
+  return typeof vNode === 'string' || typeof vNode === 'number';
+}
 
 /**
  * 주어진 타입, 속성, 자식 요소들로 가상 DOM 노드(VNode)를 생성합니다.

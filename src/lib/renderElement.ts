@@ -8,6 +8,7 @@ import {
 import { createElement__v2 } from './createElement__v2';
 import {
   isVNodeElement,
+  isVNodeText,
   VNode,
   VNodeChild,
   VNodeElement,
@@ -31,7 +32,7 @@ function processVNode(vNode: VNode): VNodeChild {
     return '';
   }
 
-  if (typeof vNode === 'string' || typeof vNode === 'number') {
+  if (isVNodeText(vNode)) {
     return String(vNode);
   }
 
@@ -156,7 +157,7 @@ function updateElement(
   }
 
   // 3. 텍스트 노드 업데이트
-  if (isTextNode(newNode) && isTextNode(oldNode)) {
+  if (isVNodeText(newNode) && isVNodeText(oldNode)) {
     if (newNode !== oldNode) {
       $existingElement.nodeValue = String(newNode);
     }
@@ -180,10 +181,6 @@ function updateElement(
   }
 
   // ---------- 내부함수 ----------
-  /** 주어진 노드가 텍스트 노드인지 확인합니다. */
-  function isTextNode(node: VNodeChild): boolean {
-    return typeof node === 'string' || typeof node === 'number';
-  }
 
   /** 두 노드의 타입이 다른 경우 노드를 교체해야 하는지 여부를 확인합니다. */
   function shouldReplaceNode(

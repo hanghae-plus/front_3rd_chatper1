@@ -75,6 +75,7 @@ function updateAttributes({ currentElement, oldProps, newProps }) {
     if (oldProps[key] !== newProps[key]) {
       if (key.startsWith("on")) {
         const eventType = key.toLowerCase().substring(2);
+        removeEvent(eventType, currentElement, oldProps[key]);
         addEvent(eventType, currentElement, newProps[key]);
       } else if (key === "className") {
         currentElement.setAttribute("class", newProps[key]);

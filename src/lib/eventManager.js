@@ -31,19 +31,19 @@ function handleEvent(event) {
   // 이를 통해 하위 요소에서 발생한 이벤트를 상위에서 효율적으로 처리할 수 있습니다.
   const { target, type } = event;
   const targetEventMap = eventMap.get(type);
-
-  while (target && target !== rootElement) {
+  let currentTarget = target;
+  while (currentTarget && currentTarget !== rootElement) {
     for (let [element, handler] of targetEventMap) {
       if (typeof element === "object" && element === target) {
         handler(event);
-        break;
+        return;
       }
       if (typeof element === "string" && target.matches(element)) {
         handler(event);
-        break;
+        return;
       }
     }
-    target = target.parentElement;
+    currentTarget = currentTarget.parentElement;
   }
 }
 

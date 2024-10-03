@@ -1,5 +1,5 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
+import { createRouter, createVNode, renderElement } from "./lib";
 import { HomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError, NotFoundError } from "./errors";
@@ -23,7 +23,7 @@ const router = createRouter({
     }
     return <ProfilePage />;
   },
-  "/not-found": () => <NotFoundPage />,
+  // "/nonexistent": () => <NotFoundPage />,
 });
 
 // console.log("globalStore.getState()", globalStore.getState());
@@ -37,20 +37,19 @@ function logout() {
 
 function handleError(error) {
   globalStore.setState({ error });
+  console.log("error", error);
 }
 
 // 초기화 함수
 function render() {
   const $root = document.querySelector("#root");
-
+  // const $app = <App targetPage={router.getTarget()} />;
+  // console.log("render");
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
-    // const $app = createElement(<App Page={Page} error={error} />);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app);
-    } else {
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
+    // console.log("router", router.getTarget());
+    // console.log("renderElement", renderElement);
+    // console.log("targetPage", targetPage());
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");
@@ -60,18 +59,19 @@ function render() {
       router.push("/login");
       return;
     }
-    if (error instanceof NotFoundError) {
-      router.push("/not-found");
-    }
+    // if (error instanceof NotFoundError) {
+    //   router.push("/nonexistent");
+    // }
 
     console.error(error);
 
-    globalStore.setState({ error });
+    // globalStore.setState({ error });
   }
   registerGlobalEvents();
 }
 
 function main() {
+  // globalStore.setState({ error });
   router.subscribe(render);
   globalStore.subscribe(render);
   window.addEventListener("error", handleError);
@@ -82,45 +82,45 @@ function main() {
     router.push(e.target.href.replace(window.location.origin, ""));
   });
 
-  // 로그인 처리 함수
-  const login = (username) => {
-    const user = { username, email: "", bio: "" };
-    globalStore.setState({
-      currentUser: user,
-      loggedIn: true,
-    });
-    userStorage.set(user);
-  };
+  // // 로그인 처리 함수
+  // const login = (username) => {
+  //   const user = { username, email: "", bio: "" };
+  //   globalStore.setState({
+  //     currentUser: user,
+  //     loggedIn: true,
+  //   });
+  //   userStorage.set(user);
+  // };
 
-  // 프로필 업데이트 함수
-  const updateProfile = (profile) => {
-    const user = { ...globalStore.getState().currentUser, ...profile };
-    globalStore.setState({ currentUser: user });
-    userStorage.set(user);
-    alert("프로필이 업데이트되었습니다.");
-  };
+  // // 프로필 업데이트 함수
+  // const updateProfile = (profile) => {
+  //   const user = { ...globalStore.getState().currentUser, ...profile };
+  //   globalStore.setState({ currentUser: user });
+  //   userStorage.set(user);
+  //   alert("프로필이 업데이트되었습니다.");
+  // };
 
-  // 통합된 이벤트 핸들러
-  const handleSubmit = (e) => {
-    e.preventDefault(); // 기본 동작 방지
-    const form = e.target;
-    const formData = new FormData(form);
+  // // 통합된 이벤트 핸들러
+  // const handleSubmit = (e) => {
+  //   e.preventDefault(); // 기본 동작 방지
+  //   const form = e.target;
+  //   const formData = new FormData(form);
 
-    // data-submit 속성에 따라 분기 처리
-    if (form.getAttribute("data-submit") === "login-form") {
-      const username = formData.get("username");
-      if (username) {
-        login(username);
-        router.push("/profile"); // 로그인 후 프로필 페이지로 이동
-      }
-    } else if (form.getAttribute("data-submit") === "profile-form") {
-      const updatedProfile = Object.fromEntries(formData);
-      updateProfile(updatedProfile);
-    }
-  };
+  //   // data-submit 속성에 따라 분기 처리
+  //   if (form.getAttribute("data-submit") === "login-form") {
+  //     const username = formData.get("username");
+  //     if (username) {
+  //       login(username);
+  //       router.push("/profile"); // 로그인 후 프로필 페이지로 이동
+  //     }
+  //   } else if (form.getAttribute("data-submit") === "profile-form") {
+  //     const updatedProfile = Object.fromEntries(formData);
+  //     updateProfile(updatedProfile);
+  //   }
+  // };
 
-  // 이벤트 리스너 등록
-  addEvent("submit", "[data-submit]", handleSubmit);
+  // // 이벤트 리스너 등록
+  // addEvent("submit", "[data-submit]", handleSubmit);
 
   addEvent("click", "#logout", (e) => {
     e.preventDefault();

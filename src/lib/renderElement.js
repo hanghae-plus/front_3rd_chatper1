@@ -2,9 +2,10 @@
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { createElement__v2 } from "./createElement__v2.js";
 
-
 function processVNode(vNode) {
-  if (!vNode) return document.createTextNode("");
+  if (!vNode || typeof vNode === 'boolean') {
+    return document.createTextNode("");
+  };
 
   if (typeof vNode === "string" || typeof vNode === "number") {
     return document.createTextNode(vNode);
@@ -19,7 +20,7 @@ function processVNode(vNode) {
   if (vNode.props) {
     Object.keys(vNode.props).forEach(prop => {
       if (prop.startsWith("on")) {
-        const event = prop.toLowerCase().substring(2); //on뒤에 나오는 string
+        const event = prop.toLowerCase().substring(2);
         element.addEventListener(event, vNode.props[prop]);
       } else if (prop === "className") {
         element.setAttribute("class", vNode.props[prop]);
@@ -37,8 +38,7 @@ function processVNode(vNode) {
   return element;
 }
 
-
-function updateAttributes(domElement, newProps, oldProps = {}) {
+function updateAttributes(domElement, newProps, oldProps) {
   
   Object.keys(newProps).forEach(key => {
     if (key.startsWith('on')) {
@@ -60,7 +60,6 @@ function updateAttributes(domElement, newProps, oldProps = {}) {
   });
 }
 
-
 function updateElement(parent, newNode, oldNode, index = 0) {
   const oldChild = parent.childNodes[index];
 
@@ -69,13 +68,11 @@ function updateElement(parent, newNode, oldNode, index = 0) {
     parent.removeChild(oldChild);
     return;
   }
-
   
   if (newNode && !oldNode) {
     parent.appendChild(processVNode(newNode));
     return;
   }
-
   
   if (typeof newNode === "string" || typeof newNode === "number") {
     if (typeof oldNode === "string" || typeof oldNode === "number") {
@@ -88,33 +85,26 @@ function updateElement(parent, newNode, oldNode, index = 0) {
     return;
   }
 
-  
   if (newNode.type !== oldNode.type) {
     parent.replaceChild(processVNode(newNode), oldChild);
     return;
   }
 
-  
   if (newNode.type) {
     updateAttributes(oldChild, newNode.props, oldNode.props);
 
     const newLength = newNode.children.length;
     const oldLength = oldNode.children.length;
 
-    
     for (let i = newLength; i < oldLength; i++) {
       oldChild.removeChild(oldChild.childNodes[i]);
     }
 
-    
     for (let i = 0; i < newLength; i++) {
       updateElement(oldChild, newNode.children[i], oldNode.children[i], i);
     }
   }
 }
-
-
-
 
 export function renderElement(newVNode, container, oldVNode = null) {
   
@@ -125,6 +115,5 @@ export function renderElement(newVNode, container, oldVNode = null) {
     updateElement(container, newVNode, oldVNode);
   }
 
-  
   setupEventListeners(container); 
 }

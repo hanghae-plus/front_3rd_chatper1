@@ -41,7 +41,7 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
+    const $app = renderElement(<App targetPage={router.getTarget()}/>,$root);
     if ($root.hasChildNodes()) {
       $root.firstChild.replaceWith($app)
     } else{

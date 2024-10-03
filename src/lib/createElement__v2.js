@@ -1,3 +1,5 @@
+import { addEvent } from './eventManager';
+
 export function createElement__v2(vNode) {
   // 이 함수는 createElement의 개선된 버전입니다.
   // 1. falsy vNode 처리
@@ -40,7 +42,7 @@ const createFragment = (vNodes) => {
 
 const createEventListener = (element, key, value) => {
   const eventName = key.replace(/^on/, '').toLowerCase();
-  element.addEventListener(eventName, value);
+  addEvent(element, eventName, value);
 };
 
 const setAttribute = (element, key, value) => {

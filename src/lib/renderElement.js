@@ -6,6 +6,7 @@ import {
   isString
 } from '../utils/lodash.js';
 import { createElement__v2 } from './createElement__v2.js';
+import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 
 // TODO: processVNode 함수 구현
 function processVNode(vNode) {
@@ -55,7 +56,7 @@ function updateAttributes(element, oldProps, newProps) {
     if (!(key in currentNewProps)) {
       if (key.startsWith('on')) {
         const eventName = key.replace(/^on/, '').toLowerCase();
-        element.removeEventListener(eventName);
+        removeEvent(element, eventName, value);
       } else if (key === 'className') {
         element.className = '';
       } else if (key === 'style') {
@@ -70,7 +71,10 @@ function updateAttributes(element, oldProps, newProps) {
     if (value !== currentOldProps[key]) {
       if (key.startsWith('on')) {
         const eventName = key.replace(/^on/, '').toLowerCase();
-        element.addEventListener(eventName, value);
+        if (currentOldProps[key]) {
+          removeEvent(element, eventName, currentOldProps[key]);
+        }
+        addEvent(element, eventName, value);
       } else if (key === 'className') {
         element.className = value;
       } else if (key === 'style') {
@@ -186,4 +190,6 @@ export function renderElement(vNode, rootElement) {
   }
 
   rootElement._vNode = newNode;
+
+  setupEventListeners(rootElement);
 }

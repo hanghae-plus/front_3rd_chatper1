@@ -1,7 +1,7 @@
 const eventMap = new Map();
 let rootElement = null;
 
-export function setupEventListeners(root) {
+export const setupEventListeners = (root) => {
   rootElement = root;
 
   if (rootElement) {
@@ -10,9 +10,9 @@ export function setupEventListeners(root) {
       rootElement.addEventListener(eventType, handleEvent, true);
     });
   }
-}
+};
 
-function handleEvent(event) {
+const handleEvent = (event) => {
   let target = event.target;
 
   while (target && target !== rootElement) {
@@ -28,9 +28,9 @@ function handleEvent(event) {
     }
     target = target.parentNode;
   }
-}
+};
 
-export function addEvent(element, eventType, handler) {
+export const addEvent = (element, eventType, handler) => {
   if (!eventMap.has(eventType)) {
     eventMap.set(eventType, new Map());
   }
@@ -41,9 +41,9 @@ export function addEvent(element, eventType, handler) {
   if (rootElement && !eventMap.get(eventType).size) {
     rootElement.addEventListener(eventType, handleEvent, true);
   }
-}
+};
 
-export function removeEvent(element, eventType, handler) {
+export const removeEvent = (element, eventType, handler) => {
   const handlers = eventMap.get(eventType);
   if (handlers && handlers.get(element) === handler) {
     handlers.delete(element);
@@ -55,4 +55,4 @@ export function removeEvent(element, eventType, handler) {
       }
     }
   }
-}
+};

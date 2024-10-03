@@ -1,4 +1,4 @@
-export function createElement(vNode) {
+export const createElement = (vNode) => {
   if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
     return document.createTextNode('');
   }
@@ -41,4 +41,4 @@ export function createElement(vNode) {
   }
 
   return element;
-}
+};

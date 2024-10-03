@@ -1,6 +1,6 @@
 import { addEvent } from './eventManager.js';
 
-export function createElement__v2(vNode) {
+export const createElement__v2 = (vNode) => {
   if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
     return document.createTextNode('');
   }
@@ -43,4 +43,4 @@ export function createElement__v2(vNode) {
   }
 
   return element;
-}
+};

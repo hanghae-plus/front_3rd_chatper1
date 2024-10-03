@@ -1,7 +1,7 @@
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { createElement__v2 } from './createElement__v2.js';
 
-function processVNode(vNode) {
+const processVNode = (vNode) => {
   if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
     return '';
   }
@@ -20,9 +20,9 @@ function processVNode(vNode) {
   }
 
   return vNode;
-}
+};
 
-function updateAttributes(element, oldProps, newProps) {
+const updateAttributes = (element, oldProps, newProps) => {
   Object.keys(oldProps).forEach((key) => {
     if (!(key in newProps)) {
       if (key.startsWith('on') && typeof oldProps[key] === 'function') {
@@ -66,9 +66,9 @@ function updateAttributes(element, oldProps, newProps) {
       element.setAttribute(key, newValue);
     }
   });
-}
+};
 
-function updateElement(container, oldVNode, newVNode, index = 0) {
+const updateElement = (container, oldVNode, newVNode, index = 0) => {
   const oldElement = container.childNodes[index];
   const newElement = createElement__v2(newVNode);
 
@@ -107,9 +107,9 @@ function updateElement(container, oldVNode, newVNode, index = 0) {
       oldElement.removeChild(oldElement.childNodes[i]);
     }
   }
-}
+};
 
-export function renderElement(vNode, container) {
+export const renderElement = (vNode, container) => {
   const oldVNode = container._vNode;
   const newVNode = processVNode(vNode);
 
@@ -123,4 +123,4 @@ export function renderElement(vNode, container) {
   container._vNode = newVNode;
 
   setupEventListeners(container);
-}
+};

@@ -9,6 +9,7 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
 export function createElement(vNode) {
+  console.log(vNode);
   // 1. vNode가 falsy인 경우
   if (!vNode) return document.createTextNode("");
 

@@ -1,5 +1,5 @@
-import { defineConfig as defineTestConfig, mergeConfig } from 'vitest/config';
-import { defineConfig } from 'vite';
+import { defineConfig as defineTestConfig, mergeConfig } from 'vitest/config'
+import { defineConfig } from 'vite'
 
 export default mergeConfig(
   defineConfig({
@@ -10,14 +10,14 @@ export default mergeConfig(
       esbuildOptions: {
         jsx: 'transform',
         jsxFactory: 'createVNode',
-      }
-    }
+      },
+    },
   }),
   defineTestConfig({
     test: {
       globals: true,
       environment: 'jsdom',
-      setupFiles: './src/setupTests.js'
+      setupFiles: './src/setupTests.js',
     },
-  })
-);
+  }),
+)

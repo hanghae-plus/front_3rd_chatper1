@@ -6,7 +6,13 @@ import {
   setupEventListeners,
 } from './eventManager';
 import { createElement__v2 } from './createElement__v2';
-import { VNode, VNodeChild, VNodeElement, VNodeProps } from './createVNode';
+import {
+  isVNodeElement,
+  VNode,
+  VNodeChild,
+  VNodeElement,
+  VNodeProps,
+} from './createVNode';
 
 /**
  * 주어진 가상 DOM 노드(vNode)를 처리하여 렌더링 가능한 형태로 변환합니다.
@@ -53,18 +59,20 @@ function processVNode(vNode: VNode): VNodeChild {
  *   - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
  *
  * @param {HTMLElement} $element - 속성을 업데이트할 DOM 요소
- * @param {VNodeProps} oldProps - 이전 속성 집합
- * @param {VNodeProps} newProps - 새로운 속성 집합
+ * @param {VNodeProps} _oldProps - 이전 속성 집합
+ * @param {VNodeProps} _newProps - 새로운 속성 집합
  */
 function updateAttributes(
   $element: HTMLElement,
-  oldProps: VNodeProps,
-  newProps: VNodeProps
+  _oldProps: VNodeProps,
+  _newProps: VNodeProps
 ) {
+  const oldProps = _oldProps ?? {};
+  const newProps = _newProps ?? {};
+
   // 이전 속성 제거
   for (const key in oldProps) {
-    const hasNewProp = newProps && key in newProps;
-    if (!hasNewProp) {
+    if (!(key in newProps)) {
       removeAttributeOrEvent($element, key);
     }
   }
@@ -183,10 +191,8 @@ function updateElement(
     oldNode: VNodeChild
   ): boolean {
     return (
-      newNode !== null &&
-      oldNode !== null &&
-      typeof newNode !== 'string' &&
-      typeof oldNode !== 'string' &&
+      isVNodeElement(newNode) &&
+      isVNodeElement(oldNode) &&
       newNode.type !== oldNode.type
     );
   }
@@ -197,10 +203,8 @@ function updateElement(
     oldNode: VNodeChild
   ): boolean {
     return (
-      newNode !== null &&
-      oldNode !== null &&
-      typeof newNode !== 'string' &&
-      typeof oldNode !== 'string' &&
+      isVNodeElement(newNode) &&
+      isVNodeElement(oldNode) &&
       newNode.type === oldNode.type
     );
   }

@@ -8,6 +8,10 @@ export type VNodeElement = {
   children: VNodeChild[];
 };
 
+export function isVNodeElement(node: VNodeChild): node is VNodeElement {
+  return typeof node === 'object' && node !== null && 'type' in node;
+}
+
 export type VNode = VNodeChild | number;
 
 /**

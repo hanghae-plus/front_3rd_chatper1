@@ -108,9 +108,6 @@ function updateElement(parent, oldNode, newNode, index = 0) {
 }
 
 export function renderElement(vNode, container) {
-  console.log("container:", container);
-  console.log(`JSON container: ${JSON.stringify(container, undefined, 2)}`);
-  console.dir("dir container:", JSON.stringify(container, undefined, 2));
   const oldVNode = container._vNode || null;
 
   const newVNode = processVNode(vNode);

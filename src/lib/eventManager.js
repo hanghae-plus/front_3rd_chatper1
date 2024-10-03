@@ -18,7 +18,6 @@ function handleEvent(event) {
   if (!handlers) return;
 
   while (target && target !== rootElement) {
-    console.log("target:", target);
     for (const [element, handler] of handlers) {
       if (typeof element === "object" && element === target) {
         handler(event);

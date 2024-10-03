@@ -1,5 +1,5 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
+import { createRouter, createVNode, renderElement } from "./lib";
 import { HomePage, LoginPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
@@ -50,13 +50,7 @@ function render() {
   const $root = document.querySelector("#root");
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
-
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app);
-    } else {
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");

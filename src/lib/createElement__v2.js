@@ -1,59 +1,48 @@
-import { addEvent } from "./eventManager"; // 이벤트 위임 방식 처리를 위해 addEvent를 가져옵니다.
+import { addEvent } from "./eventManager";
 
 export function createElement__v2(vNode) {
-  // 1. falsy vNode 처리
-  if (vNode === null || vNode === undefined || typeof vNode === "boolean") {
+  // 1. falsy vNode 처리 -> null, undefined, false, true 면 빈 텍스트 노드 반환
+  if (vNode === null || vNode === undefined || typeof vNode === "boolean")
     return document.createTextNode("");
-  }
 
-  // 2. 문자열 또는 숫자 처리
-  if (typeof vNode === "string" || typeof vNode === "number") {
+  // 2. 문자열 또는 숫자 vNode 처리
+  if (typeof vNode === "string" || typeof vNode === "number")
     return document.createTextNode(vNode);
-  }
 
   // 3. 배열 vNode 처리 (DocumentFragment 사용)
   if (Array.isArray(vNode)) {
-    const fragment = document.createDocumentFragment();
-    vNode.forEach((child) => {
-      const childNode = createElement__v2(child);
-      fragment.appendChild(childNode);
-    });
+    if (vNode.length === 0) return document.createTextNode(""); // 빈 배열일 경우 빈 텍스트 노드 반환
+    const fragment = new DocumentFragment();
+    vNode.forEach((child) => fragment.appendChild(createElement__v2(child)));
     return fragment;
   }
 
-  // 4. 함수형 컴포넌트 처리
-  if (typeof vNode.type === "function") {
-    const componentVNode = vNode.type(vNode.props || {});
-    return createElement__v2(componentVNode);
-  }
-
-  // 5. 일반 요소 처리
+  // 4. 일반 요소 vNode 처리
   const domElement = document.createElement(vNode.type);
 
-  // 6. 속성 설정 (이벤트 위임 방식으로 등록 가능하도록 개선)
-  if (vNode.props) {
-    Object.keys(vNode.props).forEach((propName) => {
-      const propValue = vNode.props[propName];
+  // 속성 설정 - 이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선
+  for (const name in vNode.props) {
+    const value = vNode.props[name];
 
-      // 이벤트 리스너 처리
-      if (propName.startsWith("on") && typeof propValue === "function") {
-        const eventName = propName.toLowerCase().substring(2); // onClick -> click
-        addEvent(domElement, eventName, propValue); // 이벤트 위임을 통해 처리
-      } else if (propName === "className") {
-        domElement.className = propValue;
-      } else {
-        domElement.setAttribute(propName, propValue);
-      }
-    });
+    if (name.startsWith("on") && typeof value === "function") {
+      const eventName = name.slice(2).toLowerCase(); // onClick -> click 으로 변환
+      addEvent(domElement, eventName, value);
+    }
+    // className을 class로 변환하여 설정
+    else if (name === "className") {
+      domElement.setAttribute("class", value || "");
+    } else {
+      domElement.setAttribute(name, value);
+    }
   }
 
-  // 7. 자식 요소 처리
-  if (vNode.children) {
-    vNode.children.forEach((child) => {
-      const childNode = createElement__v2(child);
-      domElement.appendChild(childNode);
-    });
+  // 자식 요소 추가
+  for (const child of vNode.children) {
+    domElement.appendChild(createElement__v2(child));
   }
 
+  domElement._vNode = vNode;
+
+  // element 반환
   return domElement;
 }

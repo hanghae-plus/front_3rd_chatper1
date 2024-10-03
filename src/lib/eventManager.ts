@@ -4,7 +4,7 @@ let $rootElement: HTMLElement | null = null;
 
 export const isEventListenerKey = (key: string) => key.startsWith('on');
 export const extractEventType = (key: string) =>
-  key.replace(/^on/, '').toLowerCase();
+  key.replace(/^on/, '').toLowerCase() as keyof HTMLElementEventMap;
 
 /**
  * 이벤트 위임을 위해 루트 요소에 이벤트 리스너를 설정합니다.
@@ -20,7 +20,7 @@ export function setupEventListeners($newRoot: HTMLElement) {
   $rootElement = $newRoot;
   addEventListeners($rootElement);
 
-  // =============== 내부함수 ==============
+  // ---------- 내부함수 ----------
   function removeEventListeners($root: HTMLElement) {
     eventMap.forEach((_, eventType) => {
       $root.removeEventListener(eventType, handleEvent, true);
@@ -45,15 +45,15 @@ function handleEvent(event: Event) {
 
   if (!(target instanceof HTMLElement)) return;
 
-  const handler = findEventHandler(target, type);
+  const handler = findEventHandler(target, type as keyof HTMLElementEventMap);
   if (handler) {
     handler(event);
   }
 
-  // =============== 내부함수 ==============
+  // ---------- 내부함수 ----------
   function findEventHandler(
     $target: HTMLElement,
-    eventType: string
+    eventType: keyof HTMLElementEventMap
   ): EventListener | null {
     const handlers = eventMap.get(eventType);
     if (!handlers) return null;
@@ -76,12 +76,12 @@ function handleEvent(event: Event) {
  * 이벤트 핸들러를 eventMap에 저장합니다.
  *
  * @param {HTMLElement} $element - 이벤트를 추가할 HTML 요소
- * @param {string} eventType - 이벤트 타입 (예: 'click', 'mouseover')
+ * @param {keyof HTMLElementEventMap} eventType - 이벤트 타입 (예: 'click', 'mouseover')
  * @param {EventListener} handler - 이벤트 발생 시 실행될 핸들러 함수
  */
 export function addEvent(
   $element: HTMLElement,
-  eventType: string,
+  eventType: keyof HTMLElementEventMap,
   handler: EventListener
 ) {
   if (!eventMap.has(eventType)) {
@@ -100,7 +100,10 @@ export function addEvent(
  * @param {HTMLElement} $element - 이벤트 핸들러를 제거할 HTML 요소
  * @param {string} eventType - 제거할 이벤트 타입 (예: 'click', 'mouseover')
  */
-export function removeEvent($element: HTMLElement, eventType: string) {
+export function removeEvent(
+  $element: HTMLElement,
+  eventType: keyof HTMLElementEventMap
+) {
   const handlerMap = eventMap.get(eventType);
   if (handlerMap) {
     handlerMap.delete($element);

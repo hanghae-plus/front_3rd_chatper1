@@ -6,8 +6,8 @@
 //    - 요소 생성
 //    - 속성 설정 (이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선)
 //    - 자식 요소 추가
-/** @jsx createVNode */
-import { createVNode } from './createVNode';
+import { createElement } from './createElement';
+import { addEvent } from './eventManager';
 
 export function createElement__v2(vNode) {
 
@@ -19,60 +19,39 @@ export function createElement__v2(vNode) {
     return document.createTextNode(vNode);
   }
 
-  if (Array.isArray(vNode)) {
+  if(Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment();
-    vNode.forEach(child => fragment.appendChild(createElement__v2(child)));
-    return fragment;
+    vNode.forEach(child => {
+      if (child !== undefined) { 
+        fragment.appendChild(createElement__v2(child));
+      }
+    });
+    return fragment; 
   }
 
   if (typeof vNode.type === 'function') {
-    return createElement__v2(vNode.type(vNode.props || {}))
+    return createElement(vNode.type(vNode.props || {}))
   }
+  
+  const element = document.createElement(vNode.type);
 
-  const element = document.createElement__v2(vNode.type);
-
-  if (vNode.props) {
-    const eventHandlers = [];
-
-    Object.entries(vNode.props).forEach(([key, value]) => {
-      if (key.startsWith('on') && typeof value === 'function') {
-        const eventName = key.slice(2).toLowerCase();
-        eventHandlers.push({ event: eventName, handler: value });
-      } else if (key === 'className') {
-        element.className = value;
-      } else if (key === 'style' && typeof value === 'object' && value) {
-        Object.assign(element.style, value);
-      } else {
-        if (key in element) {
-          element[key] = value;
-        } else {
-          element.setAttribute(key, value);
-        }
+  Object.entries(vNode.props || {}).forEach(([key, value]) => {
+    if (key.startsWith('on')) {
+      const eventType = key.slice(2).toLowerCase();
+      addEvent(eventType, element, value);
+    } else if (key === 'className') {
+      element.className = value;
+    } else {
+      if(key in element) {
+        element[key] = value;
+      } else{
+        element.setAttribute(key, value);
       }
-    });
-    if (eventHandlers.length > 0) {
-      const handleEvent = (event) => {
-        const target = event.target;
-        eventHandlers.forEach(({ event: eventName, handler }) => {
-          if (target.matches(`[data-event="${eventName}"]`)) {
-            handler(event);
-          }
-        });
-      };
-      eventHandlers.forEach(({ event: eventName }) => {
-        element.addEventListener(eventName, handleEvent);
-      });
     }
-  }
+  });
 
-  if (vNode.children) {
-    const fragment = document.createDocumentFragment();
-    vNode.children.forEach(child => {
-      fragment.appendChild(createElement__v2(child));
-    })
-    element.appendChild(fragment);
-  }
-
-  return element
-
+  (vNode.children || []).forEach((child) => {
+    element.appendChild(createElement__v2(child));
+  });
+  return element;
 }

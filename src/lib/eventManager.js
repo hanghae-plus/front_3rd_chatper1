@@ -61,9 +61,11 @@ export function addEvent(element, eventType, handler) {
 // TODO: removeEvent 함수 구현
 export function removeEvent(element, eventType, handler) {
   const handlers = eventMap.get(eventType);
-  handlers.delete(element);
-
   // 1. eventMap에서 해당 요소와 이벤트 타입에 대한 핸들러 제거
+  handlers.delete(element);
   // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
   // 이를 통해 더 이상 필요 없는 이벤트 핸들러를 정리하고 메모리 누수 방지
+  if (handlers.size === 0) {
+    eventMap.delete(eventType);
+  }
 }

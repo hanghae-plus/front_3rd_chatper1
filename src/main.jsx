@@ -46,7 +46,7 @@ function render() {
     // } else {
     //   $root.appendChild($app);
     // }
-    renderElement(renderElement(<App targetPage={router.getTarget()} />, $root));
+    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push('/');

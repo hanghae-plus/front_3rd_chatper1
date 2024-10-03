@@ -8,14 +8,15 @@ const processVNode = (vNode) => {
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
 
+  // 문자열과 숫자를 문자열로 변환
+  // 0을 처리하기 위해 2번 falsy처리보다 먼저 처리
+  if (['string', 'number'].includes(typeof vNode)) {
+    return String(vNode);
+  }
+
   // null, undefined, boolean 값 처리
   if (!vNode || typeof vNode === 'boolean') {
     return {};
-  }
-
-  // 문자열과 숫자를 문자열로 변환
-  if (typeof vNode === 'string' || typeof vNode === 'number') {
-    return String(vNode);
   }
 
   // 함수형 컴포넌트 처리

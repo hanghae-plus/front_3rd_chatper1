@@ -2,14 +2,15 @@ import { addEvent } from './eventManager';
 
 export const createElement__v2 = (vNode) => {
   // 이벤트 위임 부분만 개선
-  // 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
-  if (!vNode || typeof vNode === 'boolean') {
-    return document.createTextNode('');
-  }
-
-  // 2. vNode가 문자열이나 숫자면 텍스트 노드를 생성하여 반환합니다.
+  // 1. vNode가 문자열이나 숫자면 텍스트 노드를 생성하여 반환합니다.
+  // 0을 처리하기 위해 2번 falsy처리보다 먼저 처리
   if (['string', 'number'].includes(typeof vNode)) {
     return document.createTextNode(String(vNode));
+  }
+
+  // 2. vNode가 falsy거나 boolean이면 빈 텍스트 노드를 반환합니다.
+  if (!vNode || typeof vNode === 'boolean') {
+    return document.createTextNode('');
   }
 
   // 3. vNode가 배열이면 DocumentFragment를 생성하고 각 자식에 대해 createElement를 재귀 호출하여 추가합니다.

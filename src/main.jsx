@@ -8,20 +8,20 @@ import { addEvent, registerGlobalEvents } from './utils';
 import { App } from './App';
 
 const router = createRouter({
-	'/': HomePage,
+	'/': () => HomePage,
 	'/login': () => {
 		const { loggedIn } = globalStore.getState();
 		if (loggedIn) {
 			throw new ForbiddenError();
 		}
-		return <LoginPage />;
+		return LoginPage;
 	},
 	'/profile': () => {
 		const { loggedIn } = globalStore.getState();
 		if (!loggedIn) {
 			throw new UnauthorizedError();
 		}
-		return <ProfilePage />;
+		return ProfilePage;
 	},
 });
 

@@ -3,7 +3,10 @@ import { createObserver } from './createObserver';
 export const createRouter = (routes) => {
 	const { subscribe, notify } = createObserver();
 
-	const getTarget = () => routes[window.location.pathname];
+	const getTarget = () => {
+		const target = routes[window.location.pathname];
+		return target && target();
+	};
 
 	const push = (path) => {
 		window.history.pushState(null, null, path);

@@ -56,17 +56,14 @@ function updateAttributes(element, newProps, oldProps) {
   for (const attr in newProps) {
     if (newProps[attr] !== oldProps[attr]) {
       if (attr.startsWith('on')) {
-        // 이벤트 리스너 처리
         const eventName = attr.slice(2).toLowerCase();
         if (oldProps[attr]) {
           removeEvent(element, eventName, oldProps[attr]);
         }
         addEvent(element, eventName, newProps[attr]);
       } else if (attr === 'className') {
-        // className 특별 처리
         element.className = newProps[attr];
       } else if (attr === 'style') {
-        // style 특별 처리
         if (typeof newProps[attr] === 'string') {
           element.style.cssText = newProps[attr];
         } else {
@@ -83,18 +80,18 @@ function updateAttributes(element, newProps, oldProps) {
 }
 
 // TODO: updateElement 함수 구현
-function updateElement(parent, newNode, oldNode, index = 0) {
+function updateElement(container, newNode, oldNode, index = 0) {
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
   if (!newNode && oldNode) {
-    parent.removeChild(parent.childNodes[index]);
+    container.removeChild(container.childNodes[index]);
     return;
   }
 
   // 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
   // TODO: newNode만 존재하는 경우, 새 노드를 생성하여 DOM에 추가
   if (newNode && !oldNode) {
-    parent.appendChild(createElement__v2(newNode));
+    container.appendChild(createElement__v2(newNode));
     return;
   }
 
@@ -104,7 +101,7 @@ function updateElement(parent, newNode, oldNode, index = 0) {
   // TODO: 내용이 다르면 텍스트 노드 업데이트
   if ((typeof oldNode === "string" && typeof newNode === "string") || (typeof oldNode === "number" && typeof newNode === "number")) {
     if (newNode !== oldNode) {
-      parent.childNodes[index].textContent = String(newNode);
+      container.childNodes[index].textContent = String(newNode);
     }
     return;
   }
@@ -113,7 +110,7 @@ function updateElement(parent, newNode, oldNode, index = 0) {
   // 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
   // TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
   if (newNode.type !== oldNode.type) {
-    parent.replaceChild(createElement__v2(newNode), parent.childNodes[index]);
+    container.replaceChild(createElement__v2(newNode), container.childNodes[index]);
     return;
   }
 
@@ -122,13 +119,13 @@ function updateElement(parent, newNode, oldNode, index = 0) {
     const newFunctionalNode = newNode.type(newNode.props || {});
     const oldFunctionalNode = oldNode.type(oldNode.props || {});
     
-    updateElement(parent, newFunctionalNode, oldFunctionalNode, index);
+    updateElement(container, newFunctionalNode, oldFunctionalNode, index);
     return;
   }
   
   // 5-1. 속성 업데이트
   // TODO: updateAttributes 함수를 호출하여 속성 업데이트
-  updateAttributes(parent.childNodes[index], newNode.props, oldNode.props);
+  updateAttributes(container.childNodes[index], newNode.props, oldNode.props);
 
   // 5-2. 자식 노드 재귀적 업데이트
   // TODO: newNode와 oldNode의 자식 노드들을 비교하며 재귀적으로 updateElement 호출
@@ -140,7 +137,7 @@ function updateElement(parent, newNode, oldNode, index = 0) {
 
   for (let i = 0; i < maxLength; i++) {
     updateElement(
-      parent.childNodes[index],
+      container.childNodes[index],
       newNode.children && newNode.children[i],
       oldNode.children && oldNode.children[i],
       i

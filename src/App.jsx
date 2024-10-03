@@ -17,7 +17,7 @@ export const App = ({ targetPage }) => {
         >
           <div class="flex justify-between items-center">
             <div>
-              <strong class="font-bold">오류 발생!</strong>
+              <strong class="font-bold">오류 발생! {error.message}</strong>
               <span class="block sm:inline ml-1">
                 {error || "알 수 없는 오류가 발생했습니다."}
               </span>

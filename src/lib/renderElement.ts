@@ -79,6 +79,7 @@ function updateAttributes(
     }
   }
 
+  // =============== 내부함수 ==============
   /** DOM 요소에서 속성이나 이벤트 리스너 제거 */
   function removeAttributeOrEvent(
     $element: HTMLElement,
@@ -180,6 +181,7 @@ function updateElement(
     return typeof node === 'string' || typeof node === 'number';
   }
 
+  // =============== 내부함수 ==============
   /** 두 노드의 타입이 다른 경우 노드를 교체해야 하는지 여부를 확인합니다. */
   function shouldReplaceNode(
     newNode: VNodeElement | string,

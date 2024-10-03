@@ -20,6 +20,7 @@ export function setupEventListeners($newRoot: HTMLElement) {
   $rootElement = $newRoot;
   addEventListeners($rootElement);
 
+  // =============== 내부함수 ==============
   function removeEventListeners($root: HTMLElement) {
     eventMap.forEach((_, eventType) => {
       $root.removeEventListener(eventType, handleEvent, true);
@@ -49,6 +50,7 @@ function handleEvent(event: Event) {
     handler(event);
   }
 
+  // =============== 내부함수 ==============
   function findEventHandler(
     $target: HTMLElement,
     eventType: string

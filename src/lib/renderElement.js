@@ -26,6 +26,39 @@ function processVNode(vNode) {
 
   return vNode;
 }
+
+function updateAttributes(element, newProps, oldProps) {
+  // old엔 있고 new엔 없는 경우 삭제
+  for (const propName in oldProps) {
+    if (isNullish(newProps) || !Object.keys(newProps).includes(propName)) {
+      if (propName.startsWith("on")) {
+        const eventType = propName.slice(2).toLowerCase();
+        removeEvent(element, eventType);
+      } else if (propName.includes("class")) {
+        element.className = "";
+      } else if (propName === "style") {
+        element.style.cssText = "";
+      } else {
+        element.removeAttribute(propName);
+      }
+    }
+  }
+
+  // 추가 or 유지된 속성 추가
+  for (const key in newProps) {
+    if (key.startsWith("on")) {
+      const eventType = key.slice(2).toLowerCase();
+      addEvent(element, eventType, newProps[key]);
+    } else if (key === "className") {
+      element.className = newProps[key];
+    } else if (key === "style") {
+      element.style.cssText = newProps[key];
+    } else {
+      element.setAttribute(key, newProps[key]);
+    }
+  }
+}
+
 function updateElement(parentNode, newNode, oldNode, index = 0) {
   if (!oldNode && newNode) {
     parentNode.appendChild(createElement__v2(newNode));

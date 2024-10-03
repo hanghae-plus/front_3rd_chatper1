@@ -1,88 +1,83 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
-import { globalStore } from "./stores";
-import { ForbiddenError, UnauthorizedError } from "./errors";
-import { userStorage } from "./storages";
-import { addEvent, registerGlobalEvents } from "./utils";
-import { App } from "./App";
+import { createRouter, createVNode, renderElement } from './lib';
+import { HomePage, LoginPage, NotFoundPage, ProfilePage } from './pages';
+import { globalStore } from './stores';
+import { ForbiddenError, UnauthorizedError } from './errors';
+import { userStorage } from './storages';
+import { App } from './App';
+import { addEvent } from './lib/eventManager';
 
-const router = createRouter({
-  "/": HomePage,
-  "/login": () => {
+export const router = createRouter({
+  '/': () => <HomePage />,
+  '/login': () => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {
       throw new ForbiddenError();
     }
-    return <LoginPage/>;
+    return <LoginPage />;
   },
-  "/profile": () => {
+  '/profile': () => {
     const { loggedIn } = globalStore.getState();
     if (!loggedIn) {
       throw new UnauthorizedError();
     }
-    return <ProfilePage/>;
+    return <ProfilePage />;
   },
+  '/404': () => <NotFoundPage />,
 });
-
-function logout() {
-  globalStore.setState({ currentUser: null, loggedIn: false });
-  router.push('/login');
-  userStorage.reset();
-}
 
 function handleError(error) {
   globalStore.setState({ error });
 }
 
+function logout() {
+  userStorage.reset('user');
+  userStorage.reset('loggedIn');
+  globalStore.setState({ currentUser: null, loggedIn: false });
+  router.push('/login');
+}
+
 // 초기화 함수
 function render() {
-  const $root = document.querySelector('#root');
+  const $root = document.getElementById('root');
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else{
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
-      router.push("/");
+      router.push('/');
       return;
     }
     if (error instanceof UnauthorizedError) {
-      router.push("/login");
+      router.push('/login');
       return;
     }
-
-    console.error(error);
-
-    // globalStore.setState({ error });
+    globalStore.setState({ error });
   }
-  registerGlobalEvents();
-}
 
-function main() {
-  router.subscribe(render);
-  globalStore.subscribe(render);
-  window.addEventListener('error', handleError);
-  window.addEventListener('unhandledrejection', handleError);
-
-  addEvent('click', '[data-link]', (e) => {
-    e.preventDefault();
-    router.push(e.target.href.replace(window.location.origin, ''));
-  });
-
-  addEvent('click', '#logout', (e) => {
-    e.preventDefault();
-    logout();
-  });
+  addEvent('click', '#logout', logout);
 
   addEvent('click', '#error-boundary', (e) => {
     e.preventDefault();
     globalStore.setState({ error: null });
   });
+}
+
+function main() {
+  const currentUser = userStorage.get('user');
+  if (currentUser) {
+    globalStore.setState({ currentUser, loggedIn: true });
+  } else {
+    globalStore.setState({
+      currentUser: { username: '', email: '', bio: '' },
+      loggedIn: false,
+    });
+  }
+
+  router.subscribe(render);
+  globalStore.subscribe(render);
+  window.addEventListener('error', handleError);
+  window.addEventListener('unhandledrejection', handleError);
 
   render();
 }

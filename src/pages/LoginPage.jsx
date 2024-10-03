@@ -9,9 +9,9 @@ export const LoginPage = () => {
                 <form id="login-form">
                     <input type="text" id="username" placeholder="사용자 이름" className="w-full p-2 mb-4 border rounded" required/>
                     <input type="password" placeholder="비밀번호" className="w-full p-2 mb-6 border rounded" required/>
-                    <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded">로그인</button>
+                    <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">로그인</button>
                 </form>
-                <div class="mt-4 text-center">
+                <div className="mt-4 text-center">
                     <a href="#" className="text-blue-600 text-sm">비밀번호를 잊으셨나요?</a>
                 </div>
                 <hr className="my-6"/>

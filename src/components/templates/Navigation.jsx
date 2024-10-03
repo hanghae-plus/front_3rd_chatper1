@@ -1,24 +1,24 @@
 /** @jsx createVNode */
 import { createVNode } from "../../lib";
+import { globalStore } from '../../stores';
+import { router } from "../../main";
 
-const getNavItemClass = (path) => {
-  const currentPath = window.location.pathname;
-  return currentPath === path ? "text-blue-600 font-bold" : "text-gray-600";
-};
+export const Navigation = () => {
+  const { loggedIn } = globalStore.getState();
+  const getNavItemClass = (href) => (location.pathname === href ? 'text-blue-600 font-bold' : 'text-gray-600');
 
-export const Navigation = ({ loggedIn }) => {
   return (
-    <nav class="bg-white shadow-md p-2 sticky top-14">
-      <ul class="flex justify-around">
+    <nav className="bg-white shadow-md p-2 sticky top-14">
+      <ul className="flex justify-around">
         <li>
-          <a href="/" className={getNavItemClass("/")} data-link>
+          <a href="/" className={getNavItemClass("/")} data-link='true' onClick={()=>router.push('/')}>
             홈
           </a>
         </li>
 
         {!loggedIn && (
           <li>
-            <a href="/login" className={getNavItemClass("/login")} data-link>
+            <a href="/login" className={getNavItemClass("/login")} data-link='true' onClick={()=>router.push('/login')}>
               로그인
             </a>
           </li>
@@ -28,7 +28,7 @@ export const Navigation = ({ loggedIn }) => {
             <a
               href="/profile"
               className={getNavItemClass("/profile")}
-              data-link
+              data-link='true' onClick={()=>router.push('/profile')}
             >
               프로필
             </a>

@@ -4,7 +4,7 @@ import { globalStore } from "./stores";
 
 export const App = ({ targetPage }) => {
   const PageComponent = targetPage;
-  const error = globalStore.getState().error;
+  const {error} = globalStore.getState();
   return (
     <div>
       {error ? (

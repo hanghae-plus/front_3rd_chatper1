@@ -1,10 +1,52 @@
-// TODO: createVNode 함수 구현
-// 1. type, props, ...children을 매개변수로 받는 함수를 작성하세요.
-// 2. 반환값은 { type, props, children } 형태의 객체여야 합니다.
-// 3. children은 평탄화(flat)되어야 하며, falsy 값은 필터링되어야 합니다.
-// 4. Infinity를 사용하여 모든 깊이의 배열을 평탄화하세요.
+import { isEmpty, isFalsy } from "../utils";
+import { eventMap } from "./eventManager";
 
 export function createVNode(type, props, ...children) {
-  const fChildren = children.flat(Infinity).filter(Boolean);
+  const fChildren = children.flat(Infinity).filter((child) => !isFalsy(child));
   return { type, props, children: fChildren };
+}
+
+export function elementToVNode(element) {
+  const { tagName, attributes, childNodes } = element;
+
+  const vNode = {
+    type: tagName.toLowerCase(),
+    props: {},
+    children: [],
+  };
+
+  for (const attr of attributes) {
+    // node에는 class, vNode에는 className
+    if (attr.name === "class") {
+      vNode.props["className"] = attr.value;
+    } else {
+      vNode.props[attr.name] = attr.value;
+    }
+  }
+  // event props는 따로 처리
+  eventMap.forEach((handlers, eventType) => {
+    if (handlers.has(element)) {
+      const handler = handlers.get(element);
+      const eventName = `on${upperFirstChar(eventType)}`;
+      vNode.props[eventName] = handler;
+    }
+  });
+
+  for (const child of childNodes) {
+    if (child.nodeType === Node.TEXT_NODE) {
+      vNode.children.push(child.nodeValue);
+    } else if (child.nodeType === Node.ELEMENT_NODE) {
+      vNode.children.push(elementToVNode(child));
+    }
+  }
+
+  return createVNode(
+    vNode.type,
+    isEmpty(vNode.props) ? null : vNode.props,
+    vNode.children
+  );
+}
+
+function upperFirstChar(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }

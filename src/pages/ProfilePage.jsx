@@ -5,7 +5,7 @@ import { Header, Navigation, Footer } from '../components';
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
-  const { username = '', email = '', bio = '' } = currentUser ?? {};
+  const { username, email, bio } = currentUser ?? {};
 
   return (
     <div className='bg-gray-100 min-h-screen flex justify-center'>
@@ -26,7 +26,6 @@ export const ProfilePage = () => {
                   name='username'
                   className='w-full p-2 border rounded'
                   value={username}
-                  required
                 />
               </div>
               <div className='mb-4'>
@@ -39,7 +38,6 @@ export const ProfilePage = () => {
                   name='email'
                   className='w-full p-2 border rounded'
                   value={email}
-                  required
                 />
               </div>
               <div className='mb-6'>

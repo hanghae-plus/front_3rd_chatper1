@@ -17,11 +17,11 @@ const router = createRouter({
     return <LoginPage/>;
   },
   "/profile": () => {
-    const { loggedIn } = globalStore.getState();
+    const { loggedIn, currentUser } = globalStore.getState();
     if (!loggedIn) {
       throw new UnauthorizedError();
     }
-    return <ProfilePage/>;
+    return <ProfilePage loggedIn={loggedIn} currentUser={currentUser}/>;
   },
 });
 

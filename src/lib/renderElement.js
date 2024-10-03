@@ -47,17 +47,18 @@ function updateAttributes(element, oldProps, newProps) {
   //     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
   //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
   //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
+
   if (!oldProps || !newProps) {
     return;
   }
 
-  Object.keys(oldProps).forEach((key) => {
+  Object.entries(oldProps).forEach(([key, value]) => {
     if (!(key in newProps)) {
-      if (key === 'className') {
-        element.className = '';
-      } else if (key.startsWith('on')) {
+      if (key.startsWith('on')) {
         const eventName = key.replace(/^on/, '').toLowerCase();
-        element.addEventListener(eventName);
+        element.removeEventListener(eventName);
+      } else if (key === 'className') {
+        element.className = '';
       } else if (key === 'style') {
         Object.assign(element.style, {});
       } else {
@@ -68,13 +69,19 @@ function updateAttributes(element, oldProps, newProps) {
 
   Object.entries(newProps).forEach(([key, value]) => {
     if (value !== oldProps[key]) {
-      if (key === 'className') {
-        element.className = value;
-      } else if (key.startsWith('on')) {
+      if (key.startsWith('on')) {
         const eventName = key.replace(/^on/, '').toLowerCase();
         element.addEventListener(eventName, value);
+      } else if (key === 'className') {
+        element.className = value;
       } else if (key === 'style') {
-        Object.assign(element.style, value);
+        if (typeof value === 'string') {
+          element.style.cssText = value;
+        } else {
+          Object.entries(value).forEach(([styleName, styleValue]) => {
+            element.style[styleName] = styleValue;
+          });
+        }
       } else {
         element.setAttribute(key, value);
       }
@@ -104,7 +111,10 @@ function updateElement(container, newNode, oldNode, index = 0) {
   // TODO: newNode와 oldNode가 둘 다 문자열 또는 숫자인 경우
   // TODO: 내용이 다르면 텍스트 노드 업데이트
 
-  if (isString(oldNode) || isNumber(oldNode)) {
+  if (
+    (isString(oldNode) && isString(newNode)) ||
+    (isNumber(oldNode) && isNumber(newNode))
+  ) {
     if (oldNode === newNode) {
       return;
     }
@@ -148,7 +158,6 @@ function updateElement(container, newNode, oldNode, index = 0) {
   };
 
   updateChild(0);
-
   // 5-3. 불필요한 자식 노드 제거
   // TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
   while (element.childNodes.length > updatedChildren.length) {

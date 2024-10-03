@@ -8,6 +8,8 @@ export function setupEventListeners($root) {
 
   if (rootElement) {
     for (const eventType of eventMap.keys()) {
+      // 기존에 등록되어 있던 이벤트 제거
+      rootElement.removeEventListener(eventType, handleEvent, true);
       rootElement.addEventListener(eventType, handleEvent, true);
     }
   }
@@ -44,6 +46,6 @@ export function removeEvent(element, eventType, handler) {
     eventMap.set(eventType, newEvents);
   } else {
     eventMap.delete(eventType);
-    if (rootElement) rootElement.removeEventListener(eventType, handleEvent, true);
+    rootElement?.removeEventListener(eventType, handleEvent, true);
   }
 }

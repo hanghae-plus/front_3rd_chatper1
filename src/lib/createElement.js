@@ -26,7 +26,7 @@ export function createElement(vNode) {
     return fragment;
   }
 
-  if (typeof vNode === 'function') {
+  if (typeof vNode.type === 'function') {
     return createElement(vNode.type(vNode.props));
   }
 

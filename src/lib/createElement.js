@@ -19,17 +19,6 @@ export function createElement(vNode) {
     return document.createTextNode(vNode);
   } 
 
-  // if(vNode === undefined){
-  //   return null;
-  // } 
-  // vNode가 배열이면 DocumentFragment를 생성하고 각 자식에 대해 createElement를 재귀 호출하여 추가
-  // if(Array.isArray(vNode)) {
-  //   const createFNode = document.createDocumentFragment();
-  //   vNode.forEach((childVNode) => {
-  //     createFNode.appendChild(createElement(childVNode))
-  //   })
-  //   return createFNode;
-  // } 
   
   if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment();
@@ -56,7 +45,6 @@ export function createElement(vNode) {
         if(key === 'className') {
           $el.className = value
         }else if(key.startsWith('on')) {
-          // 이벤트 리스너 onclick만
           $el.addEventListener(key.slice(2).toLowerCase(), value)
 
         } else {

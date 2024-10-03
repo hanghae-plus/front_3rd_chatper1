@@ -1,5 +1,6 @@
 // renderElement.js
 import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
+import { createElement__v2 } from "./createElement__v2.js";
 
 // TODO: processVNode 함수 구현
 function processVNode(vNode) {
@@ -11,7 +12,7 @@ function processVNode(vNode) {
 
   // - 문자열과 숫자를 문자열로 변환
   if (typeof vNode === "string" || typeof vNode === "number") {
-    return document.createTextNode(vNode);
+    return String(vNode);
   }
 
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
@@ -20,17 +21,15 @@ function processVNode(vNode) {
   }
 
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
-  const domElement = document.createElement(vNode.type);
-
-  // 속성 설정
-  updateAttributes(domElement, {}, vNode.props || {});
-
-  // 자식 노드 재귀적으로 추가
-  (vNode.children || []).forEach((child) => {
-    domElement.appendChild(processVNode(child));
-  });
-
-  return domElement;
+  if (Array.isArray(vNode)) {
+    return vNode.flat(Infinity).map(processVNode).filter(Boolean);
+  }
+  return {
+    ...vNode,
+    children: Array.isArray(vNode.children)
+      ? vNode.children.flat(Infinity).map(processVNode).filter(Boolean)
+      : [],
+  };
 }
 
 // TODO: updateAttributes 함수 구현
@@ -74,34 +73,35 @@ function updateAttributes(domElement, oldProps, newProps) {
 // TODO: updateElement 함수 구현
 function updateElement(parent, oldVNode, newVNode, index = 0) {
   const oldDomNode = parent.childNodes[index];
-
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
-  if (!newVNode && oldDomNode) {
+  if (!newVNode && oldVNode) {
     parent.removeChild(oldDomNode);
     return;
   }
 
   // 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
   // TODO: newNode만 존재하는 경우, 새 노드를 생성하여 DOM에 추가
-  if (newVNode && !oldDomNode) {
-    const newDomNode = processVNode(newVNode); // newVNode를 실제 DOM으로 변환
-    parent.appendChild(newDomNode);
+  if (newVNode && !oldVNode) {
+    parent.appendChild(createElement__v2(newVNode));
     return;
   }
   // 3. 텍스트 노드 업데이트
   // TODO: newNode와 oldNode가 둘 다 문자열 또는 숫자인 경우
   // TODO: 내용이 다르면 텍스트 노드 업데이트
-  if (typeof newVNode === "string" || typeof newVNode === "number") {
+  if (
+    (typeof newVNode === "string" || typeof newVNode === "number") &&
+    (typeof oldVNode === "string" || typeof oldVNode === "number")
+  ) {
     if (newVNode !== oldDomNode.nodeValue) {
-      oldDomNode.nodeValue = newVNode; // 텍스트 노드 업데이트
+      oldDomNode.nodeValue = newVNode;
     }
     return;
   }
   // 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
   // TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
-  if (newVNode.type !== oldDomNode.nodeName.toLowerCase()) {
-    const newDomNode = processVNode(newVNode); // newVNode를 실제 DOM으로 변환
+  if (newVNode.type !== oldVNode.type) {
+    const newDomNode = createElement__v2(newVNode);
     parent.replaceChild(newDomNode, oldDomNode);
     return;
   }
@@ -118,12 +118,7 @@ function updateElement(parent, oldVNode, newVNode, index = 0) {
     newVNode.children.length
   );
   for (let i = 0; i < maxLength; i++) {
-    updateElement(
-      oldDomNode,
-      oldVNode.children?.[i],
-      newVNode.children?.[i],
-      i
-    );
+    updateElement(oldDomNode, oldVNode.children[i], newVNode.children[i], i);
   }
   // 5-3. 불필요한 자식 노드 제거
   // TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
@@ -151,12 +146,12 @@ export function renderElement(vNode, container) {
   const oldVNode = container._vNode || null;
 
   if (!oldVNode) {
-    container.appendChild(processVNode(vNode));
+    container.appendChild(createElement__v2(processVNode(vNode)));
   } else {
-    updateElement(container, oldVNode, vNode);
+    updateElement(container, oldVNode, processVNode(vNode));
   }
 
-  container._vNode = vNode;
+  container._vNode = processVNode(vNode);
 
   setupEventListeners(container);
 }

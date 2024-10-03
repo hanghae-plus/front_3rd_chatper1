@@ -1,11 +1,13 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
+import { createRouter, createVNode, renderElement } from "./lib";
 import {HomePage, LoginPage, NotFoundPage, ProfilePage} from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
 import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
+import {createElement__v2} from "./lib/createElement__v2.js";
+import {setupEventListeners} from "./lib/eventManager.js";
 
 export const router = createRouter({
   "/": () => <HomePage />,
@@ -43,7 +45,9 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
+    const $app = createElement__v2(<App targetPage={router.getTarget()} />);
+    setupEventListeners($root)
+
     if ($root.hasChildNodes()) {
       $root.firstChild.replaceWith($app)
     } else{

@@ -27,7 +27,7 @@ export const ProfilePage = () => {
         <div className="bg-gray-100 min-h-screen flex justify-center">
             <div className="max-w-md w-full">
                 <Header />
-                <Navigation loggedIn={loggedIn} />
+                <Navigation />
                 <main className="p-4">
                     <div className="bg-white p-8 rounded-lg shadow-md">
                         <h2 className="text-2xl font-bold text-center text-blue-600 mb-8">내 프로필</h2>

@@ -1,6 +1,6 @@
 /** @jsx createVNode */
 import{ createVNode } from "../lib";
-import {Footer, Header, Navigation, Post} from "../components/index.js";
+import {Footer, Header, Navigation, Post, PostForm} from "../components/index.js";
 import {NotFoundPage} from "./NotFoundPage.jsx";
 import {globalStore} from "../stores/index.js";
 import {ProfilePage} from "./ProfilePage.jsx";
@@ -14,6 +14,7 @@ export const HomePage = () => {
                 <Navigation />
 
                 <main className="p-4">
+                    {loggedIn ? <PostForm /> : ''}
                     <div id="posts-container" className="space-y-4">
                         {posts.map(({id, author, time, content}) => (
                             <Post postId={id} author={author} time={time} content={content}/>

@@ -1,3 +1,5 @@
+import { addEvent } from "./eventManager";
+
 export function createElement__v2(vNode) {
   // 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
   if (!vNode || typeof vNode === "boolean") return document.createTextNode("");
@@ -32,9 +34,9 @@ export function createElement__v2(vNode) {
   if (props) {
     Object.keys(props).forEach((prop) => {
       if (prop.startsWith("on")) {
-        // 이벤트 리스너 처리
+        // 이벤트 위임 처리 - addEvent 함수 사용
         const eventType = prop.slice(2).toLowerCase();
-        element.addEventListener(eventType, props[prop]);
+        addEvent(element, eventType, props[prop]); // 이벤트 위임 방식으로 변경
       } else if (prop === "className") {
         // className 처리
         element.className = props[prop];

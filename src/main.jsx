@@ -23,6 +23,9 @@ const router = createRouter({
     }
     return <ProfilePage />;
   },
+  "*": () => {
+    return <NotFoundPage />;
+  },
 });
 
 function logout() {

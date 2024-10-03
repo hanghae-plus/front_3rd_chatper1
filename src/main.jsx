@@ -25,18 +25,18 @@ export const router = createRouter({
   },
 });
 
-function logout() {
+const logout = () => {
   globalStore.setState({ currentUser: null, loggedIn: false });
   router.push('/login');
   userStorage.reset();
-}
+};
 
 function handleError(error) {
   globalStore.setState({ error });
 }
 
 // 초기화 함수
-function render() {
+const render = () => {
   const $root = document.querySelector('#root');
 
   try {
@@ -56,9 +56,9 @@ function render() {
     // globalStore.setState({ error });
   }
   registerGlobalEvents();
-}
+};
 
-function main() {
+const main = () => {
   router.subscribe(render);
   globalStore.subscribe(render);
   window.addEventListener('error', handleError);
@@ -80,6 +80,6 @@ function main() {
   });
 
   render();
-}
+};
 
 main();

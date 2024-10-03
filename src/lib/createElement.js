@@ -8,21 +8,23 @@
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
+import { isArray, isFunction, isNumber, isString } from '../utils';
+
 export function createElement(vNode) {
   if (!vNode && vNode !== 0) {
     //  null undefined false true 에 대해서만 빈 텍스트 노드로 처리
     return createTextNode('');
   }
 
-  if (typeof vNode === 'string' || typeof vNode === 'number') {
+  if (isString(vNode) || isNumber(vNode)) {
     return createTextNode(String(vNode));
   }
 
-  if (Array.isArray(vNode)) {
+  if (isArray(vNode)) {
     return createFragment(vNode);
   }
 
-  if (typeof vNode.type === 'function') {
+  if (isFunction(vNode.type)) {
     return createElement(vNode.type(vNode.props));
   }
 

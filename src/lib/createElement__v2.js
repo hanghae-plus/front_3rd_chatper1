@@ -24,7 +24,6 @@ export function createElement__v2(vNode) {
 
   // 4. 일반 요소 vNode 처리:
   if (!vNode.type) {
-    console.error('Invalid vNode:', vNode);
     return document.createTextNode('');
   }
 

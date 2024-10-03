@@ -40,7 +40,7 @@ function render() {
   const $root = document.querySelector('#root')
 
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />)
+    const $app = <App targetPage={router.getTarget()} />
     // if ($root.hasChildNodes()) {
     //   $root.firstChild.replaceWith($app)
     // } else {
@@ -68,18 +68,23 @@ function main() {
   globalStore.subscribe(render)
   window.addEventListener('error', handleError)
   window.addEventListener('unhandledrejection', handleError)
+
   addEvent('click', '[data-link]', (e) => {
     e.preventDefault()
     router.push(e.target.href.replace(window.location.origin, ''))
   })
+
   addEvent('click', '#logout', (e) => {
     e.preventDefault()
     logout()
   })
+
   addEvent('click', '#error-boundary', (e) => {
     e.preventDefault()
     globalStore.setState({ error: null })
   })
+
   render()
 }
+
 main()

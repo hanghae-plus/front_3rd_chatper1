@@ -2,20 +2,19 @@
 import { createVNode } from '../lib'
 import { globalStore } from '../stores/index.js'
 import { userStorage } from '../storages/index.js'
-import { router } from '../main.jsx'
 
 export const LoginPage = () => {
   const onClickSubmit = (e) => {
     e.preventDefault()
-    const username = document.getElementById('username').value
 
-    const currentUser = { username, email: '', bio: '' }
+    const user = { username: document.getElementById('username').value, email: '', bio: '' }
+
+    userStorage.set(user)
+
     globalStore.setState({
-      currentUser,
+      currentUser: user,
       loggedIn: true,
     })
-    userStorage.set(currentUser)
-    router.push('/profile')
   }
 
   return (

@@ -1,6 +1,6 @@
 /** @jsx createVNode */
 import { createElement, createRouter, createVNode, renderElement } from './lib';
-import { HomePage, LoginPage, ProfilePage } from './pages';
+import { HomePage, LoginPage, NotFoundPage, ProfilePage } from './pages';
 import { globalStore } from './stores';
 import { ForbiddenError, UnauthorizedError } from './errors';
 import { userStorage } from './storages';

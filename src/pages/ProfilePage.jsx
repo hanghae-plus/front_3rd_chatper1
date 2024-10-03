@@ -2,34 +2,11 @@
 import { Footer, Header, Navigation } from "../components";
 import { createVNode } from "../lib";
 import { globalStore } from "../stores";
-import { userStorage } from "../storages"; // userStorage를 import해야 합니다.
-import { addEvent } from "../utils"; // addEvent를 import해야 합니다.
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
 
   const { username = "", email = "", bio = "" } = currentUser ?? {};
-  console.log("username", username);
-  // 프로필 업데이트 함수
-  const updateProfile = (profile) => {
-    const user = { ...globalStore.getState().currentUser, ...profile };
-    globalStore.setState({ currentUser: user });
-    console.log("Current User in Profile Page:", currentUser);
-    userStorage.set(user);
-    alert("프로필이 업데이트되었습니다.");
-  };
-
-  // 폼 제출 처리 함수
-  const handleSubmit = (e) => {
-    e.preventDefault(); // 기본 제출 동작 방지
-    const formData = new FormData(e.target);
-    const updatedProfile = Object.fromEntries(formData);
-    console.log("Updated Profile:", updatedProfile); // 이곳에서 확인
-    updateProfile(updatedProfile);
-  };
-
-  // 이벤트 리스너 등록
-  addEvent("submit", "#profile-form", handleSubmit);
 
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">

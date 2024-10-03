@@ -27,7 +27,7 @@ function updateAttributes(target, newProps, oldProps) {
   oldProps = oldProps || {};
   newProps = newProps || {};
 
-  // 이전 props에서 제거된 속성 처리
+  //이전 props에서 제거된 속성 처리
   Object.entries(oldProps).forEach(([key, value]) => {
     if (!(key in newProps)) {
       if (key.startsWith("on")) {
@@ -61,28 +61,39 @@ function updateAttributes(target, newProps, oldProps) {
         target.removeAttribute("class");
         target.setAttribute("class", value);
       } else {
-        target.removeAttribute(key);
+        // target.removeAttribute(key);
         target.setAttribute(key, value);
       }
     }
   });
 }
-//   // DOM 요소의 속성을 업데이트합니다.
-//   // - 이전 props에서 제거된 속성 처리
-//   for (const attr of Object.keys(oldProps)) {
-//     if (newProps[attr] !== undefined) continue;
-//     target.removeAttribute(attr);
-//   }
-//   // - 새로운 props의 속성 추가 또는 업데이트
-//   for (const [attr, value] of Object.entries(newProps)) {
-//     if (oldProps[attr] === newProps[attr]) continue;
-//     target.setAttribute(attr, value);
-//   }
-//   // - 이벤트 리스너, className, style 등 특별한 경우 처리
-//   //   <이벤트 리스너 처리>
-//   //     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
-//   //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
-//   //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
+
+//   Object.entries(oldProps).forEach(([key, value]) => {
+//     if (!(key in newProps)) {
+//       if (key.startsWith("on")) {
+//         const eventType = key.toLowerCase().substring(2);
+//         removeEvent(target, eventType, value);
+//       } else if (key === "className") {
+//         target.removeAttribute("class");
+//       } else {
+//         target.removeAttribute(key);
+//       }
+//     }
+//   });
+
+//   Object.entries(newProps).forEach(([key, value]) => {
+//     if (!(key in oldProps) || oldProps[key] !== value) {
+//       if (key.startsWith("on")) {
+//         const eventType = key.toLowerCase().substring(2);
+//         if (oldProps[key]) removeEvent(target, eventType, oldProps[key]);
+//         addEvent(target, eventType, value);
+//       } else if (key === "className") {
+//         target.setAttribute("class", value);
+//       } else {
+//         target.setAttribute(key, value);
+//       }
+//     }
+//   });
 // }
 
 // TODO: updateElement 함수 구현
@@ -101,16 +112,12 @@ function updateElement(parent, newNode, oldNode, index = 0) {
   // 3. 텍스트 노드 업데이트
   // TODO: newNode와 oldNode가 둘 다 문자열 또는 숫자인 경우
   // TODO: 내용이 다르면 텍스트 노드 업데이트
-  if (
-    (typeof newNode === "string" && typeof oldNode === "string") ||
-    (typeof newNode === "number" && typeof oldNode === "number")
-  ) {
+  if (typeof newNode === "string" && typeof oldNode === "string") {
     if (newNode !== oldNode) {
       parent.replaceChild(createElement__v2(newNode), parent.childNodes[index]);
     }
     return;
   }
-
   // 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
   // TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
   if (newNode.type !== oldNode.type) {
@@ -119,6 +126,7 @@ function updateElement(parent, newNode, oldNode, index = 0) {
       parent.childNodes[index]
     );
   }
+
   // 5. 같은 타입의 노드 업데이트
   // 5-1. 속성 업데이트
   // TODO: updateAttributes 함수를 호출하여 속성 업데이트
@@ -141,22 +149,46 @@ function updateElement(parent, newNode, oldNode, index = 0) {
     );
   }
 
-  // 5-3. 불필요한 자식 노드 제거
   if (oldNodeChildren.length > newNodeChildren.length) {
-    for (let i = newNodeChildren.length; i < oldNodeChildren.length; i++) {
-      parent.removeChild(parent.childNodes[i]);
+    for (let i = newNodeChildren.length + 1; i < oldNodeChildren.length; i++) {
+      parent.childNodes[index].removeChild(
+        parent.childNodes[index].childNodes[i]
+      );
     }
   }
 }
+//   if (oldNodeChildren.length > newNodeChildren.length) {
+//     for (let i = newNodeChildren.length; i < oldNodeChildren.length; i++) {
+//       const childNode = parentNode.childNodes[index].childNodes[i];
+//       if (childNode) {
+//         parentNode.childNodes[index].removeChild(childNode);
+//       }
+//     }
+//   }
+// }
+
+//   if (oldNodeChildren.length > newNodeChildren.length) {
+//     for (let i = newNodeChildren.length; i < newNodeChildren.length; i++) {
+//       const childNode = parent.childNodes[index].childNodes[i];
+//       if (childNode) {
+//         parent.childNodes[index].removeChild(childNode);
+//       }
+//     }
+//   }
+// }
+
+//   if (oldNodeChildren.length > newNodeChildren.length) {
+//     for (let i = newNodeChildren.length; i < oldNodeChildren.length; i++) {
+//       parent.removeChild(parent.childNodes[i]);
+//     }
+//   }
+// }
 
 export function renderElement(vNode, container) {
   if (!container) return;
 
   const oldNode = container._vNode;
   const newVNode = processVNode(vNode);
-
-  console.log("Rendering newVNode:", newVNode);
-  console.log("Old Node:", oldNode);
 
   if (!oldNode) {
     container.appendChild(createElement__v2(newVNode));

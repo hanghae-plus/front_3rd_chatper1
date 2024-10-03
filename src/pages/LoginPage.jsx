@@ -1,8 +1,5 @@
 /** @jsx createVNode */
 import { createVNode } from "../lib";
-import { globalStore } from "../stores";
-import { userStorage } from "../storages";
-import { addEvent } from "../utils";
 
 export const LoginPage = () => {
   return (
@@ -19,6 +16,7 @@ export const LoginPage = () => {
               className="w-full p-2 border rounded"
               id="username"
               name="username"
+              required
             />
           </div>
           <div className="mb-6">
@@ -26,6 +24,7 @@ export const LoginPage = () => {
               type="password"
               placeholder="비밀번호"
               className="w-full p-2 border rounded"
+              required
             />
           </div>
           <button
@@ -50,31 +49,3 @@ export const LoginPage = () => {
     </div>
   );
 };
-
-// const login = (username) => {
-//   const user = { username, email: "", bio: "" };
-//   globalStore.setState({
-//     currentUser: user,
-//     loggedIn: true,
-//   });
-//   userStorage.set(user);
-// };
-
-const login = (username) => {
-  const user = { username, email: "", bio: "" };
-  globalStore.setState({
-    currentUser: user,
-    loggedIn: true,
-  });
-  userStorage.set(user);
-};
-
-// 로그인 폼 제출 이벤트 핸들러
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const username = document.getElementById("username").value;
-  login(username);
-};
-
-// 이벤트 리스너 등록
-addEvent("submit", "#login-form", handleSubmit);

@@ -1,4 +1,4 @@
-import { addEvent, removeEvent } from "./eventManager";
+import { addEvent } from "./eventManager";
 
 export function createElement__v2(vNode) {
   // 이 함수는 createElement의 개선된 버전입니다.

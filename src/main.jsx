@@ -22,8 +22,7 @@ const router = createRouter({
       throw new UnauthorizedError();
     }
     return <ProfilePage />;
-  },
-  "/*": () => <NotFoundPage />,
+  }
 });
 
 function logout() {
@@ -56,8 +55,6 @@ function render() {
       router.push("/login");
       return;
     }
-
-    console.error(error);
 
     globalStore.setState({ error });
   }

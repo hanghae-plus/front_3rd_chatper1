@@ -4,9 +4,7 @@ export const createRouter = (routes) => {
   const { subscribe, notify } = createObserver();
 
   const getTarget = () => {
-    return routes[window.location.pathname]
-      ? routes[window.location.pathname]()
-      : routes["/*"]();
+    return routes[window.location.pathname];
   };
 
   const push = (path) => {

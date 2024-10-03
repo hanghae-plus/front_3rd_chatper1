@@ -19,7 +19,7 @@ export function createElement(vNode) {
 		const fragment = document.createDocumentFragment();
 		vNode.forEach((child) => {
 			const childElement = createElement(child);
-			if (childElement) fragment.appendChild(childElement);
+			fragment.appendChild(childElement);
 		});
 		return fragment;
 	}
@@ -30,12 +30,7 @@ export function createElement(vNode) {
 		return createElement(component);
 	}
 
-	// 5. vNode.type이 'fragment', 즉 Fragment 에 대한 처리, 자식 노드에 대해 createElement를 재귀 호출
-	if (vNode.type === 'fragment') {
-		return createElement(vNode.children);
-	}
-
-	// 6. 위 경우가 아니면 실제 DOM 요소를 생성
+	// 5. 위 경우가 아니면 실제 DOM 요소를 생성
 	// (1) vNode.type에 해당하는 요소를 생성
 	const domElement = document.createElement(vNode.type);
 
@@ -62,12 +57,7 @@ export function createElement(vNode) {
 	if (vNode.children) {
 		vNode.children.forEach((child) => {
 			const childElement = createElement(child);
-			if (childElement) {
 				domElement.appendChild(childElement);
-			} else {
-				// 빈 텍스트 노드를 추가 (자식이 없을 때)
-				domElement.appendChild(document.createTextNode(''));
-			}
 		});
 	}
 

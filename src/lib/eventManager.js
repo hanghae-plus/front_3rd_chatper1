@@ -17,13 +17,14 @@ const handleEvent = (event) => {
 
 	while (target && target !== rootElement) {
 		const handlers = eventMap.get(eventType);
-		if (handlers) {
-			handlers.forEach((h) => {
-				if (h.$element === target) {
-					h.handler.call(target, event);
-				}
-			});
+
+		for (const handler of handlers) {
+			if (handler.$element === target) {
+				handler.handler.call(target, event);
+				break;
+			}
 		}
+
 		target = target.parentElement;
 	}
 };

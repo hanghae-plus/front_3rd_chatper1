@@ -1,3 +1,5 @@
+import { addEvent, removeEvent } from "./eventManager";
+
 export function createElement__v2(vNode) {
   // 이 함수는 createElement의 개선된 버전입니다.
   // 1. falsy vNode 처리
@@ -49,8 +51,8 @@ export function createElement__v2(vNode) {
   if (!!props) {
     Object.keys(props).forEach((key) => {
       if (key.startsWith("on")) {
-        const eventName = key.toLowerCase().substring(2);
-        element.addEventListener(eventName, props[key]);
+        const eventType = key.toLowerCase().substring(2);
+        addEvent(eventType, element, props[key]);
       } else if (key === "className") {
         element.setAttribute("class", props[key]);
       } else if (key === "style") {
@@ -64,5 +66,6 @@ export function createElement__v2(vNode) {
   children.forEach((child) => {
     element.appendChild(createElement__v2(child));
   });
+
   return element;
 }

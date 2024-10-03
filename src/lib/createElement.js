@@ -28,7 +28,7 @@ export function createElement(vNode) {
   if (vNode.props) {
     Object.keys(vNode.props).forEach((key) => {
       if (key.startsWith('on')) {
-        const eventName = key.slice(2).toLowerCase();
+        const eventName = key.slice(2).toLowerCase(); // on뒤에 나오는 string
         domElement.addEventListener(eventName, vNode.props[key]);
       } else if (key === 'className') {
         domElement.setAttribute('class', vNode.props[key]);

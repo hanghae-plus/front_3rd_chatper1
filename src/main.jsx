@@ -23,12 +23,7 @@ const router = createRouter({
     }
     return <ProfilePage/>;
   },
-  "/error": () => {
-    return <NotFoundPage />;
-  },
-  '*': () => {
-    return <NotFoundPage />;
-  }
+  "*": () => NotFoundPage
 });
 
 function logout() {
@@ -64,7 +59,6 @@ function render() {
 
     console.error(error);
 
-    // globalStore.setState({ error });
   }
   registerGlobalEvents();
 }
@@ -92,7 +86,7 @@ function main() {
 
   addEvent('submit', '#login-form', (e) => {
     e.preventDefault();
-    router.push('/profile')
+    router.push('/profile');
   })
 
   render();

@@ -10,17 +10,17 @@ const processVNode = (vNode) => {
 };
 
 const updateAttributes = ($element, newNode, oldNode) => {
-	oldNode.props = oldNode.props || {};
-	newNode.props = newNode.props || {};
+	const oldProps = oldNode.props || {};
+	const newProps = newNode.props || {};
 
-	Object.entries(oldNode.props).forEach(([key, value]) => {
-		if (!(key in newNode.props)) {
+	Object.entries(oldProps).forEach(([key, value]) => {
+		if (!(key in newProps)) {
 			handleUpdateAttributes("remove", $element, key, value);
 		}
 	});
 
-	Object.entries(newNode.props).forEach(([key, value]) => {
-		if (!(key in oldNode.props)) {
+	Object.entries(newProps).forEach(([key, value]) => {
+		if (!(key in oldProps)) {
 			handleUpdateAttributes("add", $element, key, value);
 		} else {
 			handleUpdateAttributes("update", $element, key, value);

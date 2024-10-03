@@ -4,19 +4,19 @@ import { Footer, Header, Navigation } from '../components/index.js';
 import { globalStore } from '../stores/index.js';
 import { userStorage } from '../storages/index.js';
 
+const updateProfile = (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const updatedProfile = Object.fromEntries(formData);
+  const currentUser = { ...globalStore.getState().currentUser, ...updatedProfile };
+  globalStore.setState({ currentUser });
+  userStorage.set(currentUser);
+  alert('프로필이 업데이트되었습니다.');
+};
+
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = '', email = '', bio = '' } = currentUser ?? {};
-
-  const updateProfile = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const updatedProfile = Object.fromEntries(formData);
-    const currentUser = { ...globalStore.getState().currentUser, ...updatedProfile };
-    globalStore.setState({ currentUser });
-    userStorage.set(currentUser);
-    alert('프로필이 업데이트되었습니다.');
-  };
 
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center">

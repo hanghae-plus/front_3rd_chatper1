@@ -37,16 +37,17 @@ function updateAttributes(domElement, newProps, oldProps) {
       domElement.setAttribute(key, newProps[key]);
     }
   });
-  
+
   Object.keys(oldProps).forEach(key => {
-    if (!(key in newProps)) {
-      domElement.removeAttribute(key);
+    if (key.startsWith('on')) {
+      const eventName = key.slice(2).toLowerCase();
+      removeEvent(domElement, eventName, oldProps[key]);
+    } else if (key === 'className') {
+      domElement.setAttribute('class', newProps[key]);
     } else {
-      domElement.removeAttribute(key);
+      domElement.setAttribute(key, newProps[key]);
     }
   });
-
-
 }
 
 function updateElement(parent, newNode, oldNode, index = 0) {
@@ -110,7 +111,6 @@ export function renderElement(newVNode, container) {
     updateElement(container, vNode, container._oldNode);
   }
 
-  // console.log(container._oldNode)
   setupEventListeners(container); 
   container._oldNode = vNode;
 };

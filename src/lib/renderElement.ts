@@ -65,7 +65,7 @@ function updateAttributes(
   for (const key in oldProps) {
     const isNewProp = newProps && key in newProps;
     if (!isNewProp) {
-      removeAttributeOrEvent($element, key, oldProps[key]);
+      removeAttributeOrEvent($element, key);
     }
   }
 
@@ -75,20 +75,16 @@ function updateAttributes(
     const nextValue = newProps[key];
 
     if (nextValue !== prevValue) {
-      updateAttributeOrEvent($element, key, prevValue, nextValue);
+      updateAttributeOrEvent($element, key, prevValue);
     }
   }
 
   // =============== 내부함수 ==============
   /** DOM 요소에서 속성이나 이벤트 리스너 제거 */
-  function removeAttributeOrEvent(
-    $element: HTMLElement,
-    key: string,
-    value: any
-  ) {
+  function removeAttributeOrEvent($element: HTMLElement, key: string) {
     if (isEventListenerKey(key)) {
       const eventType = extractEventType(key);
-      removeEvent($element, eventType, value);
+      removeEvent($element, eventType);
       return;
     }
 
@@ -101,12 +97,11 @@ function updateAttributes(
   function updateAttributeOrEvent(
     $element: HTMLElement,
     key: string,
-    oldValue: any,
     newValue: any
   ) {
     if (isEventListenerKey(key)) {
       const eventType = extractEventType(key);
-      removeEvent($element, eventType, oldValue);
+      removeEvent($element, eventType);
       addEvent($element, eventType, newValue);
     } else if (key === 'className') {
       $element.className = newValue;

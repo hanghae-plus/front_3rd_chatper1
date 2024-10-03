@@ -99,18 +99,11 @@ export function addEvent(
  *
  * @param {HTMLElement} $element - 이벤트 핸들러를 제거할 HTML 요소
  * @param {string} eventType - 제거할 이벤트 타입 (예: 'click', 'mouseover')
- * @param {EventListener} handler - 제거할 이벤트 핸들러 함수
  */
-export function removeEvent(
-  $element: HTMLElement,
-  eventType: string,
-  handler: EventListener
-) {
+export function removeEvent($element: HTMLElement, eventType: string) {
   const handlerMap = eventMap.get(eventType);
   if (handlerMap) {
     handlerMap.delete($element);
-
-    $rootElement?.removeEventListener(eventType, handler, true);
 
     if (handlerMap.size === 0) {
       eventMap.delete(eventType);

@@ -1,4 +1,4 @@
-import { addEvent } from "./eventManager";
+import { addEvent, removeEvent } from "./eventManager";
 
 export function createElement__v2(vNode) {
     // 이 함수는 createElement의 개선된 버전입니다.
@@ -15,33 +15,41 @@ export function createElement__v2(vNode) {
     }
 
     if (typeof vNode === "string" || typeof vNode === "number") {
-        return document.createTextNode("");
+        return document.createTextNode(vNode);
     }
 
     if (Array.isArray(vNode)) {
-        document.createDocumentFragment();
-
+        const fragment = document.createDocumentFragment();
         vNode.forEach((child) => {
             fragment.appendChild(createElement__v2(child));
         });
-
         return fragment;
     }
 
-    const element = document.createElement(vNode.type);
-
-    if (vNode.props) {
-        Object.entries(vNode.props).forEach(([key, value]) => {
-            if (key.startsWith("on") && typeof value === "function") {
-                const eventType = key.slice(2).toLowerCase();
-                addEvent(element, eventType, value);
-            } else if (key === "className") {
-                element.className = value;
-            } else {
-                element.setAttribute(key, value);
-            }
-        });
+    if (typeof vNode.type === "function") {
+        return createElement__v2(vNode.type(vNode.props));
     }
 
-    return {};
+    const element = document.createElement(vNode.type);
+    Object.entries(vNode.props || {}).forEach(([attr, value]) => {
+        if (!value) {
+            return;
+        }
+
+        if (attr.startsWith("on")) {
+            addEvent(element, attr.slice(2).toLowerCase(), value);
+        } else if (attr === "className") {
+            element.className = value;
+        } else {
+            element.setAttribute(attr, value);
+        }
+    });
+
+    const children = vNode.children || [];
+    const childElements = children.map((childVNode) => createElement__v2(childVNode));
+
+    childElements.forEach((childElement) => {
+        element.appendChild(childElement);
+    });
+    return element;
 }

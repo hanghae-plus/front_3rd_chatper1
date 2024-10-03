@@ -50,14 +50,9 @@ export function createElement(vNode) {
     }
 
     if (vNode.children) {
-        const fragment = document.createDocumentFragment();
-
         vNode.children.forEach((child) => {
-            fragment.appendChild(createElement(child));
+            element.appendChild(createElement(child));
         });
-
-        element.appendChild(fragment);
     }
-
     return element;
 }

@@ -5,11 +5,13 @@ export default mergeConfig(
 	defineConfig({
 		esbuild: {
 			jsxFactory: 'createVNode',
+			jsxFragment: 'Fragment', // Fragment는 type을 'fragment'로 처리
 		},
 		optimizeDeps: {
 			esbuildOptions: {
 				jsx: 'transform',
 				jsxFactory: 'createVNode',
+				jsxFragment: 'Fragment', // Fragment는 type을 'fragment'로 처리
 			},
 		},
 	}),

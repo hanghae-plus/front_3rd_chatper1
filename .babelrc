@@ -1,7 +1,11 @@
 {
-  "plugins": [
-    ["@babel/plugin-transform-react-jsx", {
-      "pragma": "createVNode",
-    }]
-  ]
+	"plugins": [
+		[
+			"@babel/plugin-transform-react-jsx",
+			{
+				"pragma": "createVNode",
+				"pragmaFrag": "Fragment" // JSX Fragment를 Fragment로 변환
+			}
+		]
+	]
 }

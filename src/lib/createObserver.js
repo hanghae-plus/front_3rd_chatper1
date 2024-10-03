@@ -3,6 +3,5 @@ export const createObserver = () => {
   const subscribe = (fn) => listeners.add(fn);
   const notify = () => listeners.forEach(listener => listener());
 
-  console.log(listeners)
   return { subscribe, notify }
 }

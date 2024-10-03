@@ -41,12 +41,8 @@ function render() {
   const $root = document.querySelector('#root');
 
   try {
-    const $app = renderElement(<App targetPage={router.getTarget()}/>,$root);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else{
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
+    
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");

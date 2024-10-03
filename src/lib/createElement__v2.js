@@ -2,6 +2,8 @@ import { addEvent } from "./eventManager";
 
 // TODO: createElement__v2 함수 구현
 export function createElement__v2(vNode) {
+  // console.log(vNode)
+  
   if (!vNode) {
     return document.createTextNode("");
   }
@@ -25,7 +27,7 @@ export function createElement__v2(vNode) {
     return createElement__v2(componentVNode);
   }
 
-  const domElement = document.createElement__v2(vNode.type);
+  const domElement = document.createElement(vNode.type);
 
   if (vNode.props) {
     Object.keys(vNode.props).forEach((key) => {

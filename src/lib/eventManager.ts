@@ -1,3 +1,10 @@
+/** 주어진 키가 이벤트 리스너 키인지 확인합니다. */
+export const isEventListenerKey = (key: string) => key.startsWith('on');
+
+/** 이벤트 리스너 키에서 이벤트 타입을 추출하고, 소문자로 변환합니다. */
+export const extractEventType = (key: string) =>
+  key.replace(/^on/, '').toLowerCase();
+
 // 이벤트 위임을 위한 전역 이벤트 맵
 // 이 맵은 이벤트 타입별로 요소와 해당 요소의 이벤트 핸들러를 저장합니다.
 const eventMap = new Map<string, Map<HTMLElement, EventListener>>();

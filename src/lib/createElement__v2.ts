@@ -1,11 +1,12 @@
-import type { VNode, VNodeChildren, VNodeProps } from './createVNode';
-import { addEvent } from './eventManager';
+import type { VNode, VNodeChild, VNodeProps } from './createVNode';
+import { addEvent, extractEventType, isEventListenerKey } from './eventManager';
 
+/** 주어진 HTML 요소에 속성을 설정합니다. */
 function setAttributes($element: HTMLElement, props: NonNullable<VNodeProps>) {
   Object.entries(props).forEach(([key, value]) => {
-    if (typeof value === 'function' && key.toLowerCase() in $element) {
-      const eventType = key.replace(/^on/, '').toLowerCase();
-      addEvent($element, eventType as keyof HTMLElementTagNameMap, value);
+    if (typeof value === 'function' && isEventListenerKey(key)) {
+      const eventType = extractEventType(key);
+      addEvent($element, eventType, value);
     } else if (key === 'className') {
       $element.className = value;
     } else {
@@ -14,7 +15,8 @@ function setAttributes($element: HTMLElement, props: NonNullable<VNodeProps>) {
   });
 }
 
-function appendChildren($element: HTMLElement, children: VNodeChildren) {
+/** 주어진 HTML 요소에 자식 노드를 추가합니다. */
+function appendChildren($element: HTMLElement, children: VNodeChild[]) {
   for (const child of children) {
     $element.appendChild(createElement__v2(child));
   }

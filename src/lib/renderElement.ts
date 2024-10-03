@@ -1,4 +1,10 @@
-import { addEvent, removeEvent, setupEventListeners } from './eventManager';
+import {
+  addEvent,
+  extractEventType,
+  isEventListenerKey,
+  removeEvent,
+  setupEventListeners,
+} from './eventManager';
 import { createElement__v2 } from './createElement__v2';
 import { VNode, VNodeElement, VNodeProps } from './createVNode';
 
@@ -50,8 +56,8 @@ function updateAttributes(
   // 이전 속성 제거
   for (const key in oldProps) {
     if (!(newProps && key in newProps)) {
-      if (key.startsWith('on')) {
-        const eventType = key.replace(/^on/, '').toLowerCase();
+      if (isEventListenerKey(key)) {
+        const eventType = extractEventType(key);
         removeEvent($element, eventType, oldProps[key]);
       } else {
         $element.removeAttribute(key);
@@ -65,8 +71,8 @@ function updateAttributes(
     const oldValue = oldProps?.[key];
 
     if (newValue !== oldValue) {
-      if (key.startsWith('on')) {
-        const eventType = key.replace(/^on/, '').toLowerCase();
+      if (isEventListenerKey(key)) {
+        const eventType = extractEventType(key);
         removeEvent($element, eventType, oldValue);
         addEvent($element, eventType, newValue);
       } else if (key === 'className') {

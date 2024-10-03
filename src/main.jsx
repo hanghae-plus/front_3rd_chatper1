@@ -78,6 +78,7 @@ function main() {
     e.preventDefault();
     globalStore.setState({ error: null });
   });
+ 
 
   render();
 }

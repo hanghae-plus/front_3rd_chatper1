@@ -2,8 +2,12 @@
 import{ createVNode } from "../lib";
 import { userStorage } from '../storages';
 import { globalStore } from '../stores';
-import { router } from "../main"
+// import { router } from "../main"
 
+
+
+export const LoginPage = () => {
+  const { router } = globalStore.getState();
 
 const handleSubmitLogin = (e)=>{
   e.preventDefault();
@@ -17,8 +21,6 @@ const handleSubmitLogin = (e)=>{
   router.push("/profile")
 
 }
-export const LoginPage = () => {
-  
   return(
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">

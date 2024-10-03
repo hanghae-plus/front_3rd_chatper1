@@ -9,23 +9,23 @@ function processVNode(vNode) {
   // - 문자열과 숫자를 문자열로 변환
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
-  if ([null, undefined].includes(vNode) && typeof vNode === 'boolean') {
+  if ([null, undefined].includes(vNode) || typeof vNode === 'boolean') {
     return '';
   }
   if (['string', 'number', 'bigint'].includes(typeof vNode)) {
     return String(vNode);
   }
-  if (typeof vNode === 'function') {
+  if (typeof vNode.type === 'function') {
     return processVNode(vNode.type(vNode.props));
   }
   return {
-    ...vNode,
-    children: vNode.children.map(child => processVNode(child)),
+    type: vNode.type,
+    props: vNode.props || {},
+    children: (vNode.children || []).map(child => processVNode(child)),
   };
 }
 
-// TODO: updateAttributes 함수 구현
-function updateAttributes() {
+function updateAttributes(vNode, newProps, oldProps) {
   // DOM 요소의 속성을 업데이트합니다.
   // - 이전 props에서 제거된 속성 처리
   // - 새로운 props의 속성 추가 또는 업데이트
@@ -36,11 +36,7 @@ function updateAttributes() {
   //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
 }
 
-// TODO: updateElement 함수 구현
-function updateElement(initialProcess, container) {
-  const oldNode = container;
-  console.log(oldNode);
-  console.log(initialProcess);
+function updateElement(parent, newNode, oldNode) {
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
   // 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
@@ -50,6 +46,9 @@ function updateElement(initialProcess, container) {
   // TODO: 내용이 다르면 텍스트 노드 업데이트
   // 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
   // TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
+  // console.log(oldNode);
+  // console.log('--------------');
+  // console.log(newNode);
   // 5. 같은 타입의 노드 업데이트
   // 5-1. 속성 업데이트
   // TODO: updateAttributes 함수를 호출하여 속성 업데이트
@@ -60,8 +59,9 @@ function updateElement(initialProcess, container) {
   // TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
 }
 
-// TODO: renderElement 함수 구현
-export function renderElement(vNode, container) {
+let vNodeMap = new Map();
+
+export function renderElement(vNode, $root) {
   // 최상위 수준의 렌더링 함수입니다.
   // - processVNode를 실행해서 함수 컴포넌트로 정의된 vNode를 전부 해체
   // - 이전 vNode와 새로운 vNode를 비교하여 업데이트
@@ -70,10 +70,12 @@ export function renderElement(vNode, container) {
   // 이벤트 위임 설정
   // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
   // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
-  const initialProcess = processVNode(vNode);
-  if (!container.hasChildNodes()) {
-    container.appendChild(createElement__v2(initialProcess));
+  vNodeMap.set('newNode', processVNode(vNode));
+
+  if (!vNodeMap.has('oldNode')) {
+    vNodeMap.set('oldNode', processVNode(vNode));
+    $root.appendChild(createElement__v2(vNodeMap.get('oldNode')));
     return;
   }
-  updateElement(initialProcess, container);
+  updateElement($root, vNodeMap.get('newNode'), vNodeMap.get('oldNode'));
 }

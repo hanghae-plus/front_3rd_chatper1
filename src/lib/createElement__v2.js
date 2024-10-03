@@ -10,26 +10,15 @@ const events = ['onClick', 'onChange', 'onInput', 'onSubmit'];
 export function createElement__v2(vNode) {
   let $el;
 
-  if (['string', 'number', 'bigint'].includes(typeof vNode)) {
+  if (typeof vNode === 'string') {
     $el = document.createTextNode(vNode);
     return $el;
   }
-
-  if ([null, false].includes(vNode)) {
-    $el = document.createTextNode('');
-    return $el;
-  }
-
   if (Array.isArray(vNode)) {
     $el = new DocumentFragment();
     vNode.forEach(element => {
       $el.appendChild(createElement__v2(element));
     });
-    return $el;
-  }
-
-  if (typeof vNode.type === 'function') {
-    $el = createElement__v2(vNode.type(vNode.props));
     return $el;
   }
 

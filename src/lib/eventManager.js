@@ -78,17 +78,15 @@ export function removeEvent(element, eventType, handler) {
   // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
   // 이를 통해 더 이상 필요 없는 이벤트 핸들러를 정리하고 메모리 누수 방지
 
-  if (eventMap.has(eventType)) {
-    const elementMap = eventMap.get(eventType);
-    if (elementMap.has(element)) {
-      elementMap.delete(element);
-    }
+  const elementMap = eventMap.get(eventType);
+  if (elementMap.has(element)) {
+    elementMap.delete(element);
+  }
 
-    if (elementMap.size === 0) {
-      eventMap.delete(eventType);
-      if (rootElement) {
-        rootElement.removeEventListener(eventType, handler);
-      }
+  if (elementMap.size === 0) {
+    eventMap.delete(eventType);
+    if (rootElement) {
+      rootElement.removeEventListener(eventType, handler);
     }
   }
 }

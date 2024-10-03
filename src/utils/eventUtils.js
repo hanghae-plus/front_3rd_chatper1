@@ -10,7 +10,7 @@ const handleGlobalEvents = (e) => {
       break;
     }
   }
-}
+};
 
 export const registerGlobalEvents = (() => {
   let init = false;
@@ -19,12 +19,12 @@ export const registerGlobalEvents = (() => {
       return;
     }
 
-    Object.keys(eventHandlers).forEach(eventType => {
-      document.body.addEventListener(eventType, handleGlobalEvents)
+    Object.keys(eventHandlers).forEach((eventType) => {
+      document.body.addEventListener(eventType, handleGlobalEvents);
     });
 
     init = true;
-  }
+  };
 })();
 
 export const addEvent = (eventType, selector, handler) => {
@@ -32,4 +32,4 @@ export const addEvent = (eventType, selector, handler) => {
     eventHandlers[eventType] = {};
   }
   eventHandlers[eventType][selector] = handler;
-}
+};

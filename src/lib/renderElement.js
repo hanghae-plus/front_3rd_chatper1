@@ -48,12 +48,11 @@ function updateAttributes(element, oldProps, newProps) {
   //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
   //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
 
-  if (!oldProps || !newProps) {
-    return;
-  }
+  const currentOldProps = oldProps || {};
+  const currentNewProps = newProps || {};
 
-  Object.entries(oldProps).forEach(([key, value]) => {
-    if (!(key in newProps)) {
+  Object.entries(currentOldProps).forEach(([key, value]) => {
+    if (!(key in currentNewProps)) {
       if (key.startsWith('on')) {
         const eventName = key.replace(/^on/, '').toLowerCase();
         element.removeEventListener(eventName);
@@ -67,8 +66,8 @@ function updateAttributes(element, oldProps, newProps) {
     }
   });
 
-  Object.entries(newProps).forEach(([key, value]) => {
-    if (value !== oldProps[key]) {
+  Object.entries(currentNewProps).forEach(([key, value]) => {
+    if (value !== currentOldProps[key]) {
       if (key.startsWith('on')) {
         const eventName = key.replace(/^on/, '').toLowerCase();
         element.addEventListener(eventName, value);

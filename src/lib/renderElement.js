@@ -88,17 +88,17 @@ function updateElement(oldNode, newNode, parent, index = 0) {
     updateAttributes(oldNode.props || {}, newNode.props || {}, replacedNode);
 
     if (oldNode.type === 'Fragment') {
-      diffChildren(oldNode.children, newNode.children, parent);
+      diffChildren(oldNode.children, newNode.children, parent, index);
     } else {
       diffChildren(oldNode.children, newNode.children, parent.childNodes[index]);
     }
   }
 }
 
-function diffChildren(oldChildren, newChildren, parent) {
+function diffChildren(oldChildren, newChildren, parent, fragmentIndex = 0) {
   const maxLength = Math.max(oldChildren.length, newChildren.length);
   for (let i = 0; i < maxLength; i++) {
-    updateElement(oldChildren[i], newChildren[i], parent, i);
+    updateElement(oldChildren[i], newChildren[i], parent, i + fragmentIndex);
   }
 }
 

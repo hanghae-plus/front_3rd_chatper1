@@ -1,5 +1,4 @@
 import { addEvent } from './eventManager'
-// import { createElement__v2 } from './createElement__v2'
 // TODO: createElement 함수 구현
 // 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
 // 2. vNode가 문자열이나 숫자면 텍스트 노드를 생성하여 반환합니다.

@@ -38,7 +38,7 @@ export function createElement(vNode) {
   for (const key in vNode.props) {
     if (key === 'className') {
       node.setAttribute('class', vNode.props['className']);
-    } else if (key.startsWith('on')) {
+    } else if (key.startsWith('on') && typeof vNode.props[key] === 'function') {
       const eventType = key.replace('on', '').toLowerCase();
       node.addEventListener(eventType, vNode.props[key]);
     } else node.setAttribute(key, vNode.props[key]);

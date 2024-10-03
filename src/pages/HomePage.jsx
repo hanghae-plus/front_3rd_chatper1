@@ -2,7 +2,6 @@
 import { Footer, Header, Navigation, Post } from "../components";
 import { createVNode } from "../lib";
 import { globalStore } from "../stores";
-import { NotFoundPage } from "./NotFoundPage";
 
 export const HomePage = () => {
   const { loggedIn, posts } = globalStore.getState();

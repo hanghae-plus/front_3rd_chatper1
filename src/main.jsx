@@ -40,13 +40,13 @@ function render() {
   const $root = document.querySelector("#root");
 
   try {
-    // renderElement(<App targetPage={router.getTarget()} />, $root);
-    const $app = createElement(<App targetPage={router.getTarget()} />);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app);
-    } else {
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
+    // const $app = createElement(<App targetPage={router.getTarget()} />);
+    // if ($root.hasChildNodes()) {
+    //   $root.firstChild.replaceWith($app);
+    // } else {
+    //   $root.appendChild($app);
+    // }
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");
@@ -92,6 +92,7 @@ function main() {
     const currentUser = { username, email, bio };
     userStorage.set(currentUser);
     globalStore.setState({ currentUser });
+    alert("프로필업데이트 완료");
   });
 
   addEvent("click", "#logout", (e) => {

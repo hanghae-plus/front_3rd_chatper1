@@ -105,9 +105,10 @@ function updateElement(parent, newNode, oldNode, index = 0) {
     // 5-3. 불필요한 자식 노드 제거
     if (oldChildren.length > newChildren.length) {
       for (let i = newChildren.length; i < oldChildren.length; i++) {
-        parent.childNodes[index].removeChild(
-          parent.childNodes[index].childNodes[i]
-        );
+        const childNode = parent.childNodes[index].childNodes[i];
+        if (childNode) {
+          parent.childNodes[index].removeChild(childNode);
+        }
       }
     }
   }

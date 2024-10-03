@@ -63,7 +63,6 @@ function updateElement(container, oldNode, newNode, index = 0) {
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
   if (!newNode) {
-    console.log('remove', container.childNodes);
     container.removeChild(container.childNodes[index]);
     return;
   }

@@ -4,9 +4,7 @@ import { userStorage } from "../storages";
 import { globalStore } from "../stores";
 
 export const LoginPage = () => {
-    const handleLogin = (e) => {
-        e.preventDefault();
-
+    function login() {
         const username = document.getElementById("username");
 
         let user = {
@@ -18,10 +16,14 @@ export const LoginPage = () => {
         try {
             globalStore.setState({ currentUser: user, loggedIn: true });
             userStorage.set(user);
-            router.push("/profile");
         } catch (error) {
             globalStore.setState({ error });
         }
+    }
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        login();
     };
 
     return (

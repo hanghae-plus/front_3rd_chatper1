@@ -4,10 +4,23 @@ import { Header } from '../components/templates/Header';
 import { Footer } from '../components/templates/Footer';
 import { globalStore } from '../stores/globalStore';
 import { createVNode } from '../lib';
+import { userStorage } from '../storages';
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = '', email = '', bio = '' } = currentUser ?? {};
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const username = document.querySelector('#username').value;
+    const email = document.querySelector('#email').value;
+    const bio = document.querySelector('#bio').value;
+    const user = { username, email, bio };
+
+    globalStore.setState({ currentUser: user, loggedIn: true });
+    userStorage.set(user);
+  };
 
   return (
     <div className='bg-gray-100 min-h-screen flex justify-center'>
@@ -17,7 +30,7 @@ export const ProfilePage = () => {
         <main className='p-4'>
           <div className='bg-white p-8 rounded-lg shadow-md'>
             <h2 className='text-2xl font-bold text-center text-blue-600 mb-8'>내 프로필</h2>
-            <form id='profile-form'>
+            <form id='profile-form' onSubmit={handleSubmit}>
               <div className='mb-4'>
                 <label htmlFor='username' className='block text-gray-700 text-sm font-bold mb-2'>
                   사용자 이름

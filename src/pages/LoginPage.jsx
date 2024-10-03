@@ -9,6 +9,7 @@ export const LoginPage = () => {
 
     const username = document.querySelector('#username').value;
     const user = { username, email: '', bio: '' };
+
     globalStore.setState({ currentUser: user, loggedIn: true });
     userStorage.set(user);
   };

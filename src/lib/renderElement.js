@@ -38,7 +38,6 @@ function updateAttributes(element, oldProps, newProps) {
     if (!newProps || !Object.keys(newProps).includes(key)) {
       if (key.startsWith("on")) {
         const eventType = key.slice(2).toLowerCase();
-        // removeEvent(element, eventType, oldProps[key]);
         removeEvent(element, eventType);
       } else if (key.includes("class")) {
         element.className = "";

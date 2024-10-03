@@ -63,7 +63,6 @@ export function addEvent(element, eventType, handler) {
 }
 
 // removeEvent 함수 구현
-// export function removeEvent(element, eventType, handler) {
 export function removeEvent(element, eventType) {
   // 1. eventMap에서 해당 요소와 이벤트 타입에 대한 핸들러 제거
   const handlers = eventMap.get(eventType);

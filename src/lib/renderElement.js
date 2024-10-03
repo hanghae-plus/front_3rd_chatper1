@@ -27,59 +27,53 @@ function processVNode(vNode) {
 
 // TODO: updateAttributes 함수 구현
 function updateAttributes(targetEl, newVNodeProps, oldVNodeProps) {
-  oldVNodeProps = oldVNodeProps || {};
-  newVNodeProps = newVNodeProps || {};
+  // 3. 새로운 속성을 추가하거나 업데이트
+  for (const [key, value] of Object.entries(newVNodeProps)) {
+    if (key.startsWith('on') && typeof value === 'function') {
+      const eventType = key.slice(2).toLowerCase();
+      // 2. 기존 노드의 속성 업데이트
+      const oldEventHandler = oldVNodeProps[key];
 
-  // 이전 props에서 제거된 속성 처리
-  Object.entries(oldVNodeProps).forEach(([key, value]) => {
-    if (!(key in newVNodeProps)) {
-      if (key.startsWith('on')) {
-        const eventType = key.toLowerCase().substring(2);
-        removeEvent(targetEl, eventType, value);
-      } else if (key === 'className') {
-        targetEl.removeAttribute('class');
-      } else {
-        targetEl.removeAttribute(key);
+      // 기존 요소와 새 요소의 핸들러가 같으면 유지
+      if (value === oldEventHandler) {
+        continue;
       }
-    }
-  });
 
-  // 새로운 props의 속성 추가 또는 업데이트
-  Object.entries(newVNodeProps).forEach(([key, value]) => {
-    if (!(key in oldVNodeProps)) {
-      if (key.startsWith('on')) {
-        const eventType = key.toLowerCase().substring(2);
-        addEvent(targetEl, eventType, value);
-      } else if (key === 'className') {
-        targetEl.setAttribute('class', value);
-      } else {
-        targetEl.setAttribute(key, value);
-      }
+      // 3. 이벤트 위임을 위해 eventManager의 addEvent와 removeEvent를 사용
+      oldEventHandler && removeEvent(targetEl, eventType, oldEventHandler);
+      value && addEvent(eventType, targetEl, value);
+    } else if (key === 'className') {
+      targetEl.setAttribute('class', value || '');
+    } else if (key === 'style') {
+      Object.assign(targetEl.style, value);
     } else {
-      if (key.startsWith('on')) {
-        const eventType = key.toLowerCase().substring(2);
-        removeEvent(targetEl, eventType, value);
-        addEvent(targetEl, eventType, value);
-      } else if (key === 'className') {
-        targetEl.removeAttribute('class');
-        targetEl.setAttribute('class', value);
-      } else {
-        targetEl.removeAttribute(key);
-        targetEl.setAttribute(key, value);
-      }
+      targetEl.setAttribute(key, value);
     }
-  });
+  }
+
+  // 4. 이전 속성 중 새로운 속성에 존재하지 않는 속성을 제거
+  for (const [key, value] of Object.entries(oldVNodeProps)) {
+    if (key in newVNodeProps) {
+      continue;
+    }
+
+    if (key.startsWith('on')) {
+      const eventType = key.slice(2).toLowerCase();
+      removeEvent(targetEl, eventType, value);
+    } else {
+      targetEl.removeAttribute(key);
+    }
+  }
 }
 
 // TODO: updateElement 함수 구현
 function updateElement(parent, newVNode, oldVNode, index = 0) {
   const oldDomNode = parent.childNodes[index];
-  if (!oldDomNode) return;
 
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
   if (!newVNode && oldVNode) {
-    return parent.removeChild(parent.childNodes[index]);
+    return oldDomNode && parent.removeChild(parent.childNodes[index]);
   }
 
   // 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
@@ -104,9 +98,11 @@ function updateElement(parent, newVNode, oldVNode, index = 0) {
     return parent.replaceChild(createElement__v2(newVNode), parent.childNodes[index]);
   }
   // 5. 같은 타입의 노드 업데이트
+  if (!oldDomNode) return;
+
   // 5-1. 속성 업데이트
   // TODO: updateAttributes 함수를 호출하여 속성 업데이트
-  updateAttributes(oldDomNode, newVNode.props, oldVNode.props);
+  updateAttributes(oldDomNode, newVNode.props || {}, oldVNode.props || {});
 
   // 5-2. 자식 노드 재귀적 업데이트
   // TODO: newNode와 oldNode의 자식 노드들을 비교하며 재귀적으로 updateElement 호출
@@ -117,12 +113,7 @@ function updateElement(parent, newVNode, oldVNode, index = 0) {
 
   for (let i = 0; i < maxLength; i++) {
     // 자식 노드가 있는지 확인하고 재귀적으로 업데이트
-    if (i < oldDomNode.childNodes.length) {
-      updateElement(oldDomNode, newVNodeChildren[i], oldVNodeChildren[i], i);
-    } else if (newVNodeChildren[i]) {
-      // 새로운 자식 노드가 있으면 추가
-      oldDomNode.appendChild(createElement__v2(newVNodeChildren[i]));
-    }
+    updateElement(oldDomNode, newVNodeChildren[i], oldVNodeChildren[i], i);
   }
 
   // 5-3. 불필요한 자식 노드 제거

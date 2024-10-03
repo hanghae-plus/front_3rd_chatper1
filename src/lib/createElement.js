@@ -14,6 +14,11 @@ function createFragmentFromArray(array) {
   return fragment;
 }
 
+function handleAttrName(attr) {
+  if (attr === 'className') return 'class';
+  return attr;
+}
+
 export function createElement(vNode) {
   // 여기에 구현하세요
   // 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
@@ -39,11 +44,7 @@ export function createElement(vNode) {
   for (const [attr, value] of Object.entries(props || {})) {
     if (attr.startsWith('on')) {
       $el.addEventListener(attr.slice(2).toLowerCase(), value);
-      break;
-    }
-
-    if (attr === 'className') attr === 'class';
-    $el.setAttribute(attr, value);
+    } else $el.setAttribute(handleAttrName(attr), value);
   }
 
   // - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가

@@ -71,7 +71,7 @@ function updateAttributes(element, oldProps = {}, newProps = {}) {
           removeEvent(element, eventType, oldEventHandler);
         }
         if (newEventHandler) {
-          addEvent(eventType, element, newEventHandler);
+          addEvent(element, eventType, newEventHandler);
         }
       }
     }

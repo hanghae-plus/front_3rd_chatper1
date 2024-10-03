@@ -37,7 +37,7 @@ export function createElement__v2(vNode) {
   for (const [key, value] of Object.entries(vNode.props || {})) {
     if (typeof value === "function" && key.startsWith("on")) {
       const eventType = key.toLowerCase().slice(2);
-      addEvent(eventType, $element, value);
+      addEvent($element, eventType, value);
     } else if (key === "className") {
       $element.className = value;
     } else if (key.startsWith("data-")) {

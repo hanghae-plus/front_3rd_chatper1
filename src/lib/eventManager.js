@@ -15,36 +15,36 @@ export function setupEventListeners(root) {
   rootElement = root;
 
   // 2. 기존에 설정된 이벤트 리스너 제거 (있다면)
-  if (rootElement.__eventListener) {
-    // eventMap에 등록된 모든 이벤트 타입을 가져옴
-    eventMap.forEach((_, eventType) => {
-      rootElement.removeEventListener(eventType, handleEvent, true);
-    });
-  }
-
   // 3. eventMap에 등록된 모든 이벤트 타입에 대해 루트 요소에 이벤트 리스너 추가
-  eventMap.forEach((_, eventType) => {
-    rootElement.addEventListener(eventType, handleEvent, true);
+  Array.from(eventMap.keys()).forEach((eventType) => {
+    removeEvent(rootElement, eventType, handleEvent);
+    rootElement.addEventListener(eventType, handleEvent);
   });
-
-  rootElement.__eventListener = true;
 }
 
 // TODO: handleEvent 함수 구현
 // 이 함수는 실제 이벤트가 발생했을 때 호출되는 핸들러입니다.
 function handleEvent(event) {
   // 1. 이벤트 타겟에서 시작하여 루트 요소까지 버블링
-  let currentElement = target;
+  const target = event.target;
+  const type = event.type;
 
-  while (currentElement && currentElement !== rootElement) {
-    // 2. 각 요소에 대해 해당 이벤트 타입의 핸들러가 있는지 확인
-    const handlers = eventMap.get(type);
-    if (handlers && handlers.has(currentElement)) {
-      const handler = handlers.get(currentElement);
-      // 3. 핸들러가 있다면 실행
-      handler(event);
+  // 2. 각 요소에 대해 해당 이벤트 타입의 핸들러가 있는지 확인
+  const handlers = eventMap.get(type);
+  if (handlers && handlers.has(target)) {
+    // 3. 핸들러가 있다면 실행
+    for (const [element, handler] of handlers) {
+      if (typeof element === "object" && element === target) {
+        event.preventDefault();
+        handler(event);
+        break;
+      }
+      if (typeof element === "string" && target.matches(element)) {
+        event.preventDefault();
+        handler(event);
+        break;
+      }
     }
-    currentElement = currentElement.parentElement; // 상위 요소로 이동
   }
   // 이를 통해 하위 요소에서 발생한 이벤트를 상위에서 효율적으로 처리할 수 있습니다.
 }
@@ -72,11 +72,12 @@ export function removeEvent(element, eventType, handler) {
     if (eventHandlers.has(element)) {
       eventHandlers.delete(element); // 요소에 대한 핸들러 제거
     }
-  }
-  // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
-  if (eventHandlers.size === 0) {
-    rootElement.removeEventListener(eventType, handleEvent, true);
-    eventMap.delete(eventType); // 이벤트 타입도 eventMap에서 제거
+
+    // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
+    if (eventHandlers.size === 0) {
+      rootElement.removeEventListener(eventType, handleEvent, true);
+      eventMap.delete(eventType); // 이벤트 타입도 eventMap에서 제거
+    }
   }
   // 이를 통해 더 이상 필요 없는 이벤트 핸들러를 정리하고 메모리 누수 방지
 }

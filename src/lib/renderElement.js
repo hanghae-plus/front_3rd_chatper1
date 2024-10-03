@@ -1,4 +1,3 @@
-// renderElement.js
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { createElement__v2 } from './createElement__v2.js';
 import { isBooleanProp, isEventProp, isInValidVNode, removeBooleanProp, setBooleanProp, setStyleProp } from '../utils';
@@ -37,8 +36,8 @@ function setProp($el, name, value) {
   } else if (isBooleanProp(name, value)) {
     setBooleanProp($el, name, value);
   } else if (isEventProp(name, value)) {
-    console.log('event prop', { name, value });
-    // addEvent
+    const eventType = name.slice(2).toLowerCase();
+    addEvent($el, eventType, value);
   } else {
     $el.setAttribute(name, value);
   }
@@ -50,8 +49,8 @@ function removeProp($el, name, value) {
   } else if (isBooleanProp(name, value)) {
     removeBooleanProp($el, name);
   } else if (isEventProp(name, value)) {
-    console.log('event prop', { name, value });
-    // removeEvent()
+    const eventType = name.slice(2).toLowerCase();
+    removeEvent($el, eventType, value);
   } else {
     $el.removeAttribute(name);
   }
@@ -73,14 +72,6 @@ function updateAttributes($el, newProps, oldProps) {
       removeProp($el, name, oldProps[name]);
     }
   });
-  // DOM 요소의 속성을 업데이트합니다.
-  // - 이전 props에서 제거된 속성 처리
-  // - 새로운 props의 속성 추가 또는 업데이트
-  // - 이벤트 리스너, className, style 등 특별한 경우 처리
-  //   <이벤트 리스너 처리>
-  //     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
-  //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
-  //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
 }
 
 function isNodeChange(newNode, oldNode) {
@@ -95,7 +86,6 @@ function updateElement($parent, newNode, oldNode, index = 0) {
   // 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
   if (!newNode) {
-    console.log('💡 출력되면 안되는 로그', { $currentNode: $parent.childNodes[index] });
     // Dom에서 노드가 제거되면서 한 칸씩 당겨지는 오류 방지
     if ($parent.childNodes[index]) {
       $parent.removeChild($parent.childNodes[index]);
@@ -144,27 +134,19 @@ function updateElement($parent, newNode, oldNode, index = 0) {
   }
 }
 
-// 최상위 수준의 렌더링 함수입니다.
 export function renderElement(vNode, $container) {
-  /**
-   * 1. 이전 노드가 없을 경우
-   *  1.1 새로운 노드로 element를 생성해서 화면에 렌더링
-   * 2. 있을 경우
-   *  2.1 새로운 노드와 이전 노드를 비교해서 필요한 부분을 업데이트
-   */
-  const oldNode = $container._vNode ?? null;
-  const newNode = processVNode(vNode);
+  if ($container) {
+    const oldNode = $container._vNode ?? null;
+    const newNode = processVNode(vNode);
 
-  // - 최초 렌더링과 업데이트 렌더링 처리
-  if (!oldNode) {
-    $container.appendChild(createElement__v2(newNode));
-  } else {
-    // - 이전 vNode와 새로운 vNode를 비교하여 업데이트
-    updateElement($container, newNode, oldNode);
+    if (!oldNode) {
+      $container.appendChild(createElement__v2(newNode));
+    } else {
+      updateElement($container, newNode, oldNode);
+    }
+
+    $container._vNode = newNode;
+
+    setupEventListeners($container);
   }
-
-  $container._vNode = newNode;
-  // 이벤트 위임 설정
-  // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
-  // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
 }

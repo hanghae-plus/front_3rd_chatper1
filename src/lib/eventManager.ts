@@ -110,6 +110,8 @@ export function removeEvent(
   if (handlerMap) {
     handlerMap.delete($element);
 
+    $rootElement?.removeEventListener(eventType, handler, true);
+
     if (handlerMap.size === 0) {
       eventMap.delete(eventType);
       $rootElement?.removeEventListener(eventType, handleEvent, true);

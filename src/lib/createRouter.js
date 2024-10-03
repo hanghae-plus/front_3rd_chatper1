@@ -10,7 +10,7 @@ export const createRouter = (routes) => {
     notify();
   };
 
-  // window.addEventListener("popstate", () => notify());
+  window.addEventListener("popstate", () => notify());
 
   return { push, subscribe, getTarget };
 };

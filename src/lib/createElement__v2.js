@@ -5,10 +5,10 @@ import {addEvent} from "./eventManager.js";
 function createElementProps__v2(element, props) {
   if (!!props) {
     for (const [key,value] of Object.entries(props)) {
+
       const isEventHandler = key.startsWith('on') && typeof value === 'function'
       if (isEventHandler) {
         // prop이 handler일 경우 이벤트 등록
-        // element.addEventListener(key.slice(2).toLowerCase(), value);
         const eventType = key.slice(2).toLowerCase()
         addEvent(element, eventType, value)
       } else if (key === 'className') {
@@ -17,7 +17,6 @@ function createElementProps__v2(element, props) {
 
       } else {
         element.setAttribute(key, value);
-
       }
     }
   }

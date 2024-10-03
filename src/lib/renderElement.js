@@ -102,7 +102,7 @@ function updateElement(container, oldNode, newNode, index = 0) {
 
   if (!newNode && oldNode) {
     if (oldElement){
-      container.removeChild(oldElement);
+      container.removeChild(oldElement); 
     } 
     return;
   }

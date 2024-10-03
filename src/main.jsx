@@ -114,7 +114,6 @@ function main() {
 
   });
 
-
   addEvent('submit', '#profile-form', (e) => {
     const profileForm = document.getElementById("profile-form");
     if (profileForm) {

@@ -68,6 +68,7 @@ function updateAttributes($element, oldProps, newProps) {
         $element.className = value;
       } else if (key.startsWith('on')) {
         const eventName = key.slice(2).toLowerCase();
+
         addEvent($element, eventName, value);
       } else if (key === 'style') {
         Object.assign($element.style, value);
@@ -82,6 +83,8 @@ function updateAttributes($element, oldProps, newProps) {
 function updateElement($parent, newNode, oldNode, index = 0) {
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
+
+  const $element = $parent.childNodes[index];
 
   if (!newNode && oldNode) {
     $parent.removeChild($parent.childNodes[index]);
@@ -125,8 +128,6 @@ function updateElement($parent, newNode, oldNode, index = 0) {
   // HINT: 최대 자식 수를 기준으로 루프를 돌며 업데이트
   // 5-3. 불필요한 자식 노드 제거
   // TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
-
-  const $element = $parent.childNodes[index];
 
   updateAttributes($element, oldNode.props, newNode.props);
 

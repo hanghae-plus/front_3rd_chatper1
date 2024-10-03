@@ -9,11 +9,7 @@ export const App = ({ targetPage }) => {
   const PageComponent = targetPage ?? NotFoundPage;
 
   if (error) {
-    return (
-      <div>
-        <ErrorBoundary error={error} />
-      </div>
-    );
+    return <ErrorBoundary error={error} />;
   }
 
   return <PageComponent />;

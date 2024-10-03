@@ -50,7 +50,7 @@ function removeProp($el, name, value) {
     removeBooleanProp($el, name);
   } else if (isEventProp(name, value)) {
     const eventType = name.slice(2).toLowerCase();
-    removeEvent($el, eventType, value);
+    removeEvent($el, eventType);
   } else {
     $el.removeAttribute(name);
   }

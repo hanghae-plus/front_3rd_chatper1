@@ -38,7 +38,7 @@ export function addEvent(element, eventType, handler) {
   eventMap.set(eventType, [...events, { el: element, handler }]);
 }
 
-export function removeEvent(element, eventType, handler) {
+export function removeEvent(element, eventType) {
   const events = eventMap.get(eventType) || [];
   const newEvents = events.filter(({ el }) => el !== element);
 

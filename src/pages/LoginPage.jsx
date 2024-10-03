@@ -12,6 +12,7 @@ export const LoginPage = () => {
 
     if (username) {
       const data = { username, email: '', bio: '' };
+
       userStorage.set(data);
       globalStore.setState({ currentUser: data, loggedIn: true });
       router.push('/');

@@ -54,8 +54,6 @@ function render() {
     }
 
     console.error(error);
-
-    // globalStore.setState({ error });
   }
   registerGlobalEvents();
 }

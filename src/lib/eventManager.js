@@ -10,18 +10,17 @@ let rootElement = null;
 // TODO: setupEventListeners 함수 구현
 // 이 함수는 루트 요소에 이벤트 위임을 설정합니다.
 export function setupEventListeners(root) {
+  rootElement = root;
   // 1. rootElement 설정
 
-  // 2. 기존에 설정된 이벤트 리스너 제거 (있다면)
-
-  rootElement = root;
-
   Array.from(eventMap.keys()).forEach((eventType) => {
-    rootElement.removeEventListener(eventType, handleEvent); // 기존 리스너 제거
-    rootElement.addEventListener(eventType, handleEvent); // 새로운 리스너 추가
+    rootElement.removeEventListener(eventType, handleEvent, true);
+    // 2. 기존에 설정된 이벤트 리스너 제거 (있다면)
+
+    rootElement.addEventListener(eventType, handleEvent, true);
+    // 3. eventMap에 등록된 모든 이벤트 타입에 대해 루트 요소에 이벤트 리스너 추가
   });
 
-  // 3. eventMap에 등록된 모든 이벤트 타입에 대해 루트 요소에 이벤트 리스너 추가
   // 주의: 이벤트 캡처링을 사용하여 이벤트를 상위에서 하위로 전파
 }
 
@@ -39,19 +38,19 @@ function handleEvent(event) {
   if (!handlers) return;
 
   let currentTarget = target;
-  while (currentTarget && currentTarget !== rootElement) {
+
+  while (currentTarget) {
     for (const [element, handler] of handlers) {
       if (typeof element === 'object' && element === currentTarget) {
-        event.preventDefault();
-        handler(event);
-        return;
-      }
-      if (typeof element === 'string' && currentTarget.matches(element)) {
-        event.preventDefault();
+        if (event.cancelable) {
+          event.preventDefault();
+        }
+
         handler(event);
         return;
       }
     }
+
     currentTarget = currentTarget.parentElement;
   }
 }
@@ -59,10 +58,15 @@ function handleEvent(event) {
 // TODO: addEvent 함수 구현
 export function addEvent(element, eventType, handler) {
   // 1. eventMap에 이벤트 타입과 요소, 핸들러 정보 저장
+  // 2. 필요한 경우 루트 요소에 새 이벤트 리스너 추가
+  // 이 함수를 통해 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
 
   if (!eventMap.has(eventType)) {
     eventMap.set(eventType, new Map());
-    rootElement.addEventListener(eventType, handleEvent);
+
+    if (rootElement) {
+      rootElement.addEventListener(eventType, handleEvent);
+    }
   }
 
   const handlers = eventMap.get(eventType);
@@ -70,8 +74,6 @@ export function addEvent(element, eventType, handler) {
   if (!handlers.has(element)) {
     handlers.set(element, handler);
   }
-  // 2. 필요한 경우 루트 요소에 새 이벤트 리스너 추가
-  // 이 함수를 통해 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
 }
 
 // TODO: removeEvent 함수 구현

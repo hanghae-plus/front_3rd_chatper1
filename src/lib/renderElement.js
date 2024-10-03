@@ -29,7 +29,7 @@ function processVNode(vNode) {
   return {
     type: vNode.type,
     props: vNode.props || {},
-    children: children,
+    children,
   };
 }
 
@@ -145,11 +145,13 @@ function updateElement($parent, newNode, oldNode, index = 0) {
 }
 
 // TODO: renderElement 함수 구현
-
 export function renderElement(vNode, container) {
   // 최상위 수준의 렌더링 함수입니다.
   // - 이전 vNode와 새로운 vNode를 비교하여 업데이트
   // - 최초 렌더링과 업데이트 렌더링 처리
+  // 이벤트 위임 설정
+  // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
+  // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
 
   if (!container) return;
 
@@ -164,8 +166,4 @@ export function renderElement(vNode, container) {
   container._vNode = newNode;
 
   setupEventListeners(container);
-
-  // 이벤트 위임 설정
-  // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
-  // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
 }

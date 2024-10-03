@@ -1,6 +1,5 @@
 /** @jsx createVNode */
 import { createVNode } from "./lib";
-import React from "react";
 import { globalStore } from "./stores";
 
 export const App = ({ targetPage }) => {

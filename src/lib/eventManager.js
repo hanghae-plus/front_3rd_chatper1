@@ -36,17 +36,21 @@ function handleEvent(event) {
   const handlers = eventMap.get(type);
   if (!handlers) return;
 
-  for (const [element, handler] of handlers) {
-    if (typeof element === 'object' && element === target) {
-      event.preventDefault();
-      handler(event);
-      break;
+  let currentElement = target;
+
+  while (currentElement) {
+    for (const [element, handler] of handlers) {
+      if (typeof element === 'object' && element === currentElement) {
+        handler(event);
+        return; 
+      }
+
+      if (typeof element === 'string' && currentElement.matches(element)) {
+        handler(event);
+        return; 
+      }
     }
-    if (typeof element === 'string' && target.matches(element)) {
-      event.preventDefault();
-      handler(event);
-      break;
-    }
+    currentElement = currentElement.parentNode; 
   }
 }
 

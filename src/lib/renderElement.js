@@ -168,7 +168,7 @@ export function renderElement(vNode, container) {
   // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
   // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
   
-    if(!container){
+  if(!container){
     return
   }
 

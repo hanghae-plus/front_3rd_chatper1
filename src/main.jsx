@@ -1,11 +1,11 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
-import { globalStore } from "./stores";
-import { ForbiddenError, UnauthorizedError } from "./errors";
-import { userStorage } from "./storages";
-import { addEvent, registerGlobalEvents } from "./utils";
-import { App } from "./App";
+import {createElement, createRouter, createVNode} from "./lib";
+import {HomePage, LoginPage, ProfilePage} from "./pages";
+import {globalStore} from "./stores";
+import {ForbiddenError, UnauthorizedError} from "./errors";
+import {userStorage} from "./storages";
+import {addEvent, registerGlobalEvents} from "./utils";
+import {App} from "./App";
 
 const router = createRouter({
   "/": HomePage,

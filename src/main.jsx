@@ -27,13 +27,11 @@ const router = createRouter({
 
 export function login(userInfo) {
   globalStore.setState({ currentUser: userInfo, loggedIn: true });
-  router.push("/");
   userStorage.set(userInfo);
 }
 
 export function updateProfile(userInfo) {
   globalStore.setState({ currentUser: userInfo });
-  router.push("/profile");
   userStorage.set(userInfo);
 }
 

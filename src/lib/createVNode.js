@@ -5,11 +5,5 @@
 // 4. Infinity를 사용하여 모든 깊이의 배열을 평탄화하세요.
 
 export function createVNode(type, props, ...children) {
-    // 여기에 구현하세요
-
-    const vNode = { type: type, props: props, children: children.flat(Infinity) }; // 배열 깊이와 무관하게 평탄화
-
-    console.log(vNode);
-
-    return vNode;
+    return { type: type, props: props, children: children.flat(Infinity) };
 }

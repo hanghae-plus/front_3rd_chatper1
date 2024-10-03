@@ -41,7 +41,6 @@ function render() {
 
   try {
     renderElement(<App targetPage={router.getTarget()} />, $root);
-    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push('/');

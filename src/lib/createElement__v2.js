@@ -26,16 +26,22 @@ export function createElement__v2(vNode) {
 
   for (let name in vNode.props) {
     let propsName = name;
-    if (events.includes(name) && typeof vNode.props[name] === 'function') {
+    let propsValue = vNode.props[name];
+    if (events.includes(name) && typeof propsValue === 'function') {
       const eventName = name.slice(2).toLocaleLowerCase();
-      const eventFn = vNode.props[name];
+      const eventFn = propsValue;
       $el.addEventListener(eventName, eventFn);
       continue;
     }
     if (name === 'className') {
       propsName = 'class';
+    } else if (name === 'style' && typeof propsValue === 'object') {
+      const styleProps = Object.entries(propsValue)
+        .map(([key, value]) => `${camelToKebab(key)}: ${value}`)
+        .join(';');
+      propsValue = styleProps;
     }
-    $el.setAttribute(propsName, vNode.props[name]);
+    $el.setAttribute(propsName, propsValue);
   }
 
   vNode.children.forEach(child => {
@@ -44,4 +50,8 @@ export function createElement__v2(vNode) {
   });
 
   return $el;
+}
+
+function camelToKebab(str) {
+  return str.replace(/[A-Z]/g, match => `-${match.toLowerCase()}`);
 }

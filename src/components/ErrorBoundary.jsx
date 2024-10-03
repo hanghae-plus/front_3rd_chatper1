@@ -1,3 +1,6 @@
+/** @jsx createVNode */
+import { createVNode } from '../lib';
+
 export const ErrorBoundary = ({ message }) => {
   return (
     <div

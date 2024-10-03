@@ -90,11 +90,12 @@ function updateElement(parent, newNode, oldNode, index = 0) {
     typeof node === "string" || typeof node === "number";
 
   if (isTextNode(newNode) && isTextNode(oldNode)) {
-    // 내용이 다르면 텍스트 노드 업데이트
     if (newNode !== oldNode) {
-      const textNode = document.createTextNode(newNode.toString());
+      const textNode = document.createTextNode(String(newNode));
       // 부모 노드에서 기존 텍스트 노드를 교체
-      parent.replaceChild(textNode, parentChildNode);
+      if (parentChildNode) {
+        parent.replaceChild(textNode, parentChildNode);
+      }
     }
     return;
   }

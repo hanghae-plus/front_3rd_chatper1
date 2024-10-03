@@ -30,6 +30,10 @@ export const createElement__v2 = (vNode) => {
         addEvent(element, eventType, value);
       } else if (key === 'className') {
         element.className = value;
+      } else if (key === 'style' && typeof value === 'object') {
+        Object.keys(value).forEach((styleName) => {
+          element.style[styleName] = value[styleName];
+        });
       } else {
         element.setAttribute(key, value);
       }

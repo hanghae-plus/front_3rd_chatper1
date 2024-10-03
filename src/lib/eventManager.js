@@ -7,48 +7,47 @@ const eventMap = new Map();
 // 이벤트 위임이 설정될 루트 요소
 let rootElement = null;
 
+function handleRootEvent(evnetType, action) {
+  if (!rootElement) return;
+  if (action === "add") {
+    rootElement.addEventListener(evnetType, handleEvent, false);
+  } else if (action === "remove") {
+    rootElement.removeEventListener(evnetType, handleEvent, false);
+  }
+}
+
 // TODO: setupEventListeners 함수 구현
 // 이 함수는 루트 요소에 이벤트 위임을 설정합니다.
 export function setupEventListeners(root) {
   if (!root || !(root instanceof Element)) {
-    throw new Error("루트 요소가 올바르지 않습니다.");
+    throw new Error("루트 요소 X");
   }
 
   if (rootElement) {
     eventMap.forEach((_, eventType) => {
-      rootElement.removeEventListener(eventType, handleEvent, true);
+      handleRootEvent(eventType, "remove");
     });
   }
 
   rootElement = root;
 
   eventMap.forEach((_, eventType) => {
-    rootElement.addEventListener(eventType, handleEvent, true);
+    handleRootEvent(eventType, "add");
   });
 }
 
-// TODO: handleEvent 함수 구현
-// 이 함수는 실제 이벤트가 발생했을 때 호출되는 핸들러입니다.
 function handleEvent(event) {
   const { target, type } = event;
-
   const handlers = eventMap.get(type);
+
   if (!handlers) return;
 
   let currentElement = target;
 
-  while (currentElement && currentElement !== document.body) {
-    if (currentElement.classList.contains("delegate-event")) {
-      const elementHandlers = handlers.get(currentElement);
-      if (elementHandlers) {
-        elementHandlers.forEach((handler) => {
-          try {
-            handler.call(currentElement, event);
-          } catch (error) {
-            console.error("Error in event handler:", error);
-          }
-        });
-      }
+  while (currentElement && currentElement !== rootElement.parentElement) {
+    if (handlers.has(currentElement)) {
+      const handler = handlers.get(currentElement);
+      handler.call(currentElement, event);
     }
     currentElement = currentElement.parentElement;
   }
@@ -56,71 +55,31 @@ function handleEvent(event) {
 
 // TODO: addEvent 함수 구현
 export function addEvent(element, eventType, handler) {
-  if (!(element instanceof Element)) {
-    throw new Error("요소가 X");
+  if (!element || !(element instanceof Element)) {
+    throw new Error("요소가 없음");
   }
   if (typeof eventType !== "string") {
-    throw new Error("이벤트 타입 X");
+    throw new Error("event type이 유효하지 않음");
   }
   if (typeof handler !== "function") {
-    throw new Error("핸들러 X");
+    throw new Error("handler가 유효하지 않음");
   }
-
-  if (!window.eventMap) {
-    window.eventMap = new Map();
-  }
-
   if (!eventMap.has(eventType)) {
     eventMap.set(eventType, new Map());
-    document.body.addEventListener(eventType, handleEvent, true);
+    handleRootEvent(eventType, "add");
   }
-
-  const elementMap = eventMap.get(eventType);
-
-  if (!elementMap.has(element)) {
-    elementMap.set(element, []);
-  }
-
-  const handlers = elementMap.get(element); //  해당 요소의 핸들러 목록
-
-  if (!handlers.includes(handler)) {
-    //  중복 핸들러 등록 방지
-    handlers.push(handler);
-  }
-  element.classList.add("delegate-event");
+  const handlers = eventMap.get(eventType);
+  handlers.set(element, handler);
 }
 
-// TODO: removeEvent 함수 구현
 export function removeEvent(element, eventType, handler) {
-  if (!(element instanceof Element)) {
-    throw new Error("Invalid element provided");
-  }
-  if (typeof eventType !== "string") {
-    throw new Error("Invalid event type");
-  }
-  if (typeof handler !== "function") {
-    throw new Error("Invalid event handler");
-  }
+  if (!eventMap.has(eventType)) return;
 
-  if (!window.eventMap || !eventMap.has(eventType)) return;
+  const handlers = eventMap.get(eventType);
+  handlers.delete(element);
 
-  const elementMap = eventMap.get(eventType);
-  if (!elementMap.has(element)) return;
-
-  const handlers = elementMap.get(element);
-  const index = handlers.indexOf(handler);
-
-  if (index !== -1) {
-    handlers.splice(index, 1);
-    if (handlers.length === 0) {
-      elementMap.delete(element);
-      element.classList.remove("delegate-event");
-    }
-    if (elementMap.size === 0) {
-      eventMap.delete(eventType);
-      if (rootElement) {
-        rootElement.removeEventListener(eventType, handleEvent, true);
-      }
-    }
+  if (handlers.size === 0) {
+    eventMap.delete(eventType);
+    handleRootEvent(eventType, "remove");
   }
 }

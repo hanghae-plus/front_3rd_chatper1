@@ -14,7 +14,7 @@ function processVNode(vNode) {
   }
 
   if (typeof vNode === "string" || typeof vNode === "number") {
-    return document.createTextNode(String(vNode));
+    return String(vNode);
   }
 
   if (typeof vNode.type === "function") {
@@ -178,4 +178,5 @@ export function renderElement(vNode, container) {
     updateElement(container, vNode, container._vNode);
     container._vNode = vNode;
   }
+  setupEventListeners(container);
 }

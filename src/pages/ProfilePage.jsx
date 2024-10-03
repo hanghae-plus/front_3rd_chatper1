@@ -5,7 +5,8 @@ import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { Navigation } from "./Navigation";
 
-export const ProfilePage = ({ currentUser, loggedIn }) => {
+export const ProfilePage = () => {
+  const { currentUser, loggedIn } = globalStore.getState();
   return (
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">

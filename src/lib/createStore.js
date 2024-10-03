@@ -9,7 +9,6 @@ export const createStore = (initialStore) => {
     state = { ...state, ...newState }
     notify()
   }
-  // console.log("state",state)
 
   const getState = () => ({ ...state });
 

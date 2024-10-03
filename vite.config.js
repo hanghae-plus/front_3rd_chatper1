@@ -18,7 +18,6 @@ export default mergeConfig(
         '@components': path.resolve(__dirname, './src/components'),
         '@lib': path.resolve(__dirname, './src/lib'),
         '@pages': path.resolve(__dirname, './src/pages'),
-        '@constants': path.resolve(__dirname, './src/constants'),
         '@stores': path.resolve(__dirname, './src/stores'),
         '@storages': path.resolve(__dirname, './src/storages'),
         '@utils': path.resolve(__dirname, './src/utils'),

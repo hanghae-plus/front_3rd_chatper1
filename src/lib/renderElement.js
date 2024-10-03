@@ -1,5 +1,4 @@
-import { createElement__v2 } from "./createElement__v2.js";
-import { setupEventListeners } from "./eventManager";
+import { createElement__v2, setupEventListeners } from "./";
 import { handleUpdateAttributes } from "../utils";
 
 const processVNode = (vNode) => {

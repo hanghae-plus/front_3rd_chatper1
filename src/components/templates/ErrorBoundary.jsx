@@ -6,7 +6,7 @@ export const ErrorBoundary = () => {
   const error = globalStore.getState().error;
 
   if (!error) {
-    return null;
+    return <div id="error-boundary"></div>;
   }
 
   return (

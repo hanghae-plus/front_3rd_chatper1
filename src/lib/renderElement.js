@@ -180,6 +180,6 @@ export function renderElement(vNode, container) {
   } else {
     container.appendChild(createElement__v2(newVNode));
   }
-  setupEventListeners(container);
   container.nowVNode = newVNode;
+  setupEventListeners(container);
 }

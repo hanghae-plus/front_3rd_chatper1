@@ -24,7 +24,12 @@ export function elementToVNode(element) {
 
   // DOM 요소의 속성을 vNode의 props로 추가
   for (const attr of attributes) {
-    vNode.props[attr.name] = attr.value;
+    // class => className 으로 변환
+    if (attr.name === "class") {
+      vNode.props["className"] = attr.value;
+    } else {
+      vNode.props[attr.name] = attr.value;
+    }
   }
 
   // 이벤트 리스너를 props로 변환

@@ -85,20 +85,7 @@ function updateElement(parent, newNode, oldNode, index = 0) {
     parent.replaceChild(createElement__v2(newNode), parent.childNodes[index]);
   } else {
     // 5. 같은 타입의 노드 업데이트
-    // 재사용 가능한 노드는 속성이 동일한지 비교 후 재사용
-    const oldProps = oldNode.props || {};
-    const newProps = newNode.props || {};
-    const propsAreEqual = Object.keys(oldProps).every((key) => {
-      if (key === "class") {
-        return oldProps[key] === newProps[key + "Name"];
-      }
-      return oldProps[key] === newProps[key];
-    });
-
-    // 속성이 다르면 업데이트
-    if (!propsAreEqual) {
-      updateAttributes(parent.childNodes[index], oldProps, newProps);
-    }
+    updateAttributes(parent.childNodes[index], oldNode.props, newNode.props);
 
     // 5-2. 자식 노드 재귀적 업데이트
     const newChildren = newNode.children || [];

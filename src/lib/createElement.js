@@ -4,7 +4,7 @@
  * @returns {HTMLElement|DocumentFragment|Text} 생성된 DOM 요소.
  */
 export function createElement(vNode) {
-	// 1. 빈 텍스트 노드를 반환합니다.
+	// 1. 렌더링되지 않는 값에 대해서는 빈 텍스트 노드를 반환
 	if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
 		return document.createTextNode('');
 	}
@@ -14,7 +14,7 @@ export function createElement(vNode) {
 		return document.createTextNode(String(vNode));
 	}
 
-	// 3. vNode가 배열, 즉 노드가 여러 개 이면 DocumentFragment를 생성하고 각 노드에 대해 createElement를 재귀 호출하여 추가한다.
+	// 3. vNode가 배열, 즉 노드가 여러 개 이면 DocumentFragment를 생성하고 각 노드에 대해 createElement를 재귀 호출하여 추가
 	if (Array.isArray(vNode)) {
 		const fragment = document.createDocumentFragment();
 		vNode.forEach((child) => {
@@ -57,7 +57,7 @@ export function createElement(vNode) {
 	if (vNode.children) {
 		vNode.children.forEach((child) => {
 			const childElement = createElement(child);
-				domElement.appendChild(childElement);
+			domElement.appendChild(childElement);
 		});
 	}
 

@@ -7,8 +7,7 @@ export const LoginPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const username = document.querySelector('#username');
-
+    const username = document.querySelector('#username').value;
     const user = { username, email: '', bio: '' };
     globalStore.setState({ currentUser: user, loggedIn: true });
     userStorage.set(user);

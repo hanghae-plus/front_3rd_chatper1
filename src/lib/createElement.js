@@ -52,22 +52,24 @@ export function createElement(vNode) {
 
   const element = document.createElement(vNode.type);
   applyPropsToElement(element, vNode.props);
-  
+
   (vNode.children || []).forEach(child => {
     element.appendChild(createElement(child));
   });
 
   return element;
 }
+
 /**
  * @function applyPropsToElement
- * @terms 주어진 DOM 요소에 속성들을 적용
+ * @desc 주어진 `props` 객체의 모든 속성을 DOM 요소에 일괄적으로 적용
+ * `props` 객체를 순회하며 이벤트 핸들러, 클래스, 스타일, 일반 속성을 모두 처리
+ * 
  * @param {HTMLElement} element - 속성을 적용할 DOM 요소
  * @param {Object} props - 적용할 속성들을 담고 있는 객체
- * @desc 이 함수는 props 객체 내의 각 속성을 확인하고, 적절하게 DOM 요소에 적용
- * 이벤트 핸들러는 'on'으로 시작하는 속성명에서 추출되며, className은 요소의 클래스 속성을 설정
- * 스타일 객체는 요소에 인라인 스타일로 적용되며, 그 외의 속성은 setAttribute를 통해 적용
+ * 
  */
+
 function applyPropsToElement(element, props) {
   Object.entries(props || {}).forEach(([key, value]) => {
     if (key.startsWith('on') && typeof value === 'function') {

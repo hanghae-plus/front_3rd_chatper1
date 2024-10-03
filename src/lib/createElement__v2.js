@@ -32,9 +32,8 @@ export const createElement__v2 = (vNode) => {
    * 배열이 빈 경우에는 빈 텍스트 노드를 반환
    */
   if (Array.isArray(vNode)) {
-    if (vNode.length === 0) return document.createTextNode('');
     const fragment = new DocumentFragment();
-    vNode.forEach((child) => fragment.appendChild(createElement__v2(child))); // 수정: 함수 호출 명 변경
+    vNode.forEach((child) => fragment.appendChild(createElement__v2(child)));
     return fragment;
   }
 
@@ -67,21 +66,33 @@ export const createElement__v2 = (vNode) => {
 
 /**
  * @function applyPropsBatch
- * @description 주어진 DOM 요소에 속성(key-value 쌍) 적용
- * 이벤트 핸들러는 'on'으로 시작하는 속성명에서 추출되며, 'className'은 요소의 클래스 속성으로 설정하고,
- * 스타일 객체는 요소에 인라인 스타일로 적용하며, 그 외의 속성은 setAttribute를 통해 적용합니다.
+ * @desc 주어진 DOM 요소에 하나의 속성(key-value 쌍)을 적용
+ * 이벤트 핸들러는 'on'으로 시작하는 속성명에서 추출하고 이벤트 등록
+ * 'className'은 요소의 클래스 속성으로 설정
+ * 'style'은 스타일 객체를 인라인 스타일로 적용
+ * 그 외의 속성은 `setAttribute`를 사용하여 적용
+ * 
  * @param {HTMLElement} element - 속성을 적용할 DOM 요소
- * @param {string} key - 속성의 키
- * @param {any} value - 속성의 값
+ * @param {string} key - 적용할 속성의 키
+ * @param {any} value - 적용할 속성의 값
  */
+
 const applyPropsBatch = (element, key, value) => {
   if (key.startsWith('on') && typeof value === 'function') {
     const eventType = key.slice(2).toLowerCase();
     addEvent(eventType, element, value);
   } else if (key === 'className') {
     element.setAttribute('class', value || '');
-  } else if (key === 'style') {
-    Object.assign(element.style, value);
+  } else if (key === 'style' && typeof value === 'object') {
+    Object.entries(value).forEach(([styleKey, styleValue]) => {
+      try {
+        if (typeof styleKey === 'string' && styleValue !== undefined && styleValue !== null) {
+          element.style[styleKey] = String(styleValue);
+        }
+      } catch (error) {
+        console.warn(`스타일을 설정하는데 실패했습니다. [${styleKey}]:`, error);
+      }
+    });
   } else {
     element.setAttribute(key, value);
   }

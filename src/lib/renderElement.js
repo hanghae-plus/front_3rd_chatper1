@@ -32,24 +32,25 @@ function updateAttributes(target, newProps, oldProps) {
   //     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
   //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
   //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
-  // 이전 props에서 제거된 속성 처리
+
   for (const key in oldProps) {
-    if (!(key in newProps)) {
-      if (key.startsWith('on')) {
-        removeEvent(target, key.toLowerCase().substring(2), oldProps[key]);
-      } else {
-        target[key] = null; // 일반 속성 제거
-      }
+    if (key in (newProps ?? {})) {
+      continue;
     }
+    if (key.startsWith('on')) {
+      removeEvent(target, key.toLowerCase().substring(2), oldProps[key]);
+      continue;
+    }
+    delete target[key];
   }
 
   // 새로운 props의 속성 추가 또는 업데이트
   for (const key in newProps) {
     if (key.startsWith('on')) {
       addEvent(target, key.toLowerCase().substring(2), newProps[key]);
-    } else {
-      target[key] = newProps[key];
+      continue;
     }
+    target[key] = newProps[key];
   }
 }
 

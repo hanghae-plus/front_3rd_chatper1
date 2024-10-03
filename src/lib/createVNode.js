@@ -5,8 +5,8 @@ export function createVNode(type, props, ...children) {
     children:
     children
       .flat(Infinity) //모든 깊이의 배열을 평탄화
-      .filter(child => child != null && child !== false)
-      .map(child => typeof child === 'object'?child:String(child))
+      .filter(child => !!child)
+      // .map(child => typeof child === 'object'?child:String(child))
 
   }
 }

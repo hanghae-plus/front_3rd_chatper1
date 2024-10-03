@@ -22,7 +22,7 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
       expect(container.innerHTML).toBe('<div id="test">Hello</div>');
     });
 
-    ('diff 알고리즘을 통해 변경된 부분만 업데이트해야 한다', () => {
+    it('diff 알고리즘을 통해 변경된 부분만 업데이트해야 한다', () => {
       const initialVNode = (
         <div>
           <h1>Title</h1>
@@ -195,14 +195,13 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
         </div>
       );
       renderElement(initialVNode, container);
-      console.log( "renderElement1",  renderElement(initialVNode, container))
+
       const updatedVNode = (
         <div>
           <button>Button Without Handler</button>
         </div>
       );
       renderElement(updatedVNode, container);
-      console.log("renderElement2", renderElement(updatedVNode, container))
 
       const button = container.querySelector('button');
       button.click();

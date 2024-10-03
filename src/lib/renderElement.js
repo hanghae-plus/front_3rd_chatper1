@@ -33,11 +33,13 @@ function processVNode(vNode) {
 
 // TODO: updateAttributes 함수 구현
 function updateAttributes(element, newProps, oldProps = {}) {
-
+  if(newProps === null){
+    newProps = {}
+  }
   for ( const key in oldProps){
-    if(newProps === null){
-      return;
-    }
+    // if(newProps === null){
+    //   return;
+    // }
   if(!(key in newProps)){
     if(key.startsWith('on')){
       const eventName = key.toLowerCase().substring(2);

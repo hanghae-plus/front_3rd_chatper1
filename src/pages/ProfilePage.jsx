@@ -6,7 +6,6 @@ import { globalStore } from "../stores";
 
 export const ProfilePage = () => {
   const { username, email, bio } = userStorage.get("user");
-  console.log("profile", username, email, bio);
 
   const labelInput = (name, label, value, type = "text") => (
     <div class="mb-4">

@@ -1,3 +1,6 @@
+/** @jsx createVNode */
+import { createVNode } from "../lib";
+
 export function ErrorPage() {
   return (
     <main className="bg-white p-8 rounded-lg shadow-md w-full text-center max-w-[480px]">

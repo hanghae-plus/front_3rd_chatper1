@@ -3,3 +3,4 @@ export * from "./LoginPage";
 export * from "./NotFoundPage";
 export * from "./ProfilePage";
 export * from "./CustomHomePage";
+export * from "./ErrorPage";

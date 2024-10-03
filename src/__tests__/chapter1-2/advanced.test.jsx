@@ -122,13 +122,17 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
         </div>
       );
 
-      const initialVNode = <FuncComponent title="Initial Title" content="Initial Content" />;
+      const initialVNode = (
+        <FuncComponent title="Initial Title" content="Initial Content" />
+      );
       renderElement(initialVNode, container);
 
       const originalH1 = container.querySelector('h1');
       const originalP = container.querySelector('p');
 
-      const updatedVNode = <FuncComponent title="Updated Title" content="Initial Content" />;
+      const updatedVNode = (
+        <FuncComponent title="Updated Title" content="Initial Content" />
+      );
       renderElement(updatedVNode, container);
 
       expect(container.querySelector('h1')).toBe(originalH1);
@@ -146,19 +150,25 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
         </div>
       );
 
-      const initialVNode = <ParentComponent title="Parent Title" childText="Child Text" />;
+      const initialVNode = (
+        <ParentComponent title="Parent Title" childText="Child Text" />
+      );
       renderElement(initialVNode, container);
 
       const originalH1 = container.querySelector('h1');
       const originalP = container.querySelector('p');
 
-      const updatedVNode = <ParentComponent title="Parent Title" childText="Updated Child Text" />;
+      const updatedVNode = (
+        <ParentComponent title="Parent Title" childText="Updated Child Text" />
+      );
       renderElement(updatedVNode, container);
 
       expect(container.querySelector('h1')).toBe(originalH1);
       expect(container.querySelector('p')).toBe(originalP);
       expect(container.querySelector('h1').textContent).toBe('Parent Title');
-      expect(container.querySelector('p').textContent).toBe('Updated Child Text');
+      expect(container.querySelector('p').textContent).toBe(
+        'Updated Child Text'
+      );
     });
   });
 

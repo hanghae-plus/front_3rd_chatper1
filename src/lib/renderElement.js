@@ -64,22 +64,23 @@ function removeProp($el, name, value) {
   }
 }
 
-// TODO: 코드 리팩토링
 function updateAttributes($el, newProps, oldProps) {
-  const newPropsKeys = Object.keys(newProps);
-  const oldPropKeys = Object.keys(oldProps);
+  const allProps = new Set([...Object.keys(newProps), ...Object.keys(oldProps)]);
 
-  newPropsKeys.forEach((name) => {
-    if (newProps[name] !== oldProps[name]) {
-      setProp($el, name, newProps[name]);
-    }
-  });
+  for (const name of allProps) {
+    const newValue = newProps[name];
+    const oldValue = oldProps[name];
 
-  oldPropKeys.forEach((name) => {
-    if (!newPropsKeys.includes(name)) {
-      removeProp($el, name, oldProps[name]);
+    if (newValue === oldValue) {
+      continue;
     }
-  });
+
+    if (Object.hasOwn(newProps, name)) {
+      setProp($el, name, newValue);
+    } else {
+      removeProp($el, name, oldValue);
+    }
+  }
 }
 
 function isNodeChange(newNode, oldNode) {

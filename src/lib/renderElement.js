@@ -126,7 +126,6 @@ function updateElement($parent, newNode, oldNode, index = 0) {
     const newChildren = newNode.children;
     const oldChildren = oldNode.children;
 
-    // TODO: 이 부분 팀원들한테 질문하기
     // 새로운 자식 노드를 기준으로 updateElement를 실행
     for (let i = 0; i < newChildren.length; i++) {
       updateElement($currentElement, newNode.children[i], oldNode.children[i], i);

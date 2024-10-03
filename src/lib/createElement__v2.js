@@ -51,7 +51,6 @@ export function createElement__v2(vNode) {
 
   const $el = document.createElement(vNode.type);
 
-  // TODO: vNode.props이 undefined일 경우에 대한 처리도 해줘야 하나?
   if (vNode.props !== null) {
     setProps($el, vNode.props);
     setEvents($el, vNode.props);

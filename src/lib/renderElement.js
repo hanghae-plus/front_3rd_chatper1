@@ -69,6 +69,20 @@ function updateAttributes($target, newProps, oldProps) {
       // className 처리
       if (name in newProps) $target.setAttribute('class', newProps[name]);
       else $target.removeAttribute('class');
+    } else if (name === 'style') {
+      // style 처리
+      if (!name in newProps) {
+        $target.removeAttribute('style');
+        return;
+      }
+      const newStyle = newProps[name] || {};
+      const oldStyle = oldProps[name] || {};
+      const styles = Object.assign({}, newStyle, oldStyle);
+      Object.keys(styles).forEach(key => {
+        if (newStyle[key] !== oldStyle[key])
+          $target.style[key] = newStyle[key] ?? '';
+      });
+
     } else {
       if (name in newProps) $target.setAttribute(name, newProps[name]);
       else $target.removeAttribute(name);

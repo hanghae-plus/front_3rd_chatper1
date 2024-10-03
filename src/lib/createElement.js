@@ -2,11 +2,10 @@ import { formatVNodeAttr } from './formatVNodeAttr';
 import { isPrimitiveDataType } from './isPrimitiveDataType';
 
 export function createElement(vNode) {
-  if (vNode === null || vNode === undefined) return document.createTextNode('');
+  if (isPrimitiveDataType(vNode, ['undefined', 'boolean', 'null'])) return document.createTextNode('');
 
-  if (typeof vNode === 'boolean') return document.createTextNode('');
+  if (isPrimitiveDataType(vNode, ['string', 'number'])) return document.createTextNode(String(vNode));
 
-  if (isPrimitiveDataType(vNode, ['string', 'number'])) return document.createTextNode(vNode);
   if (Array.isArray(vNode)) {
     if (vNode.length === 0) return document.createTextNode('');
     const fragment = new DocumentFragment();

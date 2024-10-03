@@ -2,11 +2,10 @@ import { addEvent } from './eventManager';
 import { formatVNodeAttr, isPrimitiveDataType } from './';
 
 export function createElement__v2(vNode) {
-  if (vNode === null || vNode === undefined) return document.createTextNode('');
+  if (isPrimitiveDataType(vNode, ['undefined', 'boolean', 'null'])) return document.createTextNode('');
 
-  if (typeof vNode === 'boolean') return document.createTextNode('');
+  if (isPrimitiveDataType(vNode, ['string', 'number'])) return document.createTextNode(String(vNode));
 
-  if (isPrimitiveDataType(vNode, ['string', 'number'])) return document.createTextNode(vNode);
   if (Array.isArray(vNode)) {
     if (vNode.length === 0) return document.createTextNode('');
     const fragment = new DocumentFragment();

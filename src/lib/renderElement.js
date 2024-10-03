@@ -15,18 +15,6 @@ function processVNode(vNode) {
     return processVNode(vNode.type(vNode.props || {}));
   }
 
-  // if (vNode.props) {
-  //   Object.keys(vNode.props).forEach(prop => {
-  //     if (prop.startsWith("on")) {
-  //       const event = prop.toLowerCase().substring(2);
-  //       element.addEventListener(event, vNode.props[prop]);
-  //     } else if (prop === "className") {
-  //       element.setAttribute("class", vNode.props[prop]);
-  //     } else {
-  //       element.setAttribute(prop, vNode.props[prop]);
-  //     }
-  //   });
-  // }
 
   vNode.children.forEach(child => {
     processVNode(child);
@@ -36,11 +24,29 @@ function processVNode(vNode) {
 }
 
 function updateAttributes(domElement, newProps, oldProps) {
+  const props = new Set();
+
+  Object.keys(newProps).forEach(key => {
+    if (key.startsWith('on')) {
+      const eventName = key.slice(2).toLowerCase();
+      removeEvent(domElement, eventName, oldProps[key]);
+      addEvent(domElement, eventName, newProps[key]);
+    } else if (key === 'className') {
+      domElement.setAttribute('class', newProps[key]);
+    } else {
+      domElement.setAttribute(key, newProps[key]);
+    }
+  });
+  
   Object.keys(oldProps).forEach(key => {
     if (!(key in newProps)) {
       domElement.removeAttribute(key);
+    } else {
+      domElement.removeAttribute(key);
     }
   });
+
+
 }
 
 function updateElement(parent, newNode, oldNode, index = 0) {

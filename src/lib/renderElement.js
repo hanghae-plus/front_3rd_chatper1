@@ -36,7 +36,10 @@ function processVNode(vNode) {
   return '';
 }
 
-function updateAttributes(element, newProps, oldProps = {}) {
+function updateAttributes(element, newProps = {}, oldProps = {}) {
+  // newProps가 null이면 빈 객체로 초기화
+  newProps = newProps || {};
+
   const allProps = Object.keys({ ...oldProps, ...newProps });
 
   allProps.forEach((key) => {
@@ -59,7 +62,7 @@ function updateAttributes(element, newProps, oldProps = {}) {
       } else if (key === 'style') {
         if (typeof newValue === 'string') {
           element.style.cssText = newValue;
-        } else {
+        } else if (newValue && typeof newValue === 'object') {
           Object.keys(newValue).forEach((styleKey) => {
             if (element.style[styleKey] !== newValue[styleKey]) {
               element.style[styleKey] = newValue[styleKey];
@@ -88,7 +91,6 @@ function updateAttributes(element, newProps, oldProps = {}) {
 function updateElement(parentElement, newNode, oldNode, index = 0) {
   // parentElement가 없거나 유효하지 않은 경우 처리
   if (!parentElement || !(parentElement instanceof Element)) {
-    console.error('Invalid parent element:', parentElement);
     return;
   }
 

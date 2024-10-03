@@ -1,8 +1,9 @@
 /** @jsx createVNode */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { createElement, createVNode, isInValidVNode } from '../../lib';
+import { createElement, createVNode } from '../../lib';
 import { Footer, Header, Navigation, Post, PostForm } from "../../components";
 import { HomePage, LoginPage, NotFoundPage, ProfilePage } from "../../pages";
+import { isInValidVNode } from '../../utils';
 
 describe('Chapter1-2 > 기본과제 > 가상돔 만들기 > ', () => {
   describe('createVNode > ', () => {

@@ -1,16 +1,17 @@
-import { createObserver } from "./createObserver";
+import { createObserver } from './createObserver';
 
 export const createRouter = (routes) => {
   const { subscribe, notify } = createObserver();
 
-  const getTarget = () => routes[window.location.pathname]
+  const getTarget = () => (routes[window.location.pathname] ? routes[window.location.pathname] : routes['/404']);
 
   const push = (path) => {
+    if (window.location.pathname === path) return;
     window.history.pushState(null, null, path);
     notify();
-  }
+  };
 
   window.addEventListener('popstate', () => notify());
 
-  return { push, subscribe, getTarget }
+  return { push, subscribe, getTarget };
 };

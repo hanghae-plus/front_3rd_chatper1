@@ -15,8 +15,6 @@ function processVNode(vNode) {
     return processVNode(vNode.type(vNode.props || {}));
   }
 
-  // const element = document.createElement(vNode.type);
-
   // if (vNode.props) {
   //   Object.keys(vNode.props).forEach(prop => {
   //     if (prop.startsWith("on")) {
@@ -38,22 +36,6 @@ function processVNode(vNode) {
 }
 
 function updateAttributes(domElement, newProps, oldProps) {
-  console.log(domElement)
-  console.log(newProps)
-  console.log(oldProps)
-  // Object.keys(newProps).forEach(key => {
-  //   if (key.startsWith('on')) {
-  //     const eventName = key.slice(2).toLowerCase();
-  //     removeEvent(domElement, eventName, oldProps[key]);
-  //     addEvent(domElement, eventName, newProps[key]);
-  //   } else if (key === 'className') {
-  //     domElement.setAttribute('class', newProps[key]);
-  //   } else {
-  //     domElement.setAttribute(key, newProps[key]);
-  //   }
-  // });
-
-  
   Object.keys(oldProps).forEach(key => {
     if (!(key in newProps)) {
       domElement.removeAttribute(key);
@@ -62,7 +44,7 @@ function updateAttributes(domElement, newProps, oldProps) {
 }
 
 function updateElement(parent, newNode, oldNode, index = 0) {
-  // console.log(parent, newNode, oldNode);
+  const newChild = createElement__v2(newNode);
   const oldChild = parent.childNodes[index];
   
   if (!newNode && oldNode) {
@@ -71,7 +53,7 @@ function updateElement(parent, newNode, oldNode, index = 0) {
   }
   
   if (newNode && !oldNode) {
-    parent.appendChild(processVNode(newNode));
+    parent.appendChild(newChild);
     return;
   }
   
@@ -85,7 +67,11 @@ function updateElement(parent, newNode, oldNode, index = 0) {
   }
 
   if (newNode.type !== oldNode.type) {
-    parent.replaceChild(processVNode(newNode), oldChild);
+    if (oldChild) {
+      parent.replaceChild(newChild, oldChild);
+    } else {
+      parent.appendChild(newChild);
+    }
     return;
   }
 
@@ -122,14 +108,3 @@ export function renderElement(newVNode, container) {
   setupEventListeners(container); 
   container._oldNode = vNode;
 };
-// export function renderElement(newVNode, container) {
-//   const $oldNode = container.childNodes[0];
-//   console.log($oldNode)
-//   if (!$oldNode) {
-//     container.appendChild(processVNode(newVNode));
-//   } else {
-//     updateElement(container, newVNode, oldVNode);
-//   }
-
-//   setupEventListeners(container); 
-// }

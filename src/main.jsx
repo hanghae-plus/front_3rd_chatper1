@@ -1,10 +1,16 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { CustomHomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
+import { createRouter, createVNode, renderElement } from "./lib";
+import {
+  CustomHomePage,
+  ErrorPage,
+  LoginPage,
+  NotFoundPage,
+  ProfilePage,
+} from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
-import { addEvent, registerGlobalEvents } from "./utils";
+import { addEvent } from "./lib/eventManager";
 
 import { Layout } from "./components";
 
@@ -37,6 +43,7 @@ const router = createRouter({
     );
   },
   "/404": () => <NotFoundPage />,
+  "/error": () => <ErrorPage />,
 });
 
 function logout() {
@@ -51,15 +58,11 @@ function handleError(error) {
 
 // 초기화 함수
 function render() {
-  const $root = document.querySelector("#root");
-
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app);
-    } else {
-      $root.appendChild($app);
-    }
+    renderElement(
+      <App targetPage={router.getTarget()} />,
+      document.querySelector("#root")
+    );
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");
@@ -74,7 +77,6 @@ function render() {
 
     // globalStore.setState({ error });
   }
-  registerGlobalEvents();
 }
 
 function main() {

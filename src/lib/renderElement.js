@@ -53,12 +53,12 @@ function updateAttributes({ currentElement, oldProps, newProps }) {
 
   Object.keys(updateProps).forEach((key) => {
     for (key in updateProps) {
-      const eventName = key.toLowerCase().substring(2);
+      const eventType = key.toLowerCase().substring(2);
 
       if (newProps[key] === oldProps[key]) continue;
       if (key in oldProps)
         if (key.startsWith("on")) {
-          removeEvent({ target: currentElement, eventType: eventName });
+          removeEvent(eventType, currentElement, newProps[key]);
         } else if (key === "className") {
           currentElement.removeAttribute("class");
         } else if (key === "style") {
@@ -68,7 +68,7 @@ function updateAttributes({ currentElement, oldProps, newProps }) {
         }
 
       if (key.startsWith("on")) {
-        // addEvent({ target: currentElement, eventType: eventName });
+        addEvent(eventType, currentElement, newProps[key]);
       } else if (key === "className") {
         currentElement.setAttribute("class", newProps[key]);
       } else if (key === "style") {
@@ -101,6 +101,7 @@ function updateElement({ oldNode, newNode, container, idx = 0 }) {
   // TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
   const currentElement = container.childNodes[idx];
 
+  if (!currentElement) return;
   if (!newNode && !!oldNode) {
     return container.removeChild(currentElement);
   }
@@ -133,6 +134,7 @@ function updateElement({ oldNode, newNode, container, idx = 0 }) {
   updateAttributes({ currentElement, oldProps, newProps });
 
   const maxChildrenLength = Math.max(oldChildrenLength, newChildrenLength);
+
   for (let i = 0; i < maxChildrenLength; i++) {
     const oldChild = oldChildren[i];
     const newChild = newChildren[i];
@@ -147,7 +149,8 @@ function updateElement({ oldNode, newNode, container, idx = 0 }) {
 
   if (oldChildrenLength > newChildrenLength) {
     for (let i = newChildrenLength; i < oldChildrenLength; i++) {
-      currentElement.removeChild(currentElement.childNodes[i]);
+      const restChildNode = currentElement.lastchild;
+      restChildNode && currentElement.removeChild(restChildNode);
     }
   }
 }

@@ -10,13 +10,21 @@ export function processVNode(vNode) {
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
 
+  // if (!vNode) return ''
+  // // - 문자열과 숫자를 문자열로 변환
+  // if (isNumOrStr(vNode)) return vNode.toString()
+  // // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
+  // if (typeof vNode.type === 'function') return processVNode(vNode.type(vNode.props))
+  // // - 자식 요소들에 대해 재귀적으로 processVNode 호출
+  // const children = vNode.children ? vNode.children.map(processVNode) : []
+
   if (
     vNode === null ||
     vNode === undefined ||
     typeof vNode === "boolean" ||
     (typeof vNode === "object" && Object.keys(vNode).length === 0)
   )
-    return document.createTextNode("");
+    return "";
 
   if (typeof vNode === "string" || typeof vNode === "number")
     return String(vNode);
@@ -35,6 +43,7 @@ export function processVNode(vNode) {
     if (child === 0) return true;
     return Boolean(child);
   });
+
   return vNode;
 }
 
@@ -49,35 +58,31 @@ function updateAttributes({ currentElement, oldProps, newProps }) {
   //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
   //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
 
-  const updateProps = { ...oldProps, ...newProps };
-
-  Object.keys(updateProps).forEach((key) => {
-    for (key in updateProps) {
-      const eventType = key.toLowerCase().substring(2);
-
-      if (newProps[key] === oldProps[key]) continue;
-      if (key in oldProps)
-        if (key.startsWith("on")) {
-          removeEvent(eventType, currentElement, newProps[key]);
-        } else if (key === "className") {
-          currentElement.removeAttribute("class");
-        } else if (key === "style") {
-          currentElement.removeAttribute("style");
-        } else {
-          currentElement.removeAttribute(key);
-        }
-
+  for (let key in oldProps) {
+    if (!(key in newProps)) {
       if (key.startsWith("on")) {
+        const eventType = key.toLowerCase().substring(2);
+        removeEvent(eventType, currentElement, oldProps[key]);
+      } else if (key === "className") {
+        currentElement.removeAttribute("class");
+      } else if (key === "style") {
+        currentElement.removeAttribute("style");
+      }
+    }
+  }
+
+  for (let key in newProps) {
+    if (oldProps[key] !== newProps[key]) {
+      if (key.startsWith("on")) {
+        const eventType = key.toLowerCase().substring(2);
         addEvent(eventType, currentElement, newProps[key]);
       } else if (key === "className") {
         currentElement.setAttribute("class", newProps[key]);
-      } else if (key === "style") {
-        Object.assign(currentElement.style, newProps[key]);
       } else {
         currentElement.setAttribute(key, newProps[key]);
       }
     }
-  });
+  }
 }
 
 // TODO: updateElement 함수 구현
@@ -99,23 +104,26 @@ function updateElement({ oldNode, newNode, container, idx = 0 }) {
   // HINT: 최대 자식 수를 기준으로 루프를 돌며 업데이트
   // 5-3. 불필요한 자식 노드 제거
   // TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
+
   const currentElement = container.childNodes[idx];
 
-  if (!currentElement) return;
   if (!newNode && !!oldNode) {
     return container.removeChild(currentElement);
   }
 
-  if (!!newNode && !oldNode)
+  if (!!newNode && !oldNode) {
     return container.appendChild(createElement__v2(newNode));
+  }
 
   if (
     (typeof oldNode === "string" || typeof oldNode === "number") &&
     (typeof newNode === "string" || typeof newNode === "number")
-  )
-    if (String(oldNode) !== String(newNode))
-      return (currentElement.textContent = newNode);
-    else return "";
+  ) {
+    if (String(oldNode) !== String(newNode)) {
+      currentElement.textContent = newNode;
+    }
+    return "";
+  }
 
   const oldType = oldNode.type;
   const oldProps = oldNode.props || {};
@@ -139,23 +147,16 @@ function updateElement({ oldNode, newNode, container, idx = 0 }) {
     const oldChild = oldChildren[i];
     const newChild = newChildren[i];
 
-    updateElement({
-      oldNode: oldChild,
-      newNode: newChild,
-      container: currentElement,
-      idx: i,
-    });
-  }
-
-  if (oldChildrenLength > newChildrenLength) {
-    for (let i = newChildrenLength; i < oldChildrenLength; i++) {
-      const restChildNode = currentElement.lastchild;
-      restChildNode && currentElement.removeChild(restChildNode);
-    }
+    if (i > newChildrenLength) container.removeChild(oldChild);
+    else
+      updateElement({
+        oldNode: oldChild,
+        newNode: newChild,
+        container: currentElement,
+        idx: i,
+      });
   }
 }
-
-let rootOldVNode = null;
 
 // TODO: renderElement 함수 구현
 export function renderElement(vNode, container) {
@@ -165,11 +166,11 @@ export function renderElement(vNode, container) {
   // 이벤트 위임 설정
   // TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
   // 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
-  const oldNode = rootOldVNode;
+  const oldNode = container._vNode;
   const newNode = processVNode(vNode);
   if (!oldNode) container.appendChild(createElement__v2(newNode));
   else updateElement({ oldNode, newNode, container });
 
-  rootOldVNode = newNode;
+  container._vNode = newNode;
   setupEventListeners(container);
 }

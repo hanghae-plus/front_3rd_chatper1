@@ -1,5 +1,5 @@
 /** @jsx createVNode */
-import { createRouter, createVNode, renderElement } from "./lib";
+import { createRouter, createVNode, processVNode, renderElement } from "./lib";
 import {
   CustomHomePage,
   ErrorPage,

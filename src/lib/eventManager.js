@@ -67,7 +67,7 @@ export function removeEvent(eventType, target, handler) {
 
   if (eventMap.has(eventType)) {
     const eventTypeMap = eventMap.get(eventType);
-    if (eventTypeMap.has(element)) eventTypeMap.delete(element);
+    if (eventTypeMap.has(target)) eventTypeMap.delete(target);
 
     if (eventTypeMap.size === 0) {
       eventMap.delete(eventType);

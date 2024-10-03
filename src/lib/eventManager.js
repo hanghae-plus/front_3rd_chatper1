@@ -7,6 +7,8 @@ const eventMap = new Map();
 // 이벤트 위임이 설정될 루트 요소
 let rootElement = null;
 
+const ALL_EVENTS = ["click", "input", "change", "submit"];
+
 // TODO: setupEventListeners 함수 구현
 // 이 함수는 루트 요소에 이벤트 위임을 설정합니다.
 export function setupEventListeners(root) {
@@ -14,6 +16,13 @@ export function setupEventListeners(root) {
   // 2. 기존에 설정된 이벤트 리스너 제거 (있다면)
   // 3. eventMap에 등록된 모든 이벤트 타입에 대해 루트 요소에 이벤트 리스너 추가
   // 주의: 이벤트 캡처링을 사용하여 이벤트를 상위에서 하위로 전파
+  rootElement = root;
+  ALL_EVENTS.forEach((type) => {
+    rootElement.removeEventListener(type, handleEvent);
+    if (eventMap.has(type)) {
+      rootElement.addEventListener(type, handleEvent, true);
+    }
+  });
 }
 
 // TODO: handleEvent 함수 구현
@@ -23,6 +32,17 @@ function handleEvent(event) {
   // 2. 각 요소에 대해 해당 이벤트 타입의 핸들러가 있는지 확인
   // 3. 핸들러가 있다면 실행
   // 이를 통해 하위 요소에서 발생한 이벤트를 상위에서 효율적으로 처리할 수 있습니다.
+  let target = event.target;
+  while (target && target !== this.rootElement) {
+    const foundEvent = eventMap
+      .get(event.type)
+      ?.find((x) => x.element === target);
+    if (foundEvent) {
+      foundEvent.handler(event);
+      break;
+    }
+    target = target.parentNode;
+  }
 }
 
 // TODO: addEvent 함수 구현
@@ -30,6 +50,16 @@ export function addEvent(element, eventType, handler) {
   // 1. eventMap에 이벤트 타입과 요소, 핸들러 정보 저장
   // 2. 필요한 경우 루트 요소에 새 이벤트 리스너 추가
   // 이 함수를 통해 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
+  const realEventType = convertToEventName(eventType);
+  if (eventMap.has(realEventType)) {
+    eventMap.set(realEventType, [
+      ...eventMap.get(realEventType),
+      { element, handler },
+    ]);
+  } else {
+    eventMap.set(realEventType, [{ element, handler }]);
+    rootElement.addEventListener(realEventType, handleEvent, true);
+  }
 }
 
 // TODO: removeEvent 함수 구현
@@ -37,4 +67,35 @@ export function removeEvent(element, eventType, handler) {
   // 1. eventMap에서 해당 요소와 이벤트 타입에 대한 핸들러 제거
   // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
   // 이를 통해 더 이상 필요 없는 이벤트 핸들러를 정리하고 메모리 누수 방지
+  const realEventType = convertToEventName(eventType);
+  if (eventMap.has(realEventType)) {
+    eventMap.set(
+      realEventType,
+      eventMap.get(realEventType).filter((x) => x.element !== element)
+    );
+    if (eventMap.get(realEventType).length === 0) {
+      eventMap.delete(realEventType);
+      rootElement.removeEventListener(realEventType, handleEvent);
+    }
+  }
+}
+
+function isUpperCase(char) {
+  if (!char) return false;
+  return char === char.toUpperCase() && char !== char.toLowerCase();
+}
+
+function convertToEventName(attr) {
+  return attr.slice(2, 3).toLowerCase() + attr.slice(3);
+}
+
+export function isEventName(attr) {
+  if (
+    !attr.startsWith("on") ||
+    !isUpperCase(attr[2]) ||
+    !ALL_EVENTS.includes(convertToEventName(attr))
+  ) {
+    return false;
+  }
+  return true;
 }

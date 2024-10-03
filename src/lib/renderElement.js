@@ -1,7 +1,11 @@
 // renderElement.js
-import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
+import {
+  addEvent,
+  removeEvent,
+  setupEventListeners,
+  isEventName,
+} from "./eventManager";
 import { createElement__v2 } from "./createElement__v2.js";
-import { ALL_EVENTS } from "../utils/eventUtils.js";
 
 // TODO: processVNode 함수 구현
 function processVNode(vNode) {
@@ -33,26 +37,6 @@ function processVNode(vNode) {
   return newVNode;
 }
 
-function isUpperCase(char) {
-  if (!char) return false;
-  return char === char.toUpperCase() && char !== char.toLowerCase();
-}
-
-function convertToEventName(attr) {
-  return attr.slice(2, 3).toLowerCase() + attr.slice(3);
-}
-
-function isEventName(attr) {
-  if (
-    !attr.startsWith("on") ||
-    !isUpperCase(attr[2]) ||
-    !ALL_EVENTS.includes(convertToEventName(attr))
-  ) {
-    return false;
-  }
-  return true;
-}
-
 // TODO: updateAttributes 함수 구현
 function updateAttributes({ oldProps, newProps, $el }) {
   // DOM 요소의 속성을 업데이트합니다.
@@ -69,7 +53,7 @@ function updateAttributes({ oldProps, newProps, $el }) {
         if (key === "className") {
           $el.removeAttribute("class");
         } else if (isEventName(key)) {
-          $el.removeEventListener(convertToEventName(key), oldProps[key]);
+          removeEvent($el, key, oldProps[key]);
         } else {
           $el.removeAttribute(key);
         }
@@ -82,7 +66,7 @@ function updateAttributes({ oldProps, newProps, $el }) {
         if (key === "className") {
           $el.setAttribute("class", newProps[key]);
         } else if (isEventName(key)) {
-          $el.addEventListener(convertToEventName(key), newProps[key]);
+          addEvent($el, key, newProps[key]);
         } else {
           $el.setAttribute(key, newProps[key]);
         }
@@ -200,4 +184,5 @@ export function renderElement(vNode, container) {
     container.appendChild(createElement__v2(newVNode));
   }
   container.nowVNode = newVNode;
+  setupEventListeners(container);
 }

@@ -8,7 +8,46 @@
 //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
-import { ALL_EVENTS } from "../utils/eventUtils";
+export function createElement(vNode) {
+  if (vNode === null || vNode === undefined || typeof vNode === "boolean") {
+    return document.createTextNode("");
+  }
+  if (typeof vNode === "string" || typeof vNode === "number") {
+    return document.createTextNode(vNode);
+  }
+  if (Array.isArray(vNode)) {
+    const fragment = document.createDocumentFragment();
+    vNode.forEach((oneNode) => {
+      fragment.appendChild(createElement(oneNode));
+    });
+    return fragment;
+  }
+  if (typeof vNode.type === "function") {
+    const node = vNode.type({ ...vNode.props, children: vNode.children });
+    return createElement(node);
+  }
+  const $el = document.createElement(vNode.type);
+  if (vNode.props !== null) {
+    for (const key in vNode.props) {
+      if (key === "className") {
+        $el.setAttribute("class", vNode.props[key]);
+      } else if (isEventName(key)) {
+        $el.addEventListener(convertToEventName(key), vNode.props[key]);
+      } else {
+        $el.setAttribute(key, vNode.props[key]);
+      }
+    }
+  }
+  if (vNode.children?.length > 0) {
+    vNode.children.forEach((child) => {
+      $el.appendChild(createElement(child));
+    });
+  }
+
+  return $el;
+}
+
+const ALL_EVENTS = ["click", "input", "change", "submit"];
 
 function isUpperCase(char) {
   if (!char) return false;
@@ -28,50 +67,4 @@ function isEventName(attr) {
     return false;
   }
   return true;
-}
-
-export function createElement(vNode) {
-  // 1
-  if (vNode === null || vNode === undefined || typeof vNode === "boolean") {
-    return document.createTextNode("");
-  }
-  // 2
-  if (typeof vNode === "string" || typeof vNode === "number") {
-    return document.createTextNode(vNode);
-  }
-  // 3
-  if (Array.isArray(vNode)) {
-    const fragment = document.createDocumentFragment();
-    vNode.forEach((oneNode) => {
-      fragment.appendChild(createElement(oneNode));
-    });
-    return fragment;
-  }
-  // 4
-  if (typeof vNode.type === "function") {
-    const node = vNode.type({ ...vNode.props, children: vNode.children });
-    return createElement(node);
-  }
-  // 5-1
-  const $el = document.createElement(vNode.type);
-  // 5-2
-  if (vNode.props !== null) {
-    for (const key in vNode.props) {
-      if (key === "className") {
-        $el.setAttribute("class", vNode.props[key]);
-      } else if (isEventName(key)) {
-        $el.addEventListener(convertToEventName(key), vNode.props[key]);
-      } else {
-        $el.setAttribute(key, vNode.props[key]);
-      }
-    }
-  }
-  // 5-3
-  if (vNode.children?.length > 0) {
-    vNode.children.forEach((child) => {
-      $el.appendChild(createElement(child));
-    });
-  }
-
-  return $el;
 }

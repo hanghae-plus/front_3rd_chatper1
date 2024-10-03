@@ -1,11 +1,40 @@
-export function createElement__v2(vNode) {
-  // 이 함수는 createElement의 개선된 버전입니다.
-// 1. falsy vNode 처리
-// 2. 문자열 또는 숫자 vNode 처리
-// 3. 배열 vNode 처리 (DocumentFragment 사용)
-// 4. 일반 요소 vNode 처리:
-//    - 요소 생성
-//    - 속성 설정 (이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선)
-//    - 자식 요소 추가
-  return {}
+import { addEvent } from "./eventManager";
+
+export function createElement__v2(node) {
+  if (!node || typeof node === "boolean") {
+    return document.createTextNode("");
+  }
+
+  if (typeof node === "string" || typeof node === "number") {
+    return document.createTextNode(node);
+  }
+
+  if (Array.isArray(node)) {
+    const fragment = document.createDocumentFragment();
+    node.forEach((child) => {
+      fragment.appendChild(createElement__v2(child));
+    });
+    return fragment;
+  }
+
+  const element = document.createElement(node.type);
+
+  Object.entries(node.props || {}).forEach(([name, value]) => {
+    if (name.startsWith("on") && typeof value === "function") {
+      const eventType = name.toLowerCase().substring(2);
+      addEvent(element, eventType, value);
+    } else if (name === "className") {
+      element.setAttribute("class", value);
+    } else if (value === true) {
+      element.setAttribute(name, "");
+    } else if (value !== false && value != null) {
+      element.setAttribute(name, value);
+    }
+  });
+
+  (node.children || []).forEach((child) => {
+    element.appendChild(createElement__v2(child));
+  });
+
+  return element;
 }

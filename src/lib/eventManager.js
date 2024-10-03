@@ -32,15 +32,18 @@ function handleEvent(event) {
   const { target, type } = event;
   const targetEventMap = eventMap.get(type);
 
-  for (let [element, handler] of targetEventMap) {
-    if (typeof element === "object" && element === target) {
-      handler(event);
-      break;
+  while (target && target !== rootElement) {
+    for (let [element, handler] of targetEventMap) {
+      if (typeof element === "object" && element === target) {
+        handler(event);
+        break;
+      }
+      if (typeof element === "string" && target.matches(element)) {
+        handler(event);
+        break;
+      }
     }
-    if (typeof element === "string" && target.matches(element)) {
-      handler(event);
-      break;
-    }
+    target = target.parentElement;
   }
 }
 

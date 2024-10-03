@@ -26,6 +26,49 @@ function processVNode(vNode) {
 
   return vNode;
 }
+function updateElement(parentNode, newNode, oldNode, index = 0) {
+  if (!oldNode && newNode) {
+    parentNode.appendChild(createElement__v2(newNode));
+  } else if (!newNode && oldNode) {
+    parentNode.removeChild(parentNode.childNodes[index]);
+  } else if (isTextNode(newNode) && isTextNode(oldNode)) {
+    if (String(newNode) !== String(oldNode)) {
+      parentNode.childNodes[index].nodeValue = String(newNode);
+    }
+  } else if (newNode.type !== oldNode.type) {
+    parentNode.replaceChild(
+      createElement__v2(newNode),
+      parentNode.childNodes[index]
+    );
+  } else {
+    updateAttributes(
+      parentNode.childNodes[index],
+      newNode.props,
+      oldNode.props
+    );
+    const newChildren = newNode.children ?? [];
+    const oldChildren = oldNode.children ?? [];
+    const maxLength = Math.max(newChildren.length, oldChildren.length);
+    for (let i = 0; i < maxLength; i++) {
+      updateElement(
+        parentNode.childNodes[index],
+        newChildren[i],
+        oldChildren[i],
+        i
+      );
+    }
+
+    // new에 없는 자식 노드 제거
+    if (oldChildren.length > newChildren.length) {
+      for (let i = newChildren.length; i < oldChildren.length; i++) {
+        const childNode = parentNode.childNodes[index].childNodes[i];
+        if (childNode) {
+          parentNode.childNodes[index].removeChild(childNode);
+        }
+      }
+    }
+  }
+}
 
 export function renderElement(vNode, container) {
   if (!container) return;

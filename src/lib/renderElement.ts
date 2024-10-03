@@ -71,11 +71,11 @@ function updateAttributes(
 
   // 새 속성 추가 또는 업데이트
   for (const key in newProps) {
-    const prevValue = oldProps?.[key];
-    const nextValue = newProps[key];
+    const oldValue = oldProps?.[key];
+    const newValue = newProps[key];
 
-    if (nextValue !== prevValue) {
-      updateAttributeOrEvent($element, key, prevValue);
+    if (newValue !== oldValue) {
+      updateAttributeOrEvent($element, key, newValue);
     }
   }
 

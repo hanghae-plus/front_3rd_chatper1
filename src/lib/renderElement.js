@@ -170,9 +170,7 @@ export function renderElement(vNode, container) {
 
   const oldVNode = container.nowVNode;
   const newVNode = processVNode(vNode);
-  // if (container.hasChildNodes()) {
-  // container.firstChild.replaceWith(createElement__v2(newVNode));
-  // if (oldVNode) {
+  setupEventListeners(container);
   if (oldVNode) {
     updateElement({
       oldV: oldVNode,
@@ -184,5 +182,4 @@ export function renderElement(vNode, container) {
     container.appendChild(createElement__v2(newVNode));
   }
   container.nowVNode = newVNode;
-  setupEventListeners(container);
 }

@@ -2,7 +2,6 @@
 import { createVNode } from '../lib';
 import { globalStore } from '../stores/index.js';
 import { Footer, Header, Navigation, Post, PostForm } from '../components/index.js';
-import { userStorage } from '../storages/index.js';
 
 export const HomePage = () => {
   const { loggedIn, posts } = globalStore.getState();

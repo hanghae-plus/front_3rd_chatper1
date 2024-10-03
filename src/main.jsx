@@ -1,52 +1,48 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, ProfilePage } from "./pages";
+import { createRouter, createVNode, renderElement } from "./lib";
+import { HomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
-import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
+import { addEvent } from "./lib/eventManager";
 
-const router = createRouter({
+export const router = createRouter({
   "/": () => <HomePage />,
   "/login": () => {
     const { loggedIn } = globalStore.getState();
     if (loggedIn) {
-      window.history.pushState(null, null, "/");
-      return <HomePage />;
+      throw new ForbiddenError();
     }
     return <LoginPage />;
   },
   "/profile": () => {
     const { loggedIn } = globalStore.getState();
     if (!loggedIn) {
-      window.history.pushState(null, null, "/login");
-      return <LoginPage />;
+      throw new UnauthorizedError();
     }
     return <ProfilePage />;
   },
+  "/404": () => <NotFoundPage />,
 });
-
-function logout() {
-  globalStore.setState({ currentUser: null, loggedIn: false });
-  router.push("/login");
-  userStorage.reset("user");
-}
 
 function handleError(error) {
   globalStore.setState({ error });
 }
 
+function logout() {
+  userStorage.reset("user");
+  userStorage.reset("loggedIn");
+  globalStore.setState({ currentUser: null, loggedIn: false });
+  router.push("/login");
+}
+
 // 초기화 함수
 function render() {
-  const $root = document.querySelector("#root");
+  const $root = document.getElementById("root");
+
   try {
-    const $app = createElement(<App targetPage={router.getTarget()} />);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app);
-    } else {
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");
@@ -56,52 +52,27 @@ function render() {
       router.push("/login");
       return;
     }
-
-    console.error(error);
-
-    // globalStore.setState({ error });
+    globalStore.setState({ error });
   }
-  registerGlobalEvents();
+
+  addEvent("click", "#logout", logout);
+  addEvent("click", "#error-boundary", () => {
+    globalStore.setState({ error: null });
+  });
 }
 
 function main() {
-  router.subscribe(render);
-  globalStore.subscribe(render);
-  window.addEventListener("error", handleError);
-  window.addEventListener("unhandledrejection", handleError);
-
-  addEvent("click", "[data-link]", (e) => {
-    e.preventDefault();
-    router.push(e.target.href.replace(window.location.origin, ""));
-  });
-
-  addEvent("click", "#logout", (e) => {
-    e.preventDefault();
-
-    logout();
-  });
-
-  addEvent("click", "#error-boundary", (e) => {
-    e.preventDefault();
-    globalStore.setState({ error: null });
-  });
-
-  addEvent("submit", "#login-form", (e) => {
-    e.preventDefault();
-
-    const currentUser = {
-      username: e.target.querySelector("#username").value,
-      email: "",
-      bio: "",
-    };
-    userStorage.set("user", currentUser);
+  const currentUser = userStorage.get("user");
+  if (currentUser) {
     globalStore.setState({ currentUser, loggedIn: true });
-    router.push("/profile");
-  });
+  } else {
+    globalStore.setState({
+      currentUser: { username: "", email: "", bio: "" },
+      loggedIn: false,
+    });
+  }
 
   addEvent("submit", "#profile-form", (e) => {
-    e.preventDefault();
-
     const currentUser = {
       username: e.target.querySelector("#username").value,
       email: e.target.querySelector("#email").value,
@@ -110,8 +81,15 @@ function main() {
 
     userStorage.set("user", currentUser);
     globalStore.setState({ currentUser, loggedIn: true });
+    alert("완성");
   });
+
+  router.subscribe(render);
+  globalStore.subscribe(render);
+  window.addEventListener("error", handleError);
+  window.addEventListener("unhandledrejection", handleError);
 
   render();
 }
+
 main();

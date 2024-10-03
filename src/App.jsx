@@ -18,4 +18,4 @@ export const App = ({ targetPage }) => {
             }
          </div>
     );
-};
+}; 

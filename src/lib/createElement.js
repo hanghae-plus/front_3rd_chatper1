@@ -9,7 +9,7 @@
 //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
 export function createElement(vNode) {
-    if (!vNode) {
+    if (!vNode || typeof vNode === "boolean") {
         return document.createTextNode("");
     }
 
@@ -35,9 +35,6 @@ export function createElement(vNode) {
 
     if (vNode.props) {
         Object.entries(vNode.props).forEach(([key, value]) => {
-            console.log("key", key.startsWith("on"));
-            console.log("value", value);
-
             if (key.startsWith("on") && typeof value === "function") {
                 const event = key.slice(2).toLowerCase();
                 element.addEventListener(event, value);

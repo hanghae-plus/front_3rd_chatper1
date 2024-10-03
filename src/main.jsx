@@ -1,6 +1,6 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from "./lib";
-import { HomePage, LoginPage, NotFoundPage, ProfilePage } from "./pages";
+import { createRouter, createVNode, renderElement } from "./lib";
+import { HomePage, LoginPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
@@ -26,7 +26,6 @@ const router = createRouter({
 });
 
 function logout() {
-    localStorage.removeItem("user");
     globalStore.setState({ currentUser: null, loggedIn: false });
     router.push("/login");
     userStorage.reset();
@@ -36,33 +35,25 @@ function handleError(error) {
     globalStore.setState({ error });
 }
 
-// 초기화 함수
+// // 초기화 함수
 function render() {
     const $root = document.querySelector("#root");
-    const targetPage = router.getTarget();
-
+    const $app = <App targetPage={router.getTarget()} />;
+    console.log("renderxs");
     try {
-        const $app = createElement(targetPage ? <App targetPage={router.getTarget()} /> : <NotFoundPage />);
-
-        if ($root.hasChildNodes()) {
-            $root.firstChild.replaceWith($app);
-        } else {
-            $root.appendChild($app);
-        }
+        renderElement($app, $root);
     } catch (error) {
         if (error instanceof ForbiddenError) {
             router.push("/");
             return;
         }
-
         if (error instanceof UnauthorizedError) {
             router.push("/login");
             return;
         }
 
-        globalStore.setState({ error });
+        console.error(error);
     }
-
     registerGlobalEvents();
 }
 

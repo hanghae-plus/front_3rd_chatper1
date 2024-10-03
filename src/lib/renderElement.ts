@@ -240,11 +240,9 @@ export function renderElement(
   const oldVNode = container._vNode || null;
   const newVNode = processVNode(vNode);
 
-  // 최초 렌더링: 기존 vNode가 없으면 새로운 DOM 요소를 생성하여 추가합니다.
   if (oldVNode === null) {
     container.appendChild(createElement__v2(newVNode));
   } else {
-    // 리렌더링: 기존 vNode와 새로운 vNode를 비교하여 업데이트합니다.
     updateElement(container, newVNode, oldVNode);
   }
 

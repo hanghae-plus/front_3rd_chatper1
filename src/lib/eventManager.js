@@ -48,10 +48,12 @@ export function addEvent(element, eventType, handler) {
   }
 }
 
-export function removeEvent(element, eventType) {
+export function removeEvent(element, eventType, handler) {
   const handlers = eventMap.get(eventType);
   if (handlers) {
-    handlers.delete(element);
+    if (handlers.get(element) === handler) {
+      handlers.delete(element);
+    }
 
     if (handlers.size === 0) {
       eventMap.delete(eventType);

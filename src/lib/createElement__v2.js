@@ -1,3 +1,5 @@
+import { addEvent } from './eventManager.js';
+
 export function createElement__v2(vNode) {
   if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
     return document.createTextNode('');
@@ -26,6 +28,7 @@ export function createElement__v2(vNode) {
       if (key.startsWith('on') && typeof value === 'function') {
         const eventType = key.slice(2).toLowerCase();
         element.addEventListener(eventType, value);
+        // addEvent(element, eventType, value);
       } else if (key === 'className') {
         element.className = value;
       } else {

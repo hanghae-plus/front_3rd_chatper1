@@ -17,13 +17,10 @@ const handleEvent = (event) => {
 
 	while (target && target !== rootElement) {
 		const handlers = eventMap.get(eventType);
+		if (!handlers) continue;
 
-		for (const handler of handlers) {
-			if (handler.$element === target) {
-				handler.handler.call(target, event);
-				break;
-			}
-		}
+		const handler = handlers.get(target);
+		if (handler) handler.call(target, event);
 
 		target = target.parentElement;
 	}
@@ -31,17 +28,22 @@ const handleEvent = (event) => {
 
 export const addEvent = ($element, eventType, handler) => {
 	if (!eventMap.has(eventType)) {
-		eventMap.set(eventType, [{ $element, handler }]);
+		eventMap.set(eventType, new Map());
 		if (rootElement) rootElement.addEventListener(eventType, handleEvent, true);
-	} else eventMap.get(eventType).push({ $element, handler });
+	}
+
+	eventMap.get(eventType).set($element, handler);
 };
 
 export const removeEvent = ($element, eventType, handler) => {
-	let handlers = eventMap.get(eventType) || [];
-	handlers = handlers.filter((h) => h.$element !== $element || h.handler !== handler);
+	const handlers = eventMap.get(eventType);
 
-	if (handlers.length === 0) {
-		eventMap.delete(eventType);
-		if (rootElement) rootElement.removeEventListener(eventType, handleEvent, true);
-	} else eventMap.set(eventType, handlers);
+	if (handlers && handlers.get($element) === handler) {
+		handlers.delete($element);
+
+		if (handlers.size <= 0) {
+			eventMap.delete(eventType);
+			if (rootElement) rootElement.removeEventListener(eventType, handleEvent, true);
+		}
+	}
 };

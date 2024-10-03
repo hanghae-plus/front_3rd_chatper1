@@ -20,10 +20,6 @@ function processVNode(vNode) {
 }
 
 function updateAttributes(vNode, newProps, oldProps) {
-  //   <이벤트 리스너 처리>
-  //     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
-  //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
-  //     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
   for (let name in oldProps) {
     if (!Object.hasOwn(newProps, name)) {
       vNode.removeAttribute(name);
@@ -32,7 +28,7 @@ function updateAttributes(vNode, newProps, oldProps) {
         removeEvent(vNode, name.slice(2).toLowerCase(), oldProps[name]);
       }
     }
-    if (!Object.hasOwn(newProps, 'class')) {
+    if (!Object.hasOwn(newProps, 'className')) {
       vNode.removeAttribute('class');
     }
   }

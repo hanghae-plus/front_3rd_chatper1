@@ -1,7 +1,7 @@
 import { handleUpdateAttributes } from "../utils";
 
 export const createElement__v2 = (vNode) => {
-	if (vNode === undefined || vNode === null || vNode === "" || typeof vNode === "boolean")
+	if (vNode === undefined || vNode === null || typeof vNode === "boolean")
 		return document.createTextNode("");
 	if (typeof vNode === "string" || typeof vNode === "number") return document.createTextNode(vNode);
 	if (Array.isArray(vNode)) {

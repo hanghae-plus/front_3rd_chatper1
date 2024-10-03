@@ -2,8 +2,7 @@ import { createElement__v2, setupEventListeners } from "./";
 import { handleUpdateAttributes } from "../utils";
 
 const processVNode = (vNode) => {
-	if (vNode === null || vNode === undefined || vNode === "" || typeof vNode === "boolean")
-		return "";
+	if (vNode === null || vNode === undefined || typeof vNode === "boolean") return "";
 	if (typeof vNode === "string" || typeof vNode === "number") return String(vNode);
 	if (typeof vNode.type === "function") return processVNode(vNode.type(vNode.props));
 	vNode.children = vNode.children.map(processVNode);

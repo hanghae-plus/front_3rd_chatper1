@@ -136,6 +136,7 @@ function updateElement(container, oldNode, newNode, index = 0) {
     } else {
       container.appendChild(newElement); // 새로운 노드 추가
     }
+    return;
   }
 
   // 5. 같은 타입의 노드 업데이트

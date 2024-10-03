@@ -27,8 +27,8 @@ function updateAttributes(element, oldProps, newProps) {
     if (!(key in newProps)) {
       if (key.startsWith('on') && typeof oldProps[key] === 'function') {
         const eventType = key.slice(2).toLowerCase();
-        // removeEvent(element, eventType, oldProps[key]);
-        element.removeEventListener(eventType, oldProps[key]);
+        removeEvent(element, eventType, oldProps[key]);
+        // element.removeEventListener(eventType, oldProps[key]);
       } else {
         element.removeAttribute(key);
       }
@@ -44,11 +44,11 @@ function updateAttributes(element, oldProps, newProps) {
       const eventType = key.slice(2).toLowerCase();
       if (oldValue !== newValue) {
         if (oldValue) {
-          // removeEvent(element, eventType, oldValue);
-          element.removeEventListener(eventType, oldValue);
+          removeEvent(element, eventType, oldValue);
+          // element.removeEventListener(eventType, oldValue);
         }
-        // addEvent(element, eventType, newValue);
-        element.addEventListener(eventType, newValue);
+        addEvent(element, eventType, newValue);
+        // element.addEventListener(eventType, newValue);
       }
     } else if (key === 'className') {
       if (newValue !== oldValue) {
@@ -128,5 +128,5 @@ export function renderElement(vNode, container) {
 
   container._vNode = newVNode;
 
-  setupEventListeners();
+  setupEventListeners(container);
 }

@@ -27,8 +27,7 @@ export function createElement__v2(vNode) {
 
       if (key.startsWith('on') && typeof value === 'function') {
         const eventType = key.slice(2).toLowerCase();
-        element.addEventListener(eventType, value);
-        // addEvent(element, eventType, value);
+        addEvent(element, eventType, value);
       } else if (key === 'className') {
         element.className = value;
       } else {

@@ -63,8 +63,8 @@ function updateAttributes(
 ) {
   // 이전 속성 제거
   for (const key in oldProps) {
-    const isNewProp = newProps && key in newProps;
-    if (!isNewProp) {
+    const hasNewProp = newProps && key in newProps;
+    if (!hasNewProp) {
       removeAttributeOrEvent($element, key);
     }
   }
@@ -163,7 +163,7 @@ function updateElement(
   }
 
   // 5. 같은 타입의 노드 업데이트
-  if (isVNodeElementType(newNode, oldNode)) {
+  if (isSameVNodeElementType(newNode, oldNode)) {
     const prevNode = oldNode as VNodeElement;
     const nextNode = newNode as VNodeElement;
 
@@ -191,8 +191,8 @@ function updateElement(
     );
   }
 
-  /** 두 노드가 VNodeElement 타입인지 확인합니다. */
-  function isVNodeElementType(
+  /** 두 노드가 같은 타입인지 확인합니다. */
+  function isSameVNodeElementType(
     newNode: VNodeChild,
     oldNode: VNodeChild
   ): boolean {
@@ -200,7 +200,8 @@ function updateElement(
       newNode !== null &&
       oldNode !== null &&
       typeof newNode !== 'string' &&
-      typeof oldNode !== 'string'
+      typeof oldNode !== 'string' &&
+      newNode.type === oldNode.type
     );
   }
 

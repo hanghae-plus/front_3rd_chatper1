@@ -40,7 +40,7 @@ export function createElement__v2(vNode) {
       } else if (key.startsWith('on')) {
         const eventName = key.slice(2).toLowerCase();
 
-        addEvent($element, eventName, value);
+        addEvent(eventName, $element, value);
       } else {
         $element.setAttribute(key, value);
       }

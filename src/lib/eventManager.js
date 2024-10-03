@@ -61,14 +61,14 @@ export function addEvent(eventType, element, handler) {
   // 2. 필요한 경우 루트 요소에 새 이벤트 리스너 추가
   // 이 함수를 통해 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
 
-  if (!eventMap.has(element)) {
-    eventMap.set(element, new Map());
+  if (!eventMap.has(eventType)) {
+    eventMap.set(eventType, new Map());
   }
 
-  const handlers = eventMap.get(element);
+  const handlers = eventMap.get(eventType);
 
-  if (!handlers.has(eventType)) {
-    handlers.set(eventType, handler);
+  if (!handlers.has(element)) {
+    handlers.set(element, handler);
   }
 }
 

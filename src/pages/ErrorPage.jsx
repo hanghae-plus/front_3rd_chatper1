@@ -1,0 +1,18 @@
+/** @jsx createVNode */
+import { createVNode } from '../lib';
+
+export const ErrorPage = () => {
+  return(
+    <div id="error-boundary" class="fixed bottom-4 left-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg transition-opacity duration-300 hover:opacity-75" role="alert">
+    <div class="flex justify-between items-center">
+    <div>
+        <strong class="font-bold">오류 발생!</strong>
+        <span class="block sm:inline ml-1">의도적인 오류입니다.</span>
+    </div>
+    <button class="text-red-700 hover:text-red-900 font-semibold">
+        &times;
+    </button>
+    </div>
+</div>
+  )
+};

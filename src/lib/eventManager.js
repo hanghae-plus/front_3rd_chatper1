@@ -3,6 +3,7 @@
 // 이벤트 위임을 위한 전역 이벤트 맵
 // 이 맵은 이벤트 타입별로 요소와 해당 요소의 이벤트 핸들러를 저장합니다.
 const eventMap = new Map();
+// Map<string, Map<string, () => void>>
 
 // 이벤트 위임이 설정될 루트 요소
 let rootElement = null;
@@ -14,33 +15,13 @@ export function setupEventListeners(root) {
   // 2. 기존에 설정된 이벤트 리스너 제거 (있다면)
   // 3. eventMap에 등록된 모든 이벤트 타입에 대해 루트 요소에 이벤트 리스너 추가
   // 주의: 이벤트 캡처링을 사용하여 이벤트를 상위에서 하위로 전파
-  
+
   rootElement = root;
 
-  if(rootElement) {
-    const elementEvents = eventMap.get(rootElement);
-    if (elementEvents) {
-      elementEvents.forEach((handler, eventType) => {
-        rootElement.removeEventListener(eventType, handler);
-      });
-    }
-  }
-
-  const allElements = eventMap.keys();
-  for (const element of allElements) {
-    const elementEvents = eventMap.get(element);
-    elementEvents.forEach((handler, eventType) => {
-      const handleEvent = (event) => {
-        const handler = elementEvents.get(event.type);
-        if (handler) {
-          handler(event);
-        }
-      };
-
-      rootElement.addEventListener(eventType, handleEvent, true);
-    });
-  }
-
+  Array.from(eventMap.keys()).forEach((eventType) => {
+    removeEvent(rootElement, eventType, handleEvent);
+    rootElement.addEventListener(eventType, handleEvent);
+  });
 }
 
 // TODO: handleEvent 함수 구현
@@ -51,45 +32,36 @@ function handleEvent(event) {
   // 3. 핸들러가 있다면 실행
   // 이를 통해 하위 요소에서 발생한 이벤트를 상위에서 효율적으로 처리할 수 있습니다.
 
-  const target = event.target; 
+  const { target, type } = event;
+  const handlers = eventMap.get(type);
+  if (!handlers) return;
 
-  while(target) {
-    const eventName = event.type; 
-    const handler = target[`on${eventName}`];
-
-    if(handler) {
-      handler(event); 
+  for (const [element, handler] of handlers) {
+    if (typeof element === 'object' && element === target) {
+      event.preventDefault();
+      handler(event);
+      break;
     }
-
-    target = target.parentNode; 
+    if (typeof element === 'string' && target.matches(element)) {
+      event.preventDefault();
+      handler(event);
+      break;
+    }
   }
 }
 
 // TODO: addEvent 함수 구현
-export function addEvent(element, eventType, handler) {
+export function addEvent(eventType, element, handler) {
   // 1. eventMap에 이벤트 타입과 요소, 핸들러 정보 저장
   // 2. 필요한 경우 루트 요소에 새 이벤트 리스너 추가
+  // 이벤트 위임: event.target이 이벤트 핸들러를 가지고 있는지 확인
   // 이 함수를 통해 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
 
-  if(!eventMap.has(element)) {
-    eventMap.set(element, new Map());
-  }
+  if (!eventMap.has(eventType)) eventMap.set(eventType, new Map());
 
-  const elementEvents = eventMap.get(element);
-
-  if(!elementEvents.has(eventType)) {
-    elementEvents.set(eventType, handler);
-
-    const handleEvent = (event) => {
-      const handler = elementEvents.get(event.type);
-      if(handler) {
-        handler(event);
-      }
-    };
-
-    element.addEventListener(eventType, handleEvent);
-  }
-
+  const elementMap = eventMap.get(eventType);
+  // if (elementMap.has(element)) return;
+  elementMap.set(element, handler);
 }
 
 // TODO: removeEvent 함수 구현
@@ -98,19 +70,13 @@ export function removeEvent(element, eventType, handler) {
   // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
   // 이를 통해 더 이상 필요 없는 이벤트 핸들러를 정리하고 메모리 누수 방지
 
-  if(eventMap.has(element)) {
-    const elementEvents = eventMap.get(element);
+  if (eventMap.has(eventType)) {
+    const elementMap = eventMap.get(eventType);
+    if (elementMap.has(element)) elementMap.delete(element);
 
-    if(elementEvents.has(eventType)) {
-      const storedHandler = elementEvents.get(eventType);
-      if(storedHandler === handler) {
-        elementEvents.delete(eventType);
-      }
-    }
-
-    if(!elementEvents.size) {
-      eventMap.delete(element); 
-      document.removeEventListener(eventType, handler); 
+    if (elementMap.size === 0) {
+      eventMap.delete(eventType);
+      rootElement.removeEventListener(eventType, handler);
     }
   }
 }

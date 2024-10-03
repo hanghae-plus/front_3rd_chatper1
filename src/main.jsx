@@ -49,14 +49,8 @@ function handleError(error) {
 // 초기화 함수
 function render() {
   const $root = document.querySelector('#root');
-
   try {
-    const $app = createElement(<App targetPage={router.getTarget()}/>);
-    if ($root.hasChildNodes()) {
-      $root.firstChild.replaceWith($app)
-    } else{
-      $root.appendChild($app);
-    }
+    renderElement(<App targetPage={router.getTarget()} />, $root);
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push("/");
@@ -97,20 +91,27 @@ function main() {
 
   addEvent('submit', '#login-form', (e) => {
     e.preventDefault();
-    const username = document.querySelector('#username').value.trim();
+    try{
+      const username = document.querySelector('#username').value.trim();
 
-    if(!username){
-      alert('이메일 또는 전화번호를 입력해 주세요.')
-      return
+      if(!username){
+        alert('이메일 또는 전화번호를 입력해 주세요.')
+        return
+      }
+  
+      const userInfo = {
+        username : username,
+        email : '',
+        bio : ''
+      }
+      setStore(userInfo)
+      router.push('/profile');
+    }catch(e){
+      globalStore.setState({
+        error : e
+      });
     }
 
-    const userInfo = {
-      username : username,
-      email : '',
-      bio : ''
-    }
-    setStore(userInfo)
-    router.push('/profile');
   });
 
 

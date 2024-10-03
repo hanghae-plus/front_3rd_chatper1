@@ -11,44 +11,30 @@ import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 
 function processVNode(vNode) {
 
-  /**
-    * @terms vNode가 falsy면 빈 텍스트 노드를 반환하는 기능 조건
-    * @desc vNode가 null, undefined 또는 false와 같은 falsy 값인 경우, 빈 텍스트 노드를 반환
-  */
+  // 1. vNode가 falsy일 경우 빈 텍스트 노드를 반환
   if (!vNode || typeof vNode === 'boolean') {
-    return document.createTextNode('');
+    return ('');
   }
 
-  /**
-    * @terms vNode가 문자열이나 숫자면 텍스트 노드를 생성하여 반환하는 기능 조건
-    * @desc 입력된 vNode 값을 String으로 변환하여 텍스트 노드를 생성
-  */
+  // 2. vNode가 문자열이나 숫자일 경우 텍스트 노드를 생성하여 반환
   if (typeof vNode === 'string' || typeof vNode === 'number') {
     return String(vNode);
   }
 
-  /**
-    * @terms vNode의 type이 함수형인 경우 처리 기능 조건
-    * @desc 해당 함수를 호출하여 반환된 결과로 createElement를 재귀적으로 호출
-  */
+  // 3. vNode의 type이 함수형인 경우, 컴포넌트를 호출하여 결과를 재귀적으로 처리
   if (typeof vNode.type === 'function') {
     const { type: component, props } = vNode;
 
     return processVNode(component(props));
   }
 
-  /**
-  * @desc 자식 요소들에 대해 재귀적으로 processVNode 호출
-*/
-
+  // 4. 자식 요소들에 대해 재귀적으로 processVNode 호출하여 변환
   const processedChildren = (vNode.children || []).map((child) =>
     processVNode(child)
   );
 
-  /**
-* @desc 가상돔의 형태로 렌더링 가능한 형태로 변환
-*/
 
+  // 5. 렌더링 가능한 형태의 객체로 변환하여 반환
   return {
     type: vNode.type,
     props: vNode.props || {},
@@ -56,12 +42,20 @@ function processVNode(vNode) {
   };
 };
 
+/**
+ * @function updateAttributes
+ * @description DOM 요소의 속성을 업데이트합니다.
+ * @param {HTMLElement} oldElement - 기존 요소
+ * @param {Object} oldProps - 기존 속성 객체
+ * @param {Object} newProps - 새로운 속성 객체
+ */
+
 const updateAttributes = (oldElement, oldProps = {}, newProps = {}) => {
   // 3. 새로운 속성을 추가하거나 업데이트
   for (const [key, value] of Object.entries(newProps)) {
     if (key.startsWith('on') && typeof value === 'function') {
       const eventType = key.slice(2).toLowerCase();
-      // 2. 기존 노드의 속성을 가져옵니다.
+      // 2. 기존 노드의 속성 업데이트
       const oldEventHandler = oldProps[key];
 
       // 기존 요소와 새 요소의 핸들러가 같으면 유지
@@ -69,7 +63,7 @@ const updateAttributes = (oldElement, oldProps = {}, newProps = {}) => {
         continue;
       }
 
-      // 이벤트 위임을 위해 eventManager의 addEvent와 removeEvent 사용
+      // 3. 이벤트 위임을 위해 eventManager의 addEvent와 removeEvent를 사용
       oldEventHandler && removeEvent(oldElement, eventType, oldEventHandler);
       value && addEvent(eventType, oldElement, value);
     } else if (key === 'className') {
@@ -98,10 +92,11 @@ const updateAttributes = (oldElement, oldProps = {}, newProps = {}) => {
 
 /**
  * @function updateElement
- * @description 두 요소를 비교하여 변경된 부분만 업데이트합니다.
+ * @description 두 요소를 비교하여 변경된 부분만 업데이트
  * @param {HTMLElement} container - 부모 요소
- * @param {Node} newElement - 새로운 요소
- * @param {Node} oldElement - 기존 요소
+ * @param {Object} oldNode - 기존 가상 노드
+ * @param {Object} newNode - 새로운 가상 노드
+ * @param {number} index - 자식 요소의 인덱스
  */
 
 const updateElement = (container, oldNode, newNode, index = 0) => {
@@ -113,7 +108,7 @@ const updateElement = (container, oldNode, newNode, index = 0) => {
     return;
   }
 
-  // 2. 새로운 노드가 있고 기존 노드가 없는 경우, 새로운 노드를 추가합니다.
+  // 2. 새로운 노드가 있고 기존 노드가 없는 경우, 새로운 노드를 추가
   if (newNode && !oldNode) {
     const newElement = createElement__v2(newNode);
     container.appendChild(newElement);
@@ -171,7 +166,8 @@ const updateElement = (container, oldNode, newNode, index = 0) => {
  * @param {Object} vNode - 가상 노드 객체
  * @param {HTMLElement} container - 렌더링할 대상 컨테이너
  */
-export const renderElement = (vNode, container) => {
+
+export function renderElement (vNode, container)  {
   const oldVNode = container?.oldVNode;
   const newVNode = processVNode(vNode);
 
@@ -182,8 +178,9 @@ export const renderElement = (vNode, container) => {
     container.appendChild(createElement__v2(newVNode));
   }
 
+  // 2. 새로운 가상 노드를 컨테이너에 저장하여 다음 업데이트에 사용
   container.oldVNode = newVNode;
 
-  // 2. 이벤트 위임 설정
+  // 3. 이벤트 위임 설정
   setupEventListeners(container);
 };

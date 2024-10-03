@@ -40,8 +40,8 @@ function processVNode(vNode) {
 /**
  * DOM 요소의 속성을 업데이트하는 함수입니다.
  * 
- * @param {object} oldNode - 이전 가상 노드
- * @param {object} newNode - 새로운 가상 노드
+ * @param {object} oldVNode - 이전 가상 노드
+ * @param {object} newVNode - 새로운 가상 노드
  * @param {HTMLElement} element - 실제 DOM 요소
  * 
  * 이 함수는 다음과 같은 작업을 수행합니다:
@@ -49,9 +49,9 @@ function processVNode(vNode) {
  * 2. 새로운 props를 DOM 요소에 추가하거나 업데이트합니다.
  * 3. 이벤트 리스너는 eventManager를 통해 처리합니다.
  */
-function updateAttributes(oldNode, newNode, element) {
-  const oldProps = oldNode?.props || {};
-  const newProps = newNode.props || {};
+function updateAttributes(oldVNode, newVNode, element) {
+  const oldProps = oldVNode?.props || {};
+  const newProps = newVNode.props || {};
 
   // 새로운 속성을 추가하거나 업데이트
   for (const [propName, newValue] of Object.entries(newProps)) {

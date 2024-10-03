@@ -58,7 +58,9 @@ export function addEvent(element, eventType, handler) {
     ]);
   } else {
     eventMap.set(realEventType, [{ element, handler }]);
-    rootElement.addEventListener(realEventType, handleEvent, true);
+    if (rootElement) {
+      rootElement.addEventListener(realEventType, handleEvent, true);
+    }
   }
 }
 
@@ -75,7 +77,9 @@ export function removeEvent(element, eventType, handler) {
     );
     if (eventMap.get(realEventType).length === 0) {
       eventMap.delete(realEventType);
-      rootElement.removeEventListener(realEventType, handleEvent);
+      if (rootElement) {
+        rootElement.removeEventListener(realEventType, handleEvent);
+      }
     }
   }
 }

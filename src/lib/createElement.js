@@ -10,5 +10,72 @@
 
 export function createElement(vNode) {
   // 여기에 구현하세요
-  return {}
+  if(vNode === false || vNode === null || vNode === ''){
+    // falsy면 빈 텍스트 노드를 반환
+    return document.createTextNode('');
+  } 
+  
+  if(vNode === undefined){
+    return null;
+  } 
+  
+  if(typeof vNode === 'string' || typeof vNode === 'number'){
+    // 문자열이나 숫자면 텍스트노드 반환
+    return document.createTextNode(vNode);
+  } 
+  
+  if(Array.isArray(vNode)) {
+    // 배열 입력에 대해 DocumentFragment 생성 + 각 자식에 대해 createDlement를 재귀 호출
+    const createFNode = document.createDocumentFragment();
+    vNode.forEach((childVNode) => {
+      const CNode = createElement(childVNode); // 재귀 호출
+      // undefined 처리
+      if(CNode !== null || CNode !== undefined){
+        createFNode.appendChild(CNode);
+      }
+    })
+    return createFNode;
+  } 
+  
+  if(typeof vNode.type === 'function') {
+    const funVNode = vNode.type(vNode.props || {});
+    return createElement(funVNode);
+  }
+  
+  
+  if (typeof vNode === 'object' && vNode.type) {
+    // 일반요소 노드 생성
+    const $el = document.createElement(vNode.type)
+
+    // 속성설정
+    Object.entries(vNode.props || {})
+      .filter(([key, value]) => value)
+      .forEach(([key, value]) => {
+
+        if(key === 'id'){
+          $el.id = value;
+        }else if(key === 'className') {
+          $el.className = value;
+        }else if(key.startsWith('on')) {
+          // 이벤트 리스너 onclick만
+          $el.addEventListener(key.slice(2).toLowerCase(), value);
+        } else {
+          $el.setAttribute(key, value);
+        }
+      })
+
+    // 자식 요소
+    const children = (vNode.children || [])
+    .map(createElement)
+    .filter(child => child !== null); //undifined 자식 필터링
+
+    children.forEach(child => {
+      $el.appendChild(child);
+    })
+
+    return $el;
+
+  }
+
+  return null;
 }

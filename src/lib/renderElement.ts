@@ -18,9 +18,9 @@ import { VNode, VNodeChild, VNodeElement, VNodeProps } from './createVNode';
  * - 자식 요소들에 대해 재귀적으로 `processVNode`를 호출하여 처리
  *
  * @param {VNode} vNode - 처리할 가상 DOM 노드
- * @returns {VNodeElement | string} - 렌더링 가능한 형태로 변환된 노드
+ * @returns {VNodeChild} - 렌더링 가능한 형태로 변환된 노드
  */
-function processVNode(vNode: VNode): VNodeElement | string {
+function processVNode(vNode: VNode): VNodeChild {
   if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
     return '';
   }
@@ -122,14 +122,14 @@ function updateAttributes(
  * - 같은 타입의 노드의 속성과 자식 노드를 업데이트합니다.
  *
  * @param {HTMLElement} $parent - 업데이트할 부모 DOM 요소
- * @param {VNodeElement | string} newNode - 새로 추가할 가상 DOM 노드 또는 텍스트
- * @param {VNodeElement | string} oldNode - 기존 가상 DOM 노드 또는 텍스트
+ * @param {VNodeChild} newNode - 새로 추가할 가상 DOM 노드 또는 텍스트
+ * @param {VNodeChild} oldNode - 기존 가상 DOM 노드 또는 텍스트
  * @param {number} [index=0] - 업데이트할 위치의 인덱스
  */
 function updateElement(
   $parent: HTMLElement,
-  newNode: VNodeElement | string,
-  oldNode: VNodeElement | string,
+  newNode: VNodeChild,
+  oldNode: VNodeChild,
   index: number = 0
 ) {
   const $existingElement = $parent.childNodes[index] as HTMLElement;
@@ -173,14 +173,14 @@ function updateElement(
 
   // ---------- 내부함수 ----------
   /** 주어진 노드가 텍스트 노드인지 확인합니다. */
-  function isTextNode(node: VNodeElement | string): boolean {
+  function isTextNode(node: VNodeChild): boolean {
     return typeof node === 'string' || typeof node === 'number';
   }
 
   /** 두 노드의 타입이 다른 경우 노드를 교체해야 하는지 여부를 확인합니다. */
   function shouldReplaceNode(
-    newNode: VNodeElement | string,
-    oldNode: VNodeElement | string
+    newNode: VNodeChild,
+    oldNode: VNodeChild
   ): boolean {
     return (
       newNode !== null &&
@@ -193,8 +193,8 @@ function updateElement(
 
   /** 두 노드가 VNodeElement 타입인지 확인합니다. */
   function isVNodeElementType(
-    newNode: VNodeElement | string,
-    oldNode: VNodeElement | string
+    newNode: VNodeChild,
+    oldNode: VNodeChild
   ): boolean {
     return (
       newNode !== null &&
@@ -226,11 +226,11 @@ function updateElement(
  * - 최초 렌더링 시에는 DOM 요소를 생성하여 추가하고, 리렌더링 시에는 기존 요소를 업데이트합니다.
  *
  * @param {VNode} vNode - 렌더링할 가상 DOM 노드
- * @param {HTMLElement & { _vNode: VNodeElement | string }} container - DOM 요소와 이전 vNode를 저장할 컨테이너
+ * @param {HTMLElement & { _vNode: VNodeChild }} container - DOM 요소와 이전 vNode를 저장할 컨테이너
  */
 export function renderElement(
   vNode: VNode,
-  container: HTMLElement & { _vNode: VNodeElement | string }
+  container: HTMLElement & { _vNode: VNodeChild }
 ) {
   const oldVNode = container._vNode || null;
   const newVNode = processVNode(vNode);

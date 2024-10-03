@@ -1,27 +1,26 @@
-import {isFalsyDom} from "../utils/isFalsyDom.js";
-import {addEvent} from "./eventManager.js";
+import { isFalsyDom } from "../utils/isFalsyDom.js";
+import { addEvent } from "./eventManager.js";
 
 export function createElement__v2(vNode) {
-
   if (isFalsyDom(vNode)) {
-    return document.createTextNode('')
+    return document.createTextNode("");
   }
 
-  if (typeof vNode === "number" || typeof vNode === "string") return document.createTextNode(vNode + "");
+  if (typeof vNode === "number" || typeof vNode === "string")
+    return document.createTextNode(vNode + "");
 
   if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment();
 
     vNode.forEach((childNode) => {
       fragment.appendChild(createElement(childNode));
-    })
+    });
 
     return fragment;
   }
 
   if (typeof vNode.type === "function") {
     return createElement__v2(vNode.type(vNode.props));
-
   }
 
   const domNode = document.createElement(vNode.type);
@@ -36,13 +35,13 @@ export function createElement__v2(vNode) {
     }
 
     domNode[key] = value;
-  })
+  });
 
   const children = vNode.children ?? [];
 
-    children.forEach((child) => {
-      domNode.appendChild(createElement__v2(child));
-    })
+  children.forEach((child) => {
+    domNode.appendChild(createElement__v2(child));
+  });
 
   return domNode;
 }

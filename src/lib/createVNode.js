@@ -3,5 +3,5 @@ export function createVNode(type, props, ...children) {
     type,
     props,
     children: children.flat(Infinity).filter(Boolean),
-  }
+  };
 }

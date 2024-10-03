@@ -1,5 +1,6 @@
 /** @jsx createVNode */
 import { createVNode } from "../../lib";
+import { router } from "../../main";
 import { userStorage } from "../../storages";
 
 const getStyle = (href) => {
@@ -10,7 +11,14 @@ const getStyle = (href) => {
 const createLink = (href, name) => {
   return (
     <li>
-      <a href={href} className={getStyle(href)} data-link>
+      <a
+        href={href}
+        className={getStyle(href)}
+        data-link="true"
+        onClick={() => {
+          router.push(href);
+        }}
+      >
         {name}
       </a>
     </li>
@@ -30,7 +38,7 @@ export const Navigation = () => {
 
         {loggedIn && (
           <li>
-            <a href="#" id="logout" className="text-gray-600">
+            <a href="/" id="logout" className="text-gray-600">
               로그아웃
             </a>
           </li>

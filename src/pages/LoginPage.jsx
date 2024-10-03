@@ -1,5 +1,19 @@
 /** @jsx createVNode */
 import { createVNode } from "../lib";
+import { router } from "../main";
+import { userStorage } from "../storages";
+import { globalStore } from "../stores";
+
+const submitLogin = () => {
+  const currentUser = {
+    username: document.querySelector("#username").value,
+    email: "",
+    bio: "",
+  };
+  userStorage.set("user", currentUser);
+  globalStore.setState({ currentUser, loggedIn: true });
+  router.push("/profile");
+};
 
 export const LoginPage = () => {
   return (
@@ -8,7 +22,7 @@ export const LoginPage = () => {
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">
           항해플러스
         </h1>
-        <form id="login-form">
+        <form id="login-form" onSubmit={submitLogin}>
           <input
             type="text"
             id="username"

@@ -28,13 +28,10 @@ function updateAttributes(element, oldVNode, newVNode) {
     const oldVal = oldVNode.props && key in oldVNode.props ? oldVNode.props[key] : null;
     const newVal = newVNode.props && key in newVNode.props ? newVNode.props[key] : null;
     if ((!oldVNode.props && newVNode.props) || (!oldVal && newVal)) {
-      console.log("추가:", key);
       addHandler();
     } else if ((oldVNode.props && !newVNode.props) || (oldVal && !newVal)) {
-      console.log("삭제:", key);
       removeHandler();
     } else if (oldVal !== newVal) {
-      console.log("변경:", key);
       updateHandler();
     }
   };
@@ -106,7 +103,7 @@ function updateElement(parentElement, oldElement, oldVNode, newVNode) {
     (typeof oldVNode === "string" && typeof newVNode === "string") ||
     (typeof oldVNode === "number" && typeof newVNode === "number")
   ) {
-    if (oldVNode !== newVNode) oldElement.textContent = newVNode;
+    if (oldVNode !== newVNode) oldElement.textContent = String(newVNode);
   } else if (oldVNode.type !== newVNode.type) {
     const newElement = createElement__v2(newVNode);
     oldElement.replaceWith(newElement);
@@ -121,12 +118,6 @@ function updateElement(parentElement, oldElement, oldVNode, newVNode) {
         oldVNode.children[i],
         newVNode.children[i]
       );
-    }
-
-    if (oldVNode.children.length > newVNode.children.length) {
-      for (let i = maxChildren; i < oldVNode.children.length; i++) {
-        updateElement(oldElement, oldElement.childNodes[i], oldVNode.children[i], null);
-      }
     }
   }
 }

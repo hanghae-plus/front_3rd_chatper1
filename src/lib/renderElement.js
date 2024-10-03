@@ -69,10 +69,11 @@ function updateAttributes(target, newProps = {}, oldProps = {}) {
 
 // : updateElement 함수 구현
 function updateElement(parent, newNode, oldNode, index = 0) {
+  const parentChildNode = parent.childNodes[index];
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
   if (!newNode && oldNode) {
-    parent.removeChild(parent.childNodes[index]);
+    parent.removeChild(parentChildNode);
     return;
   }
 
@@ -93,7 +94,7 @@ function updateElement(parent, newNode, oldNode, index = 0) {
     if (newNode !== oldNode) {
       const textNode = document.createTextNode(newNode.toString());
       // 부모 노드에서 기존 텍스트 노드를 교체
-      parent.replaceChild(textNode, parent.childNodes[index]);
+      parent.replaceChild(textNode, parentChildNode);
     }
     return;
   }
@@ -101,18 +102,14 @@ function updateElement(parent, newNode, oldNode, index = 0) {
   // 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
   // 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
   if (newNode.type !== oldNode.type) {
-    parent.replaceChild(createElement__v2(newNode), parent.childNodes[index]);
+    parent.replaceChild(createElement__v2(newNode), parentChildNode);
     return;
   }
 
   // 5. 같은 타입의 노드 업데이트
   // 5-1. 속성 업데이트
   // updateAttributes 함수를 호출하여 속성 업데이트
-  updateAttributes(
-    parent.childNodes[index],
-    newNode.props || {},
-    oldNode.props || {}
-  );
+  updateAttributes(parentChildNode, newNode.props || {}, oldNode.props || {});
 
   // 5-2. 자식 노드 재귀적 업데이트
   // newNode와 oldNode의 자식 노드들을 비교하며 재귀적으로 updateElement 호출
@@ -121,18 +118,12 @@ function updateElement(parent, newNode, oldNode, index = 0) {
 
   const maxLength = Math.max(newNodeLength, oldNodeLength);
   for (let i = 0; i < maxLength; i++) {
-    updateElement(
-      parent.childNodes[index],
-      newNode.children[i],
-      oldNode.children[i],
-      i
-    );
+    updateElement(parentChildNode, newNode.children[i], oldNode.children[i], i);
   }
 
   // 5-3. 불필요한 자식 노드 제거
-  // 불필요한 자식 노드 제거
-  while (parent.childNodes[index].childNodes.length > newNode.children.length) {
-    removeChild(parentElement.childNodes[index].lastChild);
+  while (parentChildNode.childNodes.length > newNodeLength) {
+    parentChildNode.removeChild(parentChildNode.lastChild);
   }
 }
 

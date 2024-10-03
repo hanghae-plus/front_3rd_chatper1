@@ -6,17 +6,25 @@
 
 export function createVNode(type, props, ...children) {
   // 여기에 구현하세요
-  function deepChildren(array) {
-    return array.map(item =>
-      Array.isArray(item) ? deepChildren(item) : (item && typeof item === 'object') 
-      ? {...item} : item
-    );
-  }
-  const newChildren = deepChildren(children).flat(Infinity)
+  // function deepChildren(array) {
+  //   return array.map(item =>
+  //     Array.isArray(item) ? deepChildren(item) : (item && typeof item === 'object') 
+  //     ? {...item} : item
+  //   );
+  // }
+  // const newChildren = deepChildren(children).flat(Infinity)
 
-  return {
+  // return {
+  //   type, 
+  //   props, 
+  //   children: newChildren
+  // }
+
+  // children = 
+
+  return { 
     type, 
     props, 
-    children: newChildren
+    children: children.flat(Infinity).filter(Boolean) 
   }
 }

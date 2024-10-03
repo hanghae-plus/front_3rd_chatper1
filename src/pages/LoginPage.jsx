@@ -2,6 +2,7 @@
 import { createVNode } from '../lib';
 import { userStorage } from '../storages';
 import { globalStore } from '../stores';
+import { router } from '../main';
 
 const login = (username) => {
   const user = {
@@ -24,6 +25,8 @@ const handleSubmitLoginForm = (e) => {
   const username = formData.get('username').trim();
 
   login(username);
+
+  router.push('/profile');
 };
 
 export const LoginPage = () => {

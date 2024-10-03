@@ -8,7 +8,7 @@ export function createElement__v2(vNode) {
   }
 
   // 2. 문자열 또는 숫자 vNode 처리
-  if (typeof vNode == "string" || typeof vNode === "number") {
+  if (typeof vNode === "string" || typeof vNode === "number") {
     return document.createTextNode(vNode);
   }
 
@@ -23,7 +23,7 @@ export function createElement__v2(vNode) {
 
   //vNode.type이 함수면 해당 함수를 호출하고 그 결과로 createElement를 재귀 호출합니다.
   if (typeof vNode.type === "function") {
-    return createElement__v2(vNode.type(vNode.props));
+    return createElement(vNode.type(vNode.props || {}));
   }
 
   // 위 경우가 아니면 실제 DOM 요소를 생성합니다.
@@ -37,7 +37,7 @@ export function createElement__v2(vNode) {
   for (const [key, value] of Object.entries(vNode.props || {})) {
     if (typeof value === "function" && key.startsWith("on")) {
       const eventType = key.toLowerCase().slice(2);
-      addEvent($element, eventType, value);
+      addEvent(eventType, $element, value);
     } else if (key === "className") {
       $element.className = value;
     } else if (key.startsWith("data-")) {

@@ -27,6 +27,7 @@ function handleEvent(event) {
 
 // TODO: addEvent 함수 구현
 export function addEvent(element, eventType, handler) {
+  element.addEventListener(eventType, handler);
   // 1. eventMap에 이벤트 타입과 요소, 핸들러 정보 저장
   // 2. 필요한 경우 루트 요소에 새 이벤트 리스너 추가
   // 이 함수를 통해 개별 요소에 직접 이벤트를 붙이지 않고도 이벤트 처리 가능
@@ -34,6 +35,7 @@ export function addEvent(element, eventType, handler) {
 
 // TODO: removeEvent 함수 구현
 export function removeEvent(element, eventType, handler) {
+  element.removeEventListener(eventType, handler);
   // 1. eventMap에서 해당 요소와 이벤트 타입에 대한 핸들러 제거
   // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
   // 이를 통해 더 이상 필요 없는 이벤트 핸들러를 정리하고 메모리 누수 방지

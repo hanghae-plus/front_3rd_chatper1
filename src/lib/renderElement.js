@@ -27,6 +27,10 @@ function updateAttributes(vNode, newProps, oldProps) {
   for (let name in oldProps) {
     if (!Object.hasOwn(newProps, name)) {
       vNode.removeAttribute(name);
+
+      if (name.startsWith('on')) {
+        removeEvent(vNode, name.slice(2).toLowerCase(), oldProps[name]);
+      }
     }
     if (!Object.hasOwn(newProps, 'class')) {
       vNode.removeAttribute('class');
@@ -41,6 +45,8 @@ function updateAttributes(vNode, newProps, oldProps) {
           .map(([key, value]) => `${camelToKebab(key)}:${value}`)
           .join(';');
         vNode.setAttribute(name, styleValue);
+      } else if (name.startsWith('on')) {
+        addEvent(vNode, name.slice(2).toLowerCase());
       } else {
         vNode.setAttribute(name, newProps[name]);
       }
@@ -69,9 +75,7 @@ function updateElement(parent, newNode, oldNode, key) {
     return;
   }
 
-  if (JSON.stringify(newNode.props) !== JSON.stringify(oldNode.props)) {
-    updateAttributes(parent.childNodes[key], newNode.props, oldNode.props);
-  }
+  updateAttributes(parent.childNodes[key], newNode.props, oldNode.props);
 
   if (newNode.children && oldNode.children) {
     const maxLength = Math.max(newNode.children.length, oldNode.children.length);

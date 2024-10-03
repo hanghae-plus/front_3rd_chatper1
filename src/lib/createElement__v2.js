@@ -5,8 +5,10 @@
 // 4. 일반 요소 vNode 처리:
 //    - 요소 생성
 //    - 속성 설정 (이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선)
+
+import { addEvent } from './eventManager';
+
 //    - 자식 요소 추가
-const events = ['onClick', 'onChange', 'onInput', 'onSubmit'];
 export function createElement__v2(vNode) {
   let $el;
 
@@ -27,10 +29,10 @@ export function createElement__v2(vNode) {
   for (let name in vNode.props) {
     let propsName = name;
     let propsValue = vNode.props[name];
-    if (events.includes(name) && typeof propsValue === 'function') {
+    if (name.startsWith('on') && typeof propsValue === 'function') {
       const eventName = name.slice(2).toLocaleLowerCase();
       const eventFn = propsValue;
-      $el.addEventListener(eventName, eventFn);
+      addEvent($el, eventName, eventFn);
       continue;
     }
     if (name === 'className') {

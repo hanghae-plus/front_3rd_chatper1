@@ -1,10 +1,31 @@
 /** @jsx createVNode */
+import { Footer, Header, Navigation } from "../components";
 import { createVNode } from "../lib";
+import { userStorage } from "../storages";
 import { globalStore } from "../stores/globalStore";
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = "", email = "", bio = "" } = currentUser ?? {};
+
+  const onClickUpdateProfile = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    const { username, email, bio } = data;
+
+    userStorage.set({
+      username,
+      email,
+      bio,
+    });
+
+    globalStore.setState({
+      currentUser: userStorage.get(),
+      loggedIn: true,
+    });
+  };
+
   return (
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
@@ -15,7 +36,7 @@ export const ProfilePage = () => {
             <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
               내 프로필
             </h2>
-            <form id="profile-form">
+            <form id="profile-form" onSubmit={onClickUpdateProfile}>
               <div class="mb-4">
                 <label
                   for="username"
@@ -28,7 +49,7 @@ export const ProfilePage = () => {
                   id="username"
                   name="username"
                   class="w-full p-2 border rounded"
-                  value="${username}"
+                  value={username}
                   required
                 />
               </div>
@@ -44,7 +65,7 @@ export const ProfilePage = () => {
                   id="email"
                   name="email"
                   class="w-full p-2 border rounded"
-                  value="${email}"
+                  value={email}
                   required
                 />
               </div>

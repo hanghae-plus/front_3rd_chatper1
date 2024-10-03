@@ -76,7 +76,7 @@ function updateElement(container, oldNode, newNode, index = 0) {
   }
 
   // oldNode와 newNode가 배열인 경우 처리
-  if (Array.isArray(oldNode) || Array.isArray(newNode)) {
+  if (Array.isArray(oldNode) && Array.isArray(newNode)) {
     const maxLength = Math.max(oldNode.length, newNode.length);
     for (let i = 0; i < maxLength; i++) {
       updateElement(container, oldNode[i], newNode[i], i);

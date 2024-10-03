@@ -1,5 +1,5 @@
 /** @jsx createVNode */
-import { createElement, createRouter, createVNode, renderElement } from './lib';
+import { createRouter, createVNode, renderElement } from './lib';
 import { HomePage, LoginPage, ProfilePage } from './pages';
 import { globalStore } from './stores';
 import { ForbiddenError, UnauthorizedError } from './errors';
@@ -56,12 +56,6 @@ function render() {
 
   try {
     const $app = <App targetPage={router.getTarget()} />;
-
-    // if ($root.hasChildNodes()) {
-    //   $root.replaceChild($app, $root.firstChild);
-    // } else {
-    //   $root.appendChild($app);
-    // }
 
     renderElement($app, $root);
   } catch (error) {

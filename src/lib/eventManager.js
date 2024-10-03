@@ -39,7 +39,7 @@ function handleEvent(event) {
       const handlerObj = handlers.get(currentTarget)
       if (handlerObj) {
         // 3. 핸들러가 있다면 실행
-        handlerObj(event)
+        handlerObj.call(target, event)
       }
     }
     currentTarget = currentTarget.parentElement // 상위 요소로 이동
@@ -69,11 +69,8 @@ export function removeEvent(element, eventType, handler) {
     handlers.delete(element)
 
     // 2. 해당 이벤트 타입의 모든 핸들러가 제거되면 루트 요소의 리스너도 제거
-    if (handlers.size === 0) {
-      eventMap.delete(eventType)
-      if (rootElement) {
-        rootElement.removeEventListener(eventType, handleEvent, true)
-      }
+    if (rootElement) {
+      rootElement.removeEventListener(eventType, handleEvent, true)
     }
   }
 }

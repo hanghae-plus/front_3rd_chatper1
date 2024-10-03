@@ -1,4 +1,7 @@
-import { EVENT_LISTENER_ATTRIBUTE_PREFIX } from '../constants';
+import {
+  CLASSNAME_ATTRIBUTE_PREFIX,
+  EVENT_LISTENER_ATTRIBUTE_PREFIX,
+} from '../constants';
 
 export function createElement(vNode) {
   // 1. vNode가 falsy면 빈 텍스트 노드를 반환합니다.
@@ -28,15 +31,13 @@ export function createElement(vNode) {
   }
 
   // 5. 위 경우가 아니면 실제 DOM 요소를 생성합니다:
-  //    - vNode.type에 해당하는 요소를 생성
-  //    - vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
-  //    - vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
 
   const element = document.createElement(vNodeType);
 
   props &&
     Object.entries(props).forEach(([name, value]) => {
       const isEventAttribute = EVENT_LISTENER_ATTRIBUTE_PREFIX.test(name);
+      const isClassNameAttribute = CLASSNAME_ATTRIBUTE_PREFIX.test(name);
 
       if (isEventAttribute) {
         const eventName = name.match(EVENT_LISTENER_ATTRIBUTE_PREFIX)[1];
@@ -47,9 +48,13 @@ export function createElement(vNode) {
         return;
       }
 
-      // TODO: 질문하기! setAttribute vs property 설정
+      if (isClassNameAttribute) {
+        element.className = value;
+        element.setAttribute('class', value);
+        return;
+      }
+
       element.setAttribute(name, value);
-      element[name] = value;
     });
 
   children.forEach((node) => node && element.appendChild(createElement(node)));

@@ -24,8 +24,6 @@ function processVNode(vNode) {
 }
 
 function updateAttributes(domElement, newProps, oldProps) {
-  const props = new Set();
-
   Object.keys(newProps).forEach(key => {
     if (key.startsWith('on')) {
       const eventName = key.slice(2).toLowerCase();

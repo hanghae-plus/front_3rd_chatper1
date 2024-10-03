@@ -2,8 +2,6 @@ import { addEvent } from "./eventManager";
 
 // TODO: createElement__v2 함수 구현
 export function createElement__v2(vNode) {
-  // console.log(vNode)
-  
   if (!vNode) {
     return document.createTextNode("");
   }

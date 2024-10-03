@@ -1,7 +1,7 @@
 /** @jsx createVNode */
 import{ createVNode } from "../lib";
 import{ globalStore } from "../stores";
-import { Header, Navigation, Footer } from "../components/templates/Header";
+import { Header, Navigation, Footer } from "../components/templates";
 
 export const ProfilePage = () => {
 

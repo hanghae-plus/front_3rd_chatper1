@@ -28,7 +28,6 @@ function updateAttributes(element, oldProps, newProps) {
       if (key.startsWith('on') && typeof oldProps[key] === 'function') {
         const eventType = key.slice(2).toLowerCase();
         removeEvent(element, eventType, oldProps[key]);
-        // element.removeEventListener(eventType, oldProps[key]);
       } else {
         element.removeAttribute(key);
       }
@@ -39,16 +38,13 @@ function updateAttributes(element, oldProps, newProps) {
     const newValue = newProps[key];
     const oldValue = oldProps[key];
 
-    // 이벤트 리스너 추가 및 업데이트
     if (key.startsWith('on') && typeof newValue === 'function') {
       const eventType = key.slice(2).toLowerCase();
       if (oldValue !== newValue) {
         if (oldValue) {
           removeEvent(element, eventType, oldValue);
-          // element.removeEventListener(eventType, oldValue);
         }
         addEvent(element, eventType, newValue);
-        // element.addEventListener(eventType, newValue);
       }
     } else if (key === 'className') {
       if (newValue !== oldValue) {
@@ -66,10 +62,8 @@ function updateAttributes(element, oldProps, newProps) {
           element.style[styleName] = '';
         }
       });
-    } else {
-      if (newValue !== oldValue) {
-        element.setAttribute(key, newValue);
-      }
+    } else if (newValue !== oldValue) {
+      element.setAttribute(key, newValue);
     }
   });
 }

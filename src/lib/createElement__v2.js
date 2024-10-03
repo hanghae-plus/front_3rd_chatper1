@@ -1,3 +1,5 @@
+import { addEvent } from "./eventManager";
+
 export function createElement__v2(vNode) {
   // 이 함수는 createElement의 개선된 버전입니다.
 
@@ -23,16 +25,18 @@ export function createElement__v2(vNode) {
   // 4. 일반 요소 생성
   const element = document.createElement(vNode.type);
 
-  // 속성 설정
+  // 속성 설정 (이벤트 함수를 이벤트 위임 방식으로 등록할 수 있도록 개선)
   if (vNode.props) {
     for (const [key, value] of Object.entries(vNode.props)) {
       if (key.startsWith("on")) {
         const eventType = key.slice(2).toLowerCase();
-        element.addEventListener(eventType, (event) => {
-          if (event.target === element || element.contains(event.target)) {
-            value(event);
-          }
-        });
+
+        addEvent(element, eventType, value);
+        // element.addEventListener(eventType, (event) => {
+        //   if (event.target === element || element.contains(event.target)) {
+        //     value(event);
+        // }
+        // });
       } else if (key === "className") {
         element.className = value;
       } else {

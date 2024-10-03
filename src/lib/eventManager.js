@@ -20,12 +20,12 @@ function handleEvent(event) {
 
   if (!eventMap.has(event.type)) return;
 
-  const events = eventMap.get(event.type);
+  const handlers = eventMap.get(event.type);
 
   while (target && target !== rootElement) {
-    const eventObj = events.find(({ el }) => el === target);
-    if (eventObj) {
-      eventObj.handler(event);
+    const handler = handlers.get(target);
+    if (handler) {
+      handler(event);
       break;
     }
 
@@ -34,17 +34,23 @@ function handleEvent(event) {
 }
 
 export function addEvent(element, eventType, handler) {
-  const events = eventMap.get(eventType) || [];
-  eventMap.set(eventType, [...events, { el: element, handler }]);
+  if (!eventMap.has(eventType)) {
+    eventMap.set(eventType, new Map());
+  }
+
+  const handlers = eventMap.get(eventType);
+  handlers.set(element, handler);
 }
 
 export function removeEvent(element, eventType) {
-  const events = eventMap.get(eventType) || [];
-  const newEvents = events.filter(({ el }) => el !== element);
+  if (!eventMap.has(eventType)) {
+    throw new Error(`eventMap에 ${eventType}이 존재하지 않습니다.`);
+  }
 
-  if (newEvents.length > 0) {
-    eventMap.set(eventType, newEvents);
-  } else {
+  const handlers = eventMap.get(eventType);
+  handlers.delete(element);
+
+  if (handlers.size === 0) {
     eventMap.delete(eventType);
     rootElement?.removeEventListener(eventType, handleEvent, true);
   }

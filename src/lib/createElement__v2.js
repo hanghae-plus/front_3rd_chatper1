@@ -1,3 +1,5 @@
+import { updateAttributes } from '.';
+
 export function createElement__v2(vNode) {
   // 이 함수는 createElement의 개선된 버전입니다.
   // 1. falsy vNode 처리
@@ -21,9 +23,10 @@ export function createElement__v2(vNode) {
     return fragment;
   }
 
-  // if (typeof vNode.type === 'function') {
-  //   return createElement__v2(vNode.type(vNode.props));
-  // }
+  // 함수 타입
+  if (typeof vNode.type === 'function') {
+    return createElement__v2(vNode.type(vNode.props));
+  }
 
   // +@
   if (typeof vNode.type === 'object' && typeof vNode.type?.type === 'function') {
@@ -31,20 +34,10 @@ export function createElement__v2(vNode) {
   }
 
   // 4번
-  const node = document.createElement__v2(vNode.type);
+  const node = document.createElement(vNode.type);
+  updateAttributes(node, {}, vNode.props || {});
 
-  Object.entries(vNode.props).forEach(([key, value]) => {
-    if (key === 'className') {
-      node.setAttribute('class', value);
-    } else if (key.startsWith('on') && typeof value === 'function') {
-      const eventType = key.replace('on', '').toLowerCase();
-      node.addEventListener(eventType, value);
-    } else node.setAttribute(key, value);
-  });
-
-  if (vNode.children.length > 0) {
-    vNode.children.forEach((child) => node.appendChild(createElement__v2(child)));
-  }
+  vNode.children.forEach((child) => node.appendChild(createElement__v2(child)));
 
   return node;
 }

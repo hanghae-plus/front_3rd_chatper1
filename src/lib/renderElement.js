@@ -6,8 +6,8 @@ import { createElement__v2 } from "./createElement__v2.js";
 function processVNode(vNode) {
   // vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
   // - null, undefined, boolean 값 처리
-  if (!vNode || typeof vNode === "boolean") {
-    return null;
+  if (!vNode) {
+    return document.createTextNode("");
   }
   // - 문자열과 숫자를 문자열로 변환
   if (typeof vNode === "string" || typeof vNode === "number") {
@@ -16,7 +16,8 @@ function processVNode(vNode) {
 
   // - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
   if (typeof vNode.type === "function") {
-    return processVNode(vNode.type(vNode.props || {}));
+    // return processVNode(vNode.type(vNode.props || {}));
+    return processVNode(vNode.type(vNode.props));
   }
 
   // - 자식 요소들에 대해 재귀적으로 processVNode 호출
@@ -56,16 +57,15 @@ function updateAttributes(element, oldProps = {}, newProps = {}) {
 
   // - 새로운 props의 속성 추가 또는 업데이트
 
-  for (const key in newProps) {
-    if (key === "children") continue; // 자식은 따로 처리
-
-    const value = newProps[key];
-    const newEventHandler = newProps[key];
-    const oldEventHandler = oldProps[key];
+  for (const [key, value] of Object.entries(newProps)) {
+    if (key === "children") continue;
 
     if (key.startsWith("on")) {
       // 이벤트 리스너 처리
       const eventType = key.slice(2).toLowerCase();
+      const newEventHandler = newProps[key];
+      const oldEventHandler = oldProps[key];
+
       if (newEventHandler !== oldEventHandler) {
         if (oldEventHandler) {
           removeEvent(element, eventType, oldEventHandler);
@@ -88,13 +88,13 @@ function updateAttributes(element, oldProps = {}, newProps = {}) {
 }
 
 // TODO: updateElement 함수 구현
-function updateElement(oldNode, newNode, parentElement, index = 0) {
-  const oldElement = parentElement.childNodes[index];
+function updateElement(container, oldNode, newNode, index = 0) {
+  const oldElement = container.childNodes[index];
 
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
   if (!newNode && oldNode) {
-    if (oldElement) parentElement.removeChild(oldElement);
+    if (oldElement) container.removeChild(oldElement);
     return;
   }
 
@@ -102,10 +102,10 @@ function updateElement(oldNode, newNode, parentElement, index = 0) {
   // TODO: newNode만 존재하는 경우, 새 노드를 생성하여 DOM에 추가
   if (newNode && !oldNode) {
     const newElement = createElement__v2(newNode);
-    if (parentElement.childNodes[index]) {
-      parentElement.insertBefore(newElement, parentElement.childNodes[index]);
+    if (container.childNodes[index]) {
+      container.insertBefore(newElement, container.childNodes[index]);
     } else {
-      parentElement.appendChild(newElement);
+      container.appendChild(newElement);
     }
     return;
   }
@@ -123,7 +123,7 @@ function updateElement(oldNode, newNode, parentElement, index = 0) {
 
   if (typeof newNode === "string" || typeof newNode === "number") {
     const newTextElement = document.createTextNode(newNode);
-    parentElement.replaceChild(newTextElement, oldElement);
+    container.replaceChild(newTextElement, oldElement);
     return;
   }
 
@@ -132,9 +132,9 @@ function updateElement(oldNode, newNode, parentElement, index = 0) {
   if (oldNode.type !== newNode.type) {
     const newElement = createElement__v2(newNode);
     if (oldElement) {
-      parentElement.replaceChild(newElement, oldElement); // 노드 교체
+      container.replaceChild(newElement, oldElement); // 노드 교체
     } else {
-      parentElement.appendChild(newElement); // 새로운 노드 추가
+      container.appendChild(newElement); // 새로운 노드 추가
     }
   }
 
@@ -152,7 +152,7 @@ function updateElement(oldNode, newNode, parentElement, index = 0) {
     const maxChildrenLength = Math.max(oldChildren.length, newChildren.length);
 
     for (let i = 0; i < maxChildrenLength; i++) {
-      updateElement(oldChildren[i], newChildren[i], oldElement, i);
+      updateElement(oldElement, oldChildren[i], newChildren[i], i);
     }
 
     // 5-3. 불필요한 자식 노드 제거
@@ -170,15 +170,13 @@ export function renderElement(vNode, container) {
   // - 이전 vNode와 새로운 vNode를 비교하여 업데이트
   // - 최초 렌더링과 업데이트 렌더링 처리
   const newNode = processVNode(vNode);
-  if (!container?._oldNode) {
-    // 최초 렌더링
-    const newElement = createElement__v2(vNode);
-    container.appendChild(newElement);
-  } else {
+  if (container?._oldNode) {
     // 업데이트 렌더링
-    updateElement(container._oldNode, newNode, container);
+    updateElement(container, container._oldNode, newNode);
+  } else {
+    // 최초 렌더링
+    container.appendChild(createElement__v2(newNode));
   }
-
   container._oldNode = newNode;
 
   // 이벤트 위임 설정

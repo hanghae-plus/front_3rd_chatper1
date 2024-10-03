@@ -1,6 +1,6 @@
 /** @jsx createVNode */
 import { createElement, createRouter, createVNode, renderElement } from './lib';
-import { HomePage, LoginPage, NotFoundPage, ProfilePage } from './pages';
+import { HomePage, LoginPage, ProfilePage } from './pages';
 import { globalStore } from './stores';
 import { ForbiddenError, UnauthorizedError } from './errors';
 import { userStorage } from './storages';
@@ -14,14 +14,14 @@ const router = createRouter({
         if (loggedIn) {
             throw new ForbiddenError();
         }
-        return LoginPage()
+        return <LoginPage />;
     },
     '/profile': () => {
         const { loggedIn } = globalStore.getState();
         if (!loggedIn) {
             throw new UnauthorizedError();
         }
-        return ProfilePage()
+        return <ProfilePage />;
     },
 });
 
@@ -40,23 +40,12 @@ function render() {
     const $root = document.querySelector('#root');
 
     try {
-        const Page = router.getTarget() ?? NotFoundPage;
-        const error = globalStore.getState().error;
-
-        console.log(window.location.pathname)
-
-        $root.innerHTML = `
-        ${Page()}
-      `;
-
-        // const $app = createElement(<App targetPage={router.getTarget()}/>);
-        // if ($root.hasChildNodes()) {
-        //   $root.firstChild.replaceWith($app)
-        // } else{
-        //   console.log($root)
-        //   console.log($app)
-        //   $root.appendChild($app);
-        // }
+        const $app = createElement(<App targetPage={router.getTarget()} />);
+        if ($root.hasChildNodes()) {
+            $root.firstChild.replaceWith($app);
+        } else {
+            $root.appendChild($app);
+        }
     } catch (error) {
         if (error instanceof ForbiddenError) {
             router.push('/');

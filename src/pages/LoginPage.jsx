@@ -1,14 +1,36 @@
 /** @jsx createVNode */
-import { createVNode } from "../lib";
+import { createElement, createVNode } from "../lib";
+import { userStorage } from "../storages";
+import { globalStore } from "../stores";
 
 export const LoginPage = () => {
+  const { loggedIn, currentUser } = globalStore.getState();
+  const { username = "", email = "", bio = "" } = currentUser ?? {};
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    login(username);
+  };
+
+  function login(username) {
+    const user = { username, email: "", bio: "" };
+    globalStore.setState({
+      currentUser: user,
+      loggedIn: true,
+    });
+    userStorage.set(user);
+  }
+
   return (
     <div class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-8">
           항해플러스
         </h1>
-        <form id="login-form">
+        <form id="login-form" onSubmit={handleSubmit}>
           <input
             type="text"
             id="username"
@@ -18,6 +40,7 @@ export const LoginPage = () => {
           />
           <input
             type="password"
+            id="password"
             placeholder="비밀번호"
             class="w-full p-2 mb-6 border rounded"
             required

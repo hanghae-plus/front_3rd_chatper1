@@ -2,10 +2,25 @@
 import { Header, Navigation, Post, Footer, PostForm } from "../components";
 import { createVNode } from "../lib";
 import { globalStore } from "../stores";
+import { userStorage } from "../storages";
 
 export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = "", email = "", bio = "" } = currentUser ?? {};
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const updatedProfile = Object.fromEntries(formData);
+    updateProfile(updatedProfile);
+  };
+
+  function updateProfile(profile) {
+    const user = { ...globalStore.getState().currentUser, ...profile };
+    globalStore.setState({ currentUser: user });
+    userStorage.set(user);
+    alert("프로필이 업데이트되었습니다.");
+  }
 
   return (
     <div class="bg-gray-100 min-h-screen flex justify-center">
@@ -17,7 +32,7 @@ export const ProfilePage = () => {
             <h2 class="text-2xl font-bold text-center text-blue-600 mb-8">
               내 프로필
             </h2>
-            <form id="profile-form">
+            <form id="profile-form" onSubmit={handleSubmit}>
               <div class="mb-4">
                 <label
                   for="username"
@@ -30,7 +45,7 @@ export const ProfilePage = () => {
                   id="username"
                   name="username"
                   class="w-full p-2 border rounded"
-                  value="${username}"
+                  value={username}
                   required
                 />
               </div>
@@ -46,7 +61,7 @@ export const ProfilePage = () => {
                   id="email"
                   name="email"
                   class="w-full p-2 border rounded"
-                  value="${email}"
+                  value={email}
                   required
                 />
               </div>

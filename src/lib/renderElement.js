@@ -1,6 +1,14 @@
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { createElement__v2 } from './createElement__v2.js';
-import { isBooleanProp, isEventProp, isInValidVNode, removeBooleanProp, setBooleanProp, setStyleProp } from '../utils';
+import {
+  extractEventType,
+  isBooleanProp,
+  isEventProp,
+  isInValidVNode,
+  removeBooleanProp,
+  setBooleanProp,
+  setStyleProp,
+} from '../utils';
 
 // vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
 function processVNode(vNode) {
@@ -36,7 +44,7 @@ function setProp($el, name, value) {
   } else if (isBooleanProp(name, value)) {
     setBooleanProp($el, name, value);
   } else if (isEventProp(name, value)) {
-    const eventType = name.slice(2).toLowerCase();
+    const eventType = extractEventType(name);
     addEvent($el, eventType, value);
   } else {
     $el.setAttribute(name, value);
@@ -49,7 +57,7 @@ function removeProp($el, name, value) {
   } else if (isBooleanProp(name, value)) {
     removeBooleanProp($el, name);
   } else if (isEventProp(name, value)) {
-    const eventType = name.slice(2).toLowerCase();
+    const eventType = extractEventType(name);
     removeEvent($el, eventType);
   } else {
     $el.removeAttribute(name);

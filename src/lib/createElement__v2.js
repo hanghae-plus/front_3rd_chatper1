@@ -1,4 +1,4 @@
-import { isBooleanProp, isEventProp, isInValidVNode, setBooleanProp, setEventProp, setStyleProp } from '../utils';
+import { extractEventType, isBooleanProp, isEventProp, isInValidVNode, setBooleanProp, setStyleProp } from '../utils';
 import { addEvent } from './eventManager';
 
 function setProps($el, props) {
@@ -22,7 +22,7 @@ function setProps($el, props) {
 function setEvents($el, props) {
   Object.entries(props).forEach(([name, value]) => {
     if (isEventProp(name, value)) {
-      const eventType = name.slice(2).toLowerCase();
+      const eventType = extractEventType(name);
       addEvent($el, eventType, value);
 
       return;

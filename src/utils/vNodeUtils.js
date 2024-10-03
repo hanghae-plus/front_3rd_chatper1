@@ -5,6 +5,10 @@ export function isInValidVNode(vNode) {
   );
 }
 
+export function extractEventType(name) {
+  return name.slice(2).toLowerCase();
+}
+
 export function isEventProp(name, value) {
   return name.startsWith('on') && typeof value === 'function';
 }

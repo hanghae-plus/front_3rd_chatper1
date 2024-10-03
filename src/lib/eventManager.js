@@ -1,42 +1,52 @@
 // eventManager.js
 
-// 이벤트 위임을 위한 전역 이벤트 맵
-// 이 맵은 이벤트 타입별로 요소와 해당 요소의 이벤트 핸들러를 저장합니다.
-const eventMap = new Map();
-
-// 이벤트 위임이 설정될 루트 요소
 let rootElement = null;
 
 export function setupEventListeners(container) {
-  const handleEvent = (event) => {
-    let target = event.target;
-    const eventType = event.type;
-
-    while (target && target !== container) {
-      if (target.hasAttribute(`data-event-${eventType}`)) {
-        const handler = target[`__${eventType}Handler`];
-        if (handler) {
-          handler.call(target, event);
-        }
-      }
-      target = target.parentElement;
-    }
-  };
-
-  ['click', 'input', 'change', 'submit'].forEach((eventType) => {
-    container.addEventListener(eventType, handleEvent);
+  rootElement = container;
+  ['click', 'submit', 'input', 'change'].forEach((eventType) => {
+    container.addEventListener(eventType, handleEvent, true);
   });
 }
 
-export function addEvent(element, eventType, handler) {
-  if (!eventMap.has(eventType)) {
-    eventMap.set(eventType, new Map());
+function handleEvent(event) {
+  // 이벤트 전파가 이미 중단되었는지 확인
+  if (
+    event.eventPhase === Event.CAPTURING_PHASE &&
+    (event.cancelBubble || event.defaultPrevented)
+  ) {
+    return;
   }
-  eventMap.get(eventType).set(element, handler);
+
+  let target = event.target;
+  const eventType = event.type;
+
+  while (target && target !== rootElement) {
+    if (target.hasAttribute(`data-event-${eventType}`)) {
+      const handler = target[`__${eventType}Handler`];
+      if (handler) {
+        handler.call(target, event);
+        if (event.cancelBubble || event.defaultPrevented) break;
+      }
+    }
+    target = target.parentElement;
+  }
 }
 
-export function removeEvent(element, eventType, handler) {
-  if (eventMap.has(eventType)) {
-    eventMap.get(eventType).delete(element);
-  }
+export function addEvent(element, eventType, handler, options = {}) {
+  element.setAttribute(`data-event-${eventType}`, '');
+  element[`__${eventType}Handler`] = function (event) {
+    if (options.stopPropagation) {
+      event.stopPropagation();
+    }
+    if (options.preventDefault) {
+      event.preventDefault();
+    }
+    return handler.call(this, event);
+  };
+}
+
+export function removeEvent(element, eventType) {
+  element.removeAttribute(`data-event-${eventType}`);
+  delete element[`__${eventType}Handler`];
 }

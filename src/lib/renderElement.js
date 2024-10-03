@@ -87,7 +87,7 @@ function updateElement($parent, newNode, oldNode, index = 0) {
   const $element = $parent.childNodes[index];
 
   if (!newNode && oldNode) {
-    $parent.removeChild($parent.childNodes[index]);
+    $parent.removeChild($element);
     return;
   }
   // 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
@@ -105,7 +105,7 @@ function updateElement($parent, newNode, oldNode, index = 0) {
 
   if (typeof oldNode === 'string' || typeof oldNode === 'number') {
     if (oldNode !== newNode) {
-      $parent.childNodes[index].textContent = newNode;
+      $element.textContent = newNode;
     }
     return;
   }
@@ -115,7 +115,7 @@ function updateElement($parent, newNode, oldNode, index = 0) {
 
   if (oldNode.type !== newNode.type) {
     const newElement = createElement__v2(newNode);
-    $parent.replaceChild(newElement, $parent.childNodes[index]);
+    $parent.replaceChild(newElement, $element);
 
     return;
   }

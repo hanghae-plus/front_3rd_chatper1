@@ -64,7 +64,7 @@ export const ProfilePage = () => {
                   type="email"
                   id="email"
                   name="email"
-                  class="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded"
                   value={email ? email : ""}
                 />
               </div>

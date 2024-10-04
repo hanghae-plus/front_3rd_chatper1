@@ -10,7 +10,7 @@ const handleGlobalEvents = (e) => {
       break;
     }
   }
-}
+} 
 
 export const registerGlobalEvents = (() => {
   let init = false;

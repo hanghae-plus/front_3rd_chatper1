@@ -18,7 +18,7 @@ function processVNode(vNode) {
 
   if (typeof vNode === "number" || typeof vNode === "string") return vNode + "";
 
-  if (typeof vNode?.type === "function") {
+  if (typeof vNode.type === "function") {
     return processVNode(vNode.type(vNode.props));
   }
 

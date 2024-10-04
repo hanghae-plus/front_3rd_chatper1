@@ -6,8 +6,7 @@ export function createElement__v2(vNode) {
     return document.createTextNode("");
   }
 
-  if (typeof vNode === "number" || typeof vNode === "string")
-    return document.createTextNode(vNode + "");
+  if (typeof vNode === "string") return document.createTextNode(vNode + "");
 
   if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment();
@@ -17,10 +16,6 @@ export function createElement__v2(vNode) {
     });
 
     return fragment;
-  }
-
-  if (typeof vNode.type === "function") {
-    return createElement__v2(vNode.type(vNode.props));
   }
 
   const domNode = document.createElement(vNode.type);

@@ -57,7 +57,7 @@ export const ProfilePage = () => {
                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bio">
                   자기소개
                 </label>
-                <textarea id="bio" name="bio" className="w-full p-2 border rounded" rows={4} defaultValue={bio ?? ''} />
+                <textarea id="bio" name="bio" className="w-full p-2 border rounded" rows={4} defaultValue={bio ?? ''} value={bio?''}>{bio??''}</textarea>
               </div>
               <button
                 type="submit"

@@ -32,7 +32,6 @@ function handleError(error) {
 
 function logout() {
   userStorage.reset("user");
-  userStorage.reset("loggedIn");
   globalStore.setState({ currentUser: null, loggedIn: false });
   router.push("/login");
 }

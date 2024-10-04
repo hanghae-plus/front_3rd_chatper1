@@ -2,10 +2,6 @@ import { isFalsyDom } from "../utils/isFalsyDom.js";
 import { addEvent } from "./eventManager.js";
 
 export function createElement__v2(vNode) {
-  if (isFalsyDom(vNode)) {
-    return document.createTextNode("");
-  }
-
   if (typeof vNode === "string") return document.createTextNode(vNode + "");
 
   if (Array.isArray(vNode)) {

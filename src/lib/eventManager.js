@@ -30,7 +30,7 @@ function handleEvent(event) {
     const eventType = topLevelEventsToReactNames.get(event.type);
     const handlers = eventMap.get(eventType);
 
-    if (!handlers) continue;
+    if (!handlers) return;
 
     for (const { element, handler } of handlers) {
       element === target ? handler?.(event) : null;

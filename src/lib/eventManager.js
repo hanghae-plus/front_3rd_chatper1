@@ -14,7 +14,7 @@ export function setupEventListeners(root) {
   // 1. rootElement 설정
 
   Array.from(eventMap.keys()).forEach((eventType) => {
-    rootElement.removeEventListener(eventType, handleEvent);
+    rootElement.removeEventListener(eventType, handleEvent,true);
     // 2. 기존에 설정된 이벤트 리스너 제거 (있다면)
 
     rootElement.addEventListener(eventType, handleEvent, true);
@@ -86,7 +86,7 @@ export function removeEvent(element, eventType, handler) {
   if (elementMap.size === 0) {
     eventMap.delete(eventType);
     if (rootElement) {
-      rootElement.removeEventListener(eventType, handler);
+      rootElement.removeEventListener(eventType, handler, true);
     }
   }
 }

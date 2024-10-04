@@ -49,7 +49,7 @@ export const ProfilePage = () => {
                   type="text"
                   id="username"
                   name="username"
-                  class="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded"
                   value={username ? username : ""}
                 />
               </div>

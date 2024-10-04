@@ -106,18 +106,16 @@ function updateElement(container, oldNode, newNode, index = 0) {
 
   if (newNode && !oldNode) {
     const newElement = createElement__v2(newNode);
-    if (container.childNodes[index]) {
-      container.insertBefore(newElement, container.childNodes[index]);
-    } else {
-      container.appendChild(newElement);
-    }
+    container.insertBefore(newElement, oldElement || null);
     return;
   }
 
   const isTextNewNode = ['string', 'number'].includes(typeof newNode);
   const isTextOldNode = ['string', 'number'].includes(typeof oldNode);
   if (isTextNewNode && isTextOldNode) {
-    oldElement.textContent = newNode;
+    if (oldElement.textContent !== newNode) {
+      oldElement.textContent = newNode;
+    }
     return;
   }
   
@@ -129,11 +127,7 @@ function updateElement(container, oldNode, newNode, index = 0) {
 
   if (newNode.type !== oldNode.type) {
     const newElement = createElement__v2(newNode);
-    if (oldElement) {
-      container.replaceChild(newElement, oldElement); 
-    } else {
-      container.appendChild(newElement); 
-    }
+    container.replaceChild(newElement, oldElement);
     return;
   }
 

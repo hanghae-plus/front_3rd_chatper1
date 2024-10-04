@@ -33,14 +33,13 @@ const handleEvent = (event) => {
 export const addEvent = (element, eventType, handler) => {
   if (!eventMap.has(eventType)) {
     eventMap.set(eventType, new Map());
+    if (rootElement) {
+      rootElement.addEventListener(eventType, handleEvent, true);
+    }
   }
 
   const handlers = eventMap.get(eventType);
   handlers.set(element, handler);
-
-  if (rootElement && !eventMap.get(eventType).size) {
-    rootElement.addEventListener(eventType, handleEvent, true);
-  }
 };
 
 export const removeEvent = (element, eventType, handler) => {

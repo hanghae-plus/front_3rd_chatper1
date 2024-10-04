@@ -17,7 +17,7 @@ export function setupEventListeners(root) {
   rootElement = root;
 
   Array.from(eventMap.keys()).forEach((eventType) => {
-    rootElement.removeEventListener(eventType, handleEvent);
+    rootElement.removeEventListener(eventType, handleEvent, { capture: true });
     rootElement.addEventListener(eventType, handleEvent, { capture: true });
   });
 }

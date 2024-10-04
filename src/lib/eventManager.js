@@ -16,7 +16,7 @@ export function setupEventListeners(root) {
   // 주의: 이벤트 캡처링을 사용하여 이벤트를 상위에서 하위로 전파
   rootElement = root;
 
-  Array.from(eventMap.keys()).forEach((eventType) => {
+  eventMap.forEach((_, eventType) => {
     rootElement.removeEventListener(eventType, handleEvent, { capture: true });
     rootElement.addEventListener(eventType, handleEvent, { capture: true });
   });

@@ -1,24 +1,52 @@
 import {
-  isVNodeElement,
   isVNodeText,
   type VNode,
   type VNodeChild,
   type VNodeProps,
 } from './createVNode';
-import { addEvent, extractEventType, isEventListenerKey } from './eventManager';
+import {
+  addEvent,
+  extractEventType,
+  isEventListenerKey,
+  removeEvent,
+} from './eventManager';
 
 /** 주어진 HTML 요소에 속성을 설정합니다. */
-function setAttributes($element: HTMLElement, props: NonNullable<VNodeProps>) {
+export function setElementAttributes(
+  $element: HTMLElement,
+  props: NonNullable<VNodeProps>
+) {
   Object.entries(props).forEach(([key, value]) => {
     if (typeof value === 'function' && isEventListenerKey(key)) {
       const eventType = extractEventType(key);
+      removeEvent($element, eventType);
       addEvent($element, eventType, value);
     } else if (key === 'className') {
       $element.className = value;
+    } else if (key === 'style' && typeof value === 'object') {
+      Object.assign($element.style, value);
+    } else if (key.startsWith('data-') && typeof value === 'object') {
+      Object.entries(value).forEach(([dataKey, dataValue]) => {
+        $element.setAttribute(`data-${dataKey}`, String(dataValue));
+      });
+    } else if (typeof value === 'object') {
+      $element.setAttribute(key, JSON.stringify(value));
     } else {
       $element.setAttribute(key, value);
     }
   });
+}
+
+/** 주어진 HTML 요소에 속성을 삭제합니다. */
+export function removeElementAttribute($element: HTMLElement, key: string) {
+  if (isEventListenerKey(key)) {
+    const eventType = extractEventType(key);
+    removeEvent($element, eventType);
+  }
+
+  if (!isEventListenerKey(key)) {
+    $element.removeAttribute(key);
+  }
 }
 
 /** 주어진 HTML 요소에 자식 노드를 추가합니다. */
@@ -56,7 +84,7 @@ export function createElement__v2(vNode: VNode | VNode[]): Node {
   const $element = document.createElement(vNode.type);
 
   if (vNode.props) {
-    setAttributes($element, vNode.props);
+    setElementAttributes($element, vNode.props);
   }
 
   if (vNode.children) {

@@ -1,11 +1,8 @@
 import {
-  addEvent,
-  extractEventType,
-  isEventListenerKey,
-  removeEvent,
-  setupEventListeners,
-} from './eventManager';
-import { createElement__v2 } from './createElement__v2';
+  createElement__v2,
+  removeElementAttribute,
+  setElementAttributes,
+} from './createElement__v2';
 import {
   isVNodeElement,
   isVNodeText,
@@ -14,6 +11,7 @@ import {
   VNodeElement,
   VNodeProps,
 } from './createVNode';
+import { setupEventListeners } from './eventManager';
 
 /**
  * 주어진 가상 DOM 노드(vNode)를 처리하여 렌더링 가능한 형태로 변환합니다.
@@ -74,7 +72,7 @@ function updateAttributes(
   // 이전 속성 제거
   for (const key in oldProps) {
     if (!(key in newProps)) {
-      removeAttributeOrEvent($element, key);
+      removeElementAttribute($element, key);
     }
   }
 
@@ -84,38 +82,7 @@ function updateAttributes(
     const newValue = newProps[key];
 
     if (newValue !== oldValue) {
-      updateAttributeOrEvent($element, key, newValue);
-    }
-  }
-
-  // ---------- 내부함수 ----------
-  /** DOM 요소에서 속성이나 이벤트 리스너 제거 */
-  function removeAttributeOrEvent($element: HTMLElement, key: string) {
-    if (isEventListenerKey(key)) {
-      const eventType = extractEventType(key);
-      removeEvent($element, eventType);
-      return;
-    }
-
-    if (!isEventListenerKey(key)) {
-      $element.removeAttribute(key);
-    }
-  }
-
-  /** DOM 요소의 속성이나 이벤트 리스너 업데이트 */
-  function updateAttributeOrEvent(
-    $element: HTMLElement,
-    key: string,
-    newValue: any
-  ) {
-    if (isEventListenerKey(key)) {
-      const eventType = extractEventType(key);
-      removeEvent($element, eventType);
-      addEvent($element, eventType, newValue);
-    } else if (key === 'className') {
-      $element.className = newValue;
-    } else {
-      $element.setAttribute(key, newValue);
+      setElementAttributes($element, { [key]: newValue });
     }
   }
 }

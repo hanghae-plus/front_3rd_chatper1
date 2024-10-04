@@ -43,12 +43,9 @@ function updateAttributes(element, oldProps = {}, newProps = {}) {
       if(key.startsWith('on') && typeof oldProps[key] === 'function'){
         const eventType = key.slice(2).toLowerCase();
         removeEvent(element, eventType, oldProps[key]);
-      }else if(key === 'className'){
-        element.className = '';
-      }else if(key === 'style'){
-        element.removeAttribute('style');
-      }else{
-        element.removeAttribute(key);
+      }else {
+        const attribute = key === 'className' ? 'class' : key;
+        element.removeAttribute(attribute);
       }
     }
   });

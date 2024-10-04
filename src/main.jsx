@@ -4,7 +4,7 @@ import { HomePage, LoginPage, ProfilePage } from "./pages";
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
-import { addEvent } from "./lib/eventManager";
+import { addEvent, registerGlobalEvents } from "./utils";
 import { App } from "./App";
 
 const router = createRouter({
@@ -53,6 +53,8 @@ function render() {
 
     console.error(error);
   }
+
+  registerGlobalEvents();
 }
 
 function main() {
@@ -61,17 +63,17 @@ function main() {
   window.addEventListener("error", handleError);
   window.addEventListener("unhandledrejection", handleError);
 
-  addEvent("[data-link]", "click", (e) => {
+  addEvent("click", "[data-link]", (e) => {
     e.preventDefault();
     router.push(e.target.href.replace(window.location.origin, ""));
   });
 
-  addEvent("#logout", "click", (e) => {
+  addEvent("click", "#logout", (e) => {
     e.preventDefault();
     logout();
   });
 
-  addEvent("#error-boundary", "click", (e) => {
+  addEvent("click", "#error-boundary", (e) => {
     e.preventDefault();
     globalStore.setState({ error: null });
   });

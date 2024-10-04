@@ -48,7 +48,6 @@ function render() {
     // } else {
     //   $root.appendChild($app);
     // }
-    
   } catch (error) {
     if (error instanceof ForbiddenError) {
       router.push('/');
@@ -85,26 +84,6 @@ function main() {
   addEvent('click', '#error-boundary', (e) => {
     e.preventDefault();
     globalStore.setState({ error: null });
-  });
-
-  addEvent('submit', '#login-form', (e) => {
-    e.preventDefault();
-    const $username = document.querySelector('#username');
-    const userData = { username: $username.value, email: '', bio: '' };
-    userStorage.set(userData);
-    globalStore.setState({ currentUser: userData, loggedIn: true });
-    router.push('/');
-  });
-
-  addEvent('submit', '#profile-form', (e) => {
-    e.preventDefault();
-    const $username = document.querySelector('#username');
-    const $email = document.querySelector('#email');
-    const $bio = document.querySelector('#bio');
-    const userData = { username: $username.value, email: $email.value, bio: $bio.value };
-    userStorage.set(userData);
-    globalStore.setState({ currentUser: userData });
-    router.push('/');
   });
 
   render();

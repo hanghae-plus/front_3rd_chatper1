@@ -12,7 +12,7 @@ export function createElement__v2(vNode) {
     const fragment = document.createDocumentFragment();
 
     vNode.forEach((childNode) => {
-      fragment.appendChild(createElement(childNode));
+      fragment.appendChild(createElement__v2(childNode));
     });
 
     return fragment;

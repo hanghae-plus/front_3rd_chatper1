@@ -6,8 +6,8 @@ import { userStorage } from '../storages/index.js'
 export const LoginPage = () => {
   const onClickSubmit = (e) => {
     e.preventDefault()
-
-    const user = { username: document.getElementById('username').value, email: '', bio: '' }
+    const { username } = e.target.elements
+    const user = { username: username.value, email: '', bio: '' }
 
     userStorage.set(user)
 

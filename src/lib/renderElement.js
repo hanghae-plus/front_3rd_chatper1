@@ -30,6 +30,8 @@ function updateAttributes(element, oldProps, newProps) {
         removeEvent(element, convertEventName(key), oldProps[key])
       } else if (key === 'className') {
         element.removeAttribute('class')
+      } else if (key === 'style') {
+        element.removeAttribute('style')
       } else {
         element.removeAttribute(key)
       }
@@ -43,12 +45,29 @@ function updateAttributes(element, oldProps, newProps) {
         addEvent(element, convertEventName(key), newProps[key])
       } else if (key === 'className') {
         element.setAttribute('class', newProps[key])
+      } else if (key === 'style') {
+        updateStyle(element, oldProps[key], newProps[key])
       } else {
         element.setAttribute(key, newProps[key])
       }
     }
   }
-  // - 이벤트 리스너, className, style 등 특별한 경우 처리
+  // -  style일 경우 처리
+  function updateStyle(element, oldStyle = {}, newStyle = {}) {
+    // - 이전 props(style)에서 제거된 속성 처리
+    for (let styleName in oldStyle) {
+      if (!(styleName in newStyle)) {
+        element.style[styleName] = ''
+      }
+    }
+
+    // - 새로운 props(style)의 속성 추가 또는 업데이트
+    for (let styleName in newStyle) {
+      if (newStyle[styleName] !== oldStyle[styleName]) {
+        element.style[styleName] = newStyle[styleName]
+      }
+    }
+  }
   //   <이벤트 리스너 처리>
   //     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
   //     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.

@@ -10,7 +10,7 @@ export const Navigation = ({ loggedIn }) => {
   return (
     <nav className="bg-white shadow-md p-2 sticky top-14">
       {loggedIn ? (
-        <ul className="flex justify-evenly items-center">
+        <ul className="flex justify-around">
           <li>
             <a href="/" className={getClassName('/')} data-link="true">
               홈
@@ -28,7 +28,7 @@ export const Navigation = ({ loggedIn }) => {
           </li>
         </ul>
       ) : (
-        <ul className="flex justify-evenly items-center">
+        <ul className="flex justify-around">
           <li>
             <a href="/" className={getClassName('/')} data-link="true">
               홈

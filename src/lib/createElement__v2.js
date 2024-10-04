@@ -20,7 +20,7 @@ export function createElement__v2(vNode) {
 
   if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment();
-    vNode.map(createElement__v2).forEach((child) => fragment.appendChild(child));
+    fragment.appendChild(createElement__v2(child));
 
     return fragment;
   }

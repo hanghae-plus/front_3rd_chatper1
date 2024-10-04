@@ -8,10 +8,10 @@ export const LoginPage = () => {
   function handleLogin(e) {
     e.preventDefault();
 
-    const username = document.getElementById('username')?.value ?? '';
+    const { username } = e.target.elements;
 
-    if (username) {
-      const data = { username, email: '', bio: '' };
+    if (username.value) {
+      const data = { username: username.value, email: '', bio: '' };
 
       userStorage.set(data);
       globalStore.setState({ currentUser: data, loggedIn: true });

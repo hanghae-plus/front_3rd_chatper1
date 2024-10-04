@@ -21,9 +21,6 @@ const handleEvent = (event) => {
       const handler = handlers.get(target);
       if (handler) {
         handler(event);
-        if (event.cancelBubble) {
-          break;
-        }
       }
     }
     target = target.parentNode;

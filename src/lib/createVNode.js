@@ -1,16 +1,15 @@
-import { Fragment } from '../components';
-
 export function createVNode(type, props, ...children) {
 	const flattenChildren = children.flat(Infinity).filter(Boolean);
 
 	// Fragment는 props 에 children을 포함한다.
-	if (type === Fragment) {
+	if (typeof type === 'function' && type.name === 'Fragment') {
 		return {
 			type,
 			props: {
 				...(props || {}),
 				children: flattenChildren,
 			},
+			children: flattenChildren,
 		};
 	}
 

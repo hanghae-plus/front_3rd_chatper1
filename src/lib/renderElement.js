@@ -1,55 +1,164 @@
 // renderElement.js
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
-import { createElement__v2 } from './createElement__v2.js';
+import { createElement__v2 as createElement } from './createElement__v2.js';
 
-// TODO: processVNode 함수 구현
-function processVNode() {
-	// vNode를 처리하여 렌더링 가능한 형태로 변환합니다.
-	// - null, undefined, boolean 값 처리
-	// - 문자열과 숫자를 문자열로 변환
-	// - 함수형 컴포넌트 처리 <---- 이게 제일 중요합니다.
-	// - 자식 요소들에 대해 재귀적으로 processVNode 호출
+/**
+ * vNode를 처리하여 렌더링 가능한 형태로 변환
+ */
+function processVNode(vNode) {
+	// 1. null, undefined, boolean 값 처리
+	if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
+		return '';
+	}
+
+	// 2. 문자열과 숫자를 문자열로 변환
+	if (typeof vNode === 'string' || typeof vNode === 'number') {
+		return String(vNode);
+	}
+
+	// 3. 배열 처리
+	if (Array.isArray(vNode)) {
+		return vNode.map((child) => processVNode(child));
+	}
+
+	// 4. 함수형 컴포넌트 처리
+	if (typeof vNode.type === 'function') {
+		const component = vNode.type(vNode.props || {});
+		return processVNode(component);
+	}
+
+	// 5. 자식 요소들에 대해 재귀적으로 processVNode 호출
+	return {
+		...vNode,
+		children: vNode.children.map(processVNode).filter(Boolean),
+	};
 }
 
-// TODO: updateAttributes 함수 구현
-function updateAttributes() {
-	// DOM 요소의 속성을 업데이트합니다.
-	// - 이전 props에서 제거된 속성 처리
-	// - 새로운 props의 속성 추가 또는 업데이트
-	// - 이벤트 리스너, className, style 등 특별한 경우 처리
-	//   <이벤트 리스너 처리>
-	//     - TODO: 'on'으로 시작하는 속성을 이벤트 리스너로 처리
-	//     - 주의: 직접 addEventListener를 사용하지 않고, eventManager의 addEvent와 removeEvent 함수를 사용하세요.
-	//     - 이는 이벤트 위임을 통해 효율적으로 이벤트를 관리하기 위함입니다.
+/**
+ * DOM 요소의 속성을 업데이트하는 함수
+ */
+function updateAttributes(target, newProps, oldProps) {
+	// 1. 새로운 속성을 추가 or 업데이트 한다
+	for (const [newAttr, newValue] of Object.entries(newProps)) {
+		if (oldProps[newAttr] === newValue) continue;
+
+		// 속성의 변화가 있을 때 업데이트 한다
+		// - 이벤트 리스너 처리
+		if (newAttr.startsWith('on') && typeof newValue === 'function') {
+			const eventType = newAttr.slice(2).toLowerCase();
+			addEvent(target, eventType, newValue);
+		}
+		// - className
+		else if (newAttr === 'className') {
+			target.setAttribute('class', newValue || '');
+		}
+		// - 일반 속성
+		else {
+			target.setAttribute(newAttr, newValue);
+		}
+	}
+
+	// 2.
+	for (const [oldAttr, oldValue] of Object.entries(oldProps)) {
+		if (newProps[oldAttr] !== undefined) continue;
+
+		if (oldAttr.startsWith('on') && typeof oldValue === 'function') {
+			const eventType = oldAttr.slice(2).toLowerCase();
+			removeEvent(target, eventType); // 기존 핸들러 제거
+		} else {
+			target.removeAttribute(oldAttr);
+		}
+	}
 }
 
-// TODO: updateElement 함수 구현
-function updateElement() {
-	// 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
-	// TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
-	// 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
-	// TODO: newNode만 존재하는 경우, 새 노드를 생성하여 DOM에 추가
-	// 3. 텍스트 노드 업데이트
-	// TODO: newNode와 oldNode가 둘 다 문자열 또는 숫자인 경우
-	// TODO: 내용이 다르면 텍스트 노드 업데이트
-	// 4. 노드 교체 (newNode와 oldNode의 타입이 다른 경우)
-	// TODO: 타입이 다른 경우, 이전 노드를 제거하고 새 노드로 교체
-	// 5. 같은 타입의 노드 업데이트
+/**
+ * Dom 을 업데이트하는 함수
+ */
+function updateElement(parent, newNode, oldNode, index = 0) {
+	// 1. 완전히 동일한 경우에는 업데이트 하지 않는다.
+	if (JSON.stringify(newNode) === JSON.stringify(oldNode)) return;
+	// 2. 새로 추가된 노드인 경우 parent 에 삽입한다.
+	if (newNode && !oldNode) return parent.appendChild(createElement(newNode));
+
+	// 삭제 혹은 업데이트 될 target element 정의
+	const target = parent.childNodes[index];
+
+	// 3. 삭제되는 노드의 경우 parent 에서 제거한다
+	if (!newNode && oldNode) return parent.removeChild(target);
+
+	// 4. 텍스트 노드의 경우, 내용이 다를 경우에만 업데이트 한다.
+	if (typeof newNode === 'string' && typeof oldNode === 'string') {
+		if (newNode === oldNode) return;
+		return parent.replaceChild(createElement(newNode), target);
+	}
+
+	// 5. 새로운 노드가 기존의 노드와 다른 타입의 노드라면 대체한다.
+	if (
+		newNode.type !== oldNode.type ||
+		(Array.isArray(newNode) && !Array.isArray(oldNode)) ||
+		(!Array.isArray(newNode) && Array.isArray(oldNode))
+	) {
+		return parent.replaceChild(createElement(newNode), target);
+	}
+
+	// 6. 배열인 경우, 각각의 자식 노드를 처리하도록 수정
+	if (Array.isArray(newNode) || Array.isArray(oldNode)) {
+		const newArray = Array.isArray(newNode) ? newNode : [newNode];
+		const oldArray = Array.isArray(oldNode) ? oldNode : [oldNode];
+		const maxLength = Math.max(newArray.length, oldArray.length);
+		for (let i = 0; i < maxLength; i++) {
+			updateElement(parent, newArray[i], oldArray[i], i);
+		}
+		return;
+	}
+
+	// 6. 새로운 노드와 기존의 노드가 둘다 배열인 경우, 요소 하나씩 비교하여 재귀적으로 업데이트 한다.
+	if (Array.isArray(newNode) && Array.isArray(oldNode)) {
+		// 최대 길이를 기준으로 반복하며 업데이트
+		const maxLength = Math.max(newNode.length, oldNode.length);
+		for (let i = 0; i < maxLength; i++) {
+			updateElement(parent, newNode[i], oldNode[i]);
+		}
+		return;
+	}
+
+	// 7. 나머지의 경우(같은 타입의 노드) 속성과 자식 노드를 업데이트 한다
 	// 5-1. 속성 업데이트
-	// TODO: updateAttributes 함수를 호출하여 속성 업데이트
+	updateAttributes(
+		parent.childNodes[index],
+		newNode.props || {},
+		oldNode.props || {}
+	);
+
 	// 5-2. 자식 노드 재귀적 업데이트
-	// TODO: newNode와 oldNode의 자식 노드들을 비교하며 재귀적으로 updateElement 호출
-	// HINT: 최대 자식 수를 기준으로 루프를 돌며 업데이트
-	// 5-3. 불필요한 자식 노드 제거
-	// TODO: oldNode의 자식 수가 더 많은 경우, 남은 자식 노드들을 제거
+	const maxLength = Math.max(newNode.children.length, oldNode.children.length);
+	// 최대 자식 수를 기준으로 루프를 돌며 업데이트
+	for (let i = 0; i < maxLength; i++) {
+		updateElement(
+			parent.childNodes[index],
+			newNode.children[i],
+			oldNode.children[i],
+			i
+		);
+	}
 }
 
-// TODO: renderElement 함수 구현
+/**
+ * 최상위 수준의 렌더링 함수
+ * - 이전 vNode와 새로운 vNode를 비교하여 업데이트
+ * - 이벤트 위임 설정
+ */
 export function renderElement(vNode, container) {
-	// 최상위 수준의 렌더링 함수입니다.
-	// - 이전 vNode와 새로운 vNode를 비교하여 업데이트
-	// - 최초 렌더링과 업데이트 렌더링 처리
+	// 이전 vNode와 새로운 vNode를 정의
+	const newNode = processVNode(vNode);
+	const oldNode = container._vNode;
+
+	// 이전 vNode와 새로운 vNode를 비교하여 업데이트
+	updateElement(container, newNode, oldNode);
+
+	// 새로운 vNode로 업데이트
+	container._vNode = newNode;
+
 	// 이벤트 위임 설정
-	// TODO: 렌더링이 완료된 후 setupEventListeners 함수를 호출하세요.
-	// 이는 루트 컨테이너에 이벤트 위임을 설정하여 모든 하위 요소의 이벤트를 효율적으로 관리합니다.
+	setupEventListeners(container);
 }

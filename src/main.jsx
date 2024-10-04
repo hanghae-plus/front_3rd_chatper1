@@ -10,7 +10,7 @@ import {
 import { globalStore } from "./stores";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { userStorage } from "./storages";
-import { addEvent } from "./lib/eventManager";
+import { addEvent, registerGlobalEvents } from "./utils";
 
 import { Layout } from "./components";
 
@@ -77,6 +77,7 @@ function render() {
 
     // globalStore.setState({ error });
   }
+  registerGlobalEvents();
 }
 
 function main() {

@@ -30,7 +30,7 @@ function processVNode(vNode) {
 	// 5. 자식 요소들에 대해 재귀적으로 processVNode 호출
 	return {
 		...vNode,
-		children: vNode.children.map(processVNode).filter(Boolean),
+		children: vNode.children.map(processVNode),
 	};
 }
 
@@ -75,8 +75,8 @@ function updateAttributes(target, newProps, oldProps) {
  * Dom 을 업데이트하는 함수
  */
 function updateElement(parent, newNode, oldNode, index = 0) {
-	// 1. 완전히 동일한 경우에는 업데이트 하지 않는다.
-	if (JSON.stringify(newNode) === JSON.stringify(oldNode)) return;
+	if (!newNode && !oldNode) return;
+
 	// 2. 새로 추가된 노드인 경우 parent 에 삽입한다.
 	if (newNode && !oldNode) return parent.appendChild(createElement(newNode));
 
@@ -101,17 +101,6 @@ function updateElement(parent, newNode, oldNode, index = 0) {
 		return parent.replaceChild(createElement(newNode), target);
 	}
 
-	// 6. 배열인 경우, 각각의 자식 노드를 처리하도록 수정
-	if (Array.isArray(newNode) || Array.isArray(oldNode)) {
-		const newArray = Array.isArray(newNode) ? newNode : [newNode];
-		const oldArray = Array.isArray(oldNode) ? oldNode : [oldNode];
-		const maxLength = Math.max(newArray.length, oldArray.length);
-		for (let i = 0; i < maxLength; i++) {
-			updateElement(parent, newArray[i], oldArray[i], i);
-		}
-		return;
-	}
-
 	// 6. 새로운 노드와 기존의 노드가 둘다 배열인 경우, 요소 하나씩 비교하여 재귀적으로 업데이트 한다.
 	if (Array.isArray(newNode) && Array.isArray(oldNode)) {
 		// 최대 길이를 기준으로 반복하며 업데이트
@@ -124,22 +113,13 @@ function updateElement(parent, newNode, oldNode, index = 0) {
 
 	// 7. 나머지의 경우(같은 타입의 노드) 속성과 자식 노드를 업데이트 한다
 	// 5-1. 속성 업데이트
-	updateAttributes(
-		parent.childNodes[index],
-		newNode.props || {},
-		oldNode.props || {}
-	);
+	updateAttributes(target, newNode.props || {}, oldNode.props || {});
 
 	// 5-2. 자식 노드 재귀적 업데이트
 	const maxLength = Math.max(newNode.children.length, oldNode.children.length);
 	// 최대 자식 수를 기준으로 루프를 돌며 업데이트
 	for (let i = 0; i < maxLength; i++) {
-		updateElement(
-			parent.childNodes[index],
-			newNode.children[i],
-			oldNode.children[i],
-			i
-		);
+		updateElement(target, newNode.children[i], oldNode.children[i], i);
 	}
 }
 

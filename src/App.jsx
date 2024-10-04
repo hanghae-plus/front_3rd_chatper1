@@ -1,5 +1,6 @@
 /** @jsx createVNode */
 import { createVNode } from "./lib";
+import { NotFoundPage } from "./pages/NotFoundPage";
 import { globalStore } from "./stores";
 
 export const App = ({ targetPage }) => {

@@ -5,15 +5,19 @@ import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 /**
  * @function processVNode
  * @terms vNode를 분석하여 랜더링 가능한 형태로 변환
- * @param {Object} vNode - 가상 노드 객체
- * @returns {Object} 변환된 vNode
+ * @param {Object|null|undefined|string|number|boolean} vNode - 가상 노드 객체
+ * @returns {Object} 변환된 vNode는 렌더링에 사용될 수 있는 형태로 포맷된 객체
  */
 
 function processVNode(vNode) {
 
-  // 1. vNode가 falsy일 경우 빈 텍스트 노드를 반환
-  if (!vNode || typeof vNode === 'boolean') {
-    return ('');
+  // 1. vNode가 null, undefined, falsy일 경우 빈 텍스트 노드를 반환
+  if (vNode === null || vNode === undefined) {
+    return document.createTextNode('');
+  }
+
+  if (typeof vNode === 'boolean') {
+     return document.createTextNode('');
   }
 
   // 2. vNode가 문자열이나 숫자일 경우 텍스트 노드를 생성하여 반환

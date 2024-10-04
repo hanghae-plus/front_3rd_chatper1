@@ -17,12 +17,19 @@ export function ProfilePage() {
       </h2>
       <form id="profile-form">
         {["username", "email", "bio"].map((key, idx) => {
-          const labelText =
-            key === "username"
-              ? "사용자 이름"
-              : key === "email"
-              ? "이메일"
-              : "자기소개";
+          let labelText = "";
+
+          switch (key) {
+            case "username":
+              labelText = "사용자 이름";
+              break;
+            case "email":
+              labelText = "이메일";
+              break;
+            default:
+              labelText = "자기소개";
+              break;
+          }
 
           const inputClass = "w-full p-2 border rounded";
 

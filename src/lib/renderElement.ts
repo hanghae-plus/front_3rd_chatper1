@@ -35,8 +35,7 @@ function processVNode(vNode: VNode): VNodeChild {
   }
 
   if (typeof vNode.type === 'function') {
-    const componentVNode = vNode.type(vNode.props);
-    return processVNode(componentVNode);
+    return processVNode(vNode.type(vNode.props));
   }
 
   if (Array.isArray(vNode.children)) {
@@ -118,8 +117,7 @@ function updateElement(
 
   // 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
   if (newNode && !oldNode) {
-    const $newElement = createElement__v2(newNode);
-    $parent.appendChild($newElement);
+    $parent.appendChild(createElement__v2(newNode));
     return;
   }
 

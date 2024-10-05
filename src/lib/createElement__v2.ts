@@ -39,14 +39,9 @@ export function setElementAttributes(
 
 /** 주어진 HTML 요소에 속성을 삭제합니다. */
 export function removeElementAttribute($element: HTMLElement, key: string) {
-  if (isEventListenerKey(key)) {
-    const eventType = extractEventType(key);
-    removeEvent($element, eventType);
-  }
-
-  if (!isEventListenerKey(key)) {
-    $element.removeAttribute(key);
-  }
+  isEventListenerKey(key)
+    ? removeEvent($element, extractEventType(key))
+    : $element.removeAttribute(key);
 }
 
 /** 주어진 HTML 요소에 자식 노드를 추가합니다. */

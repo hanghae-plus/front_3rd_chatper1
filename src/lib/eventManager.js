@@ -35,9 +35,6 @@ function handleEvent(event) {
 export function addEvent(element, eventType, handler) {
   if (!eventMap.has(eventType)) {
     eventMap.set(eventType, new Map());
-    if (rootElement) {
-      rootElement.addEventListener(eventType, handleEvent);
-    }
   }
 
   const handlers = eventMap.get(eventType);
@@ -50,9 +47,6 @@ export function removeEvent(element, eventType) {
     handlers.delete(element);
     if (handlers.size === 0) {
       eventMap.delete(eventType);
-      if (rootElement) {
-        rootElement.removeEventListener(eventType, handleEvent);
-      }
     }
   }
 }

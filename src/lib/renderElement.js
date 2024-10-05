@@ -100,8 +100,9 @@ function updateElement(container, newVNode, oldNode, index = 0) {
 
   // 4. 노드 교체 (newVNode와 oldNode의 타입이 다른 경우)
   if (newVNode.type !== oldNode.type) {
-    container.removeChild(container.childNodes[index]);
-    return container.appendChild(createElement__v2(newVNode));
+    return container.replaceChild(createElement__v2(newVNode), container.childNodes[index]);
+    // container.removeChild(container.childNodes[index]);
+    // return container.appendChild(createElement__v2(newVNode));
   }
 
   // 5. 같은 타입의 노드 업데이트 newVNode.type === oldNode.type

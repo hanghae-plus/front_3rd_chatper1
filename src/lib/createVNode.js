@@ -6,26 +6,19 @@
 
 export function createVNode(type, props, ...children) {
   // 배열을 평탄화하는 함수
-  function flatten(arr) {
-    return arr.reduce((acc, val) => {
-      if (Array.isArray(val)) {
-        acc.push(...flatten(val)); // 배열이면 재귀적으로 평탄화
-      } else {
-        acc.push(val); // 배열이 아니면 그대로 추가
-      }
-      return acc;
-    }, []);
+  function flattenArray(arr) {
+    return arr.flat(Infinity);
   }
 
   // falsy 값을 필터링하는 함수
-  function filterFalsy(arr) {
-    return arr.filter(Boolean);
+  function filterFalsyValues(arr) {
+    return arr.filter((child) => child !== null && child !== undefined);
   }
 
   return {
     type,
     props,
     // 먼저 평탄화한 후, falsy 값을 필터링
-    children: filterFalsy(flatten(children)),
+    children: filterFalsyValues(flattenArray(children)),
   };
 }

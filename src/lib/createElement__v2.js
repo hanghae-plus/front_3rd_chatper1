@@ -3,8 +3,8 @@ import { addEvent } from "./eventManager";
 // 가상 DOM 노드를 기반으로 실제 DOM 요소를 생성하는 함수
 export function createElement__v2(vNode) {
   // 빈 노드 처리
-  if (!vNode) {
-    return document.createTextNode(""); // 빈 텍스트 노드 반환
+  if (vNode === null || vNode === undefined || typeof vNode === "boolean") {
+    return document.createTextNode("");
   }
 
   // 문자열 또는 숫자 노드 처리
@@ -30,9 +30,9 @@ export function createElement__v2(vNode) {
 
   // 그 외의 처리
   const $element = document.createElement(vNode.type); // vNode.type에 해당하는 DOM 요소 생성
-  if (process.env.NODE_ENV === "development") {
-    console.log("DOM 요소를 생성합니다:", vNode.type);
-  }
+  // if (process.env.NODE_ENV === "development") {
+  //   console.log("DOM 요소를 생성합니다:", vNode.type);
+  // }
 
   // vNode.props의 속성들을 적용
   if (vNode.props) {

@@ -1,8 +1,7 @@
 export class NotFoundError extends Error {
-  static MESSAGE = 'NotFoundError';
+  static MESSAGE = "NotFoundError";
 
-  constructor() {
-    super(NotFoundError.MESSAGE);
+  constructor(errMsg) {
+    super(errMsg ?? NotFoundError.MESSAGE);
   }
-
 }

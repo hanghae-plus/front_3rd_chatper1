@@ -2,8 +2,8 @@ import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { createElement__v2 } from "./createElement__v2.js";
 
 function processVNode(vNode) {
-  if (vNode == null || typeof vNode === 'boolean') {
-    return null;
+  if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
+    return '';
   }
 
   if (typeof vNode === 'string' || typeof vNode === 'number') {

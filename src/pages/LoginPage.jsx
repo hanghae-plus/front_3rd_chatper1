@@ -10,11 +10,13 @@ const login = (username) => {
   userStorage.set({ username, email: '', bio: '' });
   router.push('/profile');
 };
+
 export const LoginPage = () => {
-  const submitLogin = () => {
-    const username = document.getElementById('username').value;
-    if (username) login(username);
+  const submitLogin = ({ target }) => {
+    const { username } = target.elements;
+    if (username.value) login(username.value);
   };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="max-w-md w-full">

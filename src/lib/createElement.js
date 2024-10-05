@@ -20,7 +20,15 @@ export function createElement(vNode) {
 
   const $el = document.createElement(vNode.type);
 
-  Object.entries(vNode.props ?? {})
+  updateAttributes($el, vNode.props);
+
+  $el.append(...vNode.children.map(createElement));
+
+  return $el;
+}
+
+function updateAttributes($el, props) {
+  Object.entries(props ?? {})
     .forEach(([attr, value]) => {
       if (attr.startsWith('on') && typeof value === 'function') {
         $el.addEventListener(attr.toLowerCase().slice(2), value);
@@ -30,11 +38,4 @@ export function createElement(vNode) {
         $el.setAttribute(attr, value)
       }
     });
-
-  vNode.children
-    .filter(Boolean)
-    .map(createElement)
-    .forEach(child => $el.appendChild(child));
-
-  return $el;
 }

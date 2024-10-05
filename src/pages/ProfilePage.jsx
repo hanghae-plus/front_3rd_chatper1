@@ -10,7 +10,8 @@ export const ProfilePage = () => {
   const { loggedIn, currentUser } = globalStore.getState();
   const { username = "", email = "", bio = "" } = currentUser ?? {};
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const username = document.getElementById("username").value;
     const email = document.getElementById("email").value;
     const bio = document.getElementById("bio").value;

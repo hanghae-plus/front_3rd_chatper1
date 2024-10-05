@@ -14,24 +14,15 @@ export const extractEventType = (key: string) =>
  */
 export function setupEventListeners($newRoot: HTMLElement) {
   if ($rootElement) {
-    removeEventListeners($rootElement);
+    eventMap.forEach((_, eventType) => {
+      $rootElement?.removeEventListener(eventType, handleEvent, true);
+    });
   }
 
   $rootElement = $newRoot;
-  addEventListeners($rootElement);
-
-  // ---------- 내부함수 ----------
-  function removeEventListeners($root: HTMLElement) {
-    eventMap.forEach((_, eventType) => {
-      $root.removeEventListener(eventType, handleEvent, true);
-    });
-  }
-
-  function addEventListeners($root: HTMLElement) {
-    eventMap.forEach((_, eventType) => {
-      $root.addEventListener(eventType, handleEvent, true);
-    });
-  }
+  eventMap.forEach((_, eventType) => {
+    $rootElement?.addEventListener(eventType, handleEvent, true);
+  });
 }
 
 /**
@@ -86,7 +77,6 @@ export function addEvent(
 ) {
   if (!eventMap.has(eventType)) {
     eventMap.set(eventType, new Map());
-    $rootElement?.addEventListener(eventType, handleEvent, true);
   }
 
   const handlers = eventMap.get(eventType)!;
@@ -110,7 +100,6 @@ export function removeEvent(
 
     if (handlerMap.size === 0) {
       eventMap.delete(eventType);
-      $rootElement?.removeEventListener(eventType, handleEvent, true);
     }
   }
 }

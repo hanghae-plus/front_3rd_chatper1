@@ -1,5 +1,5 @@
 export function createElement(vNode) {
-  if (!vNode === null || vNode === undefined || typeof vNode === 'boolean') {
+  if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
     return document.createTextNode('');
   }
 
@@ -25,7 +25,7 @@ export function createElement(vNode) {
       if (attr.startsWith('on') && typeof value === 'function') {
         $el.addEventListener(attr.toLowerCase().slice(2), value);
       } else if (attr === 'className') {
-        $el.setAttribute('class', value);
+        $el.className = value;
       } else {
         $el.setAttribute(attr, value)
       }

@@ -9,10 +9,6 @@ export const App = ({ targetPage }) => {
   const PageComponent = targetPage ?? NotFoundPage;
   const error = globalStore.getState().error;
 
-  console.log("targetPage", targetPage);
-
-  console.log("Current Error State:", globalStore.getState().error);
-
   return (
     <div>
       <PageComponent />

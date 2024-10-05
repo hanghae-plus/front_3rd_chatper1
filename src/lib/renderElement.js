@@ -27,10 +27,10 @@ function updateAttributes(target, newProps, oldProps) {
   oldProps = oldProps || {};
   newProps = newProps || {};
 
-  //이전 props에서 제거된 속성 처리
+  // 이전 props에서 제거된 속성 처리
   Object.entries(oldProps).forEach(([key, value]) => {
     if (!(key in newProps)) {
-      if (key.startsWith("on")) {
+      if (key.startsWith("on") && typeof value === "function") {
         const eventType = key.toLowerCase().substring(2);
         removeEvent(target, eventType, value);
       } else if (key === "className") {
@@ -43,65 +43,32 @@ function updateAttributes(target, newProps, oldProps) {
 
   // 새로운 props의 속성 추가 또는 업데이트
   Object.entries(newProps).forEach(([key, value]) => {
-    if (!(key in oldProps)) {
-      if (key.startsWith("on")) {
+    if (!(key in oldProps) || oldProps[key] !== value) {
+      if (key.startsWith("on") && typeof value === "function") {
         const eventType = key.toLowerCase().substring(2);
+        if (typeof oldProps[key] === "function") {
+          removeEvent(target, eventType, oldProps[key]);
+        }
         addEvent(target, eventType, value);
       } else if (key === "className") {
-        target.setAttribute("class", value);
+        target.className = value;
+      } else if (key === "style" && typeof value === "object") {
+        Object.assign(target.style, value);
       } else {
-        target.setAttribute(key, value);
-      }
-    } else {
-      if (key.startsWith("on")) {
-        const eventType = key.toLowerCase().substring(2);
-        removeEvent(target, eventType, value);
-        addEvent(target, eventType, value);
-      } else if (key === "className") {
-        target.removeAttribute("class");
-        target.setAttribute("class", value);
-      } else {
-        // target.removeAttribute(key);
         target.setAttribute(key, value);
       }
     }
   });
 }
 
-//   Object.entries(oldProps).forEach(([key, value]) => {
-//     if (!(key in newProps)) {
-//       if (key.startsWith("on")) {
-//         const eventType = key.toLowerCase().substring(2);
-//         removeEvent(target, eventType, value);
-//       } else if (key === "className") {
-//         target.removeAttribute("class");
-//       } else {
-//         target.removeAttribute(key);
-//       }
-//     }
-//   });
-
-//   Object.entries(newProps).forEach(([key, value]) => {
-//     if (!(key in oldProps) || oldProps[key] !== value) {
-//       if (key.startsWith("on")) {
-//         const eventType = key.toLowerCase().substring(2);
-//         if (oldProps[key]) removeEvent(target, eventType, oldProps[key]);
-//         addEvent(target, eventType, value);
-//       } else if (key === "className") {
-//         target.setAttribute("class", value);
-//       } else {
-//         target.setAttribute(key, value);
-//       }
-//     }
-//   });
-// }
-
 // TODO: updateElement 함수 구현
 function updateElement(parent, newNode, oldNode, index = 0) {
   // 1. 노드 제거 (newNode가 없고 oldNode가 있는 경우)
   // TODO: oldNode만 존재하는 경우, 해당 노드를 DOM에서 제거
   if (!newNode && oldNode) {
-    parent.removeChild(parent.childNodes[index]);
+    if (parent.childNodes[index]) {
+      parent.removeChild(parent.childNodes[index]);
+    }
     return;
   }
   // 2. 새 노드 추가 (newNode가 있고 oldNode가 없는 경우)
@@ -149,40 +116,16 @@ function updateElement(parent, newNode, oldNode, index = 0) {
     );
   }
 
+  // 불필요한 자식 노드 제거
   if (oldNodeChildren.length > newNodeChildren.length) {
-    for (let i = newNodeChildren.length + 1; i < oldNodeChildren.length; i++) {
-      parent.childNodes[index].removeChild(
-        parent.childNodes[index].childNodes[i]
-      );
+    for (let i = newNodeChildren.length; i < oldNodeChildren.length; i++) {
+      const childToRemove = parent.childNodes[index].childNodes[i];
+      if (childToRemove) {
+        parent.childNodes[index].removeChild(childToRemove);
+      }
     }
   }
 }
-//   if (oldNodeChildren.length > newNodeChildren.length) {
-//     for (let i = newNodeChildren.length; i < oldNodeChildren.length; i++) {
-//       const childNode = parentNode.childNodes[index].childNodes[i];
-//       if (childNode) {
-//         parentNode.childNodes[index].removeChild(childNode);
-//       }
-//     }
-//   }
-// }
-
-//   if (oldNodeChildren.length > newNodeChildren.length) {
-//     for (let i = newNodeChildren.length; i < newNodeChildren.length; i++) {
-//       const childNode = parent.childNodes[index].childNodes[i];
-//       if (childNode) {
-//         parent.childNodes[index].removeChild(childNode);
-//       }
-//     }
-//   }
-// }
-
-//   if (oldNodeChildren.length > newNodeChildren.length) {
-//     for (let i = newNodeChildren.length; i < oldNodeChildren.length; i++) {
-//       parent.removeChild(parent.childNodes[i]);
-//     }
-//   }
-// }
 
 export function renderElement(vNode, container) {
   if (!container) return;

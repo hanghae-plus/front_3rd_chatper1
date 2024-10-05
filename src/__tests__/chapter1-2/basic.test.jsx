@@ -92,11 +92,24 @@ describe('Chapter1-2 > 기본과제 > 가상돔 만들기 > ', () => {
       expect(result.textContent).toBe('');
     });
 
+    it('true 입력에 대해 빈 텍스트 노드를 생성해야 한다', () => {
+      const result = createElement(true);
+      expect(result.nodeType).toBe(Node.TEXT_NODE);
+      expect(result.textContent).toBe('');
+    });
+
+    it('0에 대해서는 "0"을 출력해야 한다.', () => {
+      const result = createElement(0);
+      expect(result.nodeType).toBe(Node.TEXT_NODE);
+      expect(result.textContent).toBe('0');
+    });
+
     it('배열 입력에 대해 DocumentFragment를 생성해야 한다', () => {
       const result = createElement([
         <div>첫 번째</div>,
         <span>두 번째</span>
       ]);
+
       expect(result.nodeType).toBe(Node.DOCUMENT_FRAGMENT_NODE);
       expect(result.childNodes.length).toBe(2);
       expect(result.childNodes[0].tagName).toBe('DIV');
@@ -105,6 +118,7 @@ describe('Chapter1-2 > 기본과제 > 가상돔 만들기 > ', () => {
 
     it('함수 컴포넌트를 처리해야 한다', () => {
       const FuncComponent = ({ text }) => <div>{text}</div>;
+      console.log(<FuncComponent text="Hello" />);
       const result = createElement(<FuncComponent text="Hello" />);
       expect(result.tagName).toBe('DIV');
       expect(result.textContent).toBe('Hello');

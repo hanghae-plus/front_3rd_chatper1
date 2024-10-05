@@ -1,5 +1,5 @@
 export function createElement(vNode) {
-  if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
+  if (!vNode === null || vNode === undefined || typeof vNode === 'boolean') {
     return document.createTextNode('');
   }
 
@@ -17,14 +17,6 @@ export function createElement(vNode) {
     const result = vNode.type(vNode.props);
     return createElement(result);
   }
-
-
-  if (Array.isArray(vNode)) {
-    const fragment = document.createDocumentFragment();
-    vNode.forEach(child => fragment.appendChild(createElement(child)));
-    return fragment;
-  }
-
 
   const $el = document.createElement(vNode.type);
 

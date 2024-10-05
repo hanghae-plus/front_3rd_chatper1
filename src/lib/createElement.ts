@@ -34,7 +34,9 @@ function appendChildren($element: HTMLElement, children: VNodeChild[]) {
  * @returns {Node} 변환된 DOM 노드
  */
 export function createElement(vNode: VNode | VNode[]): Node {
-  if (!vNode || typeof vNode === 'boolean') return document.createTextNode('');
+  if (vNode === undefined || vNode === null || typeof vNode === 'boolean') {
+    return document.createTextNode('');
+  }
 
   if (Array.isArray(vNode)) {
     const $fragment = document.createDocumentFragment();

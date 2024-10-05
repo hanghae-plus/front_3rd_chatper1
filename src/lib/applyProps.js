@@ -1,3 +1,4 @@
+import { globalStore } from '../stores';
 import { addEvent } from './eventManager';
 
 // 속성 적용 함수
@@ -8,6 +9,8 @@ export function applyProps(element, props) {
       addEvent(key.slice(2).toLowerCase(), element, value);
     } else if (key === 'className') {
       element.className = value;
+    } else if (key === 'style' && typeof value === 'object') {
+      Object.assign(element.style, value);
     } else {
       element.setAttribute(key, value);
     }

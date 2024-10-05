@@ -1,11 +1,11 @@
 /** @jsx createVNode */
 import { Post } from "../components/posts/Post";
+import { PostForm } from "../components/posts/PostForm";
 import { Footer } from "../components/templates/Footer";
 import { Header } from "../components/templates/Header";
 import { Navigation } from "../components/templates/Navigation";
 import { createVNode } from "../lib";
 import { globalStore } from "../stores";
-import { NotFoundPage } from "./NotFoundPage";
 
 export const HomePage = () => {
   const { loggedIn, posts } = globalStore.getState();
@@ -15,7 +15,7 @@ export const HomePage = () => {
         {Header()}
         {Navigation({ loggedIn })}
         <main class="p-4">
-          {loggedIn ? NotFoundPage() : ""}
+          {loggedIn ? PostForm() : ""}
           <div id="posts-container" class="space-y-4">
             {posts.map(Post)}
           </div>

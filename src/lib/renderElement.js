@@ -1,6 +1,5 @@
 import { addEvent, removeEvent, setupEventListeners } from "./eventManager";
 import { createElement__v2 } from "./createElement__v2.js";
-import { elementToVNode } from "./createVNode.js";
 import { isNullish, isTextNode } from "../utils/typeUtils.js";
 
 function processVNode(vNode) {
@@ -103,15 +102,18 @@ function updateElement(parentNode, newNode, oldNode, index = 0) {
   }
 }
 
+let oldVNode = null;
 export function renderElement(vNode, container) {
   if (!container) return;
-  if (container.hasChildNodes()) {
-    const newNode = processVNode(vNode);
-    const oldNode = processVNode(elementToVNode(container.childNodes[0]));
-    updateElement(container, newNode, oldNode);
-  } else {
+
+  const newVNode = processVNode(vNode);
+
+  if (!container.innerHTML) {
     container.appendChild(createElement__v2(vNode));
+  } else {
+    updateElement(container, newVNode, oldVNode);
   }
-  // 이벤트 위임 설정
+
+  oldVNode = newVNode;
   setupEventListeners(container);
 }

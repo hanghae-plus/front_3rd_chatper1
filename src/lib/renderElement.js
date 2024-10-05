@@ -1,7 +1,7 @@
 import { addEvent, removeEvent, setupEventListeners } from './eventManager';
 import { createElement__v2 } from "./createElement__v2.js";
 
-function processVNode(vNode) {
+export function processVNode(vNode) {
   if (vNode === null || vNode === undefined || typeof vNode === 'boolean') {
     return '';
   }
@@ -36,7 +36,6 @@ function updateAttributes(target, originNewProps, originOldProps) {
       }
     }
   }
-
   // 새 props의 모든 키를 순회
   for (const attr in newProps) {
     if (oldProps[attr] !== newProps[attr]) {
@@ -95,18 +94,10 @@ function updateElement(parentElement, newNode, oldNode, index = 0) {
       i
     );
   }
-
-  while (parentElement.childNodes[index].childNodes.length > newChildren.length) {
-    parentElement.childNodes[index].removeChild(
-      parentElement.childNodes[index].lastChild
-    );
-  }
 }
 
-const containerVNodeMap = new WeakMap();
-
+let oldNode = null;
 export function renderElement(vNode, container) {
-  const oldNode = containerVNodeMap.get(container);
   const newNode = processVNode(vNode);
 
   if (!oldNode) {
@@ -115,6 +106,6 @@ export function renderElement(vNode, container) {
     updateElement(container, newNode, oldNode);
   }
 
-  containerVNodeMap.set(container, newNode);
+  oldNode = newNode;
   setupEventListeners(container);
 }

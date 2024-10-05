@@ -132,7 +132,9 @@ describe('Chapter1-2 > 심화과제 > Virtual DOM과 이벤트 관리', () => {
         </div>
       );
 
+
       const initialVNode = <ParentComponent title="Parent Title" childText="Child Text" />;
+
       renderElement(initialVNode, container);
 
       const originalH1 = container.querySelector('h1');

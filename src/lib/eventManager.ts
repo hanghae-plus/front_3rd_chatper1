@@ -77,6 +77,7 @@ export function addEvent(
 ) {
   if (!eventMap.has(eventType)) {
     eventMap.set(eventType, new Map());
+    $rootElement?.addEventListener(eventType, handleEvent, true);
   }
 
   const handlers = eventMap.get(eventType)!;
@@ -100,6 +101,7 @@ export function removeEvent(
 
     if (handlerMap.size === 0) {
       eventMap.delete(eventType);
+      $rootElement?.removeEventListener(eventType, handleEvent, true);
     }
   }
 }

@@ -38,10 +38,12 @@ function updateAttributes(element, newProps = {}, oldProps = {}) {
 
   Object.keys(oldProps).forEach((attribute) => {
     if (!(attribute in newProps)) {
-      if (attribute.startsWith('on')) return removeEvent(element, attribute.slice(2).toLowerCase(), value)
-      if (attribute === 'className') return element.removeAttribute('class')
-      if (attribute === 'style') return (element.style.cssText = '')
-      return element.removeAttribute(attribute)
+      if (attribute.startsWith('on')) {
+        const eventType = attribute.slice(2).toLowerCase()
+        const oldHandler = oldProps[attribute]
+        return removeEvent(element, eventType, oldHandler)
+      }
+      // other attribute removals if necessary
     }
   })
 

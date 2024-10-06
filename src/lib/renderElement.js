@@ -18,7 +18,7 @@ function processVNode(vNode) {
 
 	// 3. 배열 처리
 	if (Array.isArray(vNode)) {
-		return vNode.map((child) => processVNode(child));
+		return vNode.map(processVNode);
 	}
 
 	// 4. 함수형 컴포넌트 처리
@@ -27,10 +27,10 @@ function processVNode(vNode) {
 		return processVNode(component);
 	}
 
-	// 5. 자식 요소들에 대해 재귀적으로 processVNode 호출
+	// 5. 자식 요소들에 대해 재귀적으로 processVNode 호출 후, flatten
 	return {
 		...vNode,
-		children: vNode.children.map(processVNode),
+		children: vNode.children.map(processVNode).flat(Infinity),
 	};
 }
 
@@ -105,8 +105,9 @@ function updateElement(parent, newNode, oldNode, index = 0) {
 	if (Array.isArray(newNode) && Array.isArray(oldNode)) {
 		// 최대 길이를 기준으로 반복하며 업데이트
 		const maxLength = Math.max(newNode.length, oldNode.length);
+
 		for (let i = 0; i < maxLength; i++) {
-			updateElement(parent, newNode[i], oldNode[i]);
+			updateElement(parent, newNode[i], oldNode[i], i);
 		}
 		return;
 	}

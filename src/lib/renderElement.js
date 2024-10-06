@@ -75,7 +75,12 @@ function updateAttributes(target, newProps, oldProps) {
  * Dom 을 업데이트하는 함수
  */
 function updateElement(parent, newNode, oldNode, index = 0) {
-	if (!newNode && !oldNode) return;
+	// 1. 내용이 완전히 동일한 경우, 업데이트가 되지 않는 경우
+	if (
+		JSON.stringify(newNode) === JSON.stringify(oldNode) ||
+		(!newNode && !oldNode)
+	)
+		return;
 
 	// 2. 새로 추가된 노드인 경우 parent 에 삽입한다.
 	if (newNode && !oldNode) return parent.appendChild(createElement(newNode));
@@ -130,14 +135,19 @@ function updateElement(parent, newNode, oldNode, index = 0) {
  * - 이벤트 위임 설정
  */
 export function renderElement(vNode, container) {
-	// 이전 vNode와 새로운 vNode를 정의
+	// 이전 vNode와 새로운 노드 정의
 	const newNode = processVNode(vNode);
 	const oldNode = container._vNode;
 
-	// 이전 vNode와 새로운 vNode를 비교하여 업데이트
-	updateElement(container, newNode, oldNode);
+	if (!oldNode) {
+		// 비교 없이 바로 렌더링
+		container.appendChild(createElement(vNode));
+	} else {
+		// 이전 vNode와 새로운 vNode를 비교하여 업데이트
+		updateElement(container, newNode, oldNode);
+	}
 
-	// 새로운 vNode로 업데이트
+	// 새로운 노드 vNode로 업데이트
 	container._vNode = newNode;
 
 	// 이벤트 위임 설정

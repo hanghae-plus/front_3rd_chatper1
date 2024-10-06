@@ -1,5 +1,5 @@
 // renderElement.js
-import { setupEventListeners } from './eventManager'
+import { addEvent, removeEvent, setupEventListeners } from './eventManager'
 import { createElement__v2 } from './createElement__v2'
 
 // TODO: processVNode 함수 구현

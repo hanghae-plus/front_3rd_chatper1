@@ -18,6 +18,12 @@ export function createElement__v2(vNode) {
     return document.createTextNode(vNode)
   }
 
+  //함수 처리
+  if (typeof vNode.type === 'function') {
+    // const componentVNode = vNode.type(vNode.props || {})
+    return document.createTextNode(vNode)
+  }
+
   if (Array.isArray(vNode)) {
     const fragment = document.createDocumentFragment()
     vNode.forEach((child) => fragment.appendChild(createElement__v2(child)))

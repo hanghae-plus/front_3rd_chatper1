@@ -1,5 +1,4 @@
 import { addEvent } from "./eventManager";
-import { createElement__v2 } from "./createElement__v2";
 
 function isPrimitive(vNode) {
   return typeof vNode === "string" || typeof vNode === "number";
